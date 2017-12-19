@@ -1,139 +1,139 @@
 /*
 * Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
 *
-* This file is part of the PACMod ROS 1.0 driver which is released under the MIT license.
+* This file is part of the PACMod v3 ROS 1.0 driver which is released under the MIT license.
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
-#include <pacmod_core.h>
+#include <pacmod3_core.h>
 
-using namespace AS::Drivers::PACMod;
+using namespace AS::Drivers::PACMod3;
 
-const int64_t AS::Drivers::PACMod::TurnSignalCmdMsg::CAN_ID = 0x63;
-const int64_t AS::Drivers::PACMod::TurnSignalRptMsg::CAN_ID = 0x64;
-const int64_t AS::Drivers::PACMod::ShiftCmdMsg::CAN_ID = 0x65;
-const int64_t AS::Drivers::PACMod::ShiftRptMsg::CAN_ID = 0x66;
-const int64_t AS::Drivers::PACMod::AccelCmdMsg::CAN_ID = 0x67;
-const int64_t AS::Drivers::PACMod::AccelRptMsg::CAN_ID = 0x68;
-const int64_t AS::Drivers::PACMod::GlobalCmdMsg::CAN_ID = 0x69;
-const int64_t AS::Drivers::PACMod::GlobalRptMsg::CAN_ID = 0x6A;
-const int64_t AS::Drivers::PACMod::BrakeCmdMsg::CAN_ID = 0x6B;
-const int64_t AS::Drivers::PACMod::SteerCmdMsg::CAN_ID = 0x6D;
-const int64_t AS::Drivers::PACMod::BrakeRptMsg::CAN_ID = 0x6C;
-const int64_t AS::Drivers::PACMod::SteerRptMsg::CAN_ID = 0x6E;
-const int64_t AS::Drivers::PACMod::VehicleSpeedRptMsg::CAN_ID = 0x6F;
-const int64_t AS::Drivers::PACMod::BrakeMotorRpt1Msg::CAN_ID = 0x70;
-const int64_t AS::Drivers::PACMod::BrakeMotorRpt2Msg::CAN_ID = 0x71;
-const int64_t AS::Drivers::PACMod::BrakeMotorRpt3Msg::CAN_ID = 0x72;
-const int64_t AS::Drivers::PACMod::SteerMotorRpt1Msg::CAN_ID = 0x73;
-const int64_t AS::Drivers::PACMod::SteerMotorRpt2Msg::CAN_ID = 0x74;
-const int64_t AS::Drivers::PACMod::SteerMotorRpt3Msg::CAN_ID = 0x75;
-const int64_t AS::Drivers::PACMod::HeadlightCmdMsg::CAN_ID = 0x76;
-const int64_t AS::Drivers::PACMod::HeadlightRptMsg::CAN_ID = 0x77;
-const int64_t AS::Drivers::PACMod::HornCmdMsg::CAN_ID = 0x78;
-const int64_t AS::Drivers::PACMod::HornRptMsg::CAN_ID = 0x79;
-const int64_t AS::Drivers::PACMod::WheelSpeedRptMsg::CAN_ID = 0x7A;
-const int64_t AS::Drivers::PACMod::SteeringPIDRpt1Msg::CAN_ID = 0x7B;
-const int64_t AS::Drivers::PACMod::SteeringPIDRpt2Msg::CAN_ID = 0x7C;
-const int64_t AS::Drivers::PACMod::SteeringPIDRpt3Msg::CAN_ID = 0x7D;
-const int64_t AS::Drivers::PACMod::SteerRpt2Msg::CAN_ID = 0x7E;
-const int64_t AS::Drivers::PACMod::SteerRpt3Msg::CAN_ID = 0x7F;
-const int64_t AS::Drivers::PACMod::ParkingBrakeStatusRptMsg::CAN_ID = 0x80;
-const int64_t AS::Drivers::PACMod::YawRateRptMsg::CAN_ID = 0x81;
-const int64_t AS::Drivers::PACMod::LatLonHeadingRptMsg::CAN_ID = 0x82;
-const int64_t AS::Drivers::PACMod::DateTimeRptMsg::CAN_ID = 0x83;
-const int64_t AS::Drivers::PACMod::SteeringPIDRpt4Msg::CAN_ID = 0x84;
-const int64_t AS::Drivers::PACMod::WiperCmdMsg::CAN_ID = 0x90;
-const int64_t AS::Drivers::PACMod::WiperRptMsg::CAN_ID = 0x91;
-const int64_t AS::Drivers::PACMod::VinRptMsg::CAN_ID = 0xFF;
+const int64_t AS::Drivers::PACMod3::TurnSignalCmdMsg::CAN_ID = 0x63;
+const int64_t AS::Drivers::PACMod3::TurnSignalRptMsg::CAN_ID = 0x64;
+const int64_t AS::Drivers::PACMod3::ShiftCmdMsg::CAN_ID = 0x65;
+const int64_t AS::Drivers::PACMod3::ShiftRptMsg::CAN_ID = 0x66;
+const int64_t AS::Drivers::PACMod3::AccelCmdMsg::CAN_ID = 0x67;
+const int64_t AS::Drivers::PACMod3::AccelRptMsg::CAN_ID = 0x68;
+const int64_t AS::Drivers::PACMod3::GlobalCmdMsg::CAN_ID = 0x69;
+const int64_t AS::Drivers::PACMod3::GlobalRptMsg::CAN_ID = 0x6A;
+const int64_t AS::Drivers::PACMod3::BrakeCmdMsg::CAN_ID = 0x6B;
+const int64_t AS::Drivers::PACMod3::SteerCmdMsg::CAN_ID = 0x6D;
+const int64_t AS::Drivers::PACMod3::BrakeRptMsg::CAN_ID = 0x6C;
+const int64_t AS::Drivers::PACMod3::SteerRptMsg::CAN_ID = 0x6E;
+const int64_t AS::Drivers::PACMod3::VehicleSpeedRptMsg::CAN_ID = 0x6F;
+const int64_t AS::Drivers::PACMod3::BrakeMotorRpt1Msg::CAN_ID = 0x70;
+const int64_t AS::Drivers::PACMod3::BrakeMotorRpt2Msg::CAN_ID = 0x71;
+const int64_t AS::Drivers::PACMod3::BrakeMotorRpt3Msg::CAN_ID = 0x72;
+const int64_t AS::Drivers::PACMod3::SteerMotorRpt1Msg::CAN_ID = 0x73;
+const int64_t AS::Drivers::PACMod3::SteerMotorRpt2Msg::CAN_ID = 0x74;
+const int64_t AS::Drivers::PACMod3::SteerMotorRpt3Msg::CAN_ID = 0x75;
+const int64_t AS::Drivers::PACMod3::HeadlightCmdMsg::CAN_ID = 0x76;
+const int64_t AS::Drivers::PACMod3::HeadlightRptMsg::CAN_ID = 0x77;
+const int64_t AS::Drivers::PACMod3::HornCmdMsg::CAN_ID = 0x78;
+const int64_t AS::Drivers::PACMod3::HornRptMsg::CAN_ID = 0x79;
+const int64_t AS::Drivers::PACMod3::WheelSpeedRptMsg::CAN_ID = 0x7A;
+const int64_t AS::Drivers::PACMod3::SteeringPIDRpt1Msg::CAN_ID = 0x7B;
+const int64_t AS::Drivers::PACMod3::SteeringPIDRpt2Msg::CAN_ID = 0x7C;
+const int64_t AS::Drivers::PACMod3::SteeringPIDRpt3Msg::CAN_ID = 0x7D;
+const int64_t AS::Drivers::PACMod3::SteerRpt2Msg::CAN_ID = 0x7E;
+const int64_t AS::Drivers::PACMod3::SteerRpt3Msg::CAN_ID = 0x7F;
+const int64_t AS::Drivers::PACMod3::ParkingBrakeStatusRptMsg::CAN_ID = 0x80;
+const int64_t AS::Drivers::PACMod3::YawRateRptMsg::CAN_ID = 0x81;
+const int64_t AS::Drivers::PACMod3::LatLonHeadingRptMsg::CAN_ID = 0x82;
+const int64_t AS::Drivers::PACMod3::DateTimeRptMsg::CAN_ID = 0x83;
+const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x84;
+const int64_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x90;
+const int64_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x91;
+const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
-std::shared_ptr<PacmodTxMsg> PacmodTxMsg::make_message(const int64_t& can_id)
+std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
 {
   switch (can_id)
   {
     case TurnSignalRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new TurnSignalRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
       break;
     case ShiftRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new ShiftRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
       break;
     case AccelRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new AccelRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new AccelRptMsg);
       break;
     case GlobalRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new GlobalRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
       break;
     case BrakeRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new BrakeRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new BrakeRptMsg);
       break;
     case SteerRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteerRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
       break;
     case VehicleSpeedRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new VehicleSpeedRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpeedRptMsg);
       break;
     case BrakeMotorRpt1Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new BrakeMotorRpt1Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new BrakeMotorRpt1Msg);
       break;
     case BrakeMotorRpt2Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new BrakeMotorRpt2Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new BrakeMotorRpt2Msg);
       break;
     case BrakeMotorRpt3Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new BrakeMotorRpt3Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new BrakeMotorRpt3Msg);
       break;
     case SteerMotorRpt1Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteerMotorRpt1Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt1Msg);
       break;
     case SteerMotorRpt2Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteerMotorRpt2Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt2Msg);
       break;
     case SteerMotorRpt3Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteerMotorRpt3Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt3Msg);
       break;
     case HeadlightRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new HeadlightRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new HeadlightRptMsg);
       break;
     case HornRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new HornRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new HornRptMsg);
       break;
     case WheelSpeedRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new WheelSpeedRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new WheelSpeedRptMsg);
       break;
     case SteeringPIDRpt1Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteeringPIDRpt1Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt1Msg);
       break;
     case SteeringPIDRpt2Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteeringPIDRpt2Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt2Msg);
       break;
     case SteeringPIDRpt3Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteeringPIDRpt3Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt3Msg);
       break;
     case SteerRpt2Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteerRpt2Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerRpt2Msg);
       break;
     case SteerRpt3Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteerRpt3Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerRpt3Msg);
       break;
     case ParkingBrakeStatusRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new ParkingBrakeStatusRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new ParkingBrakeStatusRptMsg);
       break;
     case YawRateRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new YawRateRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new YawRateRptMsg);
       break;
     case LatLonHeadingRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new LatLonHeadingRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new LatLonHeadingRptMsg);
       break;
     case DateTimeRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new DateTimeRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new DateTimeRptMsg);
       break;
     case SteeringPIDRpt4Msg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new SteeringPIDRpt4Msg);
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt4Msg);
       break;
     case WiperRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new WiperRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new WiperRptMsg);
       break;
     case VinRptMsg::CAN_ID:
-      return std::shared_ptr<PacmodTxMsg>(new VinRptMsg);
+      return std::shared_ptr<Pacmod3TxMsg>(new VinRptMsg);
       break;
     default:
       return NULL;

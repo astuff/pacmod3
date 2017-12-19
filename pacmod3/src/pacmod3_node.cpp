@@ -1,11 +1,11 @@
 /*
 * Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
 *
-* This file is part of the PACMod ROS 1.0 driver which is released under the MIT license.
+* This file is part of the PACMod3 v3 ROS 1.0 driver which is released under the MIT license.
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
-#include <pacmod_ros_msg_handler.h>
+#include <pacmod3_ros_msg_handler.h>
 #include <signal.h>
 #include <queue>
 #include <condition_variable>
@@ -21,14 +21,14 @@
 #include <std_msgs/Float64.h>
 #include <can_msgs/Frame.h>
 
-using namespace AS::Drivers::PACMod;
+using namespace AS::Drivers::PACMod3;
 
 double last_global_rpt_msg_received = 0.0;
 const double watchdog_timeout = 0.3;
 std::string veh_type_string = "POLARIS_GEM";
 VehicleType veh_type = VehicleType::POLARIS_GEM;
 std::unordered_map<int64_t, ros::Publisher> pub_tx_list;
-PacmodTxRosMsgHandler handler;
+Pacmod3TxRosMsgHandler handler;
 
 //Vehicle-Specific Publishers
 ros::Publisher wiper_rpt_pub;
@@ -86,14 +86,14 @@ pacmod_msgs::PacmodCmd::ConstPtr global_cmd_msg_cpr(&global_cmd_msg);
 */
 std::chrono::milliseconds can_error_pause = std::chrono::milliseconds(1000);
 
-// Sets the PACMod enable flag through CAN.
+// Sets the PACMod3 enable flag through CAN.
 void set_enable(bool val)
 {
   std::lock_guard<std::mutex> lck(enable_mut);
   enable_state = val;
 }
 
-// Listens for incoming requests to enable the PACMod
+// Listens for incoming requests to enable the PACMod3
 void callback_pacmod_enable(const std_msgs::Bool::ConstPtr& msg)
 {
   set_enable(msg->data);  
@@ -445,7 +445,7 @@ int main(int argc, char *argv[])
   ros::AsyncSpinner spinner(2);
   ros::NodeHandle n;
   ros::NodeHandle priv("~");
-  ros::Rate loop_rate(1.0); //PACMod is sending at ~30Hz.
+  ros::Rate loop_rate(1.0); //PACMod3 is sending at ~30Hz.
 
   // Wait for time to be valid
   while (ros::Time::now().nsec == 0);
@@ -453,7 +453,7 @@ int main(int argc, char *argv[])
   // Get and validate parameters    
   if (priv.getParam("vehicle_type", veh_type_string))
   {
-    ROS_INFO("PACMod - Got vehicle type of: %s", veh_type_string.c_str());
+    ROS_INFO("PACMod3 - Got vehicle type of: %s", veh_type_string.c_str());
 
     if (veh_type_string == "POLARIS_GEM")
     {
@@ -474,7 +474,7 @@ int main(int argc, char *argv[])
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
-      ROS_WARN("PACMod - An invalid vehicle type was entered. Assuming POLARIS_GEM.");
+      ROS_WARN("PACMod3 - An invalid vehicle type was entered. Assuming POLARIS_GEM.");
     }
   }
 

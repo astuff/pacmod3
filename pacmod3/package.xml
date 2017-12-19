@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>pacmod</name>
-  <version>2.0.0</version>
-  <description>AutonomouStuff PACMod driver package</description>
+  <name>pacmod3</name>
+  <version>3.0.0</version>
+  <description>AutonomouStuff PACMod v3 Driver Package</description>
   <license>MIT</license>
 
   <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
@@ -13,6 +13,6 @@
 
   <depend>roscpp</depend>
   <depend>std_msgs</depend>
-  <depend>pacmod_msgs</depend>
+  <depend>pacmod3_msgs</depend>
   <depend>can_msgs</depend>
 </package>

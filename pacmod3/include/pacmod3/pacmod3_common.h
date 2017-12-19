@@ -1,5 +1,5 @@
-#ifndef PACMOD_COMMON_H
-#define PACMOD_COMMON_H
+#ifndef PACMOD3_COMMON_H
+#define PACMOD3_COMMON_H
 
 /*
 * Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
@@ -11,7 +11,7 @@
 #include <memory>
 #include <mutex>
 
-#include <pacmod_core.h>
+#include <pacmod3_core.h>
 #include <ros/ros.h>
 
 #include <pacmod_msgs/DateTimeRpt.h>

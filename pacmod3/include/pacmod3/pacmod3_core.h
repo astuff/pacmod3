@@ -1,10 +1,10 @@
-#ifndef PACMOD_CORE_HPP
-#define PACMOD_CORE_HPP
+#ifndef PACMOD3_CORE_HPP
+#define PACMOD3_CORE_HPP
 
 /*
 * Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
 *
-* This file is part of the PACMod ROS 1.0 driver which is released under the MIT license.
+* This file is part of the PACMod v3 ROS 1.0 driver which is released under the MIT license.
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
@@ -18,7 +18,7 @@ namespace AS
 {
 namespace Drivers
 {
-namespace PACMod
+namespace PACMod3
 {
   enum VehicleType
   {
@@ -28,16 +28,16 @@ namespace PACMod
     LEXUS_RX_450H
   };
 
-  class PacmodTxMsg
+  class Pacmod3TxMsg
   {
     public:
-      static std::shared_ptr<PacmodTxMsg> make_message(const int64_t& can_id);
+      static std::shared_ptr<Pacmod3TxMsg> make_message(const int64_t& can_id);
       virtual void parse(uint8_t *in) = 0;
   };
 
   // TX Messages
   class GlobalRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -54,7 +54,7 @@ namespace PACMod
   };
 
   class VinRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -69,7 +69,7 @@ namespace PACMod
   };
 
   class SystemRptIntMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       uint32_t manual_input;
@@ -115,7 +115,7 @@ namespace PACMod
   };
 
   class SystemRptFloatMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       double manual_input;
@@ -161,7 +161,7 @@ namespace PACMod
   };
 
   class VehicleSpeedRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -174,7 +174,7 @@ namespace PACMod
   };
 
   class MotorRpt1Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       double current;
@@ -198,7 +198,7 @@ namespace PACMod
   };
 
   class MotorRpt2Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       double encoder_temp;
@@ -223,7 +223,7 @@ namespace PACMod
   };
 
   class MotorRpt3Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       double torque_output;
@@ -247,7 +247,7 @@ namespace PACMod
   };
 
   class YawRateRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -258,7 +258,7 @@ namespace PACMod
   };
 
   class LatLonHeadingRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -275,7 +275,7 @@ namespace PACMod
   };
 
   class DateTimeRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -291,7 +291,7 @@ namespace PACMod
   };
 
   class WheelSpeedRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -305,7 +305,7 @@ namespace PACMod
   };
 
   class SteeringPIDRpt1Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -319,7 +319,7 @@ namespace PACMod
   };
 
   class SteeringPIDRpt2Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -333,7 +333,7 @@ namespace PACMod
   };
 
   class SteeringPIDRpt3Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -347,7 +347,7 @@ namespace PACMod
   };
 
   class SteeringPIDRpt4Msg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -359,7 +359,7 @@ namespace PACMod
   };
 
   class ParkingBrakeStatusRptMsg :
-    public PacmodTxMsg
+    public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -370,14 +370,14 @@ namespace PACMod
   };
 
   // RX Messages
-  class PacmodRxMsg
+  class Pacmod3RxMsg
   {
     public:
       std::vector<uint8_t> data;
   };
 
   class GlobalCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -386,7 +386,7 @@ namespace PACMod
   };
 
   class TurnSignalCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -395,7 +395,7 @@ namespace PACMod
   };
   
   class HeadlightCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -404,7 +404,7 @@ namespace PACMod
   };
 
   class HornCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -413,7 +413,7 @@ namespace PACMod
   };
 
   class WiperCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -422,7 +422,7 @@ namespace PACMod
   };
 
   class ShiftCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -431,7 +431,7 @@ namespace PACMod
   };
 
   class AccelCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -440,7 +440,7 @@ namespace PACMod
   };
 
   class SteerCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -449,7 +449,7 @@ namespace PACMod
   };
 
   class BrakeCmdMsg :
-    public PacmodRxMsg
+    public Pacmod3RxMsg
   {
     public:
       static const int64_t CAN_ID;

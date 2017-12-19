@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(pacmod)
+project(pacmod3)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
 # For PACMod, this must be enabled to use mutexes.
@@ -8,14 +8,14 @@ add_definitions(-std=c++11)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
-  pacmod_msgs
+  pacmod3_msgs
   can_msgs
 )
 
 catkin_package(CATKIN_DEPENDS
   roscpp
   std_msgs 
-  pacmod_msgs
+  pacmod3_msgs
   can_msgs
 )
 
@@ -28,9 +28,9 @@ include_directories(
 
 ## Declare a C++ executable
 add_executable(${PROJECT_NAME}
-  src/pacmod_ros_msg_handler.cpp
-  src/pacmod_node.cpp
-  src/pacmod_core.cpp
+  src/pacmod3_ros_msg_handler.cpp
+  src/pacmod3_node.cpp
+  src/pacmod3_core.cpp
 )
 
 ## Add cmake target dependencies of the executable
