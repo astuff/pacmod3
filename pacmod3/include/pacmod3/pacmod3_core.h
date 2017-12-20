@@ -35,6 +35,48 @@ namespace PACMod3
       virtual void parse(uint8_t *in) = 0;
   };
 
+  class SystemRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      bool enabled;
+      bool override_active;
+      bool system_fault;
+  };
+
+  class SystemRptBoolMsg :
+    public SystemRptMsg
+  {
+    public:
+      bool manual_input;
+      bool command;
+      bool output;
+
+      void parse(uint8_t *in);
+  };
+
+  class SystemRptIntMsg :
+    public SystemRptMsg
+  {
+    public:
+      uint8_t manual_input;
+      uint8_t command;
+      uint8_t output;
+
+      void parse(uint8_t *in);
+  };
+
+  class SystemRptFloatMsg :
+    public SystemRptMsg
+  {
+    public:
+      double manual_input;
+      double command;
+      double output;
+
+      void parse(uint8_t *in);
+  };
+
   // TX Messages
   class GlobalRptMsg :
     public Pacmod3TxMsg
@@ -43,7 +85,7 @@ namespace PACMod3
       static const int64_t CAN_ID;
 
       bool enabled;
-      bool overridden;
+      bool override_active;
       bool user_can_timeout;
       bool brake_can_timeout;
       bool steering_can_timeout;
@@ -53,34 +95,16 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
-  class VinRptMsg :
-    public Pacmod3TxMsg
+  // System Reports
+  class AccelRptMsg :
+    public SystemRptFloatMsg
   {
     public:
       static const int64_t CAN_ID;
-
-      std::string mfg_code;
-      std::string mfg;
-      char model_year_code;
-      uint32_t model_year;
-      uint32_t serial;
-
-      void parse(uint8_t *in);
   };
 
-  class SystemRptIntMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      uint32_t manual_input;
-      uint32_t command;
-      uint32_t output;
-
-      void parse(uint8_t *in);
-  };
-
-  class TurnSignalRptMsg :
-    public SystemRptIntMsg
+  class BrakeRptMsg :
+    public SystemRptFloatMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -100,8 +124,8 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class WiperRptMsg :
-    public SystemRptIntMsg
+  class ParkingBrakeRptMsg :
+    public SystemRptBoolMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -109,24 +133,6 @@ namespace PACMod3
 
   class ShiftRptMsg :
     public SystemRptIntMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SystemRptFloatMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      double manual_input;
-      double command;
-      double output;
-
-      void parse(uint8_t *in);
-  };
-
-  class AccelRptMsg :
-    public SystemRptFloatMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -153,26 +159,21 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class BrakeRptMsg :
-    public SystemRptFloatMsg
+  class TurnSignalRptMsg :
+    public SystemRptIntMsg
   {
     public:
       static const int64_t CAN_ID;
   };
 
-  class VehicleSpeedRptMsg :
-    public Pacmod3TxMsg
+  class WiperRptMsg :
+    public SystemRptIntMsg
   {
     public:
       static const int64_t CAN_ID;
-
-      double vehicle_speed;
-      bool vehicle_speed_valid;
-      uint8_t vehicle_speed_raw[2];
-
-      void parse(uint8_t *in);
   };
 
+  // Other Reports
   class MotorRpt1Msg :
     public Pacmod3TxMsg
   {
@@ -181,20 +182,6 @@ namespace PACMod3
       double position;
 
       void parse(uint8_t *in);
-  };
-
-  class BrakeMotorRpt1Msg :
-    public MotorRpt1Msg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SteerMotorRpt1Msg :
-    public MotorRpt1Msg
-  {
-    public:
-      static const int64_t CAN_ID;
   };
 
   class MotorRpt2Msg :
@@ -208,20 +195,6 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
-  class BrakeMotorRpt2Msg :
-    public MotorRpt2Msg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SteerMotorRpt2Msg :
-    public MotorRpt2Msg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
   class MotorRpt3Msg :
     public Pacmod3TxMsg
   {
@@ -232,46 +205,25 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
+  class BrakeMotorRpt1Msg :
+    public MotorRpt1Msg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class BrakeMotorRpt2Msg :
+    public MotorRpt2Msg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
   class BrakeMotorRpt3Msg :
     public MotorRpt3Msg
   {
     public:
       static const int64_t CAN_ID;
-  };
-
-  class SteerMotorRpt3Msg :
-    public MotorRpt3Msg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class YawRateRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      double yaw_rate;
-
-      void parse(uint8_t *in);
-  };
-
-  class LatLonHeadingRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-     
-      int latitude_degrees;
-      uint32_t latitude_minutes;
-      uint32_t latitude_seconds;
-      int longitude_degrees;
-      uint32_t longitude_minutes;
-      uint32_t longitude_seconds;
-      double heading;
-
-      void parse(uint8_t *in);
   };
 
   class DateTimeRptMsg :
@@ -290,16 +242,19 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
-  class WheelSpeedRptMsg :
+  class LatLonHeadingRptMsg :
     public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
-
-      double front_left_wheel_speed;
-      double front_right_wheel_speed;
-      double rear_left_wheel_speed;
-      double rear_right_wheel_speed;
+     
+      int latitude_degrees;
+      uint32_t latitude_minutes;
+      uint32_t latitude_seconds;
+      int longitude_degrees;
+      uint32_t longitude_minutes;
+      uint32_t longitude_seconds;
+      double heading;
 
       void parse(uint8_t *in);
   };
@@ -358,13 +313,76 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
-  class ParkingBrakeStatusRptMsg :
+  class SteerMotorRpt1Msg :
+    public MotorRpt1Msg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class SteerMotorRpt2Msg :
+    public MotorRpt2Msg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class SteerMotorRpt3Msg :
+    public MotorRpt3Msg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class VehicleSpeedRptMsg :
     public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
 
-      bool parking_brake_engaged;
+      double vehicle_speed;
+      bool vehicle_speed_valid;
+      uint8_t vehicle_speed_raw[2];
+
+      void parse(uint8_t *in);
+  };
+
+  class VinRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      std::string mfg_code;
+      std::string mfg;
+      char model_year_code;
+      uint32_t model_year;
+      uint32_t serial;
+
+      void parse(uint8_t *in);
+  };
+
+  class YawRateRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      double yaw_rate;
+
+      void parse(uint8_t *in);
+  };
+
+  class WheelSpeedRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      double front_left_wheel_speed;
+      double front_right_wheel_speed;
+      double rear_left_wheel_speed;
+      double rear_right_wheel_speed;
 
       void parse(uint8_t *in);
   };
@@ -376,85 +394,99 @@ namespace PACMod3
       std::vector<uint8_t> data;
   };
 
-  class GlobalCmdMsg :
+  class SystemCmdBool :
     public Pacmod3RxMsg
   {
     public:
-      static const int64_t CAN_ID;
-
-      void encode(bool enable, bool clear_override, bool ignore_overide);
+      void encode(bool enable,
+                  bool ignore_overrides,
+                  bool cmd);
   };
 
-  class TurnSignalCmdMsg :
+  class SystemCmdFloat :
     public Pacmod3RxMsg
   {
     public:
-      static const int64_t CAN_ID;
-
-      void encode(uint8_t turn_signal_cmd);
-  };
-  
-  class HeadlightCmdMsg :
-    public Pacmod3RxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void encode(uint8_t headlight_cmd);
+      void encode(bool enable,
+                  bool ignore_overrides,
+                  float cmd);
   };
 
-  class HornCmdMsg :
+  class SystemCmdInt :
     public Pacmod3RxMsg
   {
     public:
-      static const int64_t CAN_ID;
-
-      void encode(uint8_t horn_cmd);
-  };
-
-  class WiperCmdMsg :
-    public Pacmod3RxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void encode(uint8_t wiper_cmd);
-  };
-
-  class ShiftCmdMsg :
-    public Pacmod3RxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void encode(uint8_t shift_cmd);
+      void encode(bool enable,
+                  bool ignore_overrides,
+                  uint8_t cmd);
   };
 
   class AccelCmdMsg :
-    public Pacmod3RxMsg
+    public SystemCmdFloat
   {
     public:
       static const int64_t CAN_ID;
-
-      void encode(double accel_cmd);
-  };
-
-  class SteerCmdMsg :
-    public Pacmod3RxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void encode(double steer_pos, double steer_spd);
   };
 
   class BrakeCmdMsg :
-    public Pacmod3RxMsg
+    public SystemCmdFloat
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+  
+  class HeadlightCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class HornCmdMsg :
+    public SystemCmdBool
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class ParkingBrakeCmdMsg :
+    public SystemCmdBool
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class ShiftCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class SteerCmdMsg :
+    public SystemCmdFloat
   {
     public:
       static const int64_t CAN_ID;
 
-      void encode(double brake_cmd);
+      void encode(bool enabled,
+                  bool ignore_overrides,
+                  float steer_pos,
+                  float steer_spd);
+  };
+
+  class TurnSignalCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class WiperCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
   };
 }
 }

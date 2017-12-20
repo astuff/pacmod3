@@ -15,7 +15,6 @@ const int64_t AS::Drivers::PACMod3::ShiftCmdMsg::CAN_ID = 0x65;
 const int64_t AS::Drivers::PACMod3::ShiftRptMsg::CAN_ID = 0x66;
 const int64_t AS::Drivers::PACMod3::AccelCmdMsg::CAN_ID = 0x67;
 const int64_t AS::Drivers::PACMod3::AccelRptMsg::CAN_ID = 0x68;
-const int64_t AS::Drivers::PACMod3::GlobalCmdMsg::CAN_ID = 0x69;
 const int64_t AS::Drivers::PACMod3::GlobalRptMsg::CAN_ID = 0x6A;
 const int64_t AS::Drivers::PACMod3::BrakeCmdMsg::CAN_ID = 0x6B;
 const int64_t AS::Drivers::PACMod3::SteerCmdMsg::CAN_ID = 0x6D;
@@ -38,39 +37,22 @@ const int64_t AS::Drivers::PACMod3::SteeringPIDRpt2Msg::CAN_ID = 0x7C;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt3Msg::CAN_ID = 0x7D;
 const int64_t AS::Drivers::PACMod3::SteerRpt2Msg::CAN_ID = 0x7E;
 const int64_t AS::Drivers::PACMod3::SteerRpt3Msg::CAN_ID = 0x7F;
-const int64_t AS::Drivers::PACMod3::ParkingBrakeStatusRptMsg::CAN_ID = 0x80;
+const int64_t AS::Drivers::PACMod3::ParkingBrakeRptMsg::CAN_ID = 0x80;
 const int64_t AS::Drivers::PACMod3::YawRateRptMsg::CAN_ID = 0x81;
 const int64_t AS::Drivers::PACMod3::LatLonHeadingRptMsg::CAN_ID = 0x82;
 const int64_t AS::Drivers::PACMod3::DateTimeRptMsg::CAN_ID = 0x83;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x84;
 const int64_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x90;
 const int64_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x91;
+const int64_t AS::Drivers::PACMod3::ParkingBrakeCmdMsg::CAN_ID = 0x92;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
 {
   switch (can_id)
   {
-    case TurnSignalRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
-      break;
-    case ShiftRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
-      break;
     case AccelRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new AccelRptMsg);
-      break;
-    case GlobalRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
-      break;
-    case BrakeRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new BrakeRptMsg);
-      break;
-    case SteerRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
-      break;
-    case VehicleSpeedRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpeedRptMsg);
       break;
     case BrakeMotorRpt1Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new BrakeMotorRpt1Msg);
@@ -81,14 +63,14 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case BrakeMotorRpt3Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new BrakeMotorRpt3Msg);
       break;
-    case SteerMotorRpt1Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt1Msg);
+    case BrakeRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new BrakeRptMsg);
       break;
-    case SteerMotorRpt2Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt2Msg);
+    case DateTimeRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new DateTimeRptMsg);
       break;
-    case SteerMotorRpt3Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt3Msg);
+    case GlobalRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
       break;
     case HeadlightRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new HeadlightRptMsg);
@@ -96,8 +78,14 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case HornRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new HornRptMsg);
       break;
-    case WheelSpeedRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new WheelSpeedRptMsg);
+    case LatLonHeadingRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new LatLonHeadingRptMsg);
+      break;
+    case ParkingBrakeRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new ParkingBrakeRptMsg);
+      break;
+    case ShiftRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
       break;
     case SteeringPIDRpt1Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt1Msg);
@@ -108,32 +96,44 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case SteeringPIDRpt3Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt3Msg);
       break;
+    case SteeringPIDRpt4Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt4Msg);
+      break;
+    case SteerMotorRpt1Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt1Msg);
+      break;
+    case SteerMotorRpt2Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt2Msg);
+      break;
+    case SteerMotorRpt3Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt3Msg);
+      break;
+    case SteerRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
+      break;
     case SteerRpt2Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteerRpt2Msg);
       break;
     case SteerRpt3Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteerRpt3Msg);
       break;
-    case ParkingBrakeStatusRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new ParkingBrakeStatusRptMsg);
+    case TurnSignalRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
       break;
-    case YawRateRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new YawRateRptMsg);
+    case VehicleSpeedRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpeedRptMsg);
       break;
-    case LatLonHeadingRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new LatLonHeadingRptMsg);
+    case VinRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new VinRptMsg);
       break;
-    case DateTimeRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new DateTimeRptMsg);
-      break;
-    case SteeringPIDRpt4Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt4Msg);
+    case WheelSpeedRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new WheelSpeedRptMsg);
       break;
     case WiperRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new WiperRptMsg);
       break;
-    case VinRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new VinRptMsg);
+    case YawRateRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new YawRateRptMsg);
       break;
     default:
       return NULL;
@@ -144,7 +144,7 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
 void GlobalRptMsg::parse(uint8_t *in)
 {
   enabled = in[0] & 0x01;
-  overridden = ((in[0] & 0x02) >> 1) != 0;
+  override_active = ((in[0] & 0x02) >> 1) != 0;
   user_can_timeout = ((in[0] & 0x20) >> 5) != 0;
   brake_can_timeout = ((in[0] & 0x10) >> 4) != 0;
   steering_can_timeout = ((in[0] & 0x08) >> 3) != 0;
@@ -152,150 +152,44 @@ void GlobalRptMsg::parse(uint8_t *in)
   user_can_read_errors = ((in[6] << 8) | in[7]);
 }
 
-void VinRptMsg::parse(uint8_t *in)
+void SystemRptBoolMsg::parse(uint8_t *in)
 {
-  std::ostringstream oss;
-  oss << in[0] << in[1] << in[2];
-  mfg_code = oss.str();
+  enabled = ((in[0] & 0x01) > 0);
+  override_active = ((in[0] & 0x02) > 0);
+  system_fault = ((in[0] & 0x04) > 0);
 
-  if (mfg_code == "52C")
-    mfg = "POLARIS INDUSTRIES INC.";
-  else if (mfg_code == "3HS")
-    mfg = "NAVISTAR, INC.";
-  else if (mfg_code == "2T2")
-    mfg = "TOYOTA MOTOR MANUFACTURING CANADA";
-
-  model_year_code = in[3];
-
-  if (model_year_code >= '1' && model_year_code <= '9')
-  {
-    model_year = 2000 + model_year_code;
-  }
-  else if (model_year_code >= 'A' && model_year_code < 'Z')
-  {
-    switch (model_year_code)
-    {
-      case 'A':
-        model_year = 2010;
-        break;
-      case 'B':
-        model_year = 2011;
-        break;
-      case 'C':
-        model_year = 2012;
-        break;
-      case 'D':
-        model_year = 2013;
-        break;
-      case 'E':
-        model_year = 2014;
-        break;
-      case 'F':
-        model_year = 2015;
-        break;
-      case 'G':
-        model_year = 2016;
-        break;
-      case 'H':
-        model_year = 2017;
-        break;
-      case 'J':
-        model_year = 2018;
-        break;
-      case 'K':
-        model_year = 2019;
-        break;
-      case 'L':
-        model_year = 2020;
-        break;
-      case 'M':
-        model_year = 2021;
-        break;
-      case 'N':
-        model_year = 2022;
-        break;
-      case 'P':
-        model_year = 2023;
-        break;
-      case 'R':
-        model_year = 2024;
-        break;
-      case 'S':
-        model_year = 2025;
-        break;
-      case 'T':
-        model_year = 2026;
-        break;
-      case 'V':
-        model_year = 2027;
-        break;
-      case 'W':
-        model_year = 2028;
-        break;
-      case 'X':
-        model_year = 2029;
-        break;
-      case 'Y':
-        model_year = 2030;
-        break;
-    }
-  }
-
-  serial = (in[4] & 0x0F);
-  serial = (serial << 8) | in[5];
-  serial = (serial << 8) | in[6];
+  manual_input = ((in[1] & 0x01) > 0);
+  command = ((in[1] & 0x02) > 0);
+  output = ((in[1] & 0x04) > 0);
 }
 
 void SystemRptIntMsg::parse(uint8_t *in)
 {
-  manual_input = in[0];
-  command = in[1];
-  output = in[2];
+  enabled = ((in[0] & 0x01) > 0);
+  override_active = ((in[0] & 0x02) > 0);
+  system_fault = ((in[0] & 0x04) > 0);
+
+  manual_input = in[1];
+  command = in[2];
+  output = in[3];
 }
 
 void SystemRptFloatMsg::parse(uint8_t *in)
 {
+  enabled = ((in[0] & 0x01) > 0);
+  override_active = ((in[0] & 0x02) > 0);
+  system_fault = ((in[0] & 0x04) > 0);
+
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = ((int16_t)in[1] << 8) | in[2];
   manual_input = (double)(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = ((int16_t)in[3] << 8) | in[4];
   command = (double)(temp / 1000.0);
 
-  temp = ((int16_t)in[4] << 8) | in[5];
+  temp = ((int16_t)in[5] << 8) | in[6];
   output = (double)(temp / 1000.0);
-}
-
-void VehicleSpeedRptMsg::parse(uint8_t *in)
-{
-  int16_t temp;
-
-  temp = ((int16_t)in[0] << 8) | in[1];
-  vehicle_speed = (double)(temp / 100.0);
-
-  vehicle_speed_valid = (in[2] == 1);
-  vehicle_speed_raw[0] = in[3];
-  vehicle_speed_raw[1] = in[4];
-}
-
-void YawRateRptMsg::parse(uint8_t *in)
-{
-  int16_t temp;
-  
-  temp = ((int16_t)in[0] << 8) | in[1];
-  yaw_rate = (double)(temp / 100.0);
-}
-
-void LatLonHeadingRptMsg::parse(uint8_t *in)
-{
-  latitude_degrees = (int8_t)in[0];
-  latitude_minutes = (uint8_t)in[1];
-  latitude_seconds = (uint8_t)in[2];
-  longitude_degrees = (int8_t)in[3];
-  longitude_minutes = (uint8_t)in[4];
-  longitude_seconds = (uint8_t)in[5];
-  heading = (((int16_t)in[6] << 8) | in[7]) / 100.0;
 }
 
 void DateTimeRptMsg::parse(uint8_t *in)
@@ -308,21 +202,15 @@ void DateTimeRptMsg::parse(uint8_t *in)
   second = in[5];
 }
 
-void WheelSpeedRptMsg::parse(uint8_t *in)
+void LatLonHeadingRptMsg::parse(uint8_t *in)
 {
-  int16_t temp;
-
-  temp = ((int16_t)in[0] << 8) | in[1];
-  front_left_wheel_speed = (double)(temp / 100.0);
-
-  temp = ((int16_t)in[2] << 8) | in[3];
-  front_right_wheel_speed = (double)(temp / 100.0);
-
-  temp = ((int16_t)in[4] << 8) | in[5];
-  rear_left_wheel_speed = (double)(temp / 100.0);
-
-  temp = ((int16_t)in[6] << 8) | in[7];
-  rear_right_wheel_speed = (double)(temp / 100.0);
+  latitude_degrees = (int8_t)in[0];
+  latitude_minutes = (uint8_t)in[1];
+  latitude_seconds = (uint8_t)in[2];
+  longitude_degrees = (int8_t)in[3];
+  longitude_minutes = (uint8_t)in[4];
+  longitude_seconds = (uint8_t)in[5];
+  heading = (((int16_t)in[6] << 8) | in[7]) / 100.0;
 }
 
 void MotorRpt1Msg::parse(uint8_t *in)
@@ -424,83 +312,189 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
   angular_acceleration = (double)(temp / 1000.0);
 }
 
-void ParkingBrakeStatusRptMsg::parse(uint8_t *in)
+void VehicleSpeedRptMsg::parse(uint8_t *in)
 {
-  parking_brake_engaged = (in[0] == 0x01);
+  int16_t temp;
+
+  temp = ((int16_t)in[0] << 8) | in[1];
+  vehicle_speed = (double)(temp / 100.0);
+
+  vehicle_speed_valid = (in[2] == 1);
+  vehicle_speed_raw[0] = in[3];
+  vehicle_speed_raw[1] = in[4];
+}
+
+void VinRptMsg::parse(uint8_t *in)
+{
+  std::ostringstream oss;
+  oss << in[0] << in[1] << in[2];
+  mfg_code = oss.str();
+
+  if (mfg_code == "52C")
+    mfg = "POLARIS INDUSTRIES INC.";
+  else if (mfg_code == "3HS")
+    mfg = "NAVISTAR, INC.";
+  else if (mfg_code == "2T2")
+    mfg = "TOYOTA MOTOR MANUFACTURING CANADA";
+
+  model_year_code = in[3];
+
+  if (model_year_code >= '1' && model_year_code <= '9')
+  {
+    model_year = 2000 + model_year_code;
+  }
+  else if (model_year_code >= 'A' && model_year_code < 'Z')
+  {
+    switch (model_year_code)
+    {
+      case 'A':
+        model_year = 2010;
+        break;
+      case 'B':
+        model_year = 2011;
+        break;
+      case 'C':
+        model_year = 2012;
+        break;
+      case 'D':
+        model_year = 2013;
+        break;
+      case 'E':
+        model_year = 2014;
+        break;
+      case 'F':
+        model_year = 2015;
+        break;
+      case 'G':
+        model_year = 2016;
+        break;
+      case 'H':
+        model_year = 2017;
+        break;
+      case 'J':
+        model_year = 2018;
+        break;
+      case 'K':
+        model_year = 2019;
+        break;
+      case 'L':
+        model_year = 2020;
+        break;
+      case 'M':
+        model_year = 2021;
+        break;
+      case 'N':
+        model_year = 2022;
+        break;
+      case 'P':
+        model_year = 2023;
+        break;
+      case 'R':
+        model_year = 2024;
+        break;
+      case 'S':
+        model_year = 2025;
+        break;
+      case 'T':
+        model_year = 2026;
+        break;
+      case 'V':
+        model_year = 2027;
+        break;
+      case 'W':
+        model_year = 2028;
+        break;
+      case 'X':
+        model_year = 2029;
+        break;
+      case 'Y':
+        model_year = 2030;
+        break;
+    }
+  }
+
+  serial = (in[4] & 0x0F);
+  serial = (serial << 8) | in[5];
+  serial = (serial << 8) | in[6];
+}
+
+void WheelSpeedRptMsg::parse(uint8_t *in)
+{
+  int16_t temp;
+
+  temp = ((int16_t)in[0] << 8) | in[1];
+  front_left_wheel_speed = (double)(temp / 100.0);
+
+  temp = ((int16_t)in[2] << 8) | in[3];
+  front_right_wheel_speed = (double)(temp / 100.0);
+
+  temp = ((int16_t)in[4] << 8) | in[5];
+  rear_left_wheel_speed = (double)(temp / 100.0);
+
+  temp = ((int16_t)in[6] << 8) | in[7];
+  rear_right_wheel_speed = (double)(temp / 100.0);
+}
+
+void YawRateRptMsg::parse(uint8_t *in)
+{
+  int16_t temp;
+  
+  temp = ((int16_t)in[0] << 8) | in[1];
+  yaw_rate = (double)(temp / 100.0);
 }
 
 // RX Messages
-void GlobalCmdMsg::encode(bool enable, bool clear_override, bool ignore_overide)
+void SystemCmdBool::encode(bool enable,
+                           bool ignore_overrides,
+                           bool cmd)
 {
   data.assign(8, 0);
-  
-  if(enable)
-    data[0] |= 0x01;
-  if(clear_override)
-    data[0] |= 0x02;
-  if(ignore_overide)
-    data[0] |= 0x04;
+
+  data[0] = enable ? 0x01 : 0x00;
+  data[0] |= ignore_overrides ? 0x02 : 0x00;
+  data[1] = cmd ? 0x00 : 0x01;
 }
 
-void TurnSignalCmdMsg::encode(uint8_t turn_signal_cmd)
+void SystemCmdFloat::encode(bool enable,
+                            bool ignore_overrides,
+                            float cmd)
 {
   data.assign(8, 0);
-  data[0] = turn_signal_cmd;
+
+  data[0] = enable ? 0x01 : 0x00;
+  data[0] |= ignore_overrides ? 0x02 : 0x00;
+
+  uint16_t cmd_float = (uint16_t)(cmd * 1000.0);
+  data[1] = (cmd_float & 0xFF00) >> 8;
+  data[2] = cmd_float & 0x00FF;
 }
 
-void HeadlightCmdMsg::encode(uint8_t headlight_cmd)
+void SystemCmdInt::encode(bool enable,
+                          bool ignore_overrides,
+                          uint8_t cmd)
 {
   data.assign(8, 0);
-  data[0] = headlight_cmd;
+
+  data[0] = enable ? 0x01 : 0x00;
+  data[0] |= ignore_overrides ? 0x02 : 0x00;
+  data[1] = cmd;
 }
 
-void HornCmdMsg::encode(uint8_t horn_cmd)
+void SteerCmdMsg::encode(bool enable,
+                         bool ignore_overrides,
+                         float steer_pos,
+                         float steer_spd)
 {
   data.assign(8, 0);
-  data[0] = horn_cmd;
-}
 
-void WiperCmdMsg::encode(uint8_t wiper_cmd)
-{
-  data.assign(8, 0);
-  data[0] = wiper_cmd;
-}
+  data[0] = enable ? 0x01 : 0x00;
+  data[0] |= ignore_overrides ? 0x02 : 0x00;
 
-void ShiftCmdMsg::encode(uint8_t shift_cmd)
-{
-  data.assign(8, 0);
-  data[0] = shift_cmd;
-}
+  int16_t raw_pos = (int16_t)(1000.0 * steer_pos);
+  uint16_t raw_spd = (uint16_t)(1000.0 * steer_spd);
 
-void AccelCmdMsg::encode(double accel_cmd)
-{
-  data.assign(8, 0);
-  uint16_t cmdInt = (uint16_t)(accel_cmd * 1000.0);
-  data[0] = (cmdInt & 0xFF00) >> 8;
-  data[1] = cmdInt & 0x00FF;
-}
-
-void SteerCmdMsg::encode(double steer_pos, double steer_spd)
-{
-  data.assign(8, 0);
-  int32_t raw_pos = (int32_t)(1000.0 * steer_pos);
-  uint32_t raw_spd = (uint32_t)(1000.0 * steer_spd);
-
-  data[0] = (raw_pos & 0xFF000000) >> 24;
-  data[1] = (raw_pos & 0x00FF0000) >> 16;
-  data[2] = (raw_pos & 0x0000FF00) >> 8;
-  data[3] = raw_pos & 0x000000FF;
-  data[4] = (raw_spd & 0xFF000000) >> 24;    
-  data[5] = (raw_spd & 0x00FF0000) >> 16;
-  data[6] = (raw_spd & 0x0000FF00) >> 8;
-  data[7] = raw_spd & 0x000000FF;
-}
-
-void BrakeCmdMsg::encode(double brake_pct)
-{
-  data.assign(8, 0);
-  uint16_t raw_pct = (uint16_t)(1000.0 * brake_pct);
-
-  data[0] = (raw_pct & 0xFF00) >> 8;
-  data[1] = (raw_pct & 0x00FF);
+  data[1] = (raw_pos & 0xFF00) >> 8;
+  data[2] = raw_pos & 0x00FF;
+  data[3] = (raw_spd & 0xFF00) >> 8;    
+  data[4] = raw_spd & 0x00FF;
 }
