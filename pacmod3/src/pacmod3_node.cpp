@@ -377,6 +377,9 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->enabled);
       enabled_pub.publish(bool_pub_msg);
 
+      if (!dc_parser->enabled || dc_parser->override_active)
+        set_enable(false);
+
       enable_mut.lock();
       enable_state = dc_parser->enabled;
       enable_mut.unlock();
@@ -410,21 +413,13 @@ int main(int argc, char *argv[])
     ROS_INFO("PACMod3 - Got vehicle type of: %s", veh_type_string.c_str());
 
     if (veh_type_string == "POLARIS_GEM")
-    {
-      veh_type = VehicleType::POLARIS_GEM;
-    }
+      veh_type = POLARIS_GEM;
     else if (veh_type_string == "POLARIS_RANGER")
-    {
-      veh_type = VehicleType::POLARIS_RANGER;
-    }
+      veh_type = POLARIS_RANGER;
     else if (veh_type_string == "INTERNATIONAL_PROSTAR_122")
-    {
-      veh_type = VehicleType::INTERNATIONAL_PROSTAR_122;
-    }
+      veh_type = INTERNATIONAL_PROSTAR_122;
     else if (veh_type_string == "LEXUS_RX_450H")
-    {
-      veh_type = VehicleType::LEXUS_RX_450H;
-    }
+      veh_type = LEXUS_RX_450H;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;

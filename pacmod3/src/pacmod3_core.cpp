@@ -446,23 +446,27 @@ void YawRateRptMsg::parse(uint8_t *in)
 // RX Messages
 void SystemCmdBool::encode(bool enable,
                            bool ignore_overrides,
+                           bool clear_override,
                            bool cmd)
 {
   data.assign(8, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
+  data[0] |= clear_override ? 0x04 : 0x00;
   data[1] = cmd ? 0x00 : 0x01;
 }
 
 void SystemCmdFloat::encode(bool enable,
                             bool ignore_overrides,
+                            bool clear_override,
                             float cmd)
 {
   data.assign(8, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
+  data[0] |= clear_override ? 0x04 : 0x00;
 
   uint16_t cmd_float = (uint16_t)(cmd * 1000.0);
   data[1] = (cmd_float & 0xFF00) >> 8;
@@ -471,17 +475,20 @@ void SystemCmdFloat::encode(bool enable,
 
 void SystemCmdInt::encode(bool enable,
                           bool ignore_overrides,
+                          bool clear_override,
                           uint8_t cmd)
 {
   data.assign(8, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
+  data[0] |= clear_override ? 0x04 : 0x00;
   data[1] = cmd;
 }
 
 void SteerCmdMsg::encode(bool enable,
                          bool ignore_overrides,
+                         bool clear_override,
                          float steer_pos,
                          float steer_spd)
 {
@@ -489,6 +496,7 @@ void SteerCmdMsg::encode(bool enable,
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
+  data[0] |= clear_override ? 0x04 : 0x00;
 
   int16_t raw_pos = (int16_t)(1000.0 * steer_pos);
   uint16_t raw_spd = (uint16_t)(1000.0 * steer_spd);
