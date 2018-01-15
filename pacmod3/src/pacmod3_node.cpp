@@ -316,7 +316,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             AccelCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output);
+            encoder.encode(false, false, dc_parser->output);
             rx_it->second->setData(encoder.data);
           }
         }
@@ -328,7 +328,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             BrakeCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output);
+            encoder.encode(false, false, dc_parser->output);
             rx_it->second->setData(encoder.data);
           }
         }
@@ -340,7 +340,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             HornCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output);
+            encoder.encode(false, false, dc_parser->output);
             rx_it->second->setData(encoder.data);
           }
         }
@@ -352,7 +352,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             ShiftCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output);
+            encoder.encode(false, false, dc_parser->output);
             rx_it->second->setData(encoder.data);
           }
         }
@@ -364,7 +364,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             SteerCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output, 2.0);
+            encoder.encode(false, false, dc_parser->output, 2.0);
             rx_it->second->setData(encoder.data);
           }
         }
@@ -376,7 +376,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             TurnSignalCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output);
+            encoder.encode(false, false, dc_parser->output);
             rx_it->second->setData(encoder.data);
           }
         }
@@ -388,7 +388,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             WiperCmdMsg encoder;
 
-            encoder.encode(false, false, false, dc_parser->output);
+            encoder.encode(false, false, dc_parser->output);
             rx_it->second->setData(encoder.data);
           }
         }

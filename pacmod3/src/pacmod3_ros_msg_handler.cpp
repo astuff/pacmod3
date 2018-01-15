@@ -387,7 +387,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     HornCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
   }
@@ -396,7 +395,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     ParkingBrakeCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
   }
@@ -415,7 +413,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     AccelCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
 	}
@@ -424,7 +421,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     BrakeCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
 	}
@@ -443,7 +439,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     HeadlightCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
 	}
@@ -452,7 +447,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     ShiftCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
 	}
@@ -461,7 +455,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     TurnSignalCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
 	}
@@ -470,7 +463,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     WiperCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command);
     return encoder.data;
 	}
@@ -489,7 +481,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     SteerCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
-                   msg->clear_override,
                    msg->command,
                    msg->rotation_rate);
     return encoder.data;
