@@ -294,12 +294,10 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
     parser_class->parse(const_cast<unsigned char *>(&msg->data[0]));
     handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
   
-    // TODO: Figure out how to keep this state.
     // If a system is disabled, set that system's command
     // to be the current report value. This ensures that
     // when we enable, we are in the same state as the vehicle.
 
-    /*
     // Find the cmd value for this rpt.
     auto cmd = rpt_cmd_list.find(msg->id);
 
@@ -310,65 +308,92 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
       if (rx_it != rx_list.end())
       {
-        if (msg->id == TurnSignalRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<TurnSignalRptMsg>(parser_class);
-          TurnSignalCmdMsg encoder;
-
-          encoder.encode(dc_parser->output);
-          rx_it->second->setData(encoder.data);
-        }
-        else if (msg->id == ShiftRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<ShiftRptMsg>(parser_class);
-          ShiftCmdMsg encoder;
-
-          encoder.encode(dc_parser->output);
-          rx_it->second->setData(encoder.data);
-        }
-        else if (msg->id == AccelRptMsg::CAN_ID)
+        if (msg->id == AccelRptMsg::CAN_ID)
         {
           auto dc_parser = std::dynamic_pointer_cast<AccelRptMsg>(parser_class);
-          AccelCmdMsg encoder;
 
-          encoder.encode(dc_parser->output);
-          rx_it->second->setData(encoder.data);
-        }
-        else if (msg->id == SteerRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<SteerRptMsg>(parser_class);
-          SteerCmdMsg encoder;
+          if (!dc_parser->enabled)
+          {
+            AccelCmdMsg encoder;
 
-          encoder.encode(dc_parser->output, 2.0);
-          rx_it->second->setData(encoder.data);
+            encoder.encode(false, false, false, dc_parser->output);
+            rx_it->second->setData(encoder.data);
+          }
         }
         else if (msg->id == BrakeRptMsg::CAN_ID)
         {
           auto dc_parser = std::dynamic_pointer_cast<BrakeRptMsg>(parser_class);
-          BrakeCmdMsg encoder;
 
-          encoder.encode(dc_parser->output);
-          rx_it->second->setData(encoder.data);
-        }
-        else if (msg->id == WiperRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<WiperRptMsg>(parser_class);
-          WiperCmdMsg encoder;
+          if (!dc_parser->enabled)
+          {
+            BrakeCmdMsg encoder;
 
-          encoder.encode(dc_parser->output);
-          rx_it->second->setData(encoder.data);
+            encoder.encode(false, false, false, dc_parser->output);
+            rx_it->second->setData(encoder.data);
+          }
         }
         else if (msg->id == HornRptMsg::CAN_ID)
         {
           auto dc_parser = std::dynamic_pointer_cast<HornRptMsg>(parser_class);
-          HornCmdMsg encoder;
 
-          encoder.encode(dc_parser->output);
-          rx_it->second->setData(encoder.data);
+          if (!dc_parser->enabled)
+          {
+            HornCmdMsg encoder;
+
+            encoder.encode(false, false, false, dc_parser->output);
+            rx_it->second->setData(encoder.data);
+          }
+        }
+        else if (msg->id == ShiftRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<ShiftRptMsg>(parser_class);
+
+          if (!dc_parser->enabled)
+          {
+            ShiftCmdMsg encoder;
+
+            encoder.encode(false, false, false, dc_parser->output);
+            rx_it->second->setData(encoder.data);
+          }
+        }
+        else if (msg->id == SteerRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<SteerRptMsg>(parser_class);
+
+          if (!dc_parser->enabled)
+          {
+            SteerCmdMsg encoder;
+
+            encoder.encode(false, false, false, dc_parser->output, 2.0);
+            rx_it->second->setData(encoder.data);
+          }
+        }
+        else if (msg->id == TurnSignalRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<TurnSignalRptMsg>(parser_class);
+          
+          if (!dc_parser->enabled)
+          {
+            TurnSignalCmdMsg encoder;
+
+            encoder.encode(false, false, false, dc_parser->output);
+            rx_it->second->setData(encoder.data);
+          }
+        }
+        else if (msg->id == WiperRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<WiperRptMsg>(parser_class);
+
+          if (!dc_parser->enabled)
+          {
+            WiperCmdMsg encoder;
+
+            encoder.encode(false, false, false, dc_parser->output);
+            rx_it->second->setData(encoder.data);
+          }
         }
       }
     }
-    */
 
     if (msg->id == GlobalRptMsg::CAN_ID)
     {
