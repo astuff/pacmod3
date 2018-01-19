@@ -28,6 +28,8 @@ namespace PACMod3
     LEXUS_RX_450H
   };
 
+  static const uint8_t SYSTEM_CHANGE_DEBOUNCE = 2;
+
   class Pacmod3TxMsg
   {
     public:
@@ -392,6 +394,7 @@ namespace PACMod3
   {
     public:
       std::vector<uint8_t> data;
+      uint8_t discrepancy_cnt;
   };
 
   class SystemCmdBool :
