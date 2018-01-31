@@ -45,6 +45,12 @@ const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x84;
 const int64_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x90;
 const int64_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x91;
 const int64_t AS::Drivers::PACMod3::ParkingBrakeCmdMsg::CAN_ID = 0x92;
+const int64_t AS::Drivers::PACMod3::CruiseControlCmdMsg::CAN_ID = 0x95;
+const int64_t AS::Drivers::PACMod3::CruiseControlRptMsg::CAN_ID = 0x96;
+const int64_t AS::Drivers::PACMod3::MediaControlsCmdMsg::CAN_ID = 0x97;
+const int64_t AS::Drivers::PACMod3::MediaControlsRptMsg::CAN_ID = 0x98;
+const int64_t AS::Drivers::PACMod3::DashUIControlsCmdMsg::CAN_ID = 0x99;
+const int64_t AS::Drivers::PACMod3::DashUIControlsRptMsg::CAN_ID = 0x9A;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
@@ -156,7 +162,11 @@ void SystemRptBoolMsg::parse(uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
-  system_fault = ((in[0] & 0x04) > 0);
+  command_output_fault = ((in[0] & 0x04) > 0);
+  input_output_fault = ((in[0] & 0x08) > 0);
+  output_reported_fault = ((in[0] & 0x10) > 0);
+  pacmod_fault = ((in[0] & 0x20) > 0);
+  vehicle_fault = ((in[0] & 0x40) > 0);
 
   manual_input = ((in[1] & 0x01) > 0);
   command = ((in[1] & 0x02) > 0);
@@ -167,7 +177,11 @@ void SystemRptIntMsg::parse(uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
-  system_fault = ((in[0] & 0x04) > 0);
+  command_output_fault = ((in[0] & 0x04) > 0);
+  input_output_fault = ((in[0] & 0x08) > 0);
+  output_reported_fault = ((in[0] & 0x10) > 0);
+  pacmod_fault = ((in[0] & 0x20) > 0);
+  vehicle_fault = ((in[0] & 0x40) > 0);
 
   manual_input = in[1];
   command = in[2];
@@ -178,7 +192,11 @@ void SystemRptFloatMsg::parse(uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
-  system_fault = ((in[0] & 0x04) > 0);
+  command_output_fault = ((in[0] & 0x04) > 0);
+  input_output_fault = ((in[0] & 0x08) > 0);
+  output_reported_fault = ((in[0] & 0x10) > 0);
+  pacmod_fault = ((in[0] & 0x20) > 0);
+  vehicle_fault = ((in[0] & 0x40) > 0);
 
   int16_t temp;
 

@@ -43,7 +43,11 @@ namespace PACMod3
     public:
       bool enabled;
       bool override_active;
-      bool system_fault;
+      bool command_output_fault;
+      bool input_output_fault;
+      bool output_reported_fault;
+      bool pacmod_fault;
+      bool vehicle_fault;
   };
 
   class SystemRptBoolMsg :
@@ -112,6 +116,20 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
+  class CruiseControlRptMsg :
+    public SystemRptIntMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class DashUIControlsRptMsg :
+    public SystemRptIntMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
   class HeadlightRptMsg :
     public SystemRptIntMsg
   {
@@ -120,6 +138,13 @@ namespace PACMod3
   };
 
   class HornRptMsg :
+    public SystemRptIntMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class MediaControlsRptMsg :
     public SystemRptIntMsg
   {
     public:
@@ -437,6 +462,20 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
   };
+
+  class CruiseControlCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class DashUIControlsCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
   
   class HeadlightCmdMsg :
     public SystemCmdInt
@@ -447,6 +486,13 @@ namespace PACMod3
 
   class HornCmdMsg :
     public SystemCmdBool
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class MediaControlsCmdMsg :
+    public SystemCmdInt
   {
     public:
       static const int64_t CAN_ID;

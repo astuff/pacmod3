@@ -39,10 +39,13 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillSystemRptBool(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
-  else if (can_id == TurnSignalRptMsg::CAN_ID ||
+  else if (can_id == CruiseControlRptMsg::CAN_ID ||
+      can_id == DashUIControlsRptMsg::CAN_ID ||
+      can_id == TurnSignalRptMsg::CAN_ID ||
       can_id == ShiftRptMsg::CAN_ID ||
       can_id == HeadlightRptMsg::CAN_ID ||
       can_id == HornRptMsg::CAN_ID ||
+      can_id == MediaControlsRptMsg::CAN_ID ||
       can_id == WiperRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptInt new_msg;
@@ -155,7 +158,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptBool(std::shared_ptr<Pacmod3TxMsg>& pa
 
   new_msg.enabled = dc_parser->enabled;
   new_msg.override_active = dc_parser->override_active;
-  new_msg.system_fault = dc_parser->system_fault;
+  new_msg.command_output_fault = dc_parser->command_output_fault;
+  new_msg.input_output_fault = dc_parser->input_output_fault;
+  new_msg.output_reported_fault = dc_parser->output_reported_fault;
+  new_msg.pacmod_fault = dc_parser->pacmod_fault;
+  new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
   new_msg.manual_input = dc_parser->manual_input;
   new_msg.command = dc_parser->command;
@@ -171,7 +178,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptInt(std::shared_ptr<Pacmod3TxMsg>& par
 
   new_msg.enabled = dc_parser->enabled;
   new_msg.override_active = dc_parser->override_active;
-  new_msg.system_fault = dc_parser->system_fault;
+  new_msg.command_output_fault = dc_parser->command_output_fault;
+  new_msg.input_output_fault = dc_parser->input_output_fault;
+  new_msg.output_reported_fault = dc_parser->output_reported_fault;
+  new_msg.pacmod_fault = dc_parser->pacmod_fault;
+  new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
 	new_msg.manual_input = dc_parser->manual_input;
 	new_msg.command = dc_parser->command;
@@ -187,7 +198,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptFloat(std::shared_ptr<Pacmod3TxMsg>& p
 
   new_msg.enabled = dc_parser->enabled;
   new_msg.override_active = dc_parser->override_active;
-  new_msg.system_fault = dc_parser->system_fault;
+  new_msg.command_output_fault = dc_parser->command_output_fault;
+  new_msg.input_output_fault = dc_parser->input_output_fault;
+  new_msg.output_reported_fault = dc_parser->output_reported_fault;
+  new_msg.pacmod_fault = dc_parser->pacmod_fault;
+  new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
 	new_msg.manual_input = dc_parser->manual_input;
 	new_msg.command = dc_parser->command;
@@ -434,7 +449,23 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-	if (can_id == HeadlightCmdMsg::CAN_ID)
+  if (can_id == CruiseControlCmdMsg::CAN_ID)
+  {
+    CruiseControlCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == DashUIControlsCmdMsg::CAN_ID)
+  {
+    DashUIControlsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == HeadlightCmdMsg::CAN_ID)
 	{
     HeadlightCmdMsg encoder;
     encoder.encode(msg->enable,
@@ -442,6 +473,14 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
                    msg->command);
     return encoder.data;
 	}
+  else if (can_id == MediaControlsCmdMsg::CAN_ID)
+  {
+    MediaControlsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
 	else if (can_id == ShiftCmdMsg::CAN_ID)
 	{
     ShiftCmdMsg encoder;
