@@ -49,8 +49,10 @@ const int64_t AS::Drivers::PACMod3::CruiseControlCmdMsg::CAN_ID = 0x95;
 const int64_t AS::Drivers::PACMod3::CruiseControlRptMsg::CAN_ID = 0x96;
 const int64_t AS::Drivers::PACMod3::MediaControlsCmdMsg::CAN_ID = 0x97;
 const int64_t AS::Drivers::PACMod3::MediaControlsRptMsg::CAN_ID = 0x98;
-const int64_t AS::Drivers::PACMod3::DashUIControlsCmdMsg::CAN_ID = 0x99;
-const int64_t AS::Drivers::PACMod3::DashUIControlsRptMsg::CAN_ID = 0x9A;
+const int64_t AS::Drivers::PACMod3::DashControlsLeftCmdMsg::CAN_ID = 0x99;
+const int64_t AS::Drivers::PACMod3::DashControlsLeftRptMsg::CAN_ID = 0x9A;
+const int64_t AS::Drivers::PACMod3::DashControlsRightCmdMsg::CAN_ID = 0x9E;
+const int64_t AS::Drivers::PACMod3::DashControlsRightRptMsg::CAN_ID = 0x9F;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)

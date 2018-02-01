@@ -123,13 +123,19 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class DashUIControlsRptMsg :
+  class DashControlsLeftRptMsg :
     public SystemRptIntMsg
   {
     public:
       static const int64_t CAN_ID;
   };
 
+  class DashControlsRightRptMsg :
+    public SystemRptIntMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
   class HeadlightRptMsg :
     public SystemRptIntMsg
   {
@@ -470,7 +476,14 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class DashUIControlsCmdMsg :
+  class DashControlsLeftCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class DashControlsRightCmdMsg :
     public SystemCmdInt
   {
     public:
