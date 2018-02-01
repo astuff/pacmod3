@@ -39,7 +39,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillSystemRptBool(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
-  else if (can_id == CruiseControlRptMsg::CAN_ID ||
+  else if (can_id == CruiseControlButtonsRptMsg::CAN_ID ||
       can_id == DashControlsLeftRptMsg::CAN_ID ||
       can_id == DashControlsRightRptMsg::CAN_ID ||
       can_id == TurnSignalRptMsg::CAN_ID ||
@@ -450,9 +450,9 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  if (can_id == CruiseControlCmdMsg::CAN_ID)
+  if (can_id == CruiseControlButtonsCmdMsg::CAN_ID)
   {
-    CruiseControlCmdMsg encoder;
+    CruiseControlButtonsCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->command);

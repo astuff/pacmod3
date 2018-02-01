@@ -116,7 +116,7 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class CruiseControlRptMsg :
+  class CruiseControlButtonsRptMsg :
     public SystemRptIntMsg
   {
     public:
@@ -469,7 +469,7 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class CruiseControlCmdMsg :
+  class CruiseControlButtonsCmdMsg :
     public SystemCmdInt
   {
     public:
