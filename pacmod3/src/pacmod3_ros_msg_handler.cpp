@@ -155,7 +155,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptBool(std::shared_ptr<Pacmod3TxMsg>& pa
 
   new_msg.enabled = dc_parser->enabled;
   new_msg.override_active = dc_parser->override_active;
-  new_msg.system_fault = dc_parser->system_fault;
+  new_msg.command_output_fault = dc_parser->command_output_fault;
+  new_msg.input_output_fault = dc_parser->input_output_fault;
+  new_msg.output_reported_fault = dc_parser->output_reported_fault;
+  new_msg.pacmod_fault = dc_parser->pacmod_fault;
+  new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
   new_msg.manual_input = dc_parser->manual_input;
   new_msg.command = dc_parser->command;
@@ -171,7 +175,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptInt(std::shared_ptr<Pacmod3TxMsg>& par
 
   new_msg.enabled = dc_parser->enabled;
   new_msg.override_active = dc_parser->override_active;
-  new_msg.system_fault = dc_parser->system_fault;
+  new_msg.command_output_fault = dc_parser->command_output_fault;
+  new_msg.input_output_fault = dc_parser->input_output_fault;
+  new_msg.output_reported_fault = dc_parser->output_reported_fault;
+  new_msg.pacmod_fault = dc_parser->pacmod_fault;
+  new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
 	new_msg.manual_input = dc_parser->manual_input;
 	new_msg.command = dc_parser->command;
@@ -187,7 +195,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptFloat(std::shared_ptr<Pacmod3TxMsg>& p
 
   new_msg.enabled = dc_parser->enabled;
   new_msg.override_active = dc_parser->override_active;
-  new_msg.system_fault = dc_parser->system_fault;
+  new_msg.command_output_fault = dc_parser->command_output_fault;
+  new_msg.input_output_fault = dc_parser->input_output_fault;
+  new_msg.output_reported_fault = dc_parser->output_reported_fault;
+  new_msg.pacmod_fault = dc_parser->pacmod_fault;
+  new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
 	new_msg.manual_input = dc_parser->manual_input;
 	new_msg.command = dc_parser->command;
@@ -204,8 +216,9 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(std::shared_ptr<Pacmod3TxMsg>& parser
 	new_msg.enabled = dc_parser->enabled;
 	new_msg.override_active = dc_parser->override_active;
 	new_msg.user_can_timeout = dc_parser->user_can_timeout;
-	new_msg.brake_can_timeout = dc_parser->brake_can_timeout;
 	new_msg.steering_can_timeout = dc_parser->steering_can_timeout;
+	new_msg.brake_can_timeout = dc_parser->brake_can_timeout;
+  new_msg.subsystem_can_timeout = dc_parser->subsystem_can_timeout;
 	new_msg.vehicle_can_timeout = dc_parser->vehicle_can_timeout;
 	new_msg.user_can_read_errors = dc_parser->user_can_read_errors;
 

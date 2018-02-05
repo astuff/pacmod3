@@ -43,7 +43,11 @@ namespace PACMod3
     public:
       bool enabled;
       bool override_active;
-      bool system_fault;
+      bool command_output_fault;
+      bool input_output_fault;
+      bool output_reported_fault;
+      bool pacmod_fault;
+      bool vehicle_fault;
   };
 
   class SystemRptBoolMsg :
@@ -89,8 +93,9 @@ namespace PACMod3
       bool enabled;
       bool override_active;
       bool user_can_timeout;
-      bool brake_can_timeout;
       bool steering_can_timeout;
+      bool brake_can_timeout;
+      bool subsystem_can_timeout;
       bool vehicle_can_timeout;
       uint16_t user_can_read_errors;
 

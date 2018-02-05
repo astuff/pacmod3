@@ -144,11 +144,12 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
 void GlobalRptMsg::parse(uint8_t *in)
 {
   enabled = in[0] & 0x01;
-  override_active = ((in[0] & 0x02) >> 1) != 0;
-  user_can_timeout = ((in[0] & 0x20) >> 5) != 0;
-  brake_can_timeout = ((in[0] & 0x10) >> 4) != 0;
-  steering_can_timeout = ((in[0] & 0x08) >> 3) != 0;
-  vehicle_can_timeout = ((in[0] & 0x04) >> 2) != 0;
+  override_active = ((in[0] & 0x02) > 0);
+  user_can_timeout = ((in[0] & 0x04) > 0);
+  steering_can_timeout = ((in[0] & 0x08) > 0);
+  brake_can_timeout = ((in[0] & 0x10) > 0);
+  subsystem_can_timeout = ((in[0] & 0x20) > 0);
+  vehicle_can_timeout = ((in[0] & 0x40) > 0);
   user_can_read_errors = ((in[6] << 8) | in[7]);
 }
 
@@ -156,7 +157,11 @@ void SystemRptBoolMsg::parse(uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
-  system_fault = ((in[0] & 0x04) > 0);
+  command_output_fault = ((in[0] & 0x04) > 0);
+  input_output_fault = ((in[0] & 0x08) > 0);
+  output_reported_fault = ((in[0] & 0x10) > 0);
+  pacmod_fault = ((in[0] & 0x20) > 0);
+  vehicle_fault = ((in[0] & 0x40) > 0);
 
   manual_input = ((in[1] & 0x01) > 0);
   command = ((in[1] & 0x02) > 0);
@@ -167,7 +172,11 @@ void SystemRptIntMsg::parse(uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
-  system_fault = ((in[0] & 0x04) > 0);
+  command_output_fault = ((in[0] & 0x04) > 0);
+  input_output_fault = ((in[0] & 0x08) > 0);
+  output_reported_fault = ((in[0] & 0x10) > 0);
+  pacmod_fault = ((in[0] & 0x20) > 0);
+  vehicle_fault = ((in[0] & 0x40) > 0);
 
   manual_input = in[1];
   command = in[2];
@@ -178,7 +187,11 @@ void SystemRptFloatMsg::parse(uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
-  system_fault = ((in[0] & 0x04) > 0);
+  command_output_fault = ((in[0] & 0x04) > 0);
+  input_output_fault = ((in[0] & 0x08) > 0);
+  output_reported_fault = ((in[0] & 0x10) > 0);
+  pacmod_fault = ((in[0] & 0x20) > 0);
+  vehicle_fault = ((in[0] & 0x40) > 0);
 
   int16_t temp;
 
