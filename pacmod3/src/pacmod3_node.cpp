@@ -316,10 +316,11 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
     {
       // Find the data we need to set.
       auto rx_it = rx_list.find(cmd->second);
-      bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
 
       if (rx_it != rx_list.end())
       {
+        bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
         if (msg->id == AccelRptMsg::CAN_ID)
         {
           auto dc_parser = std::dynamic_pointer_cast<AccelRptMsg>(parser_class);

@@ -45,6 +45,14 @@ const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x84;
 const int64_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x90;
 const int64_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x91;
 const int64_t AS::Drivers::PACMod3::ParkingBrakeCmdMsg::CAN_ID = 0x92;
+const int64_t AS::Drivers::PACMod3::CruiseControlButtonsCmdMsg::CAN_ID = 0x95;
+const int64_t AS::Drivers::PACMod3::CruiseControlButtonsRptMsg::CAN_ID = 0x96;
+const int64_t AS::Drivers::PACMod3::MediaControlsCmdMsg::CAN_ID = 0x97;
+const int64_t AS::Drivers::PACMod3::MediaControlsRptMsg::CAN_ID = 0x98;
+const int64_t AS::Drivers::PACMod3::DashControlsLeftCmdMsg::CAN_ID = 0x99;
+const int64_t AS::Drivers::PACMod3::DashControlsLeftRptMsg::CAN_ID = 0x9A;
+const int64_t AS::Drivers::PACMod3::DashControlsRightCmdMsg::CAN_ID = 0x9E;
+const int64_t AS::Drivers::PACMod3::DashControlsRightRptMsg::CAN_ID = 0x9F;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)

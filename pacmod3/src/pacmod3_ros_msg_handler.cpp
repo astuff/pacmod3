@@ -39,10 +39,14 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillSystemRptBool(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
-  else if (can_id == TurnSignalRptMsg::CAN_ID ||
+  else if (can_id == CruiseControlButtonsRptMsg::CAN_ID ||
+      can_id == DashControlsLeftRptMsg::CAN_ID ||
+      can_id == DashControlsRightRptMsg::CAN_ID ||
+      can_id == TurnSignalRptMsg::CAN_ID ||
       can_id == ShiftRptMsg::CAN_ID ||
       can_id == HeadlightRptMsg::CAN_ID ||
       can_id == HornRptMsg::CAN_ID ||
+      can_id == MediaControlsRptMsg::CAN_ID ||
       can_id == WiperRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptInt new_msg;
@@ -447,7 +451,31 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-	if (can_id == HeadlightCmdMsg::CAN_ID)
+  if (can_id == CruiseControlButtonsCmdMsg::CAN_ID)
+  {
+    CruiseControlButtonsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == DashControlsLeftCmdMsg::CAN_ID)
+  {
+    DashControlsLeftCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == DashControlsRightCmdMsg::CAN_ID)
+  {
+    DashControlsRightCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == HeadlightCmdMsg::CAN_ID)
 	{
     HeadlightCmdMsg encoder;
     encoder.encode(msg->enable,
@@ -455,6 +483,14 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
                    msg->command);
     return encoder.data;
 	}
+  else if (can_id == MediaControlsCmdMsg::CAN_ID)
+  {
+    MediaControlsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
 	else if (can_id == ShiftCmdMsg::CAN_ID)
 	{
     ShiftCmdMsg encoder;
