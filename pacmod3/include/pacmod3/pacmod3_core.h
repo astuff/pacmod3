@@ -145,7 +145,7 @@ namespace PACMod3
   };
 
   class HornRptMsg :
-    public SystemRptIntMsg
+    public SystemRptBoolMsg
   {
     public:
       static const int64_t CAN_ID;
