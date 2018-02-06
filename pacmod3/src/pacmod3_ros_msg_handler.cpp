@@ -205,9 +205,9 @@ void Pacmod3TxRosMsgHandler::fillSystemRptFloat(std::shared_ptr<Pacmod3TxMsg>& p
   new_msg.pacmod_fault = dc_parser->pacmod_fault;
   new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
-	new_msg.manual_input = dc_parser->manual_input;
-	new_msg.command = dc_parser->command;
-	new_msg.output = dc_parser->output;
+  new_msg.manual_input = dc_parser->manual_input;
+  new_msg.command = dc_parser->command;
+  new_msg.output = dc_parser->output;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
