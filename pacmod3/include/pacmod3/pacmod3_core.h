@@ -28,8 +28,6 @@ namespace PACMod3
     LEXUS_RX_450H
   };
 
-  static const uint8_t STATE_CHANGE_DEBOUNCE_THRESHOLD = 2;
-
   class Pacmod3TxMsg
   {
     public:
@@ -433,7 +431,9 @@ namespace PACMod3
   class Pacmod3RxMsg
   {
     public:
+      Pacmod3RxMsg();
       std::vector<uint8_t> data;
+      bool last_system_state_enabled;
   };
 
   class SystemCmdBool :
