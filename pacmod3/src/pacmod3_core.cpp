@@ -172,8 +172,8 @@ void SystemRptBoolMsg::parse(uint8_t *in)
   vehicle_fault = ((in[0] & 0x40) > 0);
 
   manual_input = ((in[1] & 0x01) > 0);
-  command = ((in[1] & 0x02) > 0);
-  output = ((in[1] & 0x04) > 0);
+  command = ((in[2] & 0x01) > 0);
+  output = ((in[3] & 0x01) > 0);
 }
 
 void SystemRptIntMsg::parse(uint8_t *in)
