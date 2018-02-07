@@ -433,10 +433,7 @@ namespace PACMod3
   class Pacmod3RxMsg
   {
     public:
-      Pacmod3RxMsg();
       std::vector<uint8_t> data;
-      bool recent_state_change;
-      uint8_t state_change_debounce_cnt;
   };
 
   class SystemCmdBool :
