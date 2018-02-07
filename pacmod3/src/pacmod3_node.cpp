@@ -182,7 +182,7 @@ void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 }
 
 //Listens for incoming requests to change the state of the horn
-void callback_horn_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
   int64_t can_id = HornCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);

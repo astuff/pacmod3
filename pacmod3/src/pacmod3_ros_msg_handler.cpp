@@ -45,7 +45,6 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
       can_id == TurnSignalRptMsg::CAN_ID ||
       can_id == ShiftRptMsg::CAN_ID ||
       can_id == HeadlightRptMsg::CAN_ID ||
-      can_id == HornRptMsg::CAN_ID ||
       can_id == MediaControlsRptMsg::CAN_ID ||
       can_id == WiperRptMsg::CAN_ID)
   {
