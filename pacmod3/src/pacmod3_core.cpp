@@ -471,9 +471,9 @@ void SystemCmdBool::encode(bool enable,
 {
   data.assign(8, 0);
 
-  data[0] = enable ? 0x01 : 0x00;
-  data[0] |= ignore_overrides ? 0x02 : 0x00;
-  data[1] = cmd ? 0x00 : 0x01;
+  data[0] = (enable ? 0x01 : 0x00);
+  data[0] |= (ignore_overrides ? 0x02 : 0x00);
+  data[1] = (cmd ? 0x00 : 0x01);
 }
 
 void SystemCmdFloat::encode(bool enable,
