@@ -73,7 +73,13 @@ ros::Publisher can_rx_pub;
 // System encoders
 AccelCmdMsg accel_encoder;
 BrakeCmdMsg brake_encoder;
+CruiseControlButtonsCmdMsg cruise_control_buttons_encoder;
+DashControlsLeftCmdMsg dash_controls_left_encoder;
+DashControlsRightCmdMsg dash_controls_right_encoder;
+HeadlightCmdMsg headlight_encoder;
 HornCmdMsg horn_encoder;
+MediaControlsCmdMsg media_controls_encoder;
+ParkingBrakeCmdMsg parking_brake_encoder;
 ShiftCmdMsg shift_encoder;
 SteerCmdMsg steer_encoder;
 TurnSignalCmdMsg turn_encoder;
@@ -402,6 +408,78 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             rx_it->second->setData(brake_encoder.data);
           }
         }
+        else if (msg->id == CruiseControlButtonsRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<CruiseControlButtonsRptMsg>(parser_class);
+
+          if (dc_parser->enabled != cmd_says_enabled &&
+              !cruise_control_buttons_encoder.recent_state_change)
+          {
+            cruise_control_buttons_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(cruise_control_buttons_encoder.data);
+            cruise_control_buttons_encoder.recent_state_change = true;
+            cruise_control_buttons_encoder.state_change_debounce_cnt = 0;
+          }
+          else
+          {
+            cruise_control_buttons_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(cruise_control_buttons_encoder.data);
+          }
+        }
+        else if (msg->id == DashControlsLeftRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<DashControlsLeftRptMsg>(parser_class);
+
+          if (dc_parser->enabled != cmd_says_enabled &&
+              !dash_controls_left_encoder.recent_state_change)
+          {
+            dash_controls_left_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_left_encoder.data);
+            dash_controls_left_encoder.recent_state_change = true;
+            dash_controls_left_encoder.state_change_debounce_cnt = 0;
+          }
+          else
+          {
+            dash_controls_left_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_left_encoder.data);
+          }
+        }
+        else if (msg->id == DashControlsRightRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<DashControlsRightRptMsg>(parser_class);
+
+          if (dc_parser->enabled != cmd_says_enabled &&
+              !dash_controls_right_encoder.recent_state_change)
+          {
+            dash_controls_right_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_right_encoder.data);
+            dash_controls_right_encoder.recent_state_change = true;
+            dash_controls_right_encoder.state_change_debounce_cnt = 0;
+          }
+          else
+          {
+            dash_controls_right_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_right_encoder.data);
+          }
+        }
+        else if (msg->id == HeadlightRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<HeadlightRptMsg>(parser_class);
+
+          if (dc_parser->enabled != cmd_says_enabled &&
+              !headlight_encoder.recent_state_change)
+          {
+            headlight_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(headlight_encoder.data);
+            headlight_encoder.recent_state_change = true;
+            headlight_encoder.state_change_debounce_cnt = 0;
+          }
+          else
+          {
+            headlight_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(headlight_encoder.data);
+          }
+        }
         else if (msg->id == HornRptMsg::CAN_ID)
         {
           auto dc_parser = std::dynamic_pointer_cast<HornRptMsg>(parser_class);
@@ -418,6 +496,42 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
           {
             horn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(horn_encoder.data);
+          }
+        }
+        else if (msg->id == MediaControlsRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<MediaControlsRptMsg>(parser_class);
+
+          if (dc_parser->enabled != cmd_says_enabled &&
+              !media_controls_encoder.recent_state_change)
+          {
+            media_controls_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(media_controls_encoder.data);
+            media_controls_encoder.recent_state_change = true;
+            media_controls_encoder.state_change_debounce_cnt = 0;
+          }
+          else
+          {
+            media_controls_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(media_controls_encoder.data);
+          }
+        }
+        else if (msg->id == ParkingBrakeRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<ParkingBrakeRptMsg>(parser_class);
+
+          if (dc_parser->enabled != cmd_says_enabled &&
+              !parking_brake_encoder.recent_state_change)
+          {
+            parking_brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(parking_brake_encoder.data);
+            parking_brake_encoder.recent_state_change = true;
+            parking_brake_encoder.state_change_debounce_cnt = 0;
+          }
+          else
+          {
+            parking_brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(parking_brake_encoder.data);
           }
         }
         else if (msg->id == ShiftRptMsg::CAN_ID)
@@ -533,7 +647,13 @@ int main(int argc, char *argv[])
   // Load up the encoders vector
   encoders.push_back(accel_encoder);
   encoders.push_back(brake_encoder);
+  encoders.push_back(cruise_control_buttons_encoder);
+  encoders.push_back(dash_controls_left_encoder);
+  encoders.push_back(dash_controls_right_encoder);
+  encoders.push_back(headlight_encoder);
   encoders.push_back(horn_encoder);
+  encoders.push_back(media_controls_encoder);
+  encoders.push_back(parking_brake_encoder);
   encoders.push_back(shift_encoder);
   encoders.push_back(steer_encoder);
   encoders.push_back(turn_encoder);
