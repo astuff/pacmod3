@@ -117,6 +117,16 @@ void set_enable(bool val)
   }
 }
 
+float clipValue(float input,
+                const float min,
+                const float max)
+{
+  float ret_val = input;
+  ret_val = (ret_val > max) ? max : ret_val;
+  ret_val = (ret_val < min) ? min : ret_val;
+  return ret_val;
+}
+
 // Listens for incoming requests to enable the PACMod3
 void callback_pacmod_enable(const std_msgs::Bool::ConstPtr& msg)
 {
@@ -358,6 +368,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
         {
           auto dc_parser = std::dynamic_pointer_cast<AccelRptMsg>(parser_class);
 
+          dc_parser->output = clipValue(dc_parser->output, 0.0, 1.0);
+
           if (!dc_parser->enabled && accel_encoder.last_system_state_enabled)
           {
             accel_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
@@ -374,6 +386,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
         else if (msg->id == BrakeRptMsg::CAN_ID)
         {
           auto dc_parser = std::dynamic_pointer_cast<BrakeRptMsg>(parser_class);
+
+          dc_parser->output = clipValue(dc_parser->output, 0.0, 1.0);
 
           if (!dc_parser->enabled && brake_encoder.last_system_state_enabled)
           {
