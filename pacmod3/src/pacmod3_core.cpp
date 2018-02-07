@@ -148,6 +148,38 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
   }
 }
 
+SystemRptMsg::SystemRptMsg() :
+  Pacmod3TxMsg(),
+  enabled(false),
+  override_active(false),
+  command_output_fault(false),
+  input_output_fault(false),
+  output_reported_fault(false),
+  pacmod_fault(false),
+  vehicle_fault(false)
+{}
+
+SystemRptBoolMsg::SystemRptBoolMsg() :
+  SystemRptMsg(),
+  manual_input(false),
+  command(false),
+  output(false)
+{}
+
+SystemRptIntMsg::SystemRptIntMsg() :
+  SystemRptMsg(),
+  manual_input(0),
+  command(0),
+  output(0)
+{}
+
+SystemRptFloatMsg::SystemRptFloatMsg() :
+  SystemRptMsg(),
+  manual_input(0),
+  command(0),
+  output(0)
+{}
+
 // TX Messages
 void GlobalRptMsg::parse(uint8_t *in)
 {

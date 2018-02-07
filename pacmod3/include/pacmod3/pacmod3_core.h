@@ -41,6 +41,8 @@ namespace PACMod3
     public Pacmod3TxMsg
   {
     public:
+      SystemRptMsg();
+
       bool enabled;
       bool override_active;
       bool command_output_fault;
@@ -54,6 +56,8 @@ namespace PACMod3
     public SystemRptMsg
   {
     public:
+      SystemRptBoolMsg();
+
       bool manual_input;
       bool command;
       bool output;
@@ -65,6 +69,8 @@ namespace PACMod3
     public SystemRptMsg
   {
     public:
+      SystemRptIntMsg();
+
       uint8_t manual_input;
       uint8_t command;
       uint8_t output;
@@ -76,6 +82,8 @@ namespace PACMod3
     public SystemRptMsg
   {
     public:
+      SystemRptFloatMsg();
+
       double manual_input;
       double command;
       double output;
