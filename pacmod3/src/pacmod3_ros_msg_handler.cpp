@@ -418,7 +418,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("A bool system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
@@ -444,7 +445,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("A float system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
@@ -518,7 +520,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("An enum system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
@@ -537,7 +540,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("A steering system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
