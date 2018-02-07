@@ -319,7 +319,6 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
     }
   }
 
-  std_msgs::Bool bool_pub_msg;
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
@@ -333,6 +332,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
     {
       auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
 
+      std_msgs::Bool bool_pub_msg;
       bool_pub_msg.data = (dc_parser->enabled);
       enabled_pub.publish(bool_pub_msg);
 
@@ -360,8 +360,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
     // Find the cmd value for this rpt.
     auto cmd = rpt_cmd_list.find(msg->id);
 
-    //TODO: This assumes that the driver is the only thing sending
-    //commands to PACMod Systems. Someday, fix this.
+    // TODO: This assumes that the driver is the only thing sending
+    // commands to PACMod Systems. Someday, fix this.
     if (cmd != rpt_cmd_list.end())
     {
       // Find the data we need to set.
