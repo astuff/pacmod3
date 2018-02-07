@@ -384,7 +384,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             accel_encoder.recent_state_change = true;
             accel_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !accel_encoder.recent_state_change)
           {
             accel_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(accel_encoder.data);
@@ -402,7 +403,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             brake_encoder.recent_state_change = true;
             brake_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !brake_encoder.recent_state_change)
           {
             brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(brake_encoder.data);
@@ -420,7 +422,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             cruise_control_buttons_encoder.recent_state_change = true;
             cruise_control_buttons_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !cruise_control_buttons_encoder.recent_state_change)
           {
             cruise_control_buttons_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(cruise_control_buttons_encoder.data);
@@ -438,7 +441,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             dash_controls_left_encoder.recent_state_change = true;
             dash_controls_left_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !dash_controls_left_encoder.recent_state_change)
           {
             dash_controls_left_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(dash_controls_left_encoder.data);
@@ -456,7 +460,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             dash_controls_right_encoder.recent_state_change = true;
             dash_controls_right_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !dash_controls_right_encoder.recent_state_change)
           {
             dash_controls_right_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(dash_controls_right_encoder.data);
@@ -474,7 +479,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             headlight_encoder.recent_state_change = true;
             headlight_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !headlight_encoder.recent_state_change)
           {
             headlight_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(headlight_encoder.data);
@@ -492,7 +498,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             horn_encoder.recent_state_change = true;
             horn_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !horn_encoder.recent_state_change)
           {
             horn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(horn_encoder.data);
@@ -510,7 +517,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             media_controls_encoder.recent_state_change = true;
             media_controls_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !media_controls_encoder.recent_state_change)
           {
             media_controls_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(media_controls_encoder.data);
@@ -528,7 +536,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             parking_brake_encoder.recent_state_change = true;
             parking_brake_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !parking_brake_encoder.recent_state_change)
           {
             parking_brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(parking_brake_encoder.data);
@@ -546,7 +555,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             shift_encoder.recent_state_change = true;
             shift_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !shift_encoder.recent_state_change)
           {
             shift_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(shift_encoder.data);
@@ -566,7 +576,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             steer_encoder.recent_state_change = true;
             steer_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !steer_encoder.recent_state_change)
           {
             steer_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
             rx_it->second->setData(steer_encoder.data);
@@ -584,7 +595,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             turn_encoder.recent_state_change = true;
             turn_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !turn_encoder.recent_state_change)
           {
             turn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(turn_encoder.data);
@@ -602,7 +614,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             wiper_encoder.recent_state_change = true;
             wiper_encoder.state_change_debounce_cnt = 0;
           }
-          else
+          else if (!dc_parser->enabled &&
+                   !wiper_encoder.recent_state_change)
           {
             wiper_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(wiper_encoder.data);
