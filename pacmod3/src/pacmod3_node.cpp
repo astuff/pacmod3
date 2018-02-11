@@ -689,6 +689,11 @@ int main(int argc, char *argv[])
   rx_list.insert(std::make_pair(BrakeCmdMsg::CAN_ID, brake_data));
   rx_list.insert(std::make_pair(ShiftCmdMsg::CAN_ID, shift_data));
   rx_list.insert(std::make_pair(SteerCmdMsg::CAN_ID, steer_data));
+
+  // Turn signals have a non-0 default value.
+  turn_encoder.encode(false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+  turn_data->setData(turn_encoder.data);
+
   rx_list.insert(std::make_pair(TurnSignalCmdMsg::CAN_ID, turn_data));
 
   if (veh_type == VehicleType::POLARIS_GEM ||
