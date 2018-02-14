@@ -73,11 +73,19 @@ ros::Publisher can_rx_pub;
 // System encoders
 AccelCmdMsg accel_encoder;
 BrakeCmdMsg brake_encoder;
+CruiseControlButtonsCmdMsg cruise_control_buttons_encoder;
+DashControlsLeftCmdMsg dash_controls_left_encoder;
+DashControlsRightCmdMsg dash_controls_right_encoder;
+HeadlightCmdMsg headlight_encoder;
 HornCmdMsg horn_encoder;
+MediaControlsCmdMsg media_controls_encoder;
+ParkingBrakeCmdMsg parking_brake_encoder;
 ShiftCmdMsg shift_encoder;
 SteerCmdMsg steer_encoder;
 TurnSignalCmdMsg turn_encoder;
 WiperCmdMsg wiper_encoder;
+
+std::vector<Pacmod3RxMsg> encoders;
 
 std::unordered_map<long long, std::shared_ptr<LockedData>> rx_list;
 std::unordered_map<long long, long long> rpt_cmd_list;
@@ -109,6 +117,16 @@ void set_enable(bool val)
   }
 }
 
+float clipValue(float input,
+                const float min,
+                const float max)
+{
+  float ret_val = input;
+  ret_val = (ret_val > max) ? max : ret_val;
+  ret_val = (ret_val < min) ? min : ret_val;
+  return ret_val;
+}
+
 // Listens for incoming requests to enable the PACMod3
 void callback_pacmod_enable(const std_msgs::Bool::ConstPtr& msg)
 {
@@ -118,7 +136,7 @@ void callback_pacmod_enable(const std_msgs::Bool::ConstPtr& msg)
 // Listens for incoming requests to change the position of the throttle pedal
 void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  long long can_id = AccelCmdMsg::CAN_ID;
+  int64_t can_id = AccelCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -127,14 +145,14 @@ void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 // Listens for incoming requests to change the position of the brake pedal
 void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  long long can_id = BrakeCmdMsg::CAN_ID;
+  int64_t can_id = BrakeCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -143,14 +161,14 @@ void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 //Listens for incoming requests to change the state of the headlights
 void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  long long can_id = HeadlightCmdMsg::CAN_ID;
+  int64_t can_id = HeadlightCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -159,14 +177,14 @@ void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 //Listens for incoming requests to change the state of the horn
-void callback_horn_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  long long can_id = HornCmdMsg::CAN_ID;
+  int64_t can_id = HornCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -175,14 +193,14 @@ void callback_horn_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 // Listens for incoming requests to change the gear shifter state
 void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  long long can_id = ShiftCmdMsg::CAN_ID;
+  int64_t can_id = ShiftCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -191,14 +209,14 @@ void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 // Listens for incoming requests to change the position of the steering wheel with a speed limit
 void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 {
-  long long can_id = SteerCmdMsg::CAN_ID;
+  int64_t can_id = SteerCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -207,14 +225,14 @@ void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 // Listens for incoming requests to change the state of the turn signals
 void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  long long can_id = TurnSignalCmdMsg::CAN_ID;
+  int64_t can_id = TurnSignalCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -223,14 +241,14 @@ void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
 // Listens for incoming requests to change the state of the windshield wipers
 void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  long long can_id = WiperCmdMsg::CAN_ID;
+  int64_t can_id = WiperCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
@@ -239,7 +257,7 @@ void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   }
   else
   {
-    ROS_WARN("Received command message for ID 0x%llx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
   }
 }
 
@@ -293,7 +311,6 @@ void can_write()
 
 void can_read(const can_msgs::Frame::ConstPtr &msg)
 {
-  std_msgs::Bool bool_pub_msg;
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
@@ -302,147 +319,16 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
   {
     parser_class->parse(const_cast<unsigned char *>(&msg->data[0]));
     handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
-  
-    // If a system is disabled, set that system's command
-    // to be the current report value. This ensures that
-    // when we enable, we are in the same state as the vehicle.
-
-    // Find the cmd value for this rpt.
-    auto cmd = rpt_cmd_list.find(msg->id);
-
-    //TODO: This assumes that the driver is the only thing sending
-    //commands to PACMod Systems. Someday, fix this.
-    if (cmd != rpt_cmd_list.end())
-    {
-      // Find the data we need to set.
-      auto rx_it = rx_list.find(cmd->second);
-      bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
-
-      if (rx_it != rx_list.end())
-      {
-        if (msg->id == AccelRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<AccelRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            accel_encoder.discrepancy_cnt++;
-          else
-            accel_encoder.discrepancy_cnt = 0;
-
-          if (!cmd_says_enabled || (accel_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            accel_encoder.encode(false, false, dc_parser->output);
-            rx_it->second->setData(accel_encoder.data);
-            accel_encoder.discrepancy_cnt = 0;
-          }
-        }
-        else if (msg->id == BrakeRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<BrakeRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            brake_encoder.discrepancy_cnt++;
-          else
-            brake_encoder.discrepancy_cnt = 0;
-
-          if (!cmd_says_enabled || (brake_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            brake_encoder.encode(false, false, dc_parser->output);
-            rx_it->second->setData(brake_encoder.data);
-            brake_encoder.discrepancy_cnt = 0;
-          }
-        }
-        else if (msg->id == HornRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<HornRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            horn_encoder.discrepancy_cnt++;
-          else
-            horn_encoder.discrepancy_cnt = 0;
-
-          if (!cmd_says_enabled || (horn_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            horn_encoder.encode(false, false, dc_parser->output);
-            rx_it->second->setData(horn_encoder.data);
-            horn_encoder.discrepancy_cnt = 0;
-          }
-        }
-        else if (msg->id == ShiftRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<ShiftRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            shift_encoder.discrepancy_cnt++;
-          else
-            shift_encoder.discrepancy_cnt = 0;
-
-          if (!cmd_says_enabled || (shift_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            shift_encoder.encode(false, false, dc_parser->output);
-            rx_it->second->setData(shift_encoder.data);
-            shift_encoder.discrepancy_cnt = 0;
-          }
-        }
-        else if (msg->id == SteerRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<SteerRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            steer_encoder.discrepancy_cnt++;
-          else
-            steer_encoder.discrepancy_cnt = 0;
-
-          if (!cmd_says_enabled || (steer_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            steer_encoder.encode(false, false, dc_parser->output, 2.0);
-            rx_it->second->setData(steer_encoder.data);
-            steer_encoder.discrepancy_cnt = 0;
-          }
-        }
-        else if (msg->id == TurnSignalRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<TurnSignalRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            turn_encoder.discrepancy_cnt++;
-          else
-            turn_encoder.discrepancy_cnt = 0;
-          
-          if (!cmd_says_enabled || (turn_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            turn_encoder.encode(false, false, dc_parser->output);
-            rx_it->second->setData(turn_encoder.data);
-            turn_encoder.discrepancy_cnt = 0;
-          }
-        }
-        else if (msg->id == WiperRptMsg::CAN_ID)
-        {
-          auto dc_parser = std::dynamic_pointer_cast<WiperRptMsg>(parser_class);
-
-          if (!dc_parser->enabled && cmd_says_enabled)
-            wiper_encoder.discrepancy_cnt++;
-          else
-            wiper_encoder.discrepancy_cnt = 0;
-
-          if (!cmd_says_enabled || (wiper_encoder.discrepancy_cnt > SYSTEM_CHANGE_DEBOUNCE && !dc_parser->enabled))
-          {
-            wiper_encoder.encode(false, false, dc_parser->output);
-            rx_it->second->setData(wiper_encoder.data);
-            wiper_encoder.discrepancy_cnt = 0;
-          }
-        }
-      }
-    }
 
     if (msg->id == GlobalRptMsg::CAN_ID)
     {
       auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
 
+      std_msgs::Bool bool_pub_msg;
       bool_pub_msg.data = (dc_parser->enabled);
       enabled_pub.publish(bool_pub_msg);
 
-      if (!dc_parser->enabled || dc_parser->override_active)
+      if (dc_parser->override_active)
         set_enable(false);
 
       enable_mut.lock();
@@ -457,6 +343,255 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       std_msgs::Float64 veh_spd_ms_msg;
       veh_spd_ms_msg.data = (dc_parser->vehicle_speed)*0.44704;
       vehicle_speed_ms_pub.publish(veh_spd_ms_msg);
+    }
+  
+    // If a system is disabled, set that system's command
+    // to be the current report value. This ensures that
+    // when we enable, we are in the same state as the vehicle.
+
+    // Find the cmd value for this rpt.
+    auto cmd = rpt_cmd_list.find(msg->id);
+
+    // TODO: This assumes that the driver is the only thing sending
+    // commands to PACMod Systems. Someday, fix this.
+    if (cmd != rpt_cmd_list.end())
+    {
+      // Find the data we need to set.
+      auto rx_it = rx_list.find(cmd->second);
+
+      if (rx_it != rx_list.end())
+      {
+        bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+        bool cmd_says_ignore_overrides = ((rx_it->second->getData()[0] & 0x02) > 0);
+
+        if (msg->id == AccelRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<AccelRptMsg>(parser_class);
+
+          dc_parser->output = clipValue(dc_parser->output, 0.0, 1.0);
+
+          if (!dc_parser->enabled && accel_encoder.last_system_state_enabled)
+          {
+            accel_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(accel_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            accel_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(accel_encoder.data);
+          }
+
+          accel_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == BrakeRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<BrakeRptMsg>(parser_class);
+
+          dc_parser->output = clipValue(dc_parser->output, 0.0, 1.0);
+
+          if (!dc_parser->enabled && brake_encoder.last_system_state_enabled)
+          {
+            brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(brake_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(brake_encoder.data);
+          }
+
+          brake_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == CruiseControlButtonsRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<CruiseControlButtonsRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && cruise_control_buttons_encoder.last_system_state_enabled)
+          {
+            cruise_control_buttons_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(cruise_control_buttons_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            cruise_control_buttons_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(cruise_control_buttons_encoder.data);
+          }
+
+          cruise_control_buttons_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == DashControlsLeftRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<DashControlsLeftRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && dash_controls_left_encoder.last_system_state_enabled)
+          {
+            dash_controls_left_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_left_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            dash_controls_left_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_left_encoder.data);
+          }
+
+          dash_controls_left_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == DashControlsRightRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<DashControlsRightRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && dash_controls_right_encoder.last_system_state_enabled)
+          {
+            dash_controls_right_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_right_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            dash_controls_right_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(dash_controls_right_encoder.data);
+          }
+
+          dash_controls_right_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == HeadlightRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<HeadlightRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && headlight_encoder.last_system_state_enabled)
+          {
+            headlight_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(headlight_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            headlight_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(headlight_encoder.data);
+          }
+
+          headlight_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == HornRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<HornRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && horn_encoder.last_system_state_enabled)
+          {
+            horn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(horn_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            horn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(horn_encoder.data);
+          }
+
+          horn_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == MediaControlsRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<MediaControlsRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && media_controls_encoder.last_system_state_enabled)
+          {
+            media_controls_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(media_controls_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            media_controls_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(media_controls_encoder.data);
+          }
+
+          media_controls_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == ParkingBrakeRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<ParkingBrakeRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && parking_brake_encoder.last_system_state_enabled)
+          {
+            parking_brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(parking_brake_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            parking_brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(parking_brake_encoder.data);
+          }
+
+          parking_brake_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == ShiftRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<ShiftRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && shift_encoder.last_system_state_enabled)
+          {
+            shift_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(shift_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            shift_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(shift_encoder.data);
+          }
+
+          shift_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == SteerRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<SteerRptMsg>(parser_class);
+          int16_t raw_turn_rate = ((int16_t)rx_it->second->getData()[3] << 8) | rx_it->second->getData()[4];
+          float cmd_turn_rate = ((float)raw_turn_rate * 1000.0);
+
+          if (!dc_parser->enabled && steer_encoder.last_system_state_enabled)
+          {
+            steer_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
+            rx_it->second->setData(steer_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            steer_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
+            rx_it->second->setData(steer_encoder.data);
+          }
+
+          steer_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == TurnSignalRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<TurnSignalRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && turn_encoder.last_system_state_enabled)
+          {
+            turn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(turn_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            turn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(turn_encoder.data);
+          }
+
+          turn_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+        else if (msg->id == WiperRptMsg::CAN_ID)
+        {
+          auto dc_parser = std::dynamic_pointer_cast<WiperRptMsg>(parser_class);
+
+          if (!dc_parser->enabled && wiper_encoder.last_system_state_enabled)
+          {
+            wiper_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(wiper_encoder.data);
+          }
+          else if (!dc_parser->enabled)
+          {
+            wiper_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            rx_it->second->setData(wiper_encoder.data);
+          }
+
+          wiper_encoder.last_system_state_enabled = dc_parser->enabled;
+        }
+      }
     }
   }
 }
@@ -491,6 +626,21 @@ int main(int argc, char *argv[])
       ROS_WARN("PACMod3 - An invalid vehicle type was entered. Assuming POLARIS_GEM.");
     }
   }
+
+  // Load up the encoders vector
+  encoders.push_back(accel_encoder);
+  encoders.push_back(brake_encoder);
+  encoders.push_back(cruise_control_buttons_encoder);
+  encoders.push_back(dash_controls_left_encoder);
+  encoders.push_back(dash_controls_right_encoder);
+  encoders.push_back(headlight_encoder);
+  encoders.push_back(horn_encoder);
+  encoders.push_back(media_controls_encoder);
+  encoders.push_back(parking_brake_encoder);
+  encoders.push_back(shift_encoder);
+  encoders.push_back(steer_encoder);
+  encoders.push_back(turn_encoder);
+  encoders.push_back(wiper_encoder);
 
   // Advertise published messages
   can_rx_pub = n.advertise<can_msgs::Frame>("can_rx", 20);
@@ -631,9 +781,18 @@ int main(int argc, char *argv[])
   // Initialize rx_list with all 0s
   for (auto rx_it = rx_list.begin(); rx_it != rx_list.end(); rx_it++)
   {
-    std::vector<uint8_t> empty_vec;
-    empty_vec.assign(8, 0);
-    rx_it->second->setData(empty_vec);
+    if (rx_it->first == TurnSignalCmdMsg::CAN_ID)
+    {
+      // Turn signals have non-0 initial value.
+      turn_encoder.encode(false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+      rx_it->second->setData(turn_encoder.data);
+    }
+    else
+    {
+      std::vector<uint8_t> empty_vec;
+      empty_vec.assign(8, 0);
+      rx_it->second->setData(empty_vec);
+    }
   }
 
   // Set initial state

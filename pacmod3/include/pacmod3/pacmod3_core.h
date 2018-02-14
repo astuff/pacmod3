@@ -28,8 +28,6 @@ namespace PACMod3
     LEXUS_RX_450H
   };
 
-  static const uint8_t SYSTEM_CHANGE_DEBOUNCE = 2;
-
   class Pacmod3TxMsg
   {
     public:
@@ -41,6 +39,8 @@ namespace PACMod3
     public Pacmod3TxMsg
   {
     public:
+      SystemRptMsg();
+
       bool enabled;
       bool override_active;
       bool command_output_fault;
@@ -54,6 +54,8 @@ namespace PACMod3
     public SystemRptMsg
   {
     public:
+      SystemRptBoolMsg();
+
       bool manual_input;
       bool command;
       bool output;
@@ -65,6 +67,8 @@ namespace PACMod3
     public SystemRptMsg
   {
     public:
+      SystemRptIntMsg();
+
       uint8_t manual_input;
       uint8_t command;
       uint8_t output;
@@ -76,6 +80,8 @@ namespace PACMod3
     public SystemRptMsg
   {
     public:
+      SystemRptFloatMsg();
+
       double manual_input;
       double command;
       double output;
@@ -93,8 +99,9 @@ namespace PACMod3
       bool enabled;
       bool override_active;
       bool user_can_timeout;
-      bool brake_can_timeout;
       bool steering_can_timeout;
+      bool brake_can_timeout;
+      bool subsystem_can_timeout;
       bool vehicle_can_timeout;
       uint16_t user_can_read_errors;
 
@@ -116,20 +123,26 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class CruiseControlRptMsg :
+  class CruiseControlButtonsRptMsg :
     public SystemRptIntMsg
   {
     public:
       static const int64_t CAN_ID;
   };
 
-  class DashUIControlsRptMsg :
+  class DashControlsLeftRptMsg :
     public SystemRptIntMsg
   {
     public:
       static const int64_t CAN_ID;
   };
 
+  class DashControlsRightRptMsg :
+    public SystemRptIntMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
   class HeadlightRptMsg :
     public SystemRptIntMsg
   {
@@ -138,7 +151,7 @@ namespace PACMod3
   };
 
   class HornRptMsg :
-    public SystemRptIntMsg
+    public SystemRptBoolMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -418,8 +431,9 @@ namespace PACMod3
   class Pacmod3RxMsg
   {
     public:
+      Pacmod3RxMsg();
       std::vector<uint8_t> data;
-      uint8_t discrepancy_cnt;
+      bool last_system_state_enabled;
   };
 
   class SystemCmdBool :
@@ -463,14 +477,21 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class CruiseControlCmdMsg :
+  class CruiseControlButtonsCmdMsg :
     public SystemCmdInt
   {
     public:
       static const int64_t CAN_ID;
   };
 
-  class DashUIControlsCmdMsg :
+  class DashControlsLeftCmdMsg :
+    public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class DashControlsRightCmdMsg :
     public SystemCmdInt
   {
     public:

@@ -45,12 +45,14 @@ const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x84;
 const int64_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x90;
 const int64_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x91;
 const int64_t AS::Drivers::PACMod3::ParkingBrakeCmdMsg::CAN_ID = 0x92;
-const int64_t AS::Drivers::PACMod3::CruiseControlCmdMsg::CAN_ID = 0x95;
-const int64_t AS::Drivers::PACMod3::CruiseControlRptMsg::CAN_ID = 0x96;
+const int64_t AS::Drivers::PACMod3::CruiseControlButtonsCmdMsg::CAN_ID = 0x95;
+const int64_t AS::Drivers::PACMod3::CruiseControlButtonsRptMsg::CAN_ID = 0x96;
 const int64_t AS::Drivers::PACMod3::MediaControlsCmdMsg::CAN_ID = 0x97;
 const int64_t AS::Drivers::PACMod3::MediaControlsRptMsg::CAN_ID = 0x98;
-const int64_t AS::Drivers::PACMod3::DashUIControlsCmdMsg::CAN_ID = 0x99;
-const int64_t AS::Drivers::PACMod3::DashUIControlsRptMsg::CAN_ID = 0x9A;
+const int64_t AS::Drivers::PACMod3::DashControlsLeftCmdMsg::CAN_ID = 0x99;
+const int64_t AS::Drivers::PACMod3::DashControlsLeftRptMsg::CAN_ID = 0x9A;
+const int64_t AS::Drivers::PACMod3::DashControlsRightCmdMsg::CAN_ID = 0x9E;
+const int64_t AS::Drivers::PACMod3::DashControlsRightRptMsg::CAN_ID = 0x9F;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
@@ -146,15 +148,48 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
   }
 }
 
+SystemRptMsg::SystemRptMsg() :
+  Pacmod3TxMsg(),
+  enabled(false),
+  override_active(false),
+  command_output_fault(false),
+  input_output_fault(false),
+  output_reported_fault(false),
+  pacmod_fault(false),
+  vehicle_fault(false)
+{}
+
+SystemRptBoolMsg::SystemRptBoolMsg() :
+  SystemRptMsg(),
+  manual_input(false),
+  command(false),
+  output(false)
+{}
+
+SystemRptIntMsg::SystemRptIntMsg() :
+  SystemRptMsg(),
+  manual_input(0),
+  command(0),
+  output(0)
+{}
+
+SystemRptFloatMsg::SystemRptFloatMsg() :
+  SystemRptMsg(),
+  manual_input(0),
+  command(0),
+  output(0)
+{}
+
 // TX Messages
 void GlobalRptMsg::parse(uint8_t *in)
 {
   enabled = in[0] & 0x01;
-  override_active = ((in[0] & 0x02) >> 1) != 0;
-  user_can_timeout = ((in[0] & 0x20) >> 5) != 0;
-  brake_can_timeout = ((in[0] & 0x10) >> 4) != 0;
-  steering_can_timeout = ((in[0] & 0x08) >> 3) != 0;
-  vehicle_can_timeout = ((in[0] & 0x04) >> 2) != 0;
+  override_active = ((in[0] & 0x02) > 0);
+  user_can_timeout = ((in[0] & 0x04) > 0);
+  steering_can_timeout = ((in[0] & 0x08) > 0);
+  brake_can_timeout = ((in[0] & 0x10) > 0);
+  subsystem_can_timeout = ((in[0] & 0x20) > 0);
+  vehicle_can_timeout = ((in[0] & 0x40) > 0);
   user_can_read_errors = ((in[6] << 8) | in[7]);
 }
 
@@ -169,8 +204,8 @@ void SystemRptBoolMsg::parse(uint8_t *in)
   vehicle_fault = ((in[0] & 0x40) > 0);
 
   manual_input = ((in[1] & 0x01) > 0);
-  command = ((in[1] & 0x02) > 0);
-  output = ((in[1] & 0x04) > 0);
+  command = ((in[2] & 0x01) > 0);
+  output = ((in[3] & 0x01) > 0);
 }
 
 void SystemRptIntMsg::parse(uint8_t *in)
@@ -462,15 +497,19 @@ void YawRateRptMsg::parse(uint8_t *in)
 }
 
 // RX Messages
+Pacmod3RxMsg::Pacmod3RxMsg() :
+  last_system_state_enabled(false)
+{}
+
 void SystemCmdBool::encode(bool enable,
                            bool ignore_overrides,
                            bool cmd)
 {
   data.assign(8, 0);
 
-  data[0] = enable ? 0x01 : 0x00;
-  data[0] |= ignore_overrides ? 0x02 : 0x00;
-  data[1] = cmd ? 0x00 : 0x01;
+  data[0] = (enable ? 0x01 : 0x00);
+  data[0] |= (ignore_overrides ? 0x02 : 0x00);
+  data[1] = (cmd ? 0x00 : 0x01);
 }
 
 void SystemCmdFloat::encode(bool enable,

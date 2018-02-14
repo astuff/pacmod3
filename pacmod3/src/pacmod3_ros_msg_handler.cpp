@@ -39,12 +39,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillSystemRptBool(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
-  else if (can_id == CruiseControlRptMsg::CAN_ID ||
-      can_id == DashUIControlsRptMsg::CAN_ID ||
+  else if (can_id == CruiseControlButtonsRptMsg::CAN_ID ||
+      can_id == DashControlsLeftRptMsg::CAN_ID ||
+      can_id == DashControlsRightRptMsg::CAN_ID ||
       can_id == TurnSignalRptMsg::CAN_ID ||
       can_id == ShiftRptMsg::CAN_ID ||
       can_id == HeadlightRptMsg::CAN_ID ||
-      can_id == HornRptMsg::CAN_ID ||
       can_id == MediaControlsRptMsg::CAN_ID ||
       can_id == WiperRptMsg::CAN_ID)
   {
@@ -204,9 +204,9 @@ void Pacmod3TxRosMsgHandler::fillSystemRptFloat(std::shared_ptr<Pacmod3TxMsg>& p
   new_msg.pacmod_fault = dc_parser->pacmod_fault;
   new_msg.vehicle_fault = dc_parser->vehicle_fault;
 
-	new_msg.manual_input = dc_parser->manual_input;
-	new_msg.command = dc_parser->command;
-	new_msg.output = dc_parser->output;
+  new_msg.manual_input = dc_parser->manual_input;
+  new_msg.command = dc_parser->command;
+  new_msg.output = dc_parser->output;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -219,8 +219,9 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(std::shared_ptr<Pacmod3TxMsg>& parser
 	new_msg.enabled = dc_parser->enabled;
 	new_msg.override_active = dc_parser->override_active;
 	new_msg.user_can_timeout = dc_parser->user_can_timeout;
-	new_msg.brake_can_timeout = dc_parser->brake_can_timeout;
 	new_msg.steering_can_timeout = dc_parser->steering_can_timeout;
+	new_msg.brake_can_timeout = dc_parser->brake_can_timeout;
+  new_msg.subsystem_can_timeout = dc_parser->subsystem_can_timeout;
 	new_msg.vehicle_can_timeout = dc_parser->vehicle_can_timeout;
 	new_msg.user_can_read_errors = dc_parser->user_can_read_errors;
 
@@ -416,7 +417,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("A bool system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
@@ -442,24 +444,33 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("A float system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  if (can_id == CruiseControlCmdMsg::CAN_ID)
+  if (can_id == CruiseControlButtonsCmdMsg::CAN_ID)
   {
-    CruiseControlCmdMsg encoder;
+    CruiseControlButtonsCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->command);
     return encoder.data;
   }
-  else if (can_id == DashUIControlsCmdMsg::CAN_ID)
+  else if (can_id == DashControlsLeftCmdMsg::CAN_ID)
   {
-    DashUIControlsCmdMsg encoder;
+    DashControlsLeftCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == DashControlsRightCmdMsg::CAN_ID)
+  {
+    DashControlsRightCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->command);
@@ -508,7 +519,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("An enum system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
@@ -527,7 +539,8 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
   else
   {
     std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 255);
+    bad_id.assign(8, 0);
+    ROS_ERROR("A steering system command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
