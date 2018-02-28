@@ -498,7 +498,8 @@ void YawRateRptMsg::parse(uint8_t *in)
 
 // RX Messages
 Pacmod3RxMsg::Pacmod3RxMsg() :
-  last_system_state_enabled(false)
+  recent_state_change(false),
+  state_change_debounce_count(0)
 {}
 
 void SystemCmdBool::encode(bool enable,

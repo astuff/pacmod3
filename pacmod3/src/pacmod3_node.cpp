@@ -23,6 +23,7 @@
 
 using namespace AS::Drivers::PACMod3;
 
+static const uint8_t STATE_CHANGE_DEBOUNCE_THRESHOLD = 20;
 double last_global_rpt_msg_received = 0.0;
 const double watchdog_timeout = 0.3;
 std::string veh_type_string = "POLARIS_GEM";
@@ -85,7 +86,7 @@ SteerCmdMsg steer_encoder;
 TurnSignalCmdMsg turn_encoder;
 WiperCmdMsg wiper_encoder;
 
-std::vector<Pacmod3RxMsg> encoders;
+std::vector<Pacmod3RxMsg*> encoders;
 
 std::unordered_map<long long, std::shared_ptr<LockedData>> rx_list;
 std::unordered_map<long long, long long> rpt_cmd_list;
@@ -141,6 +142,14 @@ void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      accel_encoder.recent_state_change = true;
+      accel_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -157,6 +166,14 @@ void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      brake_encoder.recent_state_change = true;
+      brake_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -173,6 +190,14 @@ void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      headlight_encoder.recent_state_change = true;
+      headlight_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -189,6 +214,14 @@ void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      horn_encoder.recent_state_change = true;
+      horn_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -205,6 +238,14 @@ void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      shift_encoder.recent_state_change = true;
+      shift_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -221,6 +262,14 @@ void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      steer_encoder.recent_state_change = true;
+      steer_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -237,6 +286,14 @@ void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      turn_encoder.recent_state_change = true;
+      turn_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -253,6 +310,14 @@ void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 
   if (rx_it != rx_list.end())
   {
+    bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
+
+    if (msg->enable != cmd_says_enabled)
+    {
+      wiper_encoder.recent_state_change = true;
+      wiper_encoder.state_change_debounce_count = 0;
+    }
+
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   }
   else
@@ -314,6 +379,18 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
+  // Update the state change debounce counts.
+  for (auto encoder = encoders.begin(); encoder != encoders.end(); ++encoder)
+  {
+    if ((*encoder)->recent_state_change)
+    {
+      if ((*encoder)->state_change_debounce_count > STATE_CHANGE_DEBOUNCE_THRESHOLD)
+        (*encoder)->recent_state_change = false;
+      else
+        (*encoder)->state_change_debounce_count++;
+    }
+  }
+
   // Only parse messages for which we have a parser and a publisher.
   if (parser_class != NULL && pub != pub_tx_list.end())
   {
@@ -364,232 +441,293 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
         bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
         bool cmd_says_ignore_overrides = ((rx_it->second->getData()[0] & 0x02) > 0);
 
-        if (msg->id == AccelRptMsg::CAN_ID)
+        if (msg->id == AccelRptMsg::CAN_ID && !accel_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<AccelRptMsg>(parser_class);
 
           dc_parser->output = clipValue(dc_parser->output, 0.0, 1.0);
 
-          if (!dc_parser->enabled && accel_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            accel_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(accel_encoder.data);
+            // If we disagree on whether or not we're
+            // enabled, mark a state change and
+            // ignore the PACMod for a bit.
+            accel_encoder.recent_state_change = true;
+            accel_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              // If we currently think we're enabled but
+              // the PACMod says otherwise, accept what the
+              // PACMod says and write the output value too.
+              accel_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(accel_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
+            // If we agree with the PACMod on the state
+            // and we both think we're disabled,
+            // write the output value and save the disabled state.
             accel_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(accel_encoder.data);
           }
-
-          accel_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == BrakeRptMsg::CAN_ID)
+        else if (msg->id == BrakeRptMsg::CAN_ID && !brake_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<BrakeRptMsg>(parser_class);
 
           dc_parser->output = clipValue(dc_parser->output, 0.0, 1.0);
 
-          if (!dc_parser->enabled && brake_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(brake_encoder.data);
+            brake_encoder.recent_state_change = true;
+            brake_encoder.state_change_debounce_count = 0;
+            
+            if (cmd_says_enabled)
+            {
+              brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(brake_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(brake_encoder.data);
           }
-
-          brake_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == CruiseControlButtonsRptMsg::CAN_ID)
+        else if (msg->id == CruiseControlButtonsRptMsg::CAN_ID && !cruise_control_buttons_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<CruiseControlButtonsRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && cruise_control_buttons_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            cruise_control_buttons_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(cruise_control_buttons_encoder.data);
+            cruise_control_buttons_encoder.recent_state_change = true;
+            cruise_control_buttons_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              cruise_control_buttons_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(cruise_control_buttons_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             cruise_control_buttons_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(cruise_control_buttons_encoder.data);
           }
-
-          cruise_control_buttons_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == DashControlsLeftRptMsg::CAN_ID)
+        else if (msg->id == DashControlsLeftRptMsg::CAN_ID && !dash_controls_left_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<DashControlsLeftRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && dash_controls_left_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            dash_controls_left_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(dash_controls_left_encoder.data);
+            dash_controls_left_encoder.recent_state_change = true;
+            dash_controls_left_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              dash_controls_left_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(dash_controls_left_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             dash_controls_left_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(dash_controls_left_encoder.data);
           }
-
-          dash_controls_left_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == DashControlsRightRptMsg::CAN_ID)
+        else if (msg->id == DashControlsRightRptMsg::CAN_ID && !dash_controls_right_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<DashControlsRightRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && dash_controls_right_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            dash_controls_right_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(dash_controls_right_encoder.data);
+            dash_controls_right_encoder.recent_state_change = true;
+            dash_controls_right_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              dash_controls_right_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(dash_controls_right_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             dash_controls_right_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(dash_controls_right_encoder.data);
           }
-
-          dash_controls_right_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == HeadlightRptMsg::CAN_ID)
+        else if (msg->id == HeadlightRptMsg::CAN_ID && !headlight_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<HeadlightRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && headlight_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            headlight_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(headlight_encoder.data);
+            headlight_encoder.recent_state_change = true;
+            headlight_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              headlight_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(headlight_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             headlight_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(headlight_encoder.data);
           }
-
-          headlight_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == HornRptMsg::CAN_ID)
+        else if (msg->id == HornRptMsg::CAN_ID && !horn_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<HornRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && horn_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            horn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(horn_encoder.data);
+            horn_encoder.recent_state_change = true;
+            horn_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              horn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(horn_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             horn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(horn_encoder.data);
           }
-
-          horn_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == MediaControlsRptMsg::CAN_ID)
+        else if (msg->id == MediaControlsRptMsg::CAN_ID && !media_controls_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<MediaControlsRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && media_controls_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            media_controls_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(media_controls_encoder.data);
+            media_controls_encoder.recent_state_change = true;
+            media_controls_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              media_controls_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(media_controls_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             media_controls_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(media_controls_encoder.data);
           }
-
-          media_controls_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == ParkingBrakeRptMsg::CAN_ID)
+        else if (msg->id == ParkingBrakeRptMsg::CAN_ID && !parking_brake_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<ParkingBrakeRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && parking_brake_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            parking_brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(parking_brake_encoder.data);
+            parking_brake_encoder.recent_state_change = true;
+            parking_brake_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              parking_brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(parking_brake_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             parking_brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(parking_brake_encoder.data);
           }
-
-          parking_brake_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == ShiftRptMsg::CAN_ID)
+        else if (msg->id == ShiftRptMsg::CAN_ID && !shift_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<ShiftRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && shift_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            shift_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(shift_encoder.data);
+            shift_encoder.recent_state_change = true;
+            shift_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              shift_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(shift_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             shift_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(shift_encoder.data);
           }
-
-          shift_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == SteerRptMsg::CAN_ID)
+        else if (msg->id == SteerRptMsg::CAN_ID && !steer_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<SteerRptMsg>(parser_class);
           int16_t raw_turn_rate = ((int16_t)rx_it->second->getData()[3] << 8) | rx_it->second->getData()[4];
           float cmd_turn_rate = ((float)raw_turn_rate * 1000.0);
 
-          if (!dc_parser->enabled && steer_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            steer_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
-            rx_it->second->setData(steer_encoder.data);
+            steer_encoder.recent_state_change = true;
+            steer_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              steer_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
+              rx_it->second->setData(steer_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             steer_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
             rx_it->second->setData(steer_encoder.data);
           }
-
-          steer_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == TurnSignalRptMsg::CAN_ID)
+        else if (msg->id == TurnSignalRptMsg::CAN_ID && !turn_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<TurnSignalRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && turn_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            turn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(turn_encoder.data);
+            turn_encoder.recent_state_change = true;
+            turn_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              turn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(turn_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             turn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(turn_encoder.data);
           }
-
-          turn_encoder.last_system_state_enabled = dc_parser->enabled;
         }
-        else if (msg->id == WiperRptMsg::CAN_ID)
+        else if (msg->id == WiperRptMsg::CAN_ID && !wiper_encoder.recent_state_change)
         {
           auto dc_parser = std::dynamic_pointer_cast<WiperRptMsg>(parser_class);
 
-          if (!dc_parser->enabled && wiper_encoder.last_system_state_enabled)
+          if (cmd_says_enabled != dc_parser->enabled)
           {
-            wiper_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
-            rx_it->second->setData(wiper_encoder.data);
+            wiper_encoder.recent_state_change = true;
+            wiper_encoder.state_change_debounce_count = 0;
+
+            if (cmd_says_enabled)
+            {
+              wiper_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              rx_it->second->setData(wiper_encoder.data);
+            }
           }
-          else if (!dc_parser->enabled)
+          else if (!cmd_says_enabled)
           {
             wiper_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
             rx_it->second->setData(wiper_encoder.data);
           }
-
-          wiper_encoder.last_system_state_enabled = dc_parser->enabled;
         }
       }
     }
@@ -628,19 +766,19 @@ int main(int argc, char *argv[])
   }
 
   // Load up the encoders vector
-  encoders.push_back(accel_encoder);
-  encoders.push_back(brake_encoder);
-  encoders.push_back(cruise_control_buttons_encoder);
-  encoders.push_back(dash_controls_left_encoder);
-  encoders.push_back(dash_controls_right_encoder);
-  encoders.push_back(headlight_encoder);
-  encoders.push_back(horn_encoder);
-  encoders.push_back(media_controls_encoder);
-  encoders.push_back(parking_brake_encoder);
-  encoders.push_back(shift_encoder);
-  encoders.push_back(steer_encoder);
-  encoders.push_back(turn_encoder);
-  encoders.push_back(wiper_encoder);
+  encoders.push_back(&accel_encoder);
+  encoders.push_back(&brake_encoder);
+  encoders.push_back(&cruise_control_buttons_encoder);
+  encoders.push_back(&dash_controls_left_encoder);
+  encoders.push_back(&dash_controls_right_encoder);
+  encoders.push_back(&headlight_encoder);
+  encoders.push_back(&horn_encoder);
+  encoders.push_back(&media_controls_encoder);
+  encoders.push_back(&parking_brake_encoder);
+  encoders.push_back(&shift_encoder);
+  encoders.push_back(&steer_encoder);
+  encoders.push_back(&turn_encoder);
+  encoders.push_back(&wiper_encoder);
 
   // Advertise published messages
   can_rx_pub = n.advertise<can_msgs::Frame>("can_rx", 20);
