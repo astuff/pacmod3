@@ -116,29 +116,11 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class AccelAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
   class BrakeRptMsg :
     public SystemRptFloatMsg
   {
     public:
       static const int64_t CAN_ID;
-  };
-
-  class BrakeAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
   };
 
   class CruiseControlButtonsRptMsg :
@@ -161,7 +143,6 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
   };
-
   class HeadlightRptMsg :
     public SystemRptIntMsg
   {
@@ -197,29 +178,11 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class ShiftAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
   class SteerRptMsg :
     public SystemRptFloatMsg
   {
     public:
       static const int64_t CAN_ID;
-  };
-
-  class SteerAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
   };
 
   class SteerRpt2Msg :
@@ -251,33 +214,6 @@ namespace PACMod3
   };
 
   // Other Reports
-  class ExteriorLightsRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
-  class InteriorLightsRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
-  class OccupancyRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
   class MotorRpt1Msg :
     public Pacmod3TxMsg
   {
@@ -342,15 +278,6 @@ namespace PACMod3
       uint8_t hour;
       uint8_t minute;
       uint8_t second;
-
-      void parse(uint8_t *in);
-  };
-
-  class DoorRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
 
       void parse(uint8_t *in);
   };

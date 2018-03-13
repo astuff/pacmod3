@@ -55,15 +55,6 @@ const int64_t AS::Drivers::PACMod3::DashControlsRightCmdMsg::CAN_ID = 0x9E;
 const int64_t AS::Drivers::PACMod3::DashControlsRightRptMsg::CAN_ID = 0x9F;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0xFF;
 
-const int64_t AS::Drivers::PACMod3::AccelAuxRptMsg::CAN_ID = 0x100;
-const int64_t AS::Drivers::PACMod3::BrakeAuxRptMsg::CAN_ID = 0x101;
-const int64_t AS::Drivers::PACMod3::ShiftAuxRptMsg::CAN_ID = 0x102;
-const int64_t AS::Drivers::PACMod3::SteerAuxRptMsg::CAN_ID = 0x103;
-const int64_t AS::Drivers::PACMod3::OccupancyRptMsg::CAN_ID = 0x104;
-const int64_t AS::Drivers::PACMod3::InteriorLightsRptMsg::CAN_ID = 0x105;
-const int64_t AS::Drivers::PACMod3::ExteriorLightsRptMsg::CAN_ID = 0x106;
-const int64_t AS::Drivers::PACMod3::DoorRptMsg::CAN_ID = 0x107;
-
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
 {
   switch (can_id)
@@ -85,9 +76,6 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
       break;
     case DateTimeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new DateTimeRptMsg);
-      break;
-    case DoorRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new DoorRptMsg);
       break;
     case GlobalRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
@@ -154,27 +142,6 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
       break;
     case YawRateRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new YawRateRptMsg);
-      break;
-    case AccelAuxRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new AccelAuxRptMsg);
-      break;
-    case BrakeAuxRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new BrakeAuxRptMsg);
-      break;
-    case ShiftAuxRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new ShiftAuxRptMsg);
-      break;
-    case SteerAuxRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerAuxRptMsg);
-      break;
-    case OccupancyRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new OccupancyRptMsg);
-      break;
-    case InteriorLightsRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new InteriorLightsRptMsg);
-      break;
-    case ExteriorLightsRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new ExteriorLightsRptMsg);
       break;
     default:
       return NULL;
@@ -278,14 +245,6 @@ void SystemRptFloatMsg::parse(uint8_t *in)
   output = (double)(temp / 1000.0);
 }
 
-void AccelAuxRptMsg::parse(uint8_t *in)
-{
-}
-
-void BrakeAuxRptMsg::parse(uint8_t *in)
-{
-}
-
 void DateTimeRptMsg::parse(uint8_t *in)
 {
   year = in[0];
@@ -294,18 +253,6 @@ void DateTimeRptMsg::parse(uint8_t *in)
   hour = in[3];
   minute = in[4];
   second = in[5];
-}
-
-void DoorRptMsg::parse(uint8_t *in)
-{
-}
-
-void ExteriorLightsRptMsg::parse(uint8_t *in)
-{
-}
-
-void InteriorLightsRptMsg::parse(uint8_t *in)
-{
 }
 
 void LatLonHeadingRptMsg::parse(uint8_t *in)
@@ -354,18 +301,6 @@ void MotorRpt3Msg::parse(uint8_t *in)
 
   temp = ((int32_t)in[4] << 24) | ((int32_t)in[5] << 16) | ((int32_t)in[6] << 8) | in[7];
   torque_input = (double)(temp / 1000.0);
-}
-
-void OccupancyRptMsg::parse(uint8_t *in)
-{
-}
-
-void ShiftAuxRptMsg::parse(uint8_t *in)
-{
-}
-
-void SteerAuxRptMsg::parse(uint8_t *in)
-{
 }
 
 void SteeringPIDRpt1Msg::parse(uint8_t *in)
