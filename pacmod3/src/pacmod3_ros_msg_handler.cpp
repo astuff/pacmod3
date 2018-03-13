@@ -89,16 +89,64 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillMotorRpt3(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == AccelAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::AccelAuxRpt new_msg;
+    fillAccelAuxRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == BrakeAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::BrakeAuxRpt new_msg;
+    fillBrakeAuxRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == DateTimeRptMsg::CAN_ID)
   {
     pacmod_msgs::DateTimeRpt new_msg;
     fillDateTimeRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == DoorRptMsg::CAN_ID)
+  {
+    pacmod_msgs::DoorRpt new_msg;
+    fillDoorRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == ExteriorLightsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::ExteriorLightsRpt new_msg;
+    fillExteriorLightsRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == InteriorLightsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::InteriorLightsRpt new_msg;
+    fillInteriorLightsRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == LatLonHeadingRptMsg::CAN_ID)
   {
     pacmod_msgs::LatLonHeadingRpt new_msg;
     fillLatLonHeadingRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == OccupancyRptMsg::CAN_ID)
+  {
+    pacmod_msgs::OccupancyRpt new_msg;
+    fillOccupancyRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == ShiftAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::ShiftAuxRpt new_msg;
+    fillShiftAuxRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == SteerAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::SteerAuxRpt new_msg;
+    fillSteerAuxRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
   else if (can_id == SteeringPIDRpt1Msg::CAN_ID)
@@ -229,6 +277,22 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(std::shared_ptr<Pacmod3TxMsg>& parser
 	new_msg.header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::AccelAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::BrakeAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillDateTimeRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DateTimeRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<DateTimeRptMsg>(parser_class);
@@ -239,6 +303,30 @@ void Pacmod3TxRosMsgHandler::fillDateTimeRpt(std::shared_ptr<Pacmod3TxMsg>& pars
 	new_msg.hour = dc_parser->hour;
 	new_msg.minute = dc_parser->minute;
 	new_msg.second = dc_parser->second;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DoorRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillExteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ExteriorLightsRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<ExteriorLightsRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::InteriorLightsRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -255,6 +343,14 @@ void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(std::shared_ptr<Pacmod3TxMsg>&
 	new_msg.longitude_minutes = dc_parser->longitude_minutes;
 	new_msg.longitude_seconds = dc_parser->longitude_seconds;
 	new_msg.heading = dc_parser->heading;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillOccupancyRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::OccupancyRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -289,6 +385,22 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt3(std::shared_ptr<Pacmod3TxMsg>& parser
 
 	new_msg.torque_output = dc_parser->torque_output;
 	new_msg.torque_input = dc_parser->torque_input;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ShiftAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<ShiftAuxRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillSteerAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteerAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<SteerAuxRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
