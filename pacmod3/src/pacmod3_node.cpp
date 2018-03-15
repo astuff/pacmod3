@@ -440,6 +440,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       {
         bool cmd_says_enabled = ((rx_it->second->getData()[0] & 0x01) > 0);
         bool cmd_says_ignore_overrides = ((rx_it->second->getData()[0] & 0x02) > 0);
+        bool cmd_says_clear_override = ((rx_it->second->getData()[0] & 0x04) > 0);
 
         if (msg->id == AccelRptMsg::CAN_ID && !accel_encoder.recent_state_change)
         {
@@ -460,7 +461,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
               // If we currently think we're enabled but
               // the PACMod says otherwise, accept what the
               // PACMod says and write the output value too.
-              accel_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              accel_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(accel_encoder.data);
             }
           }
@@ -469,7 +470,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             // If we agree with the PACMod on the state
             // and we both think we're disabled,
             // write the output value and save the disabled state.
-            accel_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            accel_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(accel_encoder.data);
           }
         }
@@ -486,13 +487,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
             
             if (cmd_says_enabled)
             {
-              brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(brake_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(brake_encoder.data);
           }
         }
@@ -507,13 +508,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              cruise_control_buttons_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              cruise_control_buttons_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(cruise_control_buttons_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            cruise_control_buttons_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            cruise_control_buttons_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(cruise_control_buttons_encoder.data);
           }
         }
@@ -528,13 +529,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              dash_controls_left_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              dash_controls_left_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(dash_controls_left_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            dash_controls_left_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            dash_controls_left_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(dash_controls_left_encoder.data);
           }
         }
@@ -549,13 +550,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              dash_controls_right_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              dash_controls_right_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(dash_controls_right_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            dash_controls_right_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            dash_controls_right_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(dash_controls_right_encoder.data);
           }
         }
@@ -570,13 +571,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              headlight_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              headlight_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(headlight_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            headlight_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            headlight_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(headlight_encoder.data);
           }
         }
@@ -591,13 +592,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              horn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              horn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(horn_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            horn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            horn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(horn_encoder.data);
           }
         }
@@ -612,13 +613,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              media_controls_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              media_controls_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(media_controls_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            media_controls_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            media_controls_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(media_controls_encoder.data);
           }
         }
@@ -633,13 +634,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              parking_brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              parking_brake_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(parking_brake_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            parking_brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            parking_brake_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(parking_brake_encoder.data);
           }
         }
@@ -654,13 +655,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              shift_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              shift_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(shift_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            shift_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            shift_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(shift_encoder.data);
           }
         }
@@ -677,13 +678,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              steer_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
+              steer_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output, cmd_turn_rate);
               rx_it->second->setData(steer_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            steer_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output, cmd_turn_rate);
+            steer_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output, cmd_turn_rate);
             rx_it->second->setData(steer_encoder.data);
           }
         }
@@ -698,13 +699,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              turn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              turn_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(turn_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            turn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            turn_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(turn_encoder.data);
           }
         }
@@ -719,13 +720,13 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
             if (cmd_says_enabled)
             {
-              wiper_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, dc_parser->output);
+              wiper_encoder.encode(dc_parser->enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
               rx_it->second->setData(wiper_encoder.data);
             }
           }
           else if (!cmd_says_enabled)
           {
-            wiper_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, dc_parser->output);
+            wiper_encoder.encode(cmd_says_enabled, cmd_says_ignore_overrides, cmd_says_clear_override, dc_parser->output);
             rx_it->second->setData(wiper_encoder.data);
           }
         }
@@ -922,7 +923,7 @@ int main(int argc, char *argv[])
     if (rx_it->first == TurnSignalCmdMsg::CAN_ID)
     {
       // Turn signals have non-0 initial value.
-      turn_encoder.encode(false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+      turn_encoder.encode(false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
       rx_it->second->setData(turn_encoder.data);
     }
     else
