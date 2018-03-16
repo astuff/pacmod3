@@ -516,6 +516,7 @@ namespace PACMod3
     public:
       void encode(bool enable,
                   bool ignore_overrides,
+                  bool clear_override,
                   bool cmd);
   };
 
@@ -525,6 +526,7 @@ namespace PACMod3
     public:
       void encode(bool enable,
                   bool ignore_overrides,
+                  bool clear_override,
                   float cmd);
   };
 
@@ -534,6 +536,7 @@ namespace PACMod3
     public:
       void encode(bool enable,
                   bool ignore_overrides,
+                  bool clear_override,
                   uint8_t cmd);
   };
 
@@ -615,6 +618,7 @@ namespace PACMod3
 
       void encode(bool enabled,
                   bool ignore_overrides,
+                  bool clear_override,
                   float steer_pos,
                   float steer_spd);
   };
