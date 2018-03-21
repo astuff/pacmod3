@@ -116,29 +116,11 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class AccelAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
   class BrakeRptMsg :
     public SystemRptFloatMsg
   {
     public:
       static const int64_t CAN_ID;
-  };
-
-  class BrakeAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
   };
 
   class CruiseControlButtonsRptMsg :
@@ -157,6 +139,13 @@ namespace PACMod3
 
   class DashControlsRightRptMsg :
     public SystemRptIntMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class HazardLightRptMsg :
+    public SystemRptBoolMsg
   {
     public:
       static const int64_t CAN_ID;
@@ -197,39 +186,7 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
-  class ShiftAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
   class SteerRptMsg :
-    public SystemRptFloatMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SteerAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-
-      void parse(uint8_t *in);
-  };
-
-  class SteerRpt2Msg :
-    public SystemRptFloatMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SteerRpt3Msg :
     public SystemRptFloatMsg
   {
     public:
@@ -250,8 +207,95 @@ namespace PACMod3
       static const int64_t CAN_ID;
   };
 
+  // System Aux Reports
+  class AccelAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class BrakeAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class HeadlightAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class ParkingBrakeAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class ShiftAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class SteerAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class TurnAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class WiperAuxRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
   // Other Reports
-  class ExteriorLightsRptMsg :
+  class SteerRpt2Msg :
+    public SystemRptFloatMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class SteerRpt3Msg :
+    public SystemRptFloatMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class RearLightsRptMsg :
     public Pacmod3TxMsg
   {
     public:
@@ -500,6 +544,33 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
+  class DetectedObjectRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class VehicleControlsDetailRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
+  class VehicleDynamicsRptMsg :
+    public Pacmod3TxMsg
+  {
+    public:
+      static const int64_t CAN_ID;
+
+      void parse(uint8_t *in);
+  };
+
   // RX Messages
   class Pacmod3RxMsg
   {
@@ -540,6 +611,7 @@ namespace PACMod3
                   uint8_t cmd);
   };
 
+  // System Commands
   class AccelCmdMsg :
     public SystemCmdFloat
   {
@@ -570,6 +642,13 @@ namespace PACMod3
 
   class DashControlsRightCmdMsg :
     public SystemCmdInt
+  {
+    public:
+      static const int64_t CAN_ID;
+  };
+
+  class HazardLightCmdMsg :
+    public SystemCmdBool
   {
     public:
       static const int64_t CAN_ID;

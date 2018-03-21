@@ -46,13 +46,13 @@ namespace PACMod3
       void fillBrakeAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::BrakeAuxRpt& new_msg, std::string frame_id);
       void fillDateTimeRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DateTimeRpt& new_msg, std::string frame_id);
       void fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DoorRpt& new_msg, std::string frame_id);
-      void fillExteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ExteriorLightsRpt& new_msg, std::string frame_id);
       void fillInteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::InteriorLightsRpt& new_msg, std::string frame_id);
       void fillLatLonHeadingRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::LatLonHeadingRpt& new_msg, std::string frame_id);
       void fillMotorRpt1(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::MotorRpt1& new_msg, std::string frame_id);
       void fillMotorRpt2(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::MotorRpt2& new_msg, std::string frame_id);
       void fillMotorRpt3(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::MotorRpt3& new_msg, std::string frame_id);
       void fillOccupancyRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::OccupancyRpt& new_msg, std::string frame_id);
+      void fillRearLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::RearLightsRpt& new_msg, std::string frame_id);
       void fillShiftAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ShiftAuxRpt& new_msg, std::string frame_id);
       void fillSteerAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteerAuxRpt& new_msg, std::string frame_id);
       void fillSteeringPIDRpt1(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteeringPIDRpt1& new_msg, std::string frame_id);

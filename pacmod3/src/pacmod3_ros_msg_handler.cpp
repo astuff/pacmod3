@@ -113,12 +113,6 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillDoorRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
-  else if (can_id == ExteriorLightsRptMsg::CAN_ID)
-  {
-    pacmod_msgs::ExteriorLightsRpt new_msg;
-    fillExteriorLightsRpt(parser_class, new_msg, frame_id);
-    pub.publish(new_msg);
-  }
   else if (can_id == InteriorLightsRptMsg::CAN_ID)
   {
     pacmod_msgs::InteriorLightsRpt new_msg;
@@ -135,6 +129,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
   {
     pacmod_msgs::OccupancyRpt new_msg;
     fillOccupancyRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == RearLightsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::RearLightsRpt new_msg;
+    fillRearLightsRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
   else if (can_id == ShiftAuxRptMsg::CAN_ID)
@@ -316,14 +316,6 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_c
   new_msg.header.stamp = ros::Time::now();
 }
 
-void Pacmod3TxRosMsgHandler::fillExteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ExteriorLightsRpt& new_msg, std::string frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<ExteriorLightsRptMsg>(parser_class);
-
-  new_msg.header.frame_id = frame_id;
-  new_msg.header.stamp = ros::Time::now();
-}
-
 void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::InteriorLightsRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
@@ -343,14 +335,6 @@ void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(std::shared_ptr<Pacmod3TxMsg>&
 	new_msg.longitude_minutes = dc_parser->longitude_minutes;
 	new_msg.longitude_seconds = dc_parser->longitude_seconds;
 	new_msg.heading = dc_parser->heading;
-
-  new_msg.header.frame_id = frame_id;
-  new_msg.header.stamp = ros::Time::now();
-}
-
-void Pacmod3TxRosMsgHandler::fillOccupancyRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::OccupancyRpt& new_msg, std::string frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -385,6 +369,22 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt3(std::shared_ptr<Pacmod3TxMsg>& parser
 
 	new_msg.torque_output = dc_parser->torque_output;
 	new_msg.torque_input = dc_parser->torque_input;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillOccupancyRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::OccupancyRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillRearLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::RearLightsRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<RearLightsRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
