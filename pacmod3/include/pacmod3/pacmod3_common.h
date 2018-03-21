@@ -22,13 +22,13 @@
 #include <pacmod_msgs/BrakeAuxRpt.h>
 #include <pacmod_msgs/DateTimeRpt.h>
 #include <pacmod_msgs/DoorRpt.h>
-#include <pacmod_msgs/ExteriorLightsRpt.h>
 #include <pacmod_msgs/InteriorLightsRpt.h>
 #include <pacmod_msgs/LatLonHeadingRpt.h>
 #include <pacmod_msgs/MotorRpt1.h>
 #include <pacmod_msgs/MotorRpt2.h>
 #include <pacmod_msgs/MotorRpt3.h>
 #include <pacmod_msgs/OccupancyRpt.h>
+#include <pacmod_msgs/RearLightsRpt.h>
 #include <pacmod_msgs/ShiftAuxRpt.h>
 #include <pacmod_msgs/SteerAuxRpt.h>
 #include <pacmod_msgs/SteeringPIDRpt1.h>
