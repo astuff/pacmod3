@@ -234,6 +234,7 @@ void GlobalRptMsg::parse(uint8_t *in)
 {
   enabled = in[0] & 0x01;
   override_active = ((in[0] & 0x02) > 0);
+  fault_active = ((in[0] & 0x80) > 0);
   user_can_timeout = ((in[0] & 0x04) > 0);
   steering_can_timeout = ((in[0] & 0x08) > 0);
   brake_can_timeout = ((in[0] & 0x10) > 0);
@@ -578,11 +579,6 @@ void YawRateRptMsg::parse(uint8_t *in)
 }
 
 // RX Messages
-Pacmod3RxMsg::Pacmod3RxMsg() :
-  recent_state_change(false),
-  state_change_debounce_count(0)
-{}
-
 void SystemCmdBool::encode(bool enable,
                            bool ignore_overrides,
                            bool clear_override,
