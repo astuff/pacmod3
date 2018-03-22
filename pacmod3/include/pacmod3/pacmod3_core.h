@@ -98,6 +98,7 @@ namespace PACMod3
 
       bool enabled;
       bool override_active;
+      bool fault_active;
       bool user_can_timeout;
       bool steering_can_timeout;
       bool brake_can_timeout;
@@ -585,10 +586,7 @@ namespace PACMod3
   class Pacmod3RxMsg
   {
     public:
-      Pacmod3RxMsg();
       std::vector<uint8_t> data;
-      bool recent_state_change;
-      uint8_t state_change_debounce_count;
   };
 
   class SystemCmdBool :
