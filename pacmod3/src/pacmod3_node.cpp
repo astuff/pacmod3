@@ -91,64 +91,65 @@ void set_enable(bool val)
   }
 }
 
-// Listens for incoming requests to change the position of the throttle pedal
-void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+// Looks up the appropriate LockedData and inserts the command info
+void lookup_and_encode(const int64_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  int64_t can_id = AccelCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   else
     ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+}
+
+void lookup_and_encode(const int64_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+{
+  auto rx_it = rx_list.find(can_id);
+
+  if (rx_it != rx_list.end())
+    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
+  else
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+}
+
+void lookup_and_encode(const int64_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+{
+  auto rx_it = rx_list.find(can_id);
+
+  if (rx_it != rx_list.end())
+    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
+  else
+    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+}
+
+// Listens for incoming requests to change the position of the throttle pedal
+void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+{
+  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the position of the brake pedal
 void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  int64_t can_id = BrakeCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
 //Listens for incoming requests to change the state of the headlights
 void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  int64_t can_id = HeadlightCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 //Listens for incoming requests to change the state of the horn
 void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  int64_t can_id = HornCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+  lookup_and_encode(HornCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the gear shifter state
 void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  int64_t can_id = ShiftCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the position of the steering wheel with a speed limit
@@ -166,25 +167,13 @@ void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 // Listens for incoming requests to change the state of the turn signals
 void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  int64_t can_id = TurnSignalCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the state of the windshield wipers
 void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  int64_t can_id = WiperCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+  lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
 void send_can(long id, const std::vector<unsigned char>& vec)
