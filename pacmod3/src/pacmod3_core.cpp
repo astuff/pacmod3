@@ -72,7 +72,7 @@ const int64_t AS::Drivers::PACMod3::LatLonHeadingRptMsg::CAN_ID = 0x40E;
 const int64_t AS::Drivers::PACMod3::DateTimeRptMsg::CAN_ID = 0x40F;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x410;
 const int64_t AS::Drivers::PACMod3::DetectedObjectRptMsg::CAN_ID = 0x411;
-const int64_t AS::Drivers::PACMod3::VehicleControlsDetailRptMsg::CAN_ID = 0x412;
+const int64_t AS::Drivers::PACMod3::VehicleControlsRptMsg::CAN_ID = 0x412;
 const int64_t AS::Drivers::PACMod3::VehicleDynamicsRptMsg::CAN_ID = 0x413;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0x414;
 const int64_t AS::Drivers::PACMod3::OccupancyRptMsg::CAN_ID = 0x415;
@@ -102,6 +102,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case DateTimeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new DateTimeRptMsg);
       break;
+    case DetectedObjectRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new DetectedObjectRptMsg);
+      break;      
     case DoorRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new DoorRptMsg);
       break;
@@ -156,6 +159,12 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case TurnSignalRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
       break;
+    case VehicleControlsRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new VehicleControlsRptMsg);
+      break;      
+    case VehicleDynamicsRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new VehicleDynamicsRptMsg);
+      break;      
     case VehicleSpeedRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpeedRptMsg);
       break;
@@ -313,6 +322,17 @@ void DateTimeRptMsg::parse(uint8_t *in)
   second = in[5];
 }
 
+void DetectedObjectRptMsg::parse(uint8_t *in)
+{
+  int16_t temp;
+  
+  temp = (((int16_t)in[0] << 8) | in[1]);
+  front_object_distance_low_res = (double)(temp / 1000.0);
+  
+  temp = (((int16_t)in[2] << 8) | in[3]);
+  front_object_distance_high_res = (double)(temp / 1000.0);
+}
+
 void DoorRptMsg::parse(uint8_t *in)
 {
 }
@@ -445,6 +465,30 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
 
   temp = ((int16_t)in[2] << 8) | in[3];
   angular_acceleration = (double)(temp / 1000.0);
+}
+
+void VehicleControlsRptMsg::parse(uint8_t *in)
+{
+  int16_t temp;
+  
+  temp = (((int16_t)in[0] << 8) | in[1]);
+  steering_rate = (double)(temp / 1000.0);
+  
+  temp = (((int16_t)in[2] << 8) | in[3]);
+  steering_torque = (double)(temp / 1000.0);
+               
+  shift_pos_1 = in[4];
+  shift_pos_2 = in[5];
+}
+
+void VehicleDynamicsRptMsg::parse(uint8_t *in)
+{
+  int16_t temp;
+  
+  temp = (((int16_t)in[1] << 8) | in[2]);
+  brake_torque = (double)(temp / 1000.0);
+  
+  g_forces = in[0];
 }
 
 void VehicleSpeedRptMsg::parse(uint8_t *in)

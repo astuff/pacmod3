@@ -197,6 +197,24 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillWheelSpeedRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == DetectedObjectRptMsg::CAN_ID)
+  {
+    pacmod_msgs::DetectedObjectRpt new_msg;
+    fillDetectedObjectRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }      
+  else if (can_id == VehicleControlsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::VehicleControlsRpt new_msg;
+    fillVehicleControlsRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }  
+  else if (can_id == VehicleDynamicsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::VehicleDynamicsRpt new_msg;
+    fillVehicleDynamicsRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }   
 }
 
 // Report messages
@@ -309,9 +327,44 @@ void Pacmod3TxRosMsgHandler::fillDateTimeRpt(std::shared_ptr<Pacmod3TxMsg>& pars
   new_msg.header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillDetectedObjectRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DetectedObjectRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
+
+       new_msg.front_object_distance_low_res = dc_parser->front_object_distance_low_res;
+       new_msg.front_object_distance_high_res = dc_parser->front_object_distance_high_res;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DoorRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillVehicleControlsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleControlsRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<VehicleControlsRptMsg>(parser_class);
+
+       new_msg.steering_rate = dc_parser->steering_rate;
+       new_msg.steering_torque = dc_parser->steering_torque;
+       new_msg.shift_pos_1 = dc_parser->shift_pos_1;
+       new_msg.shift_pos_2 = dc_parser->shift_pos_2;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleDynamicsRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<VehicleDynamicsRptMsg>(parser_class);
+
+       new_msg.g_forces = dc_parser->g_forces;
+       new_msg.brake_torque = dc_parser->brake_torque;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();

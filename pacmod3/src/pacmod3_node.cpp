@@ -45,6 +45,9 @@ ros::Publisher steering_rpt_detail_3_pub;
 ros::Publisher brake_rpt_detail_1_pub;
 ros::Publisher brake_rpt_detail_2_pub;
 ros::Publisher brake_rpt_detail_3_pub;
+ros::Publisher detected_object_rpt_pub;
+ros::Publisher vehicle_controls_rpt_pub;
+ros::Publisher vehicle_dynamics_rpt_pub;
 
 //Vehicle-Specific Subscribers
 std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
