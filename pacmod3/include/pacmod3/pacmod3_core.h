@@ -549,24 +549,34 @@ namespace PACMod3
   {
     public:
       static const int64_t CAN_ID;
+      double front_object_distance_low_res;
+      double front_object_distance_high_res;
 
       void parse(uint8_t *in);
   };
 
-  class VehicleControlsDetailRptMsg :
+  class VehicleControlsRptMsg :
     public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
 
+      double steering_rate;
+      double steering_torque;
+      uint8_t shift_pos_1;
+      uint8_t shift_pos_2;      
+
       void parse(uint8_t *in);
   };
-
+  
   class VehicleDynamicsRptMsg :
     public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
+
+      uint8_t g_forces;
+      double brake_torque;
 
       void parse(uint8_t *in);
   };
