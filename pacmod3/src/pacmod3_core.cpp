@@ -633,7 +633,7 @@ void SystemCmdBool::encode(bool enable,
   data[0] = (enable ? 0x01 : 0x00);
   data[0] |= (ignore_overrides ? 0x02 : 0x00);
   data[0] |= clear_override ? 0x04 : 0x00;
-  data[1] = (cmd ? 0x00 : 0x01);
+  data[1] = (cmd ? 0x01 : 0x00);
 }
 
 void SystemCmdFloat::encode(bool enable,
