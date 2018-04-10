@@ -329,8 +329,8 @@ void Pacmod3TxRosMsgHandler::fillDetectedObjectRpt(std::shared_ptr<Pacmod3TxMsg>
 {
   auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
 
-       new_msg.front_object_distance_low_res = dc_parser->front_object_distance_low_res;
-       new_msg.front_object_distance_high_res = dc_parser->front_object_distance_high_res;
+  new_msg.front_object_distance_low_res = dc_parser->front_object_distance_low_res;
+  new_msg.front_object_distance_high_res = dc_parser->front_object_distance_high_res;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -344,20 +344,9 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_c
   new_msg.header.stamp = ros::Time::now();
 }
 
-void Pacmod3TxRosMsgHandler::fillVehicleSpecificRpt1(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleSpecificRpt1& new_msg, std::string frame_id)
+void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::HeadlightAuxRpt& new_msg, std::string frame_id)
 {
-  auto dc_parser = std::dynamic_pointer_cast<VehicleSpecificRpt1Msg>(parser_class);
-
-  new_msg.header.frame_id = frame_id;
-  new_msg.header.stamp = ros::Time::now();
-}
-
-void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleDynamicsRpt& new_msg, std::string frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<VehicleDynamicsRptMsg>(parser_class);
-
-       new_msg.g_forces = dc_parser->g_forces;
-       new_msg.brake_torque = dc_parser->brake_torque;
+  auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -437,6 +426,14 @@ void Pacmod3TxRosMsgHandler::fillRearLightsRpt(std::shared_ptr<Pacmod3TxMsg>& pa
   new_msg.header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::TurnAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<TurnAuxRptMsg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ShiftAuxRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<ShiftAuxRptMsg>(parser_class);
@@ -503,6 +500,25 @@ void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt4(std::shared_ptr<Pacmod3TxMsg>& 
   new_msg.header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleDynamicsRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<VehicleDynamicsRptMsg>(parser_class);
+
+       new_msg.g_forces = dc_parser->g_forces;
+       new_msg.brake_torque = dc_parser->brake_torque;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillVehicleSpecificRpt1(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleSpecificRpt1& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<VehicleSpecificRpt1Msg>(parser_class);
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillVehicleSpeedRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleSpeedRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
@@ -538,6 +554,14 @@ void Pacmod3TxRosMsgHandler::fillWheelSpeedRpt(std::shared_ptr<Pacmod3TxMsg>& pa
 	new_msg.front_right_wheel_speed = dc_parser->front_right_wheel_speed;
 	new_msg.rear_left_wheel_speed = dc_parser->rear_left_wheel_speed;
 	new_msg.rear_right_wheel_speed = dc_parser->rear_right_wheel_speed;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::WiperAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<WiperAuxRptMsg>(parser_class);
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();

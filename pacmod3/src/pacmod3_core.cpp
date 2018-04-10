@@ -114,11 +114,20 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case HornRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new HornRptMsg);
       break;
+    case InteriorLightsRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new InteriorLightsRptMsg);
+      break;
     case LatLonHeadingRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new LatLonHeadingRptMsg);
       break;
+    case OccupancyRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new OccupancyRptMsg);
+      break;
     case ParkingBrakeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ParkingBrakeRptMsg);
+      break;
+    case RearLightsRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new RearLightsRptMsg);
       break;
     case ShiftRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
@@ -177,20 +186,20 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case BrakeAuxRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new BrakeAuxRptMsg);
       break;
+    case HeadlightAuxRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new HeadlightAuxRptMsg);
+      break;
     case ShiftAuxRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ShiftAuxRptMsg);
       break;
     case SteerAuxRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteerAuxRptMsg);
       break;
-    case OccupancyRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new OccupancyRptMsg);
+    case TurnAuxRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new TurnAuxRptMsg);
       break;
-    case InteriorLightsRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new InteriorLightsRptMsg);
-      break;
-    case RearLightsRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new RearLightsRptMsg);
+    case WiperAuxRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new WiperAuxRptMsg);
       break;
     default:
       return NULL;
@@ -328,7 +337,7 @@ void DoorRptMsg::parse(uint8_t *in)
 {
 }
 
-void RearLightsRptMsg::parse(uint8_t *in)
+void HeadlightAuxRptMsg::parse(uint8_t *in)
 {
 }
 
@@ -385,6 +394,10 @@ void MotorRpt3Msg::parse(uint8_t *in)
 }
 
 void OccupancyRptMsg::parse(uint8_t *in)
+{
+}
+
+void RearLightsRptMsg::parse(uint8_t *in)
 {
 }
 
@@ -456,6 +469,10 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
 
   temp = ((int16_t)in[2] << 8) | in[3];
   angular_acceleration = (double)(temp / 1000.0);
+}
+
+void TurnAuxRptMsg::parse(uint8_t *in)
+{
 }
 
 void VehicleSpecificRpt1Msg::parse(uint8_t *in)
@@ -595,6 +612,10 @@ void WheelSpeedRptMsg::parse(uint8_t *in)
 
   temp = ((int16_t)in[6] << 8) | in[7];
   rear_right_wheel_speed = (double)(temp / 100.0);
+}
+
+void WiperAuxRptMsg::parse(uint8_t *in)
+{
 }
 
 void YawRateRptMsg::parse(uint8_t *in)
