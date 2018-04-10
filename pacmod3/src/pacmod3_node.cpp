@@ -28,8 +28,6 @@ Pacmod3TxRosMsgHandler handler;
 ros::Publisher wiper_rpt_pub;
 ros::Publisher headlight_rpt_pub;
 ros::Publisher horn_rpt_pub;
-ros::Publisher steer_rpt_2_pub;
-ros::Publisher steer_rpt_3_pub;
 ros::Publisher wheel_speed_rpt_pub;
 ros::Publisher steering_pid_rpt_1_pub;
 ros::Publisher steering_pid_rpt_2_pub;
@@ -46,7 +44,7 @@ ros::Publisher brake_rpt_detail_1_pub;
 ros::Publisher brake_rpt_detail_2_pub;
 ros::Publisher brake_rpt_detail_3_pub;
 ros::Publisher detected_object_rpt_pub;
-ros::Publisher vehicle_controls_rpt_pub;
+ros::Publisher vehicle_specific_rpt_1_pub;
 ros::Publisher vehicle_dynamics_rpt_pub;
 
 //Vehicle-Specific Subscribers
@@ -376,8 +374,6 @@ int main(int argc, char *argv[])
     horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
     lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
     parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
-    steer_rpt_2_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt_2", 20);
-    steer_rpt_3_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt_3", 20);
     steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
     steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
     steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
@@ -390,8 +386,6 @@ int main(int argc, char *argv[])
     pub_tx_list.insert(std::make_pair(HornRptMsg::CAN_ID, horn_rpt_pub));
     pub_tx_list.insert(std::make_pair(LatLonHeadingRptMsg::CAN_ID, lat_lon_heading_rpt_pub));
     pub_tx_list.insert(std::make_pair(ParkingBrakeRptMsg::CAN_ID, parking_brake_rpt_pub));
-    pub_tx_list.insert(std::make_pair(SteerRpt2Msg::CAN_ID, steer_rpt_2_pub));
-    pub_tx_list.insert(std::make_pair(SteerRpt3Msg::CAN_ID, steer_rpt_3_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, steering_pid_rpt_3_pub));

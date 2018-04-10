@@ -282,20 +282,6 @@ namespace PACMod3
   };
 
   // Other Reports
-  class SteerRpt2Msg :
-    public SystemRptFloatMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SteerRpt3Msg :
-    public SystemRptFloatMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
   class RearLightsRptMsg :
     public Pacmod3TxMsg
   {
@@ -556,14 +542,12 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
-  class VehicleControlsRptMsg :
+  class VehicleSpecificRpt1Msg :
     public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
 
-      double steering_rate;
-      double steering_torque;
       uint8_t shift_pos_1;
       uint8_t shift_pos_2;      
 

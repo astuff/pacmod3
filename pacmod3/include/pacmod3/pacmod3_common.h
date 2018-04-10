@@ -40,8 +40,8 @@
 #include <pacmod_msgs/SystemRptBool.h>
 #include <pacmod_msgs/SystemRptFloat.h>
 #include <pacmod_msgs/SystemRptInt.h>
-#include <pacmod_msgs/VehicleControlsRpt.h>
 #include <pacmod_msgs/VehicleDynamicsRpt.h>
+#include <pacmod_msgs/VehicleSpecificRpt1.h>
 #include <pacmod_msgs/VehicleSpeedRpt.h>
 #include <pacmod_msgs/VinRpt.h>
 #include <pacmod_msgs/WheelSpeedRpt.h>

@@ -47,7 +47,6 @@ const int64_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x234;
 const int64_t AS::Drivers::PACMod3::AccelAuxRptMsg::CAN_ID = 0x300;
 const int64_t AS::Drivers::PACMod3::BrakeAuxRptMsg::CAN_ID = 0x304;
 const int64_t AS::Drivers::PACMod3::HeadlightAuxRptMsg::CAN_ID = 0x318;
-const int64_t AS::Drivers::PACMod3::ParkingBrakeAuxRptMsg::CAN_ID = 0x324;
 const int64_t AS::Drivers::PACMod3::ShiftAuxRptMsg::CAN_ID = 0x328;
 const int64_t AS::Drivers::PACMod3::SteerAuxRptMsg::CAN_ID = 0x32C;
 const int64_t AS::Drivers::PACMod3::TurnAuxRptMsg::CAN_ID = 0x330;
@@ -65,14 +64,12 @@ const int64_t AS::Drivers::PACMod3::WheelSpeedRptMsg::CAN_ID = 0x407;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt1Msg::CAN_ID = 0x408;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt2Msg::CAN_ID = 0x409;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt3Msg::CAN_ID = 0x40A;
-const int64_t AS::Drivers::PACMod3::SteerRpt2Msg::CAN_ID = 0x40B;
-const int64_t AS::Drivers::PACMod3::SteerRpt3Msg::CAN_ID = 0x40C;
 const int64_t AS::Drivers::PACMod3::YawRateRptMsg::CAN_ID = 0x40D;
 const int64_t AS::Drivers::PACMod3::LatLonHeadingRptMsg::CAN_ID = 0x40E;
 const int64_t AS::Drivers::PACMod3::DateTimeRptMsg::CAN_ID = 0x40F;
 const int64_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x410;
 const int64_t AS::Drivers::PACMod3::DetectedObjectRptMsg::CAN_ID = 0x411;
-const int64_t AS::Drivers::PACMod3::VehicleControlsRptMsg::CAN_ID = 0x412;
+const int64_t AS::Drivers::PACMod3::VehicleSpecificRpt1Msg::CAN_ID = 0x412;
 const int64_t AS::Drivers::PACMod3::VehicleDynamicsRptMsg::CAN_ID = 0x413;
 const int64_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0x414;
 const int64_t AS::Drivers::PACMod3::OccupancyRptMsg::CAN_ID = 0x415;
@@ -150,17 +147,11 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case SteerRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
       break;
-    case SteerRpt2Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerRpt2Msg);
-      break;
-    case SteerRpt3Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerRpt3Msg);
-      break;
     case TurnSignalRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
       break;
-    case VehicleControlsRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new VehicleControlsRptMsg);
+    case VehicleSpecificRpt1Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpecificRpt1Msg);
       break;      
     case VehicleDynamicsRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new VehicleDynamicsRptMsg);
@@ -467,18 +458,10 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
   angular_acceleration = (double)(temp / 1000.0);
 }
 
-void VehicleControlsRptMsg::parse(uint8_t *in)
+void VehicleSpecificRpt1Msg::parse(uint8_t *in)
 {
-  int16_t temp;
-  
-  temp = (((int16_t)in[0] << 8) | in[1]);
-  steering_rate = (double)(temp / 1000.0);
-  
-  temp = (((int16_t)in[2] << 8) | in[3]);
-  steering_torque = (double)(temp / 1000.0);
-               
-  shift_pos_1 = in[4];
-  shift_pos_2 = in[5];
+  shift_pos_1 = in[0];
+  shift_pos_2 = in[1];
 }
 
 void VehicleDynamicsRptMsg::parse(uint8_t *in)
