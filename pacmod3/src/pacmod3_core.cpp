@@ -306,10 +306,40 @@ void SystemRptFloatMsg::parse(uint8_t *in)
 
 void AccelAuxRptMsg::parse(uint8_t *in)
 {
+  int16_t temp;
+
+  temp = ((int16_t)in[0] << 8) | in[1];
+  raw_pedal_pos = (float)temp / 1000.0;
+
+  temp = ((int16_t)in[2] << 8) | in[3];
+  raw_pedal_force = (float)temp / 1000.0;
+
+  user_interaction = (in[4] & 0x01) > 0;
+  raw_pedal_pos_is_valid = (in[5] & 0x01) > 0;
+  raw_pedal_force_is_valid = (in[5] & 0x02) > 0;
+  user_interaction_is_valid = (in[5] & 0x04) > 0;
 }
 
 void BrakeAuxRptMsg::parse(uint8_t *in)
 {
+  int16_t temp;
+
+  temp = ((int16_t)in[0] << 8) | in[1];
+  raw_pedal_pos = (float)temp / 1000.0;
+
+  temp = ((int16_t)in[2] << 8) | in[3];
+  raw_pedal_force = (float)temp / 1000.0;
+
+  temp = ((int16_t)in[4] << 8) | in[5];
+  raw_brake_pressure = (float)temp / 1000.0;
+
+  user_interaction = (in[6] & 0x01) > 0;
+  brake_on_off = (in[6] & 0x02) > 0;
+  raw_pedal_pos_is_valid = (in[7] & 0x01) > 0;
+  raw_pedal_force_is_valid = (in[7] & 0x02) > 0;
+  raw_brake_pressure_is_valid = (in[7] & 0x04) > 0;
+  user_interaction_is_valid = (in[7] & 0x08) > 0;
+  brake_on_off_is_valid = (in[7] & 0x10) > 0;
 }
 
 void DateTimeRptMsg::parse(uint8_t *in)
@@ -339,6 +369,14 @@ void DoorRptMsg::parse(uint8_t *in)
 
 void HeadlightAuxRptMsg::parse(uint8_t *in)
 {
+  headlights_on = (in[0] & 0x01) > 0;
+  headlights_on_bright = (in[0] & 0x02) > 0;
+  fog_lights_on = (in[0] & 0x04) > 0;
+  headlights_mode = in[1];
+  headlights_on_is_valid = (in[2] & 0x01) > 0;
+  headlights_on_bright_is_valid = (in[2] & 0x02) > 0;
+  fog_lights_on = (in[2] & 0x04) > 0;
+  headlights_mode_is_valid = (in[2] & 0x08) > 0;
 }
 
 void InteriorLightsRptMsg::parse(uint8_t *in)
@@ -403,10 +441,36 @@ void RearLightsRptMsg::parse(uint8_t *in)
 
 void ShiftAuxRptMsg::parse(uint8_t *in)
 {
+  between_gears = (in[0] & 0x01) > 0;
+  stay_in_neutral_mode = (in[0] & 0x02) > 0;
+  brake_interlock_active = (in[0] & 0x04) > 0;
+  speed_interlock_active = (in[0] & 0x08) > 0;
+  between_gears_is_valid = (in[1] & 0x01) > 0;
+  stay_in_neutral_mode_is_valid = (in[1] & 0x02) > 0;
+  brake_interlock_active_is_valid = (in[1] & 0x04) > 0;
+  speed_interlock_active_is_valid = (in[1] & 0x08) > 0;
 }
 
 void SteerAuxRptMsg::parse(uint8_t *in)
 {
+  int16_t temp;
+
+  temp = ((int16_t)in[0] << 8) | in[1];
+  raw_position = (float)temp / 1000.0;
+
+  temp = ((int16_t)in[2] << 8) | in[3];
+  raw_torque = (float)temp / 1000.0;
+
+  uint16_t temp2;
+
+  temp2 = ((uint16_t)in[4] << 8) | in[5];
+  rotation_rate = (float)temp2 / 1000.0;
+
+  user_interaction = (in[6] & 0x01) > 0;
+  raw_position_is_valid = (in[7] & 0x01) > 0;
+  raw_torque_is_valid = (in[7] & 0x02) > 0;
+  rotation_rate_is_valid = (in[7] & 0x04) > 0;
+  user_interaction_is_valid = (in[7] & 0x08) > 0;
 }
 
 void SteeringPIDRpt1Msg::parse(uint8_t *in)
@@ -473,6 +537,10 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
 
 void TurnAuxRptMsg::parse(uint8_t *in)
 {
+  driver_blinker_bulb_on = (in[0] & 0x01) > 0;
+  passenger_blinker_bulb_on = (in[0] & 0x02) > 0;
+  driver_blinker_bulb_on_is_valid = (in[1] & 0x01) > 0;
+  passenger_blinker_bulb_on_is_valid = (in[1] & 0x02) > 0;
 }
 
 void VehicleSpecificRpt1Msg::parse(uint8_t *in)
@@ -616,6 +684,18 @@ void WheelSpeedRptMsg::parse(uint8_t *in)
 
 void WiperAuxRptMsg::parse(uint8_t *in)
 {
+  front_wiping = (in[0] & 0x01) > 0;
+  front_spraying = (in[0] & 0x02) > 0;
+  rear_wiping = (in[0] & 0x04) > 0;
+  rear_spraying = (in[0] & 0x08) > 0;
+  spray_near_empty = (in[0] & 0x10) > 0;
+  spray_empty = (in[0] & 0x20) > 0;
+  front_wiping_is_valid = (in[1] & 0x01) > 0;
+  front_spraying_is_valid = (in[1] & 0x02) > 0;
+  rear_wiping_is_valid = (in[1] & 0x04) > 0;
+  rear_spraying_is_valid = (in[1] & 0x08) > 0;
+  spray_near_empty_is_valid = (in[1] & 0x10) > 0;
+  spray_empty_is_valid = (in[1] & 0x20) > 0;
 }
 
 void YawRateRptMsg::parse(uint8_t *in)

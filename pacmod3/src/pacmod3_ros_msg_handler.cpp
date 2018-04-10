@@ -111,6 +111,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillDoorRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == HeadlightAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::HeadlightAuxRpt new_msg;
+    fillHeadlightAuxRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == InteriorLightsRptMsg::CAN_ID)
   {
     pacmod_msgs::InteriorLightsRpt new_msg;
@@ -171,6 +177,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillSteeringPIDRpt4(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == TurnAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::TurnAuxRpt new_msg;
+    fillTurnAuxRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == YawRateRptMsg::CAN_ID)
   {
     pacmod_msgs::YawRateRpt new_msg;
@@ -193,6 +205,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
   {
     pacmod_msgs::WheelSpeedRpt new_msg;
     fillWheelSpeedRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == WiperAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::WiperAuxRpt new_msg;
+    fillWiperAuxRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
   else if (can_id == DetectedObjectRptMsg::CAN_ID)
@@ -298,6 +316,13 @@ void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(std::shared_ptr<Pacmod3TxMsg>& pars
 {
   auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
 
+  new_msg.raw_pedal_pos = dc_parser->raw_pedal_pos;
+  new_msg.raw_pedal_force = dc_parser->raw_pedal_force;
+  new_msg.user_interaction = dc_parser->user_interaction;
+  new_msg.raw_pedal_pos_is_valid = dc_parser->raw_pedal_pos_is_valid;
+  new_msg.raw_pedal_force_is_valid = dc_parser->raw_pedal_force_is_valid;
+  new_msg.user_interaction_is_valid = dc_parser->user_interaction_is_valid;
+
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
 }
@@ -305,6 +330,16 @@ void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(std::shared_ptr<Pacmod3TxMsg>& pars
 void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::BrakeAuxRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
+
+  new_msg.raw_pedal_pos = dc_parser->raw_pedal_pos;
+  new_msg.raw_pedal_force = dc_parser->raw_pedal_force;
+  new_msg.raw_brake_pressure = dc_parser->raw_brake_pressure;
+  new_msg.user_interaction = dc_parser->user_interaction;
+  new_msg.brake_on_off = dc_parser->brake_on_off;
+  new_msg.raw_pedal_pos_is_valid = dc_parser->raw_pedal_pos_is_valid;
+  new_msg.raw_pedal_force_is_valid = dc_parser->raw_pedal_force_is_valid;
+  new_msg.user_interaction_is_valid = dc_parser->user_interaction_is_valid;
+  new_msg.brake_on_off_is_valid = dc_parser->brake_on_off_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -347,6 +382,15 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_c
 void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::HeadlightAuxRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
+
+  new_msg.headlights_on = dc_parser->headlights_on;
+  new_msg.headlights_on_bright = dc_parser->headlights_on_bright;
+  new_msg.fog_lights_on = dc_parser->fog_lights_on;
+  new_msg.headlights_mode = dc_parser->headlights_mode;
+  new_msg.headlights_on_is_valid = dc_parser->headlights_on_is_valid;
+  new_msg.headlights_on_bright_is_valid = dc_parser->headlights_on_bright_is_valid;
+  new_msg.fog_lights_on_is_valid = dc_parser->fog_lights_on_is_valid;
+  new_msg.headlights_mode_is_valid = dc_parser->headlights_mode_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -426,17 +470,18 @@ void Pacmod3TxRosMsgHandler::fillRearLightsRpt(std::shared_ptr<Pacmod3TxMsg>& pa
   new_msg.header.stamp = ros::Time::now();
 }
 
-void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::TurnAuxRpt& new_msg, std::string frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<TurnAuxRptMsg>(parser_class);
-
-  new_msg.header.frame_id = frame_id;
-  new_msg.header.stamp = ros::Time::now();
-}
-
 void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ShiftAuxRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<ShiftAuxRptMsg>(parser_class);
+
+  new_msg.between_gears = dc_parser->between_gears;
+  new_msg.stay_in_neutral_mode = dc_parser->stay_in_neutral_mode;
+  new_msg.brake_interlock_active = dc_parser->brake_interlock_active;
+  new_msg.speed_interlock_active = dc_parser->speed_interlock_active;
+  new_msg.between_gears_is_valid = dc_parser->between_gears_is_valid;
+  new_msg.stay_in_neutral_mode_is_valid = dc_parser->stay_in_neutral_mode_is_valid;
+  new_msg.brake_interlock_active_is_valid = dc_parser->brake_interlock_active_is_valid;
+  new_msg.speed_interlock_active_is_valid = dc_parser->speed_interlock_active_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -445,6 +490,15 @@ void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(std::shared_ptr<Pacmod3TxMsg>& pars
 void Pacmod3TxRosMsgHandler::fillSteerAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteerAuxRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<SteerAuxRptMsg>(parser_class);
+
+  new_msg.raw_position = dc_parser->raw_position;
+  new_msg.raw_torque = dc_parser->raw_torque;
+  new_msg.rotation_rate = dc_parser->rotation_rate;
+  new_msg.user_interaction = dc_parser->user_interaction;
+  new_msg.raw_position_is_valid = dc_parser->raw_position_is_valid;
+  new_msg.raw_torque_is_valid = dc_parser->raw_torque_is_valid;
+  new_msg.rotation_rate_is_valid = dc_parser->rotation_rate_is_valid;
+  new_msg.user_interaction_is_valid = dc_parser->user_interaction_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -495,6 +549,19 @@ void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt4(std::shared_ptr<Pacmod3TxMsg>& 
 
 	new_msg.angular_velocity = dc_parser->angular_velocity;
 	new_msg.angular_acceleration = dc_parser->angular_acceleration;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::TurnAuxRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<TurnAuxRptMsg>(parser_class);
+
+  new_msg.driver_blinker_bulb_on = dc_parser->driver_blinker_bulb_on;
+  new_msg.passenger_blinker_bulb_on = dc_parser->passenger_blinker_bulb_on;
+  new_msg.driver_blinker_bulb_on_is_valid = dc_parser->driver_blinker_bulb_on_is_valid;
+  new_msg.passenger_blinker_bulb_on_is_valid = dc_parser->passenger_blinker_bulb_on_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -562,6 +629,19 @@ void Pacmod3TxRosMsgHandler::fillWheelSpeedRpt(std::shared_ptr<Pacmod3TxMsg>& pa
 void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::WiperAuxRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<WiperAuxRptMsg>(parser_class);
+
+  new_msg.front_wiping = dc_parser->front_wiping;
+  new_msg.front_spraying = dc_parser->front_spraying;
+  new_msg.rear_wiping = dc_parser->rear_wiping;
+  new_msg.rear_spraying = dc_parser->rear_spraying;
+  new_msg.spray_near_empty = dc_parser->spray_near_empty;
+  new_msg.spray_empty = dc_parser->spray_empty;
+  new_msg.front_wiping_is_valid = dc_parser->front_wiping_is_valid;
+  new_msg.front_spraying_is_valid = dc_parser->front_spraying_is_valid;
+  new_msg.rear_wiping_is_valid = dc_parser->rear_wiping_is_valid;
+  new_msg.rear_spraying_is_valid = dc_parser->rear_spraying_is_valid;
+  new_msg.spray_near_empty_is_valid = dc_parser->spray_near_empty_is_valid;
+  new_msg.spray_empty_is_valid = dc_parser->spray_empty_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
