@@ -285,6 +285,7 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(std::shared_ptr<Pacmod3TxMsg>& parser
 	new_msg.enabled = dc_parser->enabled;
 	new_msg.override_active = dc_parser->override_active;
   new_msg.fault_active = dc_parser->fault_active;
+  new_msg.config_fault_active = dc_parser->config_fault_active;
 	new_msg.user_can_timeout = dc_parser->user_can_timeout;
 	new_msg.steering_can_timeout = dc_parser->steering_can_timeout;
 	new_msg.brake_can_timeout = dc_parser->brake_can_timeout;

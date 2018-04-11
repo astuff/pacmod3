@@ -244,6 +244,7 @@ void GlobalRptMsg::parse(uint8_t *in)
   enabled = in[0] & 0x01;
   override_active = ((in[0] & 0x02) > 0);
   fault_active = ((in[0] & 0x80) > 0);
+  config_fault_active = ((in[1] & 0x01) > 0);
   user_can_timeout = ((in[0] & 0x04) > 0);
   steering_can_timeout = ((in[0] & 0x08) > 0);
   brake_can_timeout = ((in[0] & 0x10) > 0);

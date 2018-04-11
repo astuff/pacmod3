@@ -99,6 +99,7 @@ namespace PACMod3
       bool enabled;
       bool override_active;
       bool fault_active;
+      bool config_fault_active;
       bool user_can_timeout;
       bool steering_can_timeout;
       bool brake_can_timeout;
