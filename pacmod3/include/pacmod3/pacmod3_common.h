@@ -23,6 +23,7 @@
 #include <pacmod_msgs/DateTimeRpt.h>
 #include <pacmod_msgs/DetectedObjectRpt.h>
 #include <pacmod_msgs/DoorRpt.h>
+#include <pacmod_msgs/HeadlightAuxRpt.h>
 #include <pacmod_msgs/InteriorLightsRpt.h>
 #include <pacmod_msgs/LatLonHeadingRpt.h>
 #include <pacmod_msgs/MotorRpt1.h>
@@ -40,11 +41,13 @@
 #include <pacmod_msgs/SystemRptBool.h>
 #include <pacmod_msgs/SystemRptFloat.h>
 #include <pacmod_msgs/SystemRptInt.h>
-#include <pacmod_msgs/VehicleControlsRpt.h>
+#include <pacmod_msgs/TurnAuxRpt.h>
 #include <pacmod_msgs/VehicleDynamicsRpt.h>
+#include <pacmod_msgs/VehicleSpecificRpt1.h>
 #include <pacmod_msgs/VehicleSpeedRpt.h>
 #include <pacmod_msgs/VinRpt.h>
 #include <pacmod_msgs/WheelSpeedRpt.h>
+#include <pacmod_msgs/WiperAuxRpt.h>
 #include <pacmod_msgs/YawRateRpt.h>
 
 #endif

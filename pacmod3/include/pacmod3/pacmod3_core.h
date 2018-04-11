@@ -215,6 +215,13 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
+      float raw_pedal_pos;
+      float raw_pedal_force;
+      bool user_interaction;
+      bool raw_pedal_pos_is_valid;
+      bool raw_pedal_force_is_valid;
+      bool user_interaction_is_valid;
+
       void parse(uint8_t *in);
   };
 
@@ -223,6 +230,17 @@ namespace PACMod3
   {
     public:
       static const int64_t CAN_ID;
+
+      float raw_pedal_pos;
+      float raw_pedal_force;
+      float raw_brake_pressure;
+      bool user_interaction;
+      bool brake_on_off;
+      bool raw_pedal_pos_is_valid;
+      bool raw_pedal_force_is_valid;
+      bool raw_brake_pressure_is_valid;
+      bool user_interaction_is_valid;
+      bool brake_on_off_is_valid;
 
       void parse(uint8_t *in);
   };
@@ -233,14 +251,14 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
-      void parse(uint8_t *in);
-  };
-
-  class ParkingBrakeAuxRptMsg :
-    public Pacmod3TxMsg
-  {
-    public:
-      static const int64_t CAN_ID;
+      bool headlights_on;
+      bool headlights_on_bright;
+      bool fog_lights_on;
+      uint8_t headlights_mode;
+      bool headlights_on_is_valid;
+      bool headlights_on_bright_is_valid;
+      bool fog_lights_on_is_valid;
+      bool headlights_mode_is_valid;
 
       void parse(uint8_t *in);
   };
@@ -251,6 +269,15 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
+      bool between_gears;
+      bool stay_in_neutral_mode;
+      bool brake_interlock_active;
+      bool speed_interlock_active;
+      bool between_gears_is_valid;
+      bool stay_in_neutral_mode_is_valid;
+      bool brake_interlock_active_is_valid;
+      bool speed_interlock_active_is_valid;
+
       void parse(uint8_t *in);
   };
 
@@ -259,6 +286,15 @@ namespace PACMod3
   {
     public:
       static const int64_t CAN_ID;
+
+      float raw_position;
+      float raw_torque;
+      float rotation_rate;
+      bool user_interaction;
+      bool raw_position_is_valid;
+      bool raw_torque_is_valid;
+      bool rotation_rate_is_valid;
+      bool user_interaction_is_valid;
 
       void parse(uint8_t *in);
   };
@@ -269,6 +305,11 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
+      bool driver_blinker_bulb_on;
+      bool passenger_blinker_bulb_on;
+      bool driver_blinker_bulb_on_is_valid;
+      bool passenger_blinker_bulb_on_is_valid;
+
       void parse(uint8_t *in);
   };
 
@@ -278,24 +319,23 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
+      bool front_wiping;
+      bool front_spraying;
+      bool rear_wiping;
+      bool rear_spraying;
+      bool spray_near_empty;
+      bool spray_empty;
+      bool front_wiping_is_valid;
+      bool front_spraying_is_valid;
+      bool rear_wiping_is_valid;
+      bool rear_spraying_is_valid;
+      bool spray_near_empty_is_valid;
+      bool spray_empty_is_valid;
+
       void parse(uint8_t *in);
   };
 
   // Other Reports
-  class SteerRpt2Msg :
-    public SystemRptFloatMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
-  class SteerRpt3Msg :
-    public SystemRptFloatMsg
-  {
-    public:
-      static const int64_t CAN_ID;
-  };
-
   class RearLightsRptMsg :
     public Pacmod3TxMsg
   {
@@ -556,14 +596,12 @@ namespace PACMod3
       void parse(uint8_t *in);
   };
 
-  class VehicleControlsRptMsg :
+  class VehicleSpecificRpt1Msg :
     public Pacmod3TxMsg
   {
     public:
       static const int64_t CAN_ID;
 
-      double steering_rate;
-      double steering_torque;
       uint8_t shift_pos_1;
       uint8_t shift_pos_2;      
 

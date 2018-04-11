@@ -47,6 +47,7 @@ namespace PACMod3
       void fillDateTimeRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DateTimeRpt& new_msg, std::string frame_id);
       void fillDetectedObjectRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DetectedObjectRpt& new_msg, std::string frame_id);
       void fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DoorRpt& new_msg, std::string frame_id);
+      void fillHeadlightAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::HeadlightAuxRpt& new_msg, std::string frame_id);
       void fillInteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::InteriorLightsRpt& new_msg, std::string frame_id);
       void fillLatLonHeadingRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::LatLonHeadingRpt& new_msg, std::string frame_id);
       void fillMotorRpt1(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::MotorRpt1& new_msg, std::string frame_id);
@@ -60,11 +61,13 @@ namespace PACMod3
       void fillSteeringPIDRpt2(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteeringPIDRpt2& new_msg, std::string frame_id);
       void fillSteeringPIDRpt3(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteeringPIDRpt3& new_msg, std::string frame_id);
       void fillSteeringPIDRpt4(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SteeringPIDRpt4& new_msg, std::string frame_id);
-      void fillVehicleControlsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleControlsRpt& new_msg, std::string frame_id);
+      void fillTurnAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::TurnAuxRpt& new_msg, std::string frame_id);
+      void fillVehicleSpecificRpt1(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleSpecificRpt1& new_msg, std::string frame_id);
       void fillVehicleDynamicsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleDynamicsRpt& new_msg, std::string frame_id);
       void fillVehicleSpeedRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VehicleSpeedRpt& new_msg, std::string frame_id);
       void fillVinRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::VinRpt& new_msg, std::string frame_id);
       void fillWheelSpeedRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::WheelSpeedRpt& new_msg, std::string frame_id);
+      void fillWiperAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::WiperAuxRpt& new_msg, std::string frame_id);
       void fillYawRateRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::YawRateRpt& new_msg, std::string frame_id);
   };
 
