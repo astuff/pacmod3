@@ -26,10 +26,10 @@ Pacmod3TxRosMsgHandler handler;
 
 //Vehicle-Specific Publishers
 ros::Publisher wiper_rpt_pub;
+ros::Publisher wiper_aux_rpt_pub;
 ros::Publisher headlight_rpt_pub;
+ros::Publisher headlight_aux_rpt_pub;
 ros::Publisher horn_rpt_pub;
-ros::Publisher steer_rpt_2_pub;
-ros::Publisher steer_rpt_3_pub;
 ros::Publisher wheel_speed_rpt_pub;
 ros::Publisher steering_pid_rpt_1_pub;
 ros::Publisher steering_pid_rpt_2_pub;
@@ -46,7 +46,7 @@ ros::Publisher brake_rpt_detail_1_pub;
 ros::Publisher brake_rpt_detail_2_pub;
 ros::Publisher brake_rpt_detail_3_pub;
 ros::Publisher detected_object_rpt_pub;
-ros::Publisher vehicle_controls_rpt_pub;
+ros::Publisher vehicle_specific_rpt_1_pub;
 ros::Publisher vehicle_dynamics_rpt_pub;
 
 //Vehicle-Specific Subscribers
@@ -66,6 +66,11 @@ ros::Publisher vehicle_speed_pub;
 ros::Publisher vehicle_speed_ms_pub;
 ros::Publisher enabled_pub;
 ros::Publisher can_rx_pub;
+ros::Publisher accel_aux_rpt_pub;
+ros::Publisher brake_aux_rpt_pub;
+ros::Publisher shift_aux_rpt_pub;
+ros::Publisher steer_aux_rpt_pub;
+ros::Publisher turn_aux_rpt_pub;
 
 std::unordered_map<long long, std::shared_ptr<LockedData>> rx_list;
 
@@ -300,6 +305,11 @@ int main(int argc, char *argv[])
   turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
   vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
   vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
+  accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+  brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+  shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+  steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+  turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
 
   enabled_pub = n.advertise<std_msgs::Bool>("as_tx/enabled", 20, true);
   vehicle_speed_ms_pub = n.advertise<std_msgs::Float64>("as_tx/vehicle_speed", 20);
@@ -315,6 +325,11 @@ int main(int argc, char *argv[])
   pub_tx_list.insert(std::make_pair(TurnSignalRptMsg::CAN_ID, turn_rpt_pub));
   pub_tx_list.insert(std::make_pair(VehicleSpeedRptMsg::CAN_ID, vehicle_speed_pub));
   pub_tx_list.insert(std::make_pair(VinRptMsg::CAN_ID, vin_rpt_pub));
+  pub_tx_list.insert(std::make_pair(AccelAuxRptMsg::CAN_ID, accel_aux_rpt_pub));
+  pub_tx_list.insert(std::make_pair(BrakeAuxRptMsg::CAN_ID, brake_aux_rpt_pub));
+  pub_tx_list.insert(std::make_pair(ShiftAuxRptMsg::CAN_ID, shift_aux_rpt_pub));
+  pub_tx_list.insert(std::make_pair(SteerAuxRptMsg::CAN_ID, steer_aux_rpt_pub));
+  pub_tx_list.insert(std::make_pair(TurnAuxRptMsg::CAN_ID, turn_aux_rpt_pub));
 
   // Subscribe to messages
   ros::Subscriber can_tx_sub = n.subscribe("can_tx", 20, can_read);
@@ -360,8 +375,10 @@ int main(int argc, char *argv[])
   if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
   {
     wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
+    wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
 
     pub_tx_list.insert(std::make_pair(WiperRptMsg::CAN_ID, wiper_rpt_pub));
+    pub_tx_list.insert(std::make_pair(WiperAuxRptMsg::CAN_ID, wiper_aux_rpt_pub));
 
     wiper_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd)));
 
@@ -376,28 +393,26 @@ int main(int argc, char *argv[])
     horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
     lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
     parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
-    steer_rpt_2_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt_2", 20);
-    steer_rpt_3_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt_3", 20);
     steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
     steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
     steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
     steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
     wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
     yaw_rate_rpt_pub = n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
+    headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
 
     pub_tx_list.insert(std::make_pair(DateTimeRptMsg::CAN_ID, date_time_rpt_pub));
     pub_tx_list.insert(std::make_pair(HeadlightRptMsg::CAN_ID, headlight_rpt_pub));
     pub_tx_list.insert(std::make_pair(HornRptMsg::CAN_ID, horn_rpt_pub));
     pub_tx_list.insert(std::make_pair(LatLonHeadingRptMsg::CAN_ID, lat_lon_heading_rpt_pub));
     pub_tx_list.insert(std::make_pair(ParkingBrakeRptMsg::CAN_ID, parking_brake_rpt_pub));
-    pub_tx_list.insert(std::make_pair(SteerRpt2Msg::CAN_ID, steer_rpt_2_pub));
-    pub_tx_list.insert(std::make_pair(SteerRpt3Msg::CAN_ID, steer_rpt_3_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, steering_pid_rpt_3_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt4Msg::CAN_ID, steering_pid_rpt_4_pub));
     pub_tx_list.insert(std::make_pair(WheelSpeedRptMsg::CAN_ID, wheel_speed_rpt_pub));
     pub_tx_list.insert(std::make_pair(YawRateRptMsg::CAN_ID, yaw_rate_rpt_pub));
+    pub_tx_list.insert(std::make_pair(HeadlightAuxRptMsg::CAN_ID, headlight_aux_rpt_pub));
 
     headlight_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd)));
     horn_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd)));
