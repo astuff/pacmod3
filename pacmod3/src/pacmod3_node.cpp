@@ -316,6 +316,8 @@ int main(int argc, char *argv[])
       veh_type = INTERNATIONAL_PROSTAR_122;
     else if (veh_type_string == "LEXUS_RX_450H")
       veh_type = LEXUS_RX_450H;
+    else if (veh_type_string == "VEHICLE_5")
+      veh_type = VEHICLE_5;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
@@ -400,7 +402,8 @@ int main(int argc, char *argv[])
     pub_tx_list.insert(std::make_pair(SteerMotorRpt3Msg::CAN_ID, steering_rpt_detail_3_pub));
   }
 
-  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
+  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
+      veh_type == VehicleType::VEHICLE_5)
   {
     wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
@@ -414,17 +417,14 @@ int main(int argc, char *argv[])
     rx_list.insert(std::make_pair(WiperCmdMsg::CAN_ID, wiper_data));
   }
 
-  if (veh_type == VehicleType::LEXUS_RX_450H)
+  if (veh_type == VehicleType::LEXUS_RX_450H ||
+      veh_type == VehicleType::VEHICLE_5)
   {
     date_time_rpt_pub = n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
     headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
     horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
     lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
     parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
-    steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
-    steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
-    steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
-    steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
     wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
     yaw_rate_rpt_pub = n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
     headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
@@ -434,10 +434,6 @@ int main(int argc, char *argv[])
     pub_tx_list.insert(std::make_pair(HornRptMsg::CAN_ID, horn_rpt_pub));
     pub_tx_list.insert(std::make_pair(LatLonHeadingRptMsg::CAN_ID, lat_lon_heading_rpt_pub));
     pub_tx_list.insert(std::make_pair(ParkingBrakeRptMsg::CAN_ID, parking_brake_rpt_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, steering_pid_rpt_3_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt4Msg::CAN_ID, steering_pid_rpt_4_pub));
     pub_tx_list.insert(std::make_pair(WheelSpeedRptMsg::CAN_ID, wheel_speed_rpt_pub));
     pub_tx_list.insert(std::make_pair(YawRateRptMsg::CAN_ID, yaw_rate_rpt_pub));
     pub_tx_list.insert(std::make_pair(HeadlightAuxRptMsg::CAN_ID, headlight_aux_rpt_pub));
@@ -450,6 +446,47 @@ int main(int argc, char *argv[])
 
     rx_list.insert(std::make_pair(HeadlightCmdMsg::CAN_ID, headlight_data));
     rx_list.insert(std::make_pair(HornCmdMsg::CAN_ID, horn_data));
+  }
+
+  if (veh_type == VehicleType::LEXUS_RX_450H)
+  {
+    steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
+    steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
+    steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
+    steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
+
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, steering_pid_rpt_3_pub));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt4Msg::CAN_ID, steering_pid_rpt_4_pub));
+  }
+
+  if (veh_type == VehicleType::VEHICLE_5)
+  {
+    cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
+    dash_controls_left_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_left_rpt", 20);
+    dash_controls_right_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_right_rpt", 20);
+    media_controls_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_controls_rpt", 20);
+
+    pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
+    pub_tx_list.insert(std::make_pair(DashControlsLeftRptMsg::CAN_ID, dash_controls_left_rpt_pub));
+    pub_tx_list.insert(std::make_pair(DashControlsRightRptMsg::CAN_ID, dash_controls_right_rpt_pub));
+    pub_tx_list.insert(std::make_pair(MediaControlsRptMsg::CAN_ID, media_controls_rpt_pub));
+
+    cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
+    dash_controls_left_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_left_cmd", 20, callback_dash_controls_left_set_cmd)));
+    dash_controls_right_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_right_cmd", 20, callback_dash_controls_right_set_cmd)));
+    media_controls_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/media_controls_cmd", 20, callback_media_controls_set_cmd)));
+
+    std::shared_ptr<LockedData> cruise_control_buttons_data(new LockedData);
+    std::shared_ptr<LockedData> dash_controls_left_data(new LockedData);
+    std::shared_ptr<LockedData> dash_controls_right_data(new LockedData);
+    std::shared_ptr<LockedData> media_controls_data(new LockedData);
+
+    rx_list.insert(std::make_pair(CruiseControlButtonsCmdMsg::CAN_ID, cruise_control_buttons_data));
+    rx_list.insert(std::make_pair(DashControlsLeftCmdMsg::CAN_ID, dash_controls_left_data));
+    rx_list.insert(std::make_pair(DashControlsRightCmdMsg::CAN_ID, dash_controls_right_data));
+    rx_list.insert(std::make_pair(MediaControlsCmdMsg::CAN_ID, media_controls_data));
   }
 
   // Initialize rx_list with all 0s

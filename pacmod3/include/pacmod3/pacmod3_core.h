@@ -25,7 +25,8 @@ namespace PACMod3
     POLARIS_GEM,
     POLARIS_RANGER,
     INTERNATIONAL_PROSTAR_122,
-    LEXUS_RX_450H
+    LEXUS_RX_450H,
+    VEHICLE_5
   };
 
   class Pacmod3TxMsg
