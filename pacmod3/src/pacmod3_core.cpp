@@ -96,6 +96,15 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
     case BrakeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new BrakeRptMsg);
       break;
+    case CruiseControlButtonsRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new CruiseControlButtonsRptMsg);
+      break;
+    case DashControlsLeftRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new DashControlsLeftRptMsg);
+      break;
+    case DashControlsRightRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new DashControlsRightRptMsg);
+      break;
     case DateTimeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new DateTimeRptMsg);
       break;
@@ -119,6 +128,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
       break;
     case LatLonHeadingRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new LatLonHeadingRptMsg);
+      break;
+    case MediaControlsRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new MediaControlsRptMsg);
       break;
     case OccupancyRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new OccupancyRptMsg);

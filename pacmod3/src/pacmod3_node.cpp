@@ -25,6 +25,10 @@ std::unordered_map<int64_t, ros::Publisher> pub_tx_list;
 Pacmod3TxRosMsgHandler handler;
 
 //Vehicle-Specific Publishers
+ros::Publisher cruise_control_buttons_rpt_pub;
+ros::Publisher dash_controls_left_rpt_pub;
+ros::Publisher dash_controls_right_rpt_pub;
+ros::Publisher media_controls_rpt_pub;
 ros::Publisher wiper_rpt_pub;
 ros::Publisher wiper_aux_rpt_pub;
 ros::Publisher headlight_rpt_pub;
@@ -52,7 +56,11 @@ ros::Publisher vehicle_dynamics_rpt_pub;
 //Vehicle-Specific Subscribers
 std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
                                  headlight_set_cmd_sub,
-                                 horn_set_cmd_sub;
+                                 horn_set_cmd_sub,
+                                 cruise_control_buttons_set_cmd_sub,
+                                 dash_controls_left_set_cmd_sub,
+                                 dash_controls_right_set_cmd_sub,
+                                 media_controls_set_cmd_sub;
 
 // Advertise published messages
 ros::Publisher global_rpt_pub;
@@ -139,6 +147,21 @@ void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
   lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
+void callback_cruise_control_buttons_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
+}
+
+void callback_dash_controls_left_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
+}
+
+void callback_dash_controls_right_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
+}
+
 //Listens for incoming requests to change the state of the headlights
 void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
@@ -149,6 +172,11 @@ void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
   lookup_and_encode(HornCmdMsg::CAN_ID, msg);
+}
+
+void callback_media_controls_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the gear shifter state
