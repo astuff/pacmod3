@@ -596,6 +596,8 @@ void VinRptMsg::parse(uint8_t *in)
     mfg = "NAVISTAR, INC.";
   else if (mfg_code == "2T2")
     mfg = "TOYOTA MOTOR MANUFACTURING CANADA";
+  else
+    mfg = "UNKNOWN";
 
   model_year_code = in[3];
 
@@ -670,7 +672,13 @@ void VinRptMsg::parse(uint8_t *in)
       case 'Y':
         model_year = 2030;
         break;
+      default:
+        model_year = 9999;
     }
+  }
+  else
+  {
+    model_year = 9999;
   }
 
   serial = (in[4] & 0x0F);
