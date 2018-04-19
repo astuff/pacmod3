@@ -582,8 +582,8 @@ void Pacmod3TxRosMsgHandler::fillVehicleSpecificRpt1(std::shared_ptr<Pacmod3TxMs
 {
   auto dc_parser = std::dynamic_pointer_cast<VehicleSpecificRpt1Msg>(parser_class);
 
-	new_msg.shift_pos_1 = dc_parser->shift_pos_1;
-	new_msg.shift_pos_2 = dc_parser->shift_pos_2;
+  new_msg.shift_pos_1 = dc_parser->shift_pos_1;
+  new_msg.shift_pos_2 = dc_parser->shift_pos_2;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
