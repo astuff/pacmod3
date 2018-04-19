@@ -316,6 +316,8 @@ int main(int argc, char *argv[])
       veh_type = INTERNATIONAL_PROSTAR_122;
     else if (veh_type_string == "LEXUS_RX_450H")
       veh_type = LEXUS_RX_450H;
+    else if (veh_type_string == "VEHICLE_4")
+      veh_type = VEHICLE_4;
     else if (veh_type_string == "VEHICLE_5")
       veh_type = VEHICLE_5;
     else
@@ -446,6 +448,15 @@ int main(int argc, char *argv[])
 
     rx_list.insert(std::make_pair(HeadlightCmdMsg::CAN_ID, headlight_data));
     rx_list.insert(std::make_pair(HornCmdMsg::CAN_ID, horn_data));
+  }
+
+  if (veh_type == VehicleType::VEHICLE_4)
+  {
+    detected_object_rpt_pub = n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
+    vehicle_dynamics_rpt_pub = n.advertise<pacmod_msgs::VehicleDynamicsRpt>("parsed_tx/vehicle_dynamics_rpt", 20);
+
+    pub_tx_list.insert(std::make_pair(DetectedObjectRptMsg::CAN_ID, detected_object_rpt_pub));
+    pub_tx_list.insert(std::make_pair(VehicleDynamicsRptMsg::CAN_ID, vehicle_dynamics_rpt_pub));
   }
 
   if (veh_type == VehicleType::LEXUS_RX_450H)
