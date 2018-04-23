@@ -375,6 +375,21 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(std::shared_ptr<Pacmod3TxMsg>& parser_c
 {
   auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
 
+  new_msg.driver_door_open = dc_parser->driver_door_open;
+  new_msg.driver_door_open_is_valid = dc_parser->driver_door_open_is_valid;
+  new_msg.passenger_door_open = dc_parser->passenger_door_open;
+  new_msg.passenger_door_open_is_valid = dc_parser->passenger_door_open_is_valid;
+  new_msg.rear_driver_door_open = dc_parser->rear_driver_door_open;
+  new_msg.rear_driver_door_open_is_valid = dc_parser->rear_driver_door_open_is_valid;
+  new_msg.rear_passenger_door_open = dc_parser->rear_passenger_door_open;
+  new_msg.rear_passenger_door_open_is_valid = dc_parser->rear_passenger_door_open_is_valid;
+  new_msg.hood_open = dc_parser->hood_open;
+  new_msg.hood_open_is_valid = dc_parser->hood_open_is_valid;
+  new_msg.trunk_open = dc_parser->trunk_open;
+  new_msg.trunk_open_is_valid = dc_parser->trunk_open_is_valid;
+  new_msg.fuel_door_open = dc_parser->fuel_door_open;
+  new_msg.fuel_door_open_is_valid = dc_parser->fuel_door_open_is_valid;
+
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
 }
@@ -399,6 +414,15 @@ void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(std::shared_ptr<Pacmod3TxMsg>& 
 void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::InteriorLightsRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
+
+  new_msg.front_dome_lights_on = dc_parser->front_dome_lights_on;
+  new_msg.front_dome_lights_on_is_valid = dc_parser->front_dome_lights_on_is_valid;
+  new_msg.rear_dome_lights_on = dc_parser->rear_dome_lights_on;
+  new_msg.rear_dome_lights_on_is_valid = dc_parser->rear_dome_lights_on_is_valid;
+  new_msg.mood_lights_on = dc_parser->mood_lights_on;
+  new_msg.mood_lights_on_is_valid = dc_parser->mood_lights_on_is_valid;
+  new_msg.dim_level = dc_parser->dim_level;
+  new_msg.dim_level_is_valid = dc_parser->dim_level_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
@@ -458,6 +482,19 @@ void Pacmod3TxRosMsgHandler::fillOccupancyRpt(std::shared_ptr<Pacmod3TxMsg>& par
 {
   auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
 
+  new_msg.driver_seat_occupied = dc_parser->driver_seat_occupied;
+  new_msg.driver_seat_occupied_is_valid = dc_parser->driver_seat_occupied_is_valid;
+  new_msg.passenger_seat_occupied = dc_parser->passenger_seat_occupied;
+  new_msg.passenger_seat_occupied_is_valid = dc_parser->passenger_seat_occupied_is_valid;
+  new_msg.rear_seat_occupied = dc_parser->rear_seat_occupied;
+  new_msg.rear_seat_occupied_is_valid = dc_parser->rear_seat_occupied_is_valid;
+  new_msg.driver_seatbelt_buckled = dc_parser->driver_seatbelt_buckled;
+  new_msg.driver_seatbelt_buckled_is_valid = dc_parser->driver_seatbelt_buckled_is_valid;
+  new_msg.passenger_seatbelt_buckled = dc_parser->passenger_seatbelt_buckled;
+  new_msg.passenger_seatbelt_buckled_is_valid = dc_parser->passenger_seatbelt_buckled_is_valid;
+  new_msg.rear_seatbelt_buckled = dc_parser->rear_seatbelt_buckled;
+  new_msg.rear_seatbelt_buckled_is_valid = dc_parser->rear_seatbelt_buckled_is_valid;
+
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
 }
@@ -465,6 +502,11 @@ void Pacmod3TxRosMsgHandler::fillOccupancyRpt(std::shared_ptr<Pacmod3TxMsg>& par
 void Pacmod3TxRosMsgHandler::fillRearLightsRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::RearLightsRpt& new_msg, std::string frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<RearLightsRptMsg>(parser_class);
+
+  new_msg.brake_lights_on = dc_parser->brake_lights_on;
+  new_msg.brake_lights_on_is_valid = dc_parser->brake_lights_on_is_valid;
+  new_msg.reverse_lights_on = dc_parser->reverse_lights_on;
+  new_msg.reverse_lights_on_is_valid = dc_parser->reverse_lights_on_is_valid;
 
   new_msg.header.frame_id = frame_id;
   new_msg.header.stamp = ros::Time::now();
