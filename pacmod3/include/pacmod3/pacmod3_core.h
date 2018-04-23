@@ -30,6 +30,23 @@ namespace PACMod3
     VEHICLE_5
   };
 
+  enum DimLevel
+  {
+    DIM_LEVEL_MIN = 0,
+    DIM_LEVEL_1 = 1,
+    DIM_LEVEL_2 = 2,
+    DIM_LEVEL_3 = 3,
+    DIM_LEVEL_4 = 4,
+    DIM_LEVEL_5 = 5,
+    DIM_LEVEL_6 = 6,
+    DIM_LEVEL_7 = 7,
+    DIM_LEVEL_8 = 8,
+    DIM_LEVEL_9 = 9,
+    DIM_LEVEL_10 = 10,
+    DIM_LEVEL_11 = 11,
+    DIM_LEVEL_MAX = 12
+  };
+
   class Pacmod3TxMsg
   {
     public:
@@ -345,6 +362,11 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
+      bool brake_lights_on;
+      bool brake_lights_on_is_valid;
+      bool reverse_lights_on;
+      bool reverse_lights_on_is_valid;
+
       void parse(uint8_t *in);
   };
 
@@ -354,6 +376,15 @@ namespace PACMod3
     public:
       static const int64_t CAN_ID;
 
+      bool front_dome_lights_on;
+      bool front_dome_lights_on_is_valid;
+      bool rear_dome_lights_on;
+      bool rear_dome_lights_on_is_valid;
+      bool mood_lights_on;
+      bool mood_lights_on_is_valid;
+      DimLevel dim_level;
+      bool dim_level_is_valid;
+
       void parse(uint8_t *in);
   };
 
@@ -362,6 +393,19 @@ namespace PACMod3
   {
     public:
       static const int64_t CAN_ID;
+
+      bool driver_seat_occupied;
+      bool driver_seat_occupied_is_valid;
+      bool passenger_seat_occupied;
+      bool passenger_seat_occupied_is_valid;
+      bool rear_seat_occupied;
+      bool rear_seat_occupied_is_valid;
+      bool driver_seatbelt_buckled;
+      bool driver_seatbelt_buckled_is_valid;
+      bool passenger_seatbelt_buckled;
+      bool passenger_seatbelt_buckled_is_valid;
+      bool rear_seatbelt_buckled;
+      bool rear_seatbelt_buckled_is_valid;
 
       void parse(uint8_t *in);
   };
@@ -439,6 +483,21 @@ namespace PACMod3
   {
     public:
       static const int64_t CAN_ID;
+
+      bool driver_door_open;
+      bool driver_door_open_is_valid;
+      bool passenger_door_open;
+      bool passenger_door_open_is_valid;
+      bool rear_driver_door_open;
+      bool rear_driver_door_open_is_valid;
+      bool rear_passenger_door_open;
+      bool rear_passenger_door_open_is_valid;
+      bool hood_open;
+      bool hood_open_is_valid;
+      bool trunk_open;
+      bool trunk_open_is_valid;
+      bool fuel_door_open;
+      bool fuel_door_open_is_valid;
 
       void parse(uint8_t *in);
   };

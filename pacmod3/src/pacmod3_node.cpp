@@ -52,6 +52,10 @@ ros::Publisher brake_rpt_detail_3_pub;
 ros::Publisher detected_object_rpt_pub;
 ros::Publisher vehicle_specific_rpt_1_pub;
 ros::Publisher vehicle_dynamics_rpt_pub;
+ros::Publisher occupancy_rpt_pub;
+ros::Publisher interior_lights_rpt_pub;
+ros::Publisher door_rpt_pub;
+ros::Publisher rear_lights_rpt_pub;
 
 //Vehicle-Specific Subscribers
 std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
@@ -477,11 +481,19 @@ int main(int argc, char *argv[])
     dash_controls_left_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_left_rpt", 20);
     dash_controls_right_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_right_rpt", 20);
     media_controls_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_controls_rpt", 20);
+    occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
+    interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
+    door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
+    rear_lights_rpt_pub = n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
 
     pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
     pub_tx_list.insert(std::make_pair(DashControlsLeftRptMsg::CAN_ID, dash_controls_left_rpt_pub));
     pub_tx_list.insert(std::make_pair(DashControlsRightRptMsg::CAN_ID, dash_controls_right_rpt_pub));
     pub_tx_list.insert(std::make_pair(MediaControlsRptMsg::CAN_ID, media_controls_rpt_pub));
+    pub_tx_list.insert(std::make_pair(OccupancyRptMsg::CAN_ID, occupancy_rpt_pub));
+    pub_tx_list.insert(std::make_pair(InteriorLightsRptMsg::CAN_ID, interior_lights_rpt_pub));
+    pub_tx_list.insert(std::make_pair(DoorRptMsg::CAN_ID, door_rpt_pub));
+    pub_tx_list.insert(std::make_pair(RearLightsRptMsg::CAN_ID, rear_lights_rpt_pub));
 
     cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
     dash_controls_left_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_left_cmd", 20, callback_dash_controls_left_set_cmd)));

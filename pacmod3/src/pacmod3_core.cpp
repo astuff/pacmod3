@@ -378,6 +378,20 @@ void DetectedObjectRptMsg::parse(uint8_t *in)
 
 void DoorRptMsg::parse(uint8_t *in)
 {
+  driver_door_open = ((in[0] & 0x01) > 0);
+  driver_door_open_is_valid = ((in[1] & 0x01) > 0);
+  passenger_door_open = ((in[0] & 0x02) > 0);
+  passenger_door_open_is_valid = ((in[1] & 0x02) > 0);
+  rear_driver_door_open = ((in[0] & 0x04) > 0);
+  rear_driver_door_open_is_valid = ((in[1] & 0x04) > 0);
+  rear_passenger_door_open = ((in[0] & 0x08) > 0);
+  rear_passenger_door_open_is_valid = ((in[1] & 0x08) > 0);
+  hood_open = ((in[0] & 0x10) > 0);
+  hood_open_is_valid = ((in[1] & 0x10) > 0);
+  trunk_open = ((in[0] & 0x20) > 0);
+  trunk_open_is_valid = ((in[1] & 0x20) > 0);
+  fuel_door_open = ((in[0] & 0x40) > 0);
+  fuel_door_open_is_valid = ((in[1] & 0x40) > 0);
 }
 
 void HeadlightAuxRptMsg::parse(uint8_t *in)
@@ -394,6 +408,14 @@ void HeadlightAuxRptMsg::parse(uint8_t *in)
 
 void InteriorLightsRptMsg::parse(uint8_t *in)
 {
+  front_dome_lights_on = ((in[0] & 0x01) > 0);
+  front_dome_lights_on_is_valid = ((in[2] & 0x01) > 0);
+  rear_dome_lights_on = ((in[0] & 0x02) > 0);
+  rear_dome_lights_on_is_valid = ((in[2] & 0x02) > 0);
+  mood_lights_on = ((in[0] & 0x04) > 0);
+  mood_lights_on_is_valid = ((in[2] & 0x04) > 0);
+  dim_level = (DimLevel)in[1];
+  dim_level_is_valid = ((in[2] & 0x08) > 0);
 }
 
 void LatLonHeadingRptMsg::parse(uint8_t *in)
@@ -446,10 +468,26 @@ void MotorRpt3Msg::parse(uint8_t *in)
 
 void OccupancyRptMsg::parse(uint8_t *in)
 {
+  driver_seat_occupied = ((in[0] & 0x01) > 0);
+  driver_seat_occupied_is_valid = ((in[1] & 0x01) > 0);
+  passenger_seat_occupied = ((in[0] & 0x02) > 0);
+  passenger_seat_occupied_is_valid = ((in[1] & 0x02) > 0);
+  rear_seat_occupied = ((in[0] & 0x04) > 0);
+  rear_seat_occupied_is_valid = ((in[1] & 0x04) > 0);
+  driver_seatbelt_buckled = ((in[0] & 0x08) > 0);
+  driver_seatbelt_buckled_is_valid = ((in[1] & 0x08) > 0);
+  passenger_seatbelt_buckled = ((in[0] & 0x10) > 0);
+  passenger_seatbelt_buckled_is_valid = ((in[1] & 0x10) > 0);
+  rear_seatbelt_buckled = ((in[0] & 0x20) > 0);
+  rear_seatbelt_buckled_is_valid = ((in[1] & 0x20) > 0);
 }
 
 void RearLightsRptMsg::parse(uint8_t *in)
 {
+  brake_lights_on = ((in[0] & 0x01) > 0);
+  brake_lights_on_is_valid = ((in[1] & 0x01) > 0);
+  reverse_lights_on = ((in[0] & 0x02) > 0);
+  reverse_lights_on_is_valid = ((in[1] & 0x02) > 0);
 }
 
 void ShiftAuxRptMsg::parse(uint8_t *in)
