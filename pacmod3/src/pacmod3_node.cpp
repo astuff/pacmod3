@@ -404,8 +404,7 @@ int main(int argc, char *argv[])
     pub_tx_list.insert(std::make_pair(SteerMotorRpt3Msg::CAN_ID, steering_rpt_detail_3_pub));
   }
 
-  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
-      veh_type == VehicleType::VEHICLE_5)
+  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
   {
     wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
