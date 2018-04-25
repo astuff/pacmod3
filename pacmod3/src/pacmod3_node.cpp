@@ -290,7 +290,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
 
       // Now publish by itself
       std_msgs::Float64 veh_spd_ms_msg;
-      veh_spd_ms_msg.data = (dc_parser->vehicle_speed)*0.44704;
+      veh_spd_ms_msg.data = (dc_parser->vehicle_speed);
       vehicle_speed_ms_pub.publish(veh_spd_ms_msg);
     }
   }
