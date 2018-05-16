@@ -83,6 +83,7 @@ ros::Publisher brake_aux_rpt_pub;
 ros::Publisher shift_aux_rpt_pub;
 ros::Publisher steer_aux_rpt_pub;
 ros::Publisher turn_aux_rpt_pub;
+ros::Publisher all_system_statuses_pub;
 
 std::unordered_map<long long, std::shared_ptr<LockedData>> rx_list;
 
@@ -106,6 +107,24 @@ void set_enable(bool val)
 
     rx_it->second->setData(current_data);
   }
+}
+
+void populate_system_status_msg(pacmod_msgs::AllSystemStatuses* msg, std::string sys_name, const unsigned char& data)
+{
+  pacmod_msgs::KeyValuePair kvp;
+
+  kvp.key = sys_name;
+  kvp.value = (data & 0x01) > 0 ? "True" : "False";
+
+  msg->enabled_status.push_back(kvp);
+
+  kvp.value = (data & 0x02) > 0 ? "True" : "False";
+
+  msg->overridden_status.push_back(kvp);
+
+  kvp.value = (data & 0xFC) > 0 ? "True" : "False";
+
+  msg->fault_status.push_back(kvp);
 }
 
 // Looks up the appropriate LockedData and inserts the command info
@@ -302,7 +321,7 @@ int main(int argc, char *argv[])
   ros::AsyncSpinner spinner(2);
   ros::NodeHandle n;
   ros::NodeHandle priv("~");
-  ros::Rate loop_rate(1.0); //PACMod3 is sending at ~30Hz.
+  ros::Rate loop_rate(30); //PACMod3 is sending at ~30Hz.
 
   // Wait for time to be valid
   while (ros::Time::now().nsec == 0);
@@ -349,6 +368,7 @@ int main(int argc, char *argv[])
 
   enabled_pub = n.advertise<std_msgs::Bool>("as_tx/enabled", 20, true);
   vehicle_speed_ms_pub = n.advertise<std_msgs::Float64>("as_tx/vehicle_speed", 20);
+  all_system_statuses_pub = n.advertise<pacmod_msgs::AllSystemStatuses>("as_tx/all_system_statuses", 20);
 
   std::string frame_id = "pacmod";
 
@@ -537,7 +557,132 @@ int main(int argc, char *argv[])
   // Start callback spinner.
   spinner.start();
 
-  ros::waitForShutdown();
+  while (ros::ok())
+  {
+    pacmod_msgs::AllSystemStatuses ss_msg;
+
+    auto sys_found = rx_list.find(AccelCmdMsg::CAN_ID);
+
+    if (sys_found != rx_list.end())
+    {
+      pacmod_msgs::KeyValuePair kvp;
+      unsigned char data = sys_found->second->getData()[0];
+
+      populate_system_status_msg(&ss_msg, "Accelerator", data);
+    }
+
+    sys_found = rx_list.find(BrakeCmdMsg::CAN_ID);
+
+    if (sys_found != rx_list.end())
+    {
+      pacmod_msgs::KeyValuePair kvp;
+      unsigned char data = sys_found->second->getData()[0];
+
+      populate_system_status_msg(&ss_msg, "Brakes", data);
+    }
+
+    if (veh_type == VEHICLE_5)
+    {
+      sys_found = rx_list.find(CruiseControlButtonsCmdMsg::CAN_ID);
+
+      if (sys_found != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Cruise Control Buttons", data);
+      }
+
+      sys_found = rx_list.find(DashControlsLeftCmdMsg::CAN_ID);
+
+      if (sys_found != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Dash Controls Left", data);
+      }
+
+      sys_found = rx_list.find(DashControlsRightCmdMsg::CAN_ID);
+
+      if (sys_found != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Dash Controls Right", data);
+      }
+    }
+
+    if (veh_type == LEXUS_RX_450H || veh_type == VEHICLE_5)
+    {
+      if (rx_list.find(HeadlightCmdMsg::CAN_ID) != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Headlights", data);
+      }
+
+      if (rx_list.find(HornCmdMsg::CAN_ID) != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Horn", data);
+      }
+    }
+
+    if (veh_type == VEHICLE_5)
+    {
+      if (rx_list.find(MediaControlsCmdMsg::CAN_ID) != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Media Controls", data);
+      }
+    }
+
+    if (rx_list.find(ShiftCmdMsg::CAN_ID) != rx_list.end())
+    {
+      pacmod_msgs::KeyValuePair kvp;
+      unsigned char data = sys_found->second->getData()[0];
+
+      populate_system_status_msg(&ss_msg, "Shifter", data);
+    }
+
+    if (rx_list.find(SteerCmdMsg::CAN_ID) != rx_list.end())
+    {
+      pacmod_msgs::KeyValuePair kvp;
+      unsigned char data = sys_found->second->getData()[0];
+
+      populate_system_status_msg(&ss_msg, "Steering", data);
+    }
+
+    if (rx_list.find(TurnSignalCmdMsg::CAN_ID) != rx_list.end())
+    {
+      pacmod_msgs::KeyValuePair kvp;
+      unsigned char data = sys_found->second->getData()[0];
+
+      populate_system_status_msg(&ss_msg, "Turn Signals", data);
+    }
+
+    if (veh_type == INTERNATIONAL_PROSTAR_122)
+    {
+      if (rx_list.find(WiperCmdMsg::CAN_ID) != rx_list.end())
+      {
+        pacmod_msgs::KeyValuePair kvp;
+        unsigned char data = sys_found->second->getData()[0];
+
+        populate_system_status_msg(&ss_msg, "Wipers", data);
+      }
+    }
+
+    all_system_statuses_pub.publish(ss_msg);
+
+    loop_rate.sleep();
+  }
 
   // Make sure it's disabled when node shuts down
   set_enable(false);
