@@ -52,6 +52,7 @@ namespace PACMod3
     public:
       static std::shared_ptr<Pacmod3TxMsg> make_message(const int64_t& can_id);
       virtual void parse(uint8_t *in) = 0;
+      virtual bool isSystem();
   };
 
   class SystemRptMsg :
@@ -59,6 +60,8 @@ namespace PACMod3
   {
     public:
       SystemRptMsg();
+
+      bool isSystem();
 
       bool enabled;
       bool override_active;
