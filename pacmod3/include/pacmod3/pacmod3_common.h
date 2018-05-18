@@ -19,6 +19,7 @@
 #include <pacmod_msgs/SystemCmdInt.h>
 #include <pacmod_msgs/GlobalRpt.h>
 #include <pacmod_msgs/AccelAuxRpt.h>
+#include <pacmod_msgs/AllSystemStatuses.h>
 #include <pacmod_msgs/BrakeAuxRpt.h>
 #include <pacmod_msgs/DateTimeRpt.h>
 #include <pacmod_msgs/DetectedObjectRpt.h>
