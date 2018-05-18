@@ -11,6 +11,7 @@
 #include <thread>
 #include <unistd.h>
 #include <time.h>
+#include <map>
 #include <unordered_map>
 #include <tuple>
 
@@ -87,7 +88,7 @@ ros::Publisher turn_aux_rpt_pub;
 ros::Publisher all_system_statuses_pub;
 
 std::unordered_map<long long, std::shared_ptr<LockedData>> rx_list;
-std::unordered_map<long long, std::tuple<bool, bool, bool>> system_statuses;
+std::map<long long, std::tuple<bool, bool, bool>> system_statuses;
 
 bool global_keep_going = true;
 std::mutex keep_going_mut;
@@ -591,15 +592,15 @@ int main(int argc, char *argv[])
       else if (system->first == WiperRptMsg::CAN_ID)
         kvp.key = "Wipers";
 
-      kvp.value = std::get<0>(system->second);
+      kvp.value = std::get<0>(system->second) ? "True" : "False";
 
       ss_msg.enabled_status.push_back(kvp);
 
-      kvp.value = std::get<1>(system->second);
+      kvp.value = std::get<1>(system->second) ? "True" : "False";
 
       ss_msg.overridden_status.push_back(kvp);
 
-      kvp.value = std::get<2>(system->second);
+      kvp.value = std::get<2>(system->second) ? "True" : "False";
 
       ss_msg.fault_status.push_back(kvp);
     }
