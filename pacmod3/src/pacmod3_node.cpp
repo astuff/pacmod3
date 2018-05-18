@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <unordered_map>
+#include <tuple>
 
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
@@ -86,6 +87,7 @@ ros::Publisher turn_aux_rpt_pub;
 ros::Publisher all_system_statuses_pub;
 
 std::unordered_map<long long, std::shared_ptr<LockedData>> rx_list;
+std::unordered_map<long long, std::tuple<bool, bool, bool>> system_statuses;
 
 bool global_keep_going = true;
 std::mutex keep_going_mut;
@@ -107,24 +109,6 @@ void set_enable(bool val)
 
     rx_it->second->setData(current_data);
   }
-}
-
-void populate_system_status_msg(pacmod_msgs::AllSystemStatuses* msg, std::string sys_name, const unsigned char& data)
-{
-  pacmod_msgs::KeyValuePair kvp;
-
-  kvp.key = sys_name;
-  kvp.value = (data & 0x01) > 0 ? "True" : "False";
-
-  msg->enabled_status.push_back(kvp);
-
-  kvp.value = (data & 0x02) > 0 ? "True" : "False";
-
-  msg->overridden_status.push_back(kvp);
-
-  kvp.value = (data & 0xFC) > 0 ? "True" : "False";
-
-  msg->fault_status.push_back(kvp);
 }
 
 // Looks up the appropriate LockedData and inserts the command info
@@ -290,6 +274,19 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
   {
     parser_class->parse(const_cast<unsigned char *>(&msg->data[0]));
     handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
+
+    if (parser_class->isSystem())
+    {
+      auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
+
+      system_statuses[msg->id] = std::make_tuple(dc_parser->enabled,
+                                                 dc_parser->override_active,
+                                                 (dc_parser->command_output_fault |
+                                                  dc_parser->input_output_fault |
+                                                  dc_parser->output_reported_fault |
+                                                  dc_parser->pacmod_fault |
+                                                  dc_parser->vehicle_fault));
+    }
 
     if (msg->id == GlobalRptMsg::CAN_ID)
     {
@@ -561,122 +558,50 @@ int main(int argc, char *argv[])
   {
     pacmod_msgs::AllSystemStatuses ss_msg;
 
-    auto sys_found = rx_list.find(AccelCmdMsg::CAN_ID);
-
-    if (sys_found != rx_list.end())
+    for (auto system = system_statuses.begin(); system != system_statuses.end(); ++system)
     {
       pacmod_msgs::KeyValuePair kvp;
-      unsigned char data = sys_found->second->getData()[0];
 
-      populate_system_status_msg(&ss_msg, "Accelerator", data);
-    }
+      if (system->first == AccelRptMsg::CAN_ID)
+        kvp.key = "Accelerator";
+      else if (system->first == BrakeRptMsg::CAN_ID)
+        kvp.key = "Brakes";
+      else if (system->first == CruiseControlButtonsRptMsg::CAN_ID)
+        kvp.key = "Cruise Control Buttons";
+      else if (system->first == DashControlsLeftRptMsg::CAN_ID)
+        kvp.key = "Dash Controls Left";
+      else if (system->first == DashControlsRightRptMsg::CAN_ID)
+        kvp.key = "Dash Controls Right";
+      else if (system->first == HazardLightRptMsg::CAN_ID)
+        kvp.key = "Hazard Lights";
+      else if (system->first == HeadlightRptMsg::CAN_ID)
+        kvp.key = "Headlights";
+      else if (system->first == HornRptMsg::CAN_ID)
+        kvp.key = "Horn";
+      else if (system->first == MediaControlsRptMsg::CAN_ID)
+        kvp.key = "Media Controls";
+      else if (system->first == ParkingBrakeRptMsg::CAN_ID)
+        kvp.key = "Parking Brake";
+      else if (system->first == ShiftRptMsg::CAN_ID)
+        kvp.key = "Shifter";
+      else if (system->first == SteerRptMsg::CAN_ID)
+        kvp.key = "Steering";
+      else if (system->first == TurnSignalRptMsg::CAN_ID)
+        kvp.key = "Turn Signals";
+      else if (system->first == WiperRptMsg::CAN_ID)
+        kvp.key = "Wipers";
 
-    sys_found = rx_list.find(BrakeCmdMsg::CAN_ID);
+      kvp.value = std::get<0>(system->second);
 
-    if (sys_found != rx_list.end())
-    {
-      pacmod_msgs::KeyValuePair kvp;
-      unsigned char data = sys_found->second->getData()[0];
+      ss_msg.enabled_status.push_back(kvp);
 
-      populate_system_status_msg(&ss_msg, "Brakes", data);
-    }
+      kvp.value = std::get<1>(system->second);
 
-    if (veh_type == VEHICLE_5)
-    {
-      sys_found = rx_list.find(CruiseControlButtonsCmdMsg::CAN_ID);
+      ss_msg.overridden_status.push_back(kvp);
 
-      if (sys_found != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
+      kvp.value = std::get<2>(system->second);
 
-        populate_system_status_msg(&ss_msg, "Cruise Control Buttons", data);
-      }
-
-      sys_found = rx_list.find(DashControlsLeftCmdMsg::CAN_ID);
-
-      if (sys_found != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
-
-        populate_system_status_msg(&ss_msg, "Dash Controls Left", data);
-      }
-
-      sys_found = rx_list.find(DashControlsRightCmdMsg::CAN_ID);
-
-      if (sys_found != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
-
-        populate_system_status_msg(&ss_msg, "Dash Controls Right", data);
-      }
-    }
-
-    if (veh_type == LEXUS_RX_450H || veh_type == VEHICLE_5)
-    {
-      if (rx_list.find(HeadlightCmdMsg::CAN_ID) != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
-
-        populate_system_status_msg(&ss_msg, "Headlights", data);
-      }
-
-      if (rx_list.find(HornCmdMsg::CAN_ID) != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
-
-        populate_system_status_msg(&ss_msg, "Horn", data);
-      }
-    }
-
-    if (veh_type == VEHICLE_5)
-    {
-      if (rx_list.find(MediaControlsCmdMsg::CAN_ID) != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
-
-        populate_system_status_msg(&ss_msg, "Media Controls", data);
-      }
-    }
-
-    if (rx_list.find(ShiftCmdMsg::CAN_ID) != rx_list.end())
-    {
-      pacmod_msgs::KeyValuePair kvp;
-      unsigned char data = sys_found->second->getData()[0];
-
-      populate_system_status_msg(&ss_msg, "Shifter", data);
-    }
-
-    if (rx_list.find(SteerCmdMsg::CAN_ID) != rx_list.end())
-    {
-      pacmod_msgs::KeyValuePair kvp;
-      unsigned char data = sys_found->second->getData()[0];
-
-      populate_system_status_msg(&ss_msg, "Steering", data);
-    }
-
-    if (rx_list.find(TurnSignalCmdMsg::CAN_ID) != rx_list.end())
-    {
-      pacmod_msgs::KeyValuePair kvp;
-      unsigned char data = sys_found->second->getData()[0];
-
-      populate_system_status_msg(&ss_msg, "Turn Signals", data);
-    }
-
-    if (veh_type == INTERNATIONAL_PROSTAR_122)
-    {
-      if (rx_list.find(WiperCmdMsg::CAN_ID) != rx_list.end())
-      {
-        pacmod_msgs::KeyValuePair kvp;
-        unsigned char data = sys_found->second->getData()[0];
-
-        populate_system_status_msg(&ss_msg, "Wipers", data);
-      }
+      ss_msg.fault_status.push_back(kvp);
     }
 
     all_system_statuses_pub.publish(ss_msg);

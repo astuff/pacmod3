@@ -218,6 +218,11 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
   }
 }
 
+bool Pacmod3TxMsg::isSystem()
+{
+  return false;
+}
+
 SystemRptMsg::SystemRptMsg() :
   Pacmod3TxMsg(),
   enabled(false),
@@ -228,6 +233,11 @@ SystemRptMsg::SystemRptMsg() :
   pacmod_fault(false),
   vehicle_fault(false)
 {}
+
+bool SystemRptMsg::isSystem()
+{
+  return true;
+}
 
 SystemRptBoolMsg::SystemRptBoolMsg() :
   SystemRptMsg(),
