@@ -517,15 +517,15 @@ void SteerAuxRptMsg::parse(uint8_t *in)
   int16_t temp;
 
   temp = ((int16_t)in[0] << 8) | in[1];
-  raw_position = (float)temp / 1000.0;
+  raw_position = (float)temp / 10.0;
 
   temp = ((int16_t)in[2] << 8) | in[3];
-  raw_torque = (float)temp / 1000.0;
+  raw_torque = (float)temp / 10.0;
 
   uint16_t temp2;
 
   temp2 = ((uint16_t)in[4] << 8) | in[5];
-  rotation_rate = (float)temp2 / 1000.0;
+  rotation_rate = (float)temp2 / 100.0;
 
   user_interaction = (in[6] & 0x01) > 0;
   raw_position_is_valid = (in[7] & 0x01) > 0;
