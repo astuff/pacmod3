@@ -495,38 +495,38 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::VEHICLE_5)
   {
-    cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
-    dash_controls_left_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_left_rpt", 20);
-    dash_controls_right_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_right_rpt", 20);
-    media_controls_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_controls_rpt", 20);
+    // cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
+    // dash_controls_left_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_left_rpt", 20);
+    // dash_controls_right_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_right_rpt", 20);
+    // media_controls_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_controls_rpt", 20);
     occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
     interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
     door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
     rear_lights_rpt_pub = n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
 
-    pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
-    pub_tx_list.insert(std::make_pair(DashControlsLeftRptMsg::CAN_ID, dash_controls_left_rpt_pub));
-    pub_tx_list.insert(std::make_pair(DashControlsRightRptMsg::CAN_ID, dash_controls_right_rpt_pub));
-    pub_tx_list.insert(std::make_pair(MediaControlsRptMsg::CAN_ID, media_controls_rpt_pub));
+    // pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
+    // pub_tx_list.insert(std::make_pair(DashControlsLeftRptMsg::CAN_ID, dash_controls_left_rpt_pub));
+    // pub_tx_list.insert(std::make_pair(DashControlsRightRptMsg::CAN_ID, dash_controls_right_rpt_pub));
+    // pub_tx_list.insert(std::make_pair(MediaControlsRptMsg::CAN_ID, media_controls_rpt_pub));
     pub_tx_list.insert(std::make_pair(OccupancyRptMsg::CAN_ID, occupancy_rpt_pub));
     pub_tx_list.insert(std::make_pair(InteriorLightsRptMsg::CAN_ID, interior_lights_rpt_pub));
     pub_tx_list.insert(std::make_pair(DoorRptMsg::CAN_ID, door_rpt_pub));
     pub_tx_list.insert(std::make_pair(RearLightsRptMsg::CAN_ID, rear_lights_rpt_pub));
 
-    cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
-    dash_controls_left_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_left_cmd", 20, callback_dash_controls_left_set_cmd)));
-    dash_controls_right_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_right_cmd", 20, callback_dash_controls_right_set_cmd)));
-    media_controls_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/media_controls_cmd", 20, callback_media_controls_set_cmd)));
+    // cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
+    // dash_controls_left_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_left_cmd", 20, callback_dash_controls_left_set_cmd)));
+    // dash_controls_right_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/dash_controls_right_cmd", 20, callback_dash_controls_right_set_cmd)));
+    // media_controls_set_cmd_sub = std::shared_ptr<ros::Subscriber>(new ros::Subscriber(n.subscribe("as_rx/media_controls_cmd", 20, callback_media_controls_set_cmd)));
 
-    std::shared_ptr<LockedData> cruise_control_buttons_data(new LockedData);
-    std::shared_ptr<LockedData> dash_controls_left_data(new LockedData);
-    std::shared_ptr<LockedData> dash_controls_right_data(new LockedData);
-    std::shared_ptr<LockedData> media_controls_data(new LockedData);
+    // std::shared_ptr<LockedData> cruise_control_buttons_data(new LockedData);
+    // std::shared_ptr<LockedData> dash_controls_left_data(new LockedData);
+    // std::shared_ptr<LockedData> dash_controls_right_data(new LockedData);
+    // std::shared_ptr<LockedData> media_controls_data(new LockedData);
 
-    rx_list.insert(std::make_pair(CruiseControlButtonsCmdMsg::CAN_ID, cruise_control_buttons_data));
-    rx_list.insert(std::make_pair(DashControlsLeftCmdMsg::CAN_ID, dash_controls_left_data));
-    rx_list.insert(std::make_pair(DashControlsRightCmdMsg::CAN_ID, dash_controls_right_data));
-    rx_list.insert(std::make_pair(MediaControlsCmdMsg::CAN_ID, media_controls_data));
+    // rx_list.insert(std::make_pair(CruiseControlButtonsCmdMsg::CAN_ID, cruise_control_buttons_data));
+    // rx_list.insert(std::make_pair(DashControlsLeftCmdMsg::CAN_ID, dash_controls_left_data));
+    // rx_list.insert(std::make_pair(DashControlsRightCmdMsg::CAN_ID, dash_controls_right_data));
+    // rx_list.insert(std::make_pair(MediaControlsCmdMsg::CAN_ID, media_controls_data));
   }
 
   // Initialize rx_list with all 0s
