@@ -59,15 +59,6 @@ ros::Publisher interior_lights_rpt_pub;
 ros::Publisher door_rpt_pub;
 ros::Publisher rear_lights_rpt_pub;
 
-//Vehicle-Specific Subscribers
-std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
-                                 headlight_set_cmd_sub,
-                                 horn_set_cmd_sub,
-                                 cruise_control_buttons_set_cmd_sub,
-                                 dash_controls_left_set_cmd_sub,
-                                 dash_controls_right_set_cmd_sub,
-                                 media_controls_set_cmd_sub;
-
 // Advertise published messages
 ros::Publisher global_rpt_pub;
 ros::Publisher vin_rpt_pub;
@@ -320,6 +311,15 @@ int main(int argc, char *argv[])
   ros::NodeHandle n;
   ros::NodeHandle priv("~");
   ros::Rate loop_rate(30); //PACMod3 is sending at ~30Hz.
+
+  //Vehicle-Specific Subscribers
+  std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
+                                   headlight_set_cmd_sub,
+                                   horn_set_cmd_sub,
+                                   cruise_control_buttons_set_cmd_sub,
+                                   dash_controls_left_set_cmd_sub,
+                                   dash_controls_right_set_cmd_sub,
+                                   media_controls_set_cmd_sub;
 
   // Wait for time to be valid
   while (ros::Time::now().nsec == 0);
