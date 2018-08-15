@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2018-08-15)
+------------------
 * A boost::shared_ptr error would occur on some vehicles on shutdown.
   Moving the allocation of all of the optional subscribers to after
   ros::init is called fixes this error and should not impact functionality
