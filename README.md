@@ -1,6 +1,6 @@
 # PACMod (Platform Actuation and Control MODule) Vehicle Interface for Board Revision 3 #
 
-[![Build Status](https://travis-ci.org/astuff/pacmod3.svg?branch=master)](https://travis-ci.org/astuff/pacmod3)
+[![pipeline status](https://gitlab.com/astuff/pacmod3/badges/master/pipeline.svg)](https://gitlab.com/astuff/pacmod3/commits/master)
 
 This ROS node is designed to allow the user to control a vehicle (see SUPPORTED VEHICLES below) with the PACMod drive-by-wire system, board revision 3. For more information about the topics, parameters, and details on the implementation, see [the wiki page](https://autonomoustuff.atlassian.net/wiki/spaces/RW/pages/17749288/PACMod+System).
 
