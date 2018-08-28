@@ -2,7 +2,7 @@ before_script:
   - apt-get update && apt-get install -y openssh-client python-catkin-tools build-essential
   - source `find /opt/ros -name setup.bash | sort | head -1` && echo $ROS_DISTRO
   - mkdir src && mv `find -maxdepth 1 -not -name . -not -name src` src/
-  - git clone https://github.com/astuff/astuff_sensor_msgs src/astuff_sensor_msgs
+  - git init src/astuff_sensor_msgs && cd src/astuff_sensor_msgs && git remote add origin https://github.com/astuff/astuff_sensor_msgs && git config core.sparsecheckout true && echo "pacmod_msgs/*" >> .git/info/sparse-checkout && git pull --depth=1 origin master && cd ../..
   - rosdep update
   - rosdep install --from-paths src --ignore-src -y
   - catkin init
