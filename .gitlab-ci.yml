@@ -1,0 +1,32 @@
+before_script:
+  - apt-get update && apt-get install -y openssh-client python-catkin-tools build-essential
+  - source `find /opt/ros -name setup.bash | sort | head -1` && echo $ROS_DISTRO
+  - mkdir src && mv `find -maxdepth 1 -not -name . -not -name src` src/
+  - git clone https://github.com/astuff/astuff_sensor_msgs src/astuff_sensor_msgs
+  - rosdep update
+  - rosdep install --from-paths src --ignore-src -y
+  - catkin init
+
+indigo:
+  image: "ros:indigo-ros-core"
+  script:
+    - catkin build -j2
+    - catkin run_tests -j2
+
+kinetic:
+  image: "ros:kinetic-ros-core"
+  script:
+    - catkin build -j2
+    - catkin run_tests -j2
+
+lunar:
+  image: "ros:lunar-ros-core"
+  script:
+    - catkin build -j2
+    - catkin run_tests -j2
+
+melodic:
+  image: "ros:melodic-ros-core"
+  script:
+    - catkin build -j2
+    - catkin run_tests -j2
