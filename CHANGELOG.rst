@@ -2,6 +2,26 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#34 <https://github.com/astuff/pacmod3/issues/34>`_ from astuff/maint/add_none_shift_cmd
+* Removing unused COMMANDED_VALUE values on SHIFT_RPT.
+* Adding NONE shift value.
+* Merge pull request `#33 <https://github.com/astuff/pacmod3/issues/33>`_ from astuff/fix/percent-signs
+* Removed erroneous percent sign from signal units
+  Before: Percentages were being reported as a decimal value between 0 and 1
+  with a percentage sign.  E.g. 0.5 would be reported, but the intent
+  was to convey 50%.  i.e. the report or command would read 0.5%
+  when it should've read 50% or just simply 0.5.
+  After: Values will be reported without the '%' sign.  They report as decimal
+  values.
+* Forgot to bump DBC after last minor change.
+* Merge pull request `#32 <https://github.com/astuff/pacmod3/issues/32>`_ from astuff/fix/steering-rpt-units
+* Corrected Steering report units JIRA: LEXUS-131
+  Before: steering_rpt reported commanded position in rad/s.
+  After: steering_rpt reports commanded position in rad.
+* Contributors: Daniel-Stanek, Joshua Whitley, Sam Rustan, Zach Oakes, driscoll85
+
 1.1.0 (2018-08-15)
 ------------------
 * A boost::shared_ptr error would occur on some vehicles on shutdown.
