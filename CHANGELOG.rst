@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2018-08-30)
+------------------
 * Merge pull request `#34 <https://github.com/astuff/pacmod3/issues/34>`_ from astuff/maint/add_none_shift_cmd
 * Removing unused COMMANDED_VALUE values on SHIFT_RPT.
 * Adding NONE shift value.
