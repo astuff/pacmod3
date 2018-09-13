@@ -341,6 +341,8 @@ int main(int argc, char *argv[])
       veh_type = VEHICLE_4;
     else if (veh_type_string == "VEHICLE_5")
       veh_type = VEHICLE_5;
+    else if (veh_type_string == "VEHICLE_6")
+      veh_type = VEHICLE_6;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
@@ -441,7 +443,8 @@ int main(int argc, char *argv[])
   }
 
   if (veh_type == VehicleType::LEXUS_RX_450H ||
-      veh_type == VehicleType::VEHICLE_5)
+      veh_type == VehicleType::VEHICLE_5 ||
+      veh_type == VehicleType::VEHICLE_6)
   {
     date_time_rpt_pub = n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
     headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);

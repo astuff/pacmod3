@@ -27,7 +27,8 @@ namespace PACMod3
     INTERNATIONAL_PROSTAR_122,
     LEXUS_RX_450H,
     VEHICLE_4,
-    VEHICLE_5
+    VEHICLE_5,
+    VEHICLE_6
   };
 
   enum DimLevel
