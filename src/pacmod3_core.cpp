@@ -10,6 +10,7 @@
 using namespace AS::Drivers::PACMod3;
 
 const int64_t AS::Drivers::PACMod3::GlobalRptMsg::CAN_ID = 0x10;
+const int64_t AS::Drivers::PACMod3::ComponentRptMsg::CAN_ID = 0x20;
 
 // System Commands
 const int64_t AS::Drivers::PACMod3::AccelCmdMsg::CAN_ID = 0x100;
@@ -95,6 +96,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
       break;
     case BrakeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new BrakeRptMsg);
+      break;
+    case ComponentRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new ComponentRptMsg);
       break;
     case CruiseControlButtonsRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new CruiseControlButtonsRptMsg);
@@ -273,6 +277,15 @@ void GlobalRptMsg::parse(uint8_t *in)
   subsystem_can_timeout = ((in[0] & 0x20) > 0);
   vehicle_can_timeout = ((in[0] & 0x40) > 0);
   user_can_read_errors = ((in[6] << 8) | in[7]);
+}
+
+void ComponentRptMsg::parse(uint8_t *in)
+{
+  component_type = static_cast<ComponentType>(in[0]);
+  component_func = static_cast<ComponentFunction>(in[1]);
+  counter = in[2] & 0x0F;
+  complement = ((in[2] & 0xF0) >> 4);
+  config_fault = ((in[3] & 0x01) > 0);
 }
 
 void SystemRptBoolMsg::parse(uint8_t *in)

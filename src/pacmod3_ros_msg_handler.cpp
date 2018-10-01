@@ -66,6 +66,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(const int64_t& can_id,
     fillGlobalRpt(parser_class, new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == ComponentRptMsg::CAN_ID)
+  {
+    pacmod_msgs::ComponentRpt new_msg;
+    fillComponentRpt(parser_class, new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == BrakeMotorRpt1Msg::CAN_ID ||
            can_id == SteerMotorRpt1Msg::CAN_ID)
   {
@@ -311,6 +317,20 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(std::shared_ptr<Pacmod3TxMsg>& parser
 
   new_msg.header.frame_id = frame_id;
 	new_msg.header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillComponentRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ComponentRpt& new_msg, std::string frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<ComponentRptMsg>(parser_class);
+
+  new_msg.component_type = dc_parser->component_type;
+  new_msg.component_func = dc_parser->component_func;
+  new_msg.counter = dc_parser->counter;
+  new_msg.complement = dc_parser->complement;
+  new_msg.config_fault = dc_parser->config_fault;
+
+  new_msg.header.frame_id = frame_id;
+  new_msg.header.stamp = ros::Time::now();
 }
 
 void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::AccelAuxRpt& new_msg, std::string frame_id)
