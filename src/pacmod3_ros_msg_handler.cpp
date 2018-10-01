@@ -732,6 +732,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
   }
@@ -741,6 +742,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
   }
@@ -761,6 +763,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
 	}
@@ -770,6 +773,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
 	}
@@ -790,6 +794,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
   }
@@ -799,6 +804,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
   }
@@ -808,6 +814,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
   }
@@ -817,6 +824,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
 	}
@@ -826,6 +834,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
   }
@@ -835,6 +844,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
 	}
@@ -844,6 +854,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
 	}
@@ -853,6 +864,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command);
     return encoder.data;
 	}
@@ -873,6 +885,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(const int64_t& can_
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
+                   msg->clear_faults,
                    msg->command,
                    msg->rotation_rate);
     return encoder.data;

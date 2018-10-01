@@ -542,7 +542,7 @@ int main(int argc, char *argv[])
     {
       // Turn signals have non-0 initial value.
       TurnSignalCmdMsg turn_encoder;
-      turn_encoder.encode(false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+      turn_encoder.encode(false, false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
       rx_it->second->setData(turn_encoder.data);
     }
     else
