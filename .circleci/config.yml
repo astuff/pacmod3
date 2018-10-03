@@ -1,5 +1,18 @@
 version: 2
 jobs:
+  dbc_validation:
+    steps:
+      - checkout
+      - run:
+          name: Set Up Container
+          command: |
+            apt-get update && apt-get install pip -y
+            pip install --user cantools
+      - run:
+          name: Validate DBC
+          command: |
+            cantools dump dbc/as_pacmod_*.dbc
+
   indigo:
     docker:
       - image: ros:indigo-ros-core
