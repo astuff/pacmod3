@@ -8,7 +8,8 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            pip install cantools
+            pip install --user cantools
+            export $PATH=$PATH:/home/circleci/.local/bin
       - run:
           name: Validate DBC
           command: |
