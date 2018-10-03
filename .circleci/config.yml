@@ -8,8 +8,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt-get update && apt-get install pip -y
-            pip install --user cantools
+            pip install cantools
       - run:
           name: Validate DBC
           command: |
