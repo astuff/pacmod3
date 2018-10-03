@@ -9,11 +9,10 @@ jobs:
           name: Set Up Container
           command: |
             pip install --user cantools
-            export PATH=$PATH:/home/circleci/.local/bin
       - run:
           name: Validate DBC
           command: |
-            cantools dump dbc/as_pacmod_*.dbc
+            /home/circleci/.local/bin/cantools dump dbc/as_pacmod_*.dbc
 
   indigo:
     docker:
