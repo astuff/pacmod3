@@ -9,7 +9,7 @@ jobs:
           name: Set Up Container
           command: |
             pip install --user cantools
-            export $PATH=$PATH:/home/circleci/.local/bin
+            export PATH=$PATH:/home/circleci/.local/bin
       - run:
           name: Validate DBC
           command: |
