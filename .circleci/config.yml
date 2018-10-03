@@ -1,6 +1,8 @@
 version: 2
 jobs:
   dbc_validation:
+    docker:
+      - image: circleci/python:latest
     steps:
       - checkout
       - run:
