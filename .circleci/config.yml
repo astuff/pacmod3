@@ -124,7 +124,16 @@ workflows:
   version: 2
   ros_build:
     jobs:
+      - dbc_validation
       - indigo
+          requires:
+            - dbc_validation
       - kinetic
+          requires:
+            - dbc_validation
       - lunar
+          requires:
+            - dbc_validation
       - melodic
+          requires:
+            - dbc_validation
