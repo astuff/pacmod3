@@ -1,5 +1,19 @@
 version: 2
 jobs:
+  dbc_validation:
+    docker:
+      - image: circleci/python:latest
+    steps:
+      - checkout
+      - run:
+          name: Set Up Container
+          command: |
+            pip install --user cantools
+      - run:
+          name: Validate DBC
+          command: |
+            /home/circleci/.local/bin/cantools dump dbc/as_pacmod_*.dbc
+
   indigo:
     docker:
       - image: ros:indigo-ros-core
@@ -10,6 +24,10 @@ jobs:
           command: |
             apt-get update && apt-get install openssh-client python-catkin-tools build-essential -y
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir $CIRCLE_PROJECT_REPONAME && mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PROJECT_REPONAME/
+            git init astuff_sensor_msgs && cd astuff_sensor_msgs
+            git remote add origin https://github.com/astuff/astuff_sensor_msgs && git config core.sparsecheckout true && echo "pacmod_msgs/*" >> .git/info/sparse-checkout && git pull --depth=1 origin master
+            cd ..
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -36,6 +54,10 @@ jobs:
           command: |
             apt-get update && apt-get install openssh-client python-catkin-tools build-essential -y
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir $CIRCLE_PROJECT_REPONAME && mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PROJECT_REPONAME/
+            git init astuff_sensor_msgs && cd astuff_sensor_msgs
+            git remote add origin https://github.com/astuff/astuff_sensor_msgs && git config core.sparsecheckout true && echo "pacmod_msgs/*" >> .git/info/sparse-checkout && git pull --depth=1 origin master
+            cd ..
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -62,6 +84,10 @@ jobs:
           command: |
             apt-get update && apt-get install openssh-client python-catkin-tools build-essential -y
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir $CIRCLE_PROJECT_REPONAME && mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PROJECT_REPONAME/
+            git init astuff_sensor_msgs && cd astuff_sensor_msgs
+            git remote add origin https://github.com/astuff/astuff_sensor_msgs && git config core.sparsecheckout true && echo "pacmod_msgs/*" >> .git/info/sparse-checkout && git pull --depth=1 origin master
+            cd ..
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -88,6 +114,10 @@ jobs:
           command: |
             apt-get update && apt-get install openssh-client python-catkin-tools build-essential -y
             source `find /opt/ros -name setup.bash | sort | head -1`
+            mkdir $CIRCLE_PROJECT_REPONAME && mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PROJECT_REPONAME/
+            git init astuff_sensor_msgs && cd astuff_sensor_msgs
+            git remote add origin https://github.com/astuff/astuff_sensor_msgs && git config core.sparsecheckout true && echo "pacmod_msgs/*" >> .git/info/sparse-checkout && git pull --depth=1 origin master
+            cd ..
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -108,7 +138,16 @@ workflows:
   version: 2
   ros_build:
     jobs:
-      - indigo
-      - kinetic
-      - lunar
-      - melodic
+      - dbc_validation
+      - indigo:
+          requires:
+            - dbc_validation
+      - kinetic:
+          requires:
+            - dbc_validation
+      - lunar:
+          requires:
+            - dbc_validation
+      - melodic:
+          requires:
+            - dbc_validation

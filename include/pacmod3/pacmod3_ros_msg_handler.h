@@ -42,6 +42,7 @@ namespace PACMod3
       void fillSystemRptInt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SystemRptInt& new_msg, std::string frame_id);
       void fillSystemRptFloat(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::SystemRptFloat& new_msg, std::string frame_id);
       void fillGlobalRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::GlobalRpt& new_msg, std::string frame_id);
+      void fillComponentRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::ComponentRpt& new_msg, std::string frame_id);
       void fillAccelAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::AccelAuxRpt& new_msg, std::string frame_id);
       void fillBrakeAuxRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::BrakeAuxRpt& new_msg, std::string frame_id);
       void fillDateTimeRpt(std::shared_ptr<Pacmod3TxMsg>& parser_class, pacmod_msgs::DateTimeRpt& new_msg, std::string frame_id);

@@ -61,6 +61,7 @@ ros::Publisher rear_lights_rpt_pub;
 
 // Advertise published messages
 ros::Publisher global_rpt_pub;
+ros::Publisher component_rpt_pub;
 ros::Publisher vin_rpt_pub;
 ros::Publisher turn_rpt_pub;
 ros::Publisher shift_rpt_pub;
@@ -353,6 +354,7 @@ int main(int argc, char *argv[])
   // Advertise published messages
   can_rx_pub = n.advertise<can_msgs::Frame>("can_rx", 20);
   global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
+  component_rpt_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt", 20);
   accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
   brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
   shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
@@ -374,6 +376,7 @@ int main(int argc, char *argv[])
 
   //Populate handler list
   pub_tx_list.insert(std::make_pair(GlobalRptMsg::CAN_ID, global_rpt_pub));
+  pub_tx_list.insert(std::make_pair(ComponentRptMsg::CAN_ID, component_rpt_pub));
   pub_tx_list.insert(std::make_pair(AccelRptMsg::CAN_ID, accel_rpt_pub));
   pub_tx_list.insert(std::make_pair(BrakeRptMsg::CAN_ID, brake_rpt_pub));
   pub_tx_list.insert(std::make_pair(ShiftRptMsg::CAN_ID, shift_rpt_pub));
@@ -539,7 +542,7 @@ int main(int argc, char *argv[])
     {
       // Turn signals have non-0 initial value.
       TurnSignalCmdMsg turn_encoder;
-      turn_encoder.encode(false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+      turn_encoder.encode(false, false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
       rx_it->second->setData(turn_encoder.data);
     }
     else

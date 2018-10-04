@@ -10,6 +10,7 @@
 using namespace AS::Drivers::PACMod3;
 
 const int64_t AS::Drivers::PACMod3::GlobalRptMsg::CAN_ID = 0x10;
+const int64_t AS::Drivers::PACMod3::ComponentRptMsg::CAN_ID = 0x20;
 
 // System Commands
 const int64_t AS::Drivers::PACMod3::AccelCmdMsg::CAN_ID = 0x100;
@@ -95,6 +96,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const int64_t& can_id)
       break;
     case BrakeRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new BrakeRptMsg);
+      break;
+    case ComponentRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new ComponentRptMsg);
       break;
     case CruiseControlButtonsRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new CruiseControlButtonsRptMsg);
@@ -273,6 +277,15 @@ void GlobalRptMsg::parse(uint8_t *in)
   subsystem_can_timeout = ((in[0] & 0x20) > 0);
   vehicle_can_timeout = ((in[0] & 0x40) > 0);
   user_can_read_errors = ((in[6] << 8) | in[7]);
+}
+
+void ComponentRptMsg::parse(uint8_t *in)
+{
+  component_type = static_cast<ComponentType>(in[0]);
+  component_func = static_cast<ComponentFunction>(in[1]);
+  counter = in[2] & 0x0F;
+  complement = ((in[2] & 0xF0) >> 4);
+  config_fault = ((in[3] & 0x01) > 0);
 }
 
 void SystemRptBoolMsg::parse(uint8_t *in)
@@ -779,6 +792,7 @@ void YawRateRptMsg::parse(uint8_t *in)
 void SystemCmdBool::encode(bool enable,
                            bool ignore_overrides,
                            bool clear_override,
+                           bool clear_faults,
                            bool cmd)
 {
   data.assign(8, 0);
@@ -786,12 +800,14 @@ void SystemCmdBool::encode(bool enable,
   data[0] = (enable ? 0x01 : 0x00);
   data[0] |= (ignore_overrides ? 0x02 : 0x00);
   data[0] |= clear_override ? 0x04 : 0x00;
+  data[0] |= clear_faults ? 0x08 : 0x00;
   data[1] = (cmd ? 0x01 : 0x00);
 }
 
 void SystemCmdFloat::encode(bool enable,
                             bool ignore_overrides,
                             bool clear_override,
+                            bool clear_faults,
                             float cmd)
 {
   data.assign(8, 0);
@@ -799,6 +815,7 @@ void SystemCmdFloat::encode(bool enable,
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
   data[0] |= clear_override ? 0x04 : 0x00;
+  data[0] |= clear_faults ? 0x08 : 0x00;
 
   uint16_t cmd_float = (uint16_t)(cmd * 1000.0);
   data[1] = (cmd_float & 0xFF00) >> 8;
@@ -808,6 +825,7 @@ void SystemCmdFloat::encode(bool enable,
 void SystemCmdInt::encode(bool enable,
                           bool ignore_overrides,
                           bool clear_override,
+                          bool clear_faults,
                           uint8_t cmd)
 {
   data.assign(8, 0);
@@ -815,12 +833,14 @@ void SystemCmdInt::encode(bool enable,
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
   data[0] |= clear_override ? 0x04 : 0x00;
+  data[0] |= clear_faults ? 0x08 : 0x00;
   data[1] = cmd;
 }
 
 void SteerCmdMsg::encode(bool enable,
                          bool ignore_overrides,
                          bool clear_override,
+                         bool clear_faults,
                          float steer_pos,
                          float steer_spd)
 {
@@ -829,6 +849,7 @@ void SteerCmdMsg::encode(bool enable,
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
   data[0] |= clear_override ? 0x04 : 0x00;
+  data[0] |= clear_faults ? 0x08 : 0x00;
 
   int16_t raw_pos = (int16_t)(1000.0 * steer_pos);
   uint16_t raw_spd = (uint16_t)(1000.0 * steer_spd);

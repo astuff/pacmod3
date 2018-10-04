@@ -21,6 +21,7 @@
 #include <pacmod_msgs/AccelAuxRpt.h>
 #include <pacmod_msgs/AllSystemStatuses.h>
 #include <pacmod_msgs/BrakeAuxRpt.h>
+#include <pacmod_msgs/ComponentRpt.h>
 #include <pacmod_msgs/DateTimeRpt.h>
 #include <pacmod_msgs/DetectedObjectRpt.h>
 #include <pacmod_msgs/DoorRpt.h>
