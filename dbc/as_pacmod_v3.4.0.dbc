@@ -513,7 +513,6 @@ BO_ 1030 STEERING_MOTOR_RPT_3: 8 PACMOD
 
 
 CM_ BU_ PACMOD "AutonomouStuff PACMod";
-CM_ BO_ 3221225472 "This is a message for not used signals, created by Vector CANdb++ DBC OLE DB Provider.";
 CM_ SG_ 296 SHIFT_CMD "FORWARD is also HIGH on vehicles with LOW/HIGH, PARK and LOW only available on certain Vehicles.";
 VAL_ 1046 DIM_LEVEL 12 "DIM_LEVEL_MAX" 11 "DIM_LEVEL_11" 10 "DIM_LEVEL_10" 9 "DIM_LEVEL_9" 8 "DIM_LEVEL_8" 7 "DIM_LEVEL_7" 6 "DIM_LEVEL_6" 5 "DIM_LEVEL_5" 4 "DIM_LEVEL_4" 3 "DIM_LEVEL_3" 2 "DIM_LEVEL_2" 1 "DIM_LEVEL_1" 0 "DIM_LEVEL_MIN" ;
 VAL_ 792 HEADLIGHTS_MODE 3 "Headlights On - Auto Mode" 2 "Headlights On - Manual Mode" 1 "Parking Lights Only" 0 "Headlights Off" ;
