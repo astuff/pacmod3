@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2018-11-19)
+------------------
 * Merge pull request `#41 <https://github.com/astuff/pacmod3/issues/41>`_ from astuff/fix/vector_comp_dbc_file
   Removing unnecessary line preventing Vector CANdb++ editor from opening
 * Merge pull request `#39 <https://github.com/astuff/pacmod3/issues/39>`_ from astuff/feat/add_comp_rpt
