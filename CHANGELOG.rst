@@ -2,6 +2,21 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#41 <https://github.com/astuff/pacmod3/issues/41>`_ from astuff/fix/vector_comp_dbc_file
+  Removing unnecessary line preventing Vector CANdb++ editor from opening
+* Merge pull request `#39 <https://github.com/astuff/pacmod3/issues/39>`_ from astuff/feat/add_comp_rpt
+  Feature add component report for each PACMod component.
+* DBC: Fixing errors. CI: Adding DBC validation to workflow.
+* DBC: Typo on two lines.
+* Adding encoding for CLEAR_FAULTS flag.
+* Adding parsing and publishing for COMPONENT_RPT.
+* DBC: Add COMPONENT_RPT and CLEAR_FAULTS flag.
+* Merge pull request `#38 <https://github.com/astuff/pacmod3/issues/38>`_ from astuff/feature/add_veh_6
+  Adding VEHICLE_6.
+* Contributors: Daniel-Stanek, Joshua Whitley, Mike Lemm, Nate Imig
+
 1.1.1 (2018-08-30)
 ------------------
 * Merge pull request `#34 <https://github.com/astuff/pacmod3/issues/34>`_ from astuff/maint/add_none_shift_cmd
