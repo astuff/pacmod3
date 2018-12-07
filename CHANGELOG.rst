@@ -2,6 +2,12 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge pull request `#43 <https://github.com/astuff/pacmod3/issues/43>`_ from astuff/maint/add_urls
+* Adding URLs to package.xml and upadating README.
+* Contributors: Daniel-Stanek, Joshua Whitley
+
 1.2.0 (2018-11-19)
 ------------------
 * Merge pull request `#41 <https://github.com/astuff/pacmod3/issues/41>`_ from astuff/fix/vector_comp_dbc_file
