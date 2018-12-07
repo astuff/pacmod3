@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.1 (2018-12-07)
+------------------
 * Merge pull request `#43 <https://github.com/astuff/pacmod3/issues/43>`_ from astuff/maint/add_urls
 * Adding URLs to package.xml and upadating README.
 * Contributors: Daniel-Stanek, Joshua Whitley
