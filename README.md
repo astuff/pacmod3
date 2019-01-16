@@ -4,7 +4,7 @@
 
 This ROS node is designed to allow the user to control a vehicle (see SUPPORTED VEHICLES below) with the PACMod drive-by-wire system, board revision 3. For more information about the topics, parameters, and details on the implementation, see [the ROS wiki](http://wiki.ros.org/pacmod3).
 
-For access to the DBC file which defines the CAN interface for the PACMod, see the dbc/ folder in this repo.
+For access to the DBC file which defines the CAN interface for the PACMod, see the [pacmod_dbc](https://github.com/astuff/pacmod_dbc) repo.
 
 ## Supported Vehicles ##
 
