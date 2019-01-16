@@ -1,45 +1,5 @@
 version: 2
 jobs:
-  dbc_validation:
-    docker:
-      - image: circleci/python:latest
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            pip install --user cantools
-      - run:
-          name: Validate DBC
-          command: |
-            /home/circleci/.local/bin/cantools dump dbc/as_pacmod_*.dbc
-
-  indigo:
-    docker:
-      - image: autonomoustuff/docker-builds:indigo-ros-base
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            cd ..
-            catkin build
-      - run:
-          name: Run Tests
-          command: |
-            cd ..
-            catkin run_tests
-    working_directory: ~/src
-
   kinetic:
     docker:
       - image: autonomoustuff/docker-builds:kinetic-ros-base
@@ -122,16 +82,6 @@ workflows:
   version: 2
   ros_build:
     jobs:
-      - dbc_validation
-      - indigo:
-          requires:
-            - dbc_validation
-      - kinetic:
-          requires:
-            - dbc_validation
-      - lunar:
-          requires:
-            - dbc_validation
-      - melodic:
-          requires:
-            - dbc_validation
+      - kinetic
+      - lunar
+      - melodic
