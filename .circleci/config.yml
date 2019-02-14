@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            source /opt/ros/melodic/setup.bash
+            source /opt/ros/kinetic/setup.bash
             cd ..
             catkin run_tests
             catkin_test_results
@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            source /opt/ros/melodic/setup.bash
+            source /opt/ros/lunar/setup.bash
             cd ..
             catkin run_tests
             catkin_test_results
