@@ -24,6 +24,7 @@ jobs:
           command: |
             cd ..
             catkin run_tests
+            catkin_test_results build/pacmod3
     working_directory: ~/src
 
   lunar:
@@ -50,6 +51,7 @@ jobs:
           command: |
             cd ..
             catkin run_tests
+            catkin_test_results build/pacmod3
     working_directory: ~/src
 
   melodic:
@@ -76,6 +78,7 @@ jobs:
           command: |
             cd ..
             catkin run_tests
+            catkin_test_results build/pacmod3
     working_directory: ~/src
 
 workflows:
