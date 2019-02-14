@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt update -qq && apt install ros-kinetic-catkin
+            apt update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -22,6 +22,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            source /opt/ros/melodic/setup.bash
             cd ..
             catkin run_tests
             catkin_test_results
@@ -35,7 +36,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt update -qq && apt install ros-lunar-catkin
+            apt update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -49,6 +50,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            source /opt/ros/melodic/setup.bash
             cd ..
             catkin run_tests
             catkin_test_results
@@ -62,7 +64,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt update -qq && apt install ros-melodic-catkin
+            apt update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -76,6 +78,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            source /opt/ros/melodic/setup.bash
             cd ..
             catkin run_tests
             catkin_test_results
