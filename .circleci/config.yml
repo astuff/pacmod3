@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt-get update -qq
+            apt update -qq && apt install ros-kinetic-catkin
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -24,7 +24,7 @@ jobs:
           command: |
             cd ..
             catkin run_tests
-            catkin_test_results build/pacmod3
+            catkin_test_results
     working_directory: ~/src
 
   lunar:
@@ -35,11 +35,11 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt-get update -qq
+            apt update -qq && apt install ros-lunar-catkin
             source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin run_tests
-            catkin_test_results build/pacmod3
+            catkin_test_results
     working_directory: ~/src
 
   melodic:
@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt-get update -qq
+            apt update -qq && apt install ros-melodic-catkin
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -67,7 +67,7 @@ jobs:
             source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin run_tests
-            catkin_test_results build/pacmod3
+            catkin_test_results
     working_directory: ~/src
 
 workflows:
