@@ -22,10 +22,24 @@ jobs:
       - run:
           name: Run Tests
           command: |
+            cd ..
+            catkin run_tests
+            catkin_test_results build/pacmod3
+    working_directory: ~/src
+
+  lunar:
+    docker:
+      - image: autonomoustuff/docker-builds:lunar-ros-base
+    steps:
+      - checkout
+      - run:
+          name: Set Up Container
+          command: |
+            apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin run_tests
-            catkin_test_results
+            catkin_test_results build/pacmod3
     working_directory: ~/src
 
   melodic:
@@ -53,7 +67,7 @@ jobs:
             source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin run_tests
-            catkin_test_results
+            catkin_test_results build/pacmod3
     working_directory: ~/src
 
 workflows:
