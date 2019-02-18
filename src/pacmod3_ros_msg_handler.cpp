@@ -31,7 +31,7 @@ void LockedData::setData(std::vector<unsigned char> new_data)
 }
 
 void Pacmod3TxRosMsgHandler::fillAndPublish(
-const int64_t& can_id,
+    const int64_t& can_id,
     const std::string& frame_id,
     const ros::Publisher& pub,
     Pacmod3TxMsg * parser_class)
