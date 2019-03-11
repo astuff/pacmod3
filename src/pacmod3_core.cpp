@@ -475,7 +475,7 @@ void MotorRpt2Msg::parse(uint8_t *in)
   motor_temp = static_cast<double>(temp16);
 
   temp32 = ((int32_t)in[7] << 24) | ((int32_t)in[6] << 16) | ((int32_t)in[5] << 8) | in[4];
-  velocity = static_cast<double>(temp32 / 1000.0);
+  velocity = static_cast<double>(temp32 / 10.0);
 }
 
 void MotorRpt3Msg::parse(uint8_t *in)
