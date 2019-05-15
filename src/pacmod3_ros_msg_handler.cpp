@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <string>
+#include <memory>
 
 using namespace AS::Drivers::PACMod3;  // NOLINT
 
@@ -34,7 +35,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     const int64_t& can_id,
     const std::string& frame_id,
     const ros::Publisher& pub,
-    Pacmod3TxMsg * parser_class)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class)
 {
   if (can_id == HornRptMsg::CAN_ID ||
       can_id == ParkingBrakeRptMsg::CAN_ID)
@@ -245,9 +246,11 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
 // Report messages
 void Pacmod3TxRosMsgHandler::fillSystemRptBool(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SystemRptBool * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SystemRptBool * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SystemRptBoolMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SystemRptBoolMsg>(parser_class);
 
   new_msg->enabled = dc_parser->enabled;
   new_msg->override_active = dc_parser->override_active;
@@ -266,9 +269,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptBool(
 }
 
 void Pacmod3TxRosMsgHandler::fillSystemRptInt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SystemRptInt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SystemRptInt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SystemRptIntMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SystemRptIntMsg>(parser_class);
 
   new_msg->enabled = dc_parser->enabled;
   new_msg->override_active = dc_parser->override_active;
@@ -287,9 +292,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptInt(
 }
 
 void Pacmod3TxRosMsgHandler::fillSystemRptFloat(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SystemRptFloat * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SystemRptFloat * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SystemRptFloatMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SystemRptFloatMsg>(parser_class);
 
   new_msg->enabled = dc_parser->enabled;
   new_msg->override_active = dc_parser->override_active;
@@ -308,9 +315,11 @@ void Pacmod3TxRosMsgHandler::fillSystemRptFloat(
 }
 
 void Pacmod3TxRosMsgHandler::fillGlobalRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::GlobalRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::GlobalRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<GlobalRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
 
   new_msg->enabled = dc_parser->enabled;
   new_msg->override_active = dc_parser->override_active;
@@ -328,9 +337,11 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillComponentRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::ComponentRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::ComponentRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<ComponentRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<ComponentRptMsg>(parser_class);
 
   new_msg->component_type = dc_parser->component_type;
   new_msg->component_func = dc_parser->component_func;
@@ -343,9 +354,11 @@ void Pacmod3TxRosMsgHandler::fillComponentRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::AccelAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::AccelAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<AccelAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
 
   new_msg->raw_pedal_pos = dc_parser->raw_pedal_pos;
   new_msg->raw_pedal_force = dc_parser->raw_pedal_force;
@@ -359,9 +372,11 @@ void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::BrakeAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::BrakeAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<BrakeAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
 
   new_msg->raw_pedal_pos = dc_parser->raw_pedal_pos;
   new_msg->raw_pedal_force = dc_parser->raw_pedal_force;
@@ -378,9 +393,11 @@ void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillDateTimeRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::DateTimeRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::DateTimeRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<DateTimeRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<DateTimeRptMsg>(parser_class);
 
   new_msg->year = dc_parser->year;
   new_msg->month = dc_parser->month;
@@ -394,9 +411,11 @@ void Pacmod3TxRosMsgHandler::fillDateTimeRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillDetectedObjectRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::DetectedObjectRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::DetectedObjectRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<DetectedObjectRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
 
   new_msg->front_object_distance_low_res = dc_parser->front_object_distance_low_res;
   new_msg->front_object_distance_high_res = dc_parser->front_object_distance_high_res;
@@ -405,9 +424,11 @@ void Pacmod3TxRosMsgHandler::fillDetectedObjectRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 void Pacmod3TxRosMsgHandler::fillDoorRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::DoorRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::DoorRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<DoorRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
 
   new_msg->driver_door_open = dc_parser->driver_door_open;
   new_msg->driver_door_open_is_valid = dc_parser->driver_door_open_is_valid;
@@ -429,9 +450,11 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::HeadlightAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::HeadlightAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<HeadlightAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
 
   new_msg->headlights_on = dc_parser->headlights_on;
   new_msg->headlights_on_bright = dc_parser->headlights_on_bright;
@@ -447,9 +470,11 @@ void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::InteriorLightsRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::InteriorLightsRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<InteriorLightsRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
 
   new_msg->front_dome_lights_on = dc_parser->front_dome_lights_on;
   new_msg->front_dome_lights_on_is_valid = dc_parser->front_dome_lights_on_is_valid;
@@ -465,9 +490,11 @@ void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::LatLonHeadingRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::LatLonHeadingRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<LatLonHeadingRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<LatLonHeadingRptMsg>(parser_class);
 
   new_msg->latitude_degrees = dc_parser->latitude_degrees;
   new_msg->latitude_minutes = dc_parser->latitude_minutes;
@@ -482,9 +509,11 @@ void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillMotorRpt1(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::MotorRpt1 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::MotorRpt1 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<MotorRpt1Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<MotorRpt1Msg>(parser_class);
 
   new_msg->current = dc_parser->current;
   new_msg->position = dc_parser->position;
@@ -494,9 +523,11 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt1(
 }
 
 void Pacmod3TxRosMsgHandler::fillMotorRpt2(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::MotorRpt2 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::MotorRpt2 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<MotorRpt2Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<MotorRpt2Msg>(parser_class);
 
   new_msg->encoder_temp = dc_parser->encoder_temp;
   new_msg->motor_temp = dc_parser->motor_temp;
@@ -507,9 +538,11 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt2(
 }
 
 void Pacmod3TxRosMsgHandler::fillMotorRpt3(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::MotorRpt3 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::MotorRpt3 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<MotorRpt3Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<MotorRpt3Msg>(parser_class);
 
   new_msg->torque_output = dc_parser->torque_output;
   new_msg->torque_input = dc_parser->torque_input;
@@ -519,9 +552,11 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt3(
 }
 
 void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::OccupancyRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::OccupancyRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<OccupancyRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
 
   new_msg->driver_seat_occupied = dc_parser->driver_seat_occupied;
   new_msg->driver_seat_occupied_is_valid = dc_parser->driver_seat_occupied_is_valid;
@@ -541,9 +576,11 @@ void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillRearLightsRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::RearLightsRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::RearLightsRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<RearLightsRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<RearLightsRptMsg>(parser_class);
 
   new_msg->brake_lights_on = dc_parser->brake_lights_on;
   new_msg->brake_lights_on_is_valid = dc_parser->brake_lights_on_is_valid;
@@ -555,9 +592,11 @@ void Pacmod3TxRosMsgHandler::fillRearLightsRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::ShiftAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::ShiftAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<ShiftAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<ShiftAuxRptMsg>(parser_class);
 
   new_msg->between_gears = dc_parser->between_gears;
   new_msg->stay_in_neutral_mode = dc_parser->stay_in_neutral_mode;
@@ -573,9 +612,11 @@ void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillSteerAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SteerAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SteerAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SteerAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SteerAuxRptMsg>(parser_class);
 
   new_msg->raw_position = dc_parser->raw_position;
   new_msg->raw_torque = dc_parser->raw_torque;
@@ -591,9 +632,11 @@ void Pacmod3TxRosMsgHandler::fillSteerAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt1(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SteeringPIDRpt1 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SteeringPIDRpt1 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SteeringPIDRpt1Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt1Msg>(parser_class);
 
   new_msg->dt = dc_parser->dt;
   new_msg->Kp = dc_parser->Kp;
@@ -605,9 +648,11 @@ void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt1(
 }
 
 void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt2(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SteeringPIDRpt2 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SteeringPIDRpt2 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SteeringPIDRpt2Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt2Msg>(parser_class);
 
   new_msg->P_term = dc_parser->P_term;
   new_msg->I_term = dc_parser->I_term;
@@ -619,9 +664,11 @@ void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt2(
 }
 
 void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt3(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SteeringPIDRpt3 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SteeringPIDRpt3 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SteeringPIDRpt3Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt3Msg>(parser_class);
 
   new_msg->new_torque = dc_parser->new_torque;
   new_msg->str_angle_desired = dc_parser->str_angle_desired;
@@ -633,9 +680,11 @@ void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt3(
 }
 
 void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt4(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::SteeringPIDRpt4 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SteeringPIDRpt4 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<SteeringPIDRpt4Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt4Msg>(parser_class);
 
   new_msg->angular_velocity = dc_parser->angular_velocity;
   new_msg->angular_acceleration = dc_parser->angular_acceleration;
@@ -645,9 +694,11 @@ void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt4(
 }
 
 void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::TurnAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::TurnAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<TurnAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<TurnAuxRptMsg>(parser_class);
 
   new_msg->driver_blinker_bulb_on = dc_parser->driver_blinker_bulb_on;
   new_msg->passenger_blinker_bulb_on = dc_parser->passenger_blinker_bulb_on;
@@ -659,9 +710,11 @@ void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::VehicleDynamicsRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::VehicleDynamicsRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<VehicleDynamicsRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<VehicleDynamicsRptMsg>(parser_class);
 
   new_msg->g_forces = dc_parser->g_forces;
   new_msg->brake_torque = dc_parser->brake_torque;
@@ -671,9 +724,11 @@ void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillVehicleSpecificRpt1(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::VehicleSpecificRpt1 * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::VehicleSpecificRpt1 * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<VehicleSpecificRpt1Msg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<VehicleSpecificRpt1Msg>(parser_class);
 
   new_msg->shift_pos_1 = dc_parser->shift_pos_1;
   new_msg->shift_pos_2 = dc_parser->shift_pos_2;
@@ -683,9 +738,11 @@ void Pacmod3TxRosMsgHandler::fillVehicleSpecificRpt1(
 }
 
 void Pacmod3TxRosMsgHandler::fillVehicleSpeedRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::VehicleSpeedRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::VehicleSpeedRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<VehicleSpeedRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
 
   new_msg->vehicle_speed = dc_parser->vehicle_speed;
   new_msg->vehicle_speed_valid = dc_parser->vehicle_speed_valid;
@@ -697,9 +754,11 @@ void Pacmod3TxRosMsgHandler::fillVehicleSpeedRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillVinRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::VinRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::VinRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<VinRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<VinRptMsg>(parser_class);
 
   new_msg->mfg_code = dc_parser->mfg_code;
   new_msg->mfg = dc_parser->mfg;
@@ -712,9 +771,11 @@ void Pacmod3TxRosMsgHandler::fillVinRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillWheelSpeedRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::WheelSpeedRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::WheelSpeedRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<WheelSpeedRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<WheelSpeedRptMsg>(parser_class);
 
   new_msg->front_left_wheel_speed = dc_parser->front_left_wheel_speed;
   new_msg->front_right_wheel_speed = dc_parser->front_right_wheel_speed;
@@ -726,9 +787,11 @@ void Pacmod3TxRosMsgHandler::fillWheelSpeedRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::WiperAuxRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::WiperAuxRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<WiperAuxRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<WiperAuxRptMsg>(parser_class);
 
   new_msg->front_wiping = dc_parser->front_wiping;
   new_msg->front_spraying = dc_parser->front_spraying;
@@ -748,9 +811,11 @@ void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(
 }
 
 void Pacmod3TxRosMsgHandler::fillYawRateRpt(
-    Pacmod3TxMsg * parser_class, pacmod_msgs::YawRateRpt * new_msg, const std::string& frame_id)
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::YawRateRpt * new_msg,
+    const std::string& frame_id)
 {
-  auto dc_parser = dynamic_cast<YawRateRptMsg*>(parser_class);
+  auto dc_parser = std::dynamic_pointer_cast<YawRateRptMsg>(parser_class);
 
   new_msg->yaw_rate = dc_parser->yaw_rate;
 
@@ -761,7 +826,7 @@ void Pacmod3TxRosMsgHandler::fillYawRateRpt(
 
 // Command messages
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-    const int64_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
+    const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
   if (can_id == HornCmdMsg::CAN_ID)
   {
@@ -793,7 +858,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
 }
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-    const int64_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+    const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
 {
   if (can_id == AccelCmdMsg::CAN_ID)
   {
@@ -825,7 +890,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
 }
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-    const int64_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+    const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
   if (can_id == CruiseControlButtonsCmdMsg::CAN_ID)
   {
@@ -917,7 +982,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
 }
 
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-    const int64_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
+    const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 {
   if (can_id == SteerCmdMsg::CAN_ID)
   {

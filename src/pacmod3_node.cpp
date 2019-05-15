@@ -266,8 +266,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
   // Only parse messages for which we have a parser and a publisher.
   if (parser_class != NULL && pub != pub_tx_list.end())
   {
-    parser_class->parse(const_cast<unsigned char *>(&msg->data[0]));
-    handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class.get());
+    parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
+    handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
 
     if (parser_class->isSystem())
     {
