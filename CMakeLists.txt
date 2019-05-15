@@ -46,7 +46,7 @@ target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
 
-set(ROSLINT_CPP_OPTS "--filter=-build/namespaces,-build/c++11")
+set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
 roslint_cpp()
 
 install(TARGETS ${PROJECT_NAME}

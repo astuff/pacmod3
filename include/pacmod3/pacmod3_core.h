@@ -2,9 +2,9 @@
 #define PACMOD3_PACMOD3_CORE_H
 
 /*
-* Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
+* Unpublished Copyright (c) 2009-2019 AutonomouStuff, LLC, All Rights Reserved.
 *
-* This file is part of the PACMod v3 ROS 1.0 driver which is released under the MIT license.
+* This file is part of the PACMod v3 ROS driver which is released under the MIT license.
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 

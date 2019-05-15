@@ -1,7 +1,7 @@
 /*
-* Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
+* Unpublished Copyright (c) 2009-2019 AutonomouStuff, LLC, All Rights Reserved.
 *
-* This file is part of the PACMod3 v3 ROS 1.0 driver which is released under the MIT license.
+* This file is part of the PACMod3 v3 ROS driver which is released under the MIT license.
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
@@ -22,10 +22,8 @@
 #include <std_msgs/Float64.h>
 #include <can_msgs/Frame.h>
 
-using namespace AS::Drivers::PACMod3;
+using namespace AS::Drivers::PACMod3;  // NOLINT
 
-std::string veh_type_string = "POLARIS_GEM";
-VehicleType veh_type = VehicleType::POLARIS_GEM;
 std::unordered_map<int64_t, ros::Publisher> pub_tx_list;
 Pacmod3TxRosMsgHandler handler;
 
@@ -315,6 +313,8 @@ int main(int argc, char *argv[])
   ros::NodeHandle n;
   ros::NodeHandle priv("~");
   ros::Rate loop_rate(30);  // PACMod3 is sending at ~30Hz.
+  std::string veh_type_string = "POLARIS_GEM";
+  VehicleType veh_type = VehicleType::POLARIS_GEM;
 
   // Vehicle-Specific Subscribers
   std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
