@@ -8,7 +8,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt update -qq
+            apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -22,7 +22,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            source /opt/ros/kinetic/setup.bash
+            source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin run_tests
             catkin_test_results
@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt update -qq
+            apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
             cd ..
@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            source /opt/ros/melodic/setup.bash
+            source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin run_tests
             catkin_test_results
