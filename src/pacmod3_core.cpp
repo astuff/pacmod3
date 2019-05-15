@@ -330,13 +330,13 @@ void SystemRptFloatMsg::parse(uint8_t *in)
 
   int16_t temp;
 
-  temp = ((int16_t)in[1] << 8) | in[2];
+  temp = (static_cast<int16_t>(in[1]) << 8) | in[2];
   manual_input = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[3] << 8) | in[4];
+  temp = (static_cast<int16_t>(in[3]) << 8) | in[4];
   command = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[5] << 8) | in[6];
+  temp = (static_cast<int16_t>(in[5]) << 8) | in[6];
   output = static_cast<double>(temp / 1000.0);
 }
 
@@ -344,10 +344,10 @@ void AccelAuxRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   raw_pedal_pos = static_cast<float>(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   raw_pedal_force = static_cast<float>(temp / 1000.0);
 
   user_interaction = (in[4] & 0x01) > 0;
@@ -360,13 +360,13 @@ void BrakeAuxRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   raw_pedal_pos = static_cast<float>(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   raw_pedal_force = static_cast<float>(temp / 1000.0);
 
-  temp = ((int16_t)in[4] << 8) | in[5];
+  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
   raw_brake_pressure = static_cast<float>(temp / 1000.0);
 
   user_interaction = (in[6] & 0x01) > 0;
@@ -392,10 +392,10 @@ void DetectedObjectRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = (((int16_t)in[0] << 8) | in[1]);
+  temp = ((static_cast<int16_t>(in[0]) << 8) | in[1]);
   front_object_distance_low_res = static_cast<double>(temp / 1000.0);
 
-  temp = (((int16_t)in[2] << 8) | in[3]);
+  temp = ((static_cast<int16_t>(in[2]) << 8) | in[3]);
   front_object_distance_high_res = static_cast<double>(temp / 1000.0);
 }
 
@@ -443,23 +443,29 @@ void InteriorLightsRptMsg::parse(uint8_t *in)
 
 void LatLonHeadingRptMsg::parse(uint8_t *in)
 {
-  latitude_degrees = (int8_t)in[0];
-  latitude_minutes = (uint8_t)in[1];
-  latitude_seconds = (uint8_t)in[2];
-  longitude_degrees = (int8_t)in[3];
-  longitude_minutes = (uint8_t)in[4];
-  longitude_seconds = (uint8_t)in[5];
-  heading = (((int16_t)in[6] << 8) | in[7]) / 100.0;
+  latitude_degrees = static_cast<int8_t>(in[0]);
+  latitude_minutes = in[1];
+  latitude_seconds = in[2];
+  longitude_degrees = static_cast<int8_t>(in[3]);
+  longitude_minutes = in[4];
+  longitude_seconds = in[5];
+  heading = ((static_cast<int16_t>(in[6]) << 8) | in[7]) / 100.0;
 }
 
 void MotorRpt1Msg::parse(uint8_t *in)
 {
   int32_t temp;
 
-  temp = ((int32_t)in[0] << 24) | ((int32_t)in[1] << 16) | ((int32_t)in[2] << 8) | in[3];
+  temp =
+      (static_cast<int32_t>(in[0]) << 24) |
+      (static_cast<int32_t>(in[1]) << 16) |
+      (static_cast<int32_t>(in[2]) << 8) | in[3];
   current = static_cast<double>(temp / 1000.0);
 
-  temp = ((int32_t)in[4] << 24) | ((int32_t)in[5] << 16) | ((int32_t)in[6] << 8) | in[7];
+  temp =
+    (static_cast<int32_t>(in[4]) << 24) |
+    (static_cast<int32_t>(in[5]) << 16) |
+    (static_cast<int32_t>(in[6]) << 8) | in[7];
   position = static_cast<double>(temp / 1000.0);
 }
 
@@ -468,13 +474,16 @@ void MotorRpt2Msg::parse(uint8_t *in)
   int16_t temp16;
   int32_t temp32;
 
-  temp16 = ((int16_t)in[0] << 8) | in[1];
+  temp16 = (static_cast<int16_t>(in[0]) << 8) | in[1];
   encoder_temp = static_cast<double>(temp16);
 
-  temp16 = ((int16_t)in[2] << 8) | in[3];
+  temp16 = (static_cast<int16_t>(in[2]) << 8) | in[3];
   motor_temp = static_cast<double>(temp16);
 
-  temp32 = ((int32_t)in[7] << 24) | ((int32_t)in[6] << 16) | ((int32_t)in[5] << 8) | in[4];
+  temp32 =
+    (static_cast<int32_t>(in[7]) << 24) |
+    (static_cast<int32_t>(in[6]) << 16) |
+    (static_cast<int32_t>(in[5]) << 8) | in[4];
   velocity = static_cast<double>(temp32 / 10.0);
 }
 
@@ -482,10 +491,16 @@ void MotorRpt3Msg::parse(uint8_t *in)
 {
   int32_t temp;
 
-  temp = ((int32_t)in[0] << 24) | ((int32_t)in[1] << 16) | ((int32_t)in[2] << 8) | in[3];
+  temp =
+    (static_cast<int32_t>(in[0]) << 24) |
+    (static_cast<int32_t>(in[1]) << 16) |
+    (static_cast<int32_t>(in[2]) << 8) | in[3];
   torque_output = static_cast<double>(temp / 1000.0);
 
-  temp = ((int32_t)in[4] << 24) | ((int32_t)in[5] << 16) | ((int32_t)in[6] << 8) | in[7];
+  temp =
+    (static_cast<int32_t>(in[4]) << 24) |
+    (static_cast<int32_t>(in[5]) << 16) |
+    (static_cast<int32_t>(in[6]) << 8) | in[7];
   torque_input = static_cast<double>(temp / 1000.0);
 }
 
@@ -529,16 +544,16 @@ void SteerAuxRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
-  raw_position = static_cast<float>(temp / 10.0);
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
+  raw_position = temp / 10.0;
 
-  temp = ((int16_t)in[2] << 8) | in[3];
-  raw_torque = static_cast<float>(temp / 10.0);
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
+  raw_torque = temp / 10.0;
 
   uint16_t temp2;
 
-  temp2 = ((uint16_t)in[4] << 8) | in[5];
-  rotation_rate = static_cast<float>(temp2 / 100.0);
+  temp2 = (static_cast<uint16_t>(in[4]) << 8) | in[5];
+  rotation_rate = temp2 / 100.0;
 
   user_interaction = (in[6] & 0x01) > 0;
   raw_position_is_valid = (in[7] & 0x01) > 0;
@@ -551,16 +566,16 @@ void SteeringPIDRpt1Msg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   dt = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   Kp = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[4] << 8) | in[5];
+  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
   Ki = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[6] << 8) | in[7];
+  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
   Kd = static_cast<double>(temp / 1000.0);
 }
 
@@ -568,16 +583,16 @@ void SteeringPIDRpt2Msg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   P_term = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   I_term = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[4] << 8) | in[5];
+  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
   D_term = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[6] << 8) | in[7];
+  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
   all_terms = static_cast<double>(temp / 1000.0);
 }
 
@@ -585,16 +600,16 @@ void SteeringPIDRpt3Msg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   new_torque = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   str_angle_desired = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[4] << 8) | in[5];
+  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
   str_angle_actual = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[6] << 8) | in[7];
+  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
   error = static_cast<double>(temp / 1000.0);
 }
 
@@ -602,10 +617,10 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   angular_velocity = static_cast<double>(temp / 1000.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   angular_acceleration = static_cast<double>(temp / 1000.0);
 }
 
@@ -627,7 +642,7 @@ void VehicleDynamicsRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = (((int16_t)in[1] << 8) | in[2]);
+  temp = ((static_cast<int16_t>(in[1]) << 8) | in[2]);
   brake_torque = static_cast<double>(temp / 1000.0);
 
   g_forces = in[0];
@@ -637,7 +652,7 @@ void VehicleSpeedRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   vehicle_speed = static_cast<double>(temp / 100.0);
 
   vehicle_speed_valid = (in[2] == 1);
@@ -751,16 +766,16 @@ void WheelSpeedRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   front_left_wheel_speed = static_cast<double>(temp / 100.0);
 
-  temp = ((int16_t)in[2] << 8) | in[3];
+  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   front_right_wheel_speed = static_cast<double>(temp / 100.0);
 
-  temp = ((int16_t)in[4] << 8) | in[5];
+  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
   rear_left_wheel_speed = static_cast<double>(temp / 100.0);
 
-  temp = ((int16_t)in[6] << 8) | in[7];
+  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
   rear_right_wheel_speed = static_cast<double>(temp / 100.0);
 }
 
@@ -784,7 +799,7 @@ void YawRateRptMsg::parse(uint8_t *in)
 {
   int16_t temp;
 
-  temp = ((int16_t)in[0] << 8) | in[1];
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   yaw_rate = static_cast<double>(temp / 100.0);
 }
 
@@ -817,7 +832,7 @@ void SystemCmdFloat::encode(bool enable,
   data[0] |= clear_override ? 0x04 : 0x00;
   data[0] |= clear_faults ? 0x08 : 0x00;
 
-  uint16_t cmd_float = (uint16_t)(cmd * 1000.0);
+  uint16_t cmd_float = static_cast<uint16_t>(cmd * 1000.0);
   data[1] = (cmd_float & 0xFF00) >> 8;
   data[2] = cmd_float & 0x00FF;
 }
@@ -851,8 +866,8 @@ void SteerCmdMsg::encode(bool enable,
   data[0] |= clear_override ? 0x04 : 0x00;
   data[0] |= clear_faults ? 0x08 : 0x00;
 
-  int16_t raw_pos = (int16_t)(1000.0 * steer_pos);
-  uint16_t raw_spd = (uint16_t)(1000.0 * steer_spd);
+  int16_t raw_pos = static_cast<int16_t>(1000.0 * steer_pos);
+  uint16_t raw_spd = static_cast<uint16_t>(1000.0 * steer_spd);
 
   data[1] = (raw_pos & 0xFF00) >> 8;
   data[2] = raw_pos & 0x00FF;
