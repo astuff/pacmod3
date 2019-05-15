@@ -71,7 +71,7 @@ enum ComponentFunction
 class Pacmod3TxMsg
 {
 public:
-  static std::shared_ptr<Pacmod3TxMsg> make_message(const int64_t& can_id);
+  static std::shared_ptr<Pacmod3TxMsg> make_message(const uint32_t& can_id);
   virtual void parse(uint8_t *in) = 0;
   virtual bool isSystem();
 };
@@ -137,7 +137,7 @@ class GlobalRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool enabled;
   bool override_active;
@@ -157,7 +157,7 @@ class ComponentRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   ComponentType component_type;
   ComponentFunction component_func;
@@ -173,98 +173,98 @@ class AccelRptMsg :
   public SystemRptFloatMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class BrakeRptMsg :
   public SystemRptFloatMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class CruiseControlButtonsRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class DashControlsLeftRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class DashControlsRightRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class HazardLightRptMsg :
   public SystemRptBoolMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class HeadlightRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class HornRptMsg :
   public SystemRptBoolMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class MediaControlsRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class ParkingBrakeRptMsg :
   public SystemRptBoolMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class ShiftRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class SteerRptMsg :
   public SystemRptFloatMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class TurnSignalRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class WiperRptMsg :
   public SystemRptIntMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 // System Aux Reports
@@ -272,7 +272,7 @@ class AccelAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   float raw_pedal_pos;
   float raw_pedal_force;
@@ -288,7 +288,7 @@ class BrakeAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   float raw_pedal_pos;
   float raw_pedal_force;
@@ -308,7 +308,7 @@ class HeadlightAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool headlights_on;
   bool headlights_on_bright;
@@ -326,7 +326,7 @@ class ShiftAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool between_gears;
   bool stay_in_neutral_mode;
@@ -344,7 +344,7 @@ class SteerAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   float raw_position;
   float raw_torque;
@@ -362,7 +362,7 @@ class TurnAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool driver_blinker_bulb_on;
   bool passenger_blinker_bulb_on;
@@ -376,7 +376,7 @@ class WiperAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool front_wiping;
   bool front_spraying;
@@ -399,7 +399,7 @@ class RearLightsRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool brake_lights_on;
   bool brake_lights_on_is_valid;
@@ -413,7 +413,7 @@ class InteriorLightsRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool front_dome_lights_on;
   bool front_dome_lights_on_is_valid;
@@ -431,7 +431,7 @@ class OccupancyRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool driver_seat_occupied;
   bool driver_seat_occupied_is_valid;
@@ -484,28 +484,28 @@ class BrakeMotorRpt1Msg :
   public MotorRpt1Msg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class BrakeMotorRpt2Msg :
   public MotorRpt2Msg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class BrakeMotorRpt3Msg :
   public MotorRpt3Msg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class DateTimeRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   uint32_t year;
   uint8_t month;
@@ -521,7 +521,7 @@ class DoorRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   bool driver_door_open;
   bool driver_door_open_is_valid;
@@ -545,7 +545,7 @@ class LatLonHeadingRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   int latitude_degrees;
   uint32_t latitude_minutes;
@@ -562,7 +562,7 @@ class SteeringPIDRpt1Msg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double dt;
   double Kp;
@@ -576,7 +576,7 @@ class SteeringPIDRpt2Msg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double P_term;
   double I_term;
@@ -590,7 +590,7 @@ class SteeringPIDRpt3Msg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double new_torque;
   double str_angle_desired;
@@ -604,7 +604,7 @@ class SteeringPIDRpt4Msg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double angular_velocity;
   double angular_acceleration;
@@ -616,28 +616,28 @@ class SteerMotorRpt1Msg :
   public MotorRpt1Msg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class SteerMotorRpt2Msg :
   public MotorRpt2Msg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class SteerMotorRpt3Msg :
   public MotorRpt3Msg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class VehicleSpeedRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double vehicle_speed;
   bool vehicle_speed_valid;
@@ -650,7 +650,7 @@ class VinRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   std::string mfg_code;
   std::string mfg;
@@ -665,7 +665,7 @@ class YawRateRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double yaw_rate;
 
@@ -676,7 +676,7 @@ class WheelSpeedRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   double front_left_wheel_speed;
   double front_right_wheel_speed;
@@ -690,7 +690,7 @@ class DetectedObjectRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
   double front_object_distance_low_res;
   double front_object_distance_high_res;
 
@@ -701,7 +701,7 @@ class VehicleSpecificRpt1Msg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   uint8_t shift_pos_1;
   uint8_t shift_pos_2;
@@ -713,7 +713,7 @@ class VehicleDynamicsRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   uint8_t g_forces;
   double brake_torque;
@@ -766,84 +766,84 @@ class AccelCmdMsg :
   public SystemCmdFloat
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class BrakeCmdMsg :
   public SystemCmdFloat
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class CruiseControlButtonsCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class DashControlsLeftCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class DashControlsRightCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class HazardLightCmdMsg :
   public SystemCmdBool
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class HeadlightCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class HornCmdMsg :
   public SystemCmdBool
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class MediaControlsCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class ParkingBrakeCmdMsg :
   public SystemCmdBool
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class ShiftCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class SteerCmdMsg :
   public SystemCmdFloat
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 
   void encode(bool enabled,
               bool ignore_overrides,
@@ -857,14 +857,14 @@ class TurnSignalCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 
 class WiperCmdMsg :
   public SystemCmdInt
 {
 public:
-  static const int64_t CAN_ID;
+  static const uint32_t CAN_ID;
 };
 }  // namespace PACMod3
 }  // namespace Drivers

@@ -24,7 +24,7 @@
 
 using namespace AS::Drivers::PACMod3;  // NOLINT
 
-std::unordered_map<int64_t, ros::Publisher> pub_tx_list;
+std::unordered_map<uint32_t, ros::Publisher> pub_tx_list;
 Pacmod3TxRosMsgHandler handler;
 
 // Vehicle-Specific Publishers
@@ -189,13 +189,13 @@ void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 // Listens for incoming requests to change the position of the steering wheel with a speed limit
 void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 {
-  int64_t can_id = SteerCmdMsg::CAN_ID;
+  auto can_id = SteerCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
   else
-    ROS_WARN("Received command message for ID 0x%lx for which we did not have an encoder.", can_id);
+    ROS_WARN("Received command message for ID 0x%u for which we did not have an encoder.", can_id);
 }
 
 // Listens for incoming requests to change the state of the turn signals
