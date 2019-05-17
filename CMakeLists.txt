@@ -6,6 +6,7 @@ project(pacmod3)
 add_definitions(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
+  roslint
   roscpp
   std_msgs
   pacmod_msgs
@@ -22,7 +23,7 @@ catkin_package(CATKIN_DEPENDS
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include/${PROJECT_NAME}
+  include/
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -44,6 +45,9 @@ add_dependencies(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
 )
+
+set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
+roslint_cpp()
 
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

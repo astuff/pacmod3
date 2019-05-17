@@ -1,17 +1,17 @@
-#ifndef PACMOD3_COMMON_H
-#define PACMOD3_COMMON_H
+#ifndef PACMOD3_PACMOD3_COMMON_H
+#define PACMOD3_PACMOD3_COMMON_H
 
 /*
-* Unpublished Copyright (c) 2009-2017 AutonomouStuff, LLC, All Rights Reserved.
+* Unpublished Copyright (c) 2009-2019 AutonomouStuff, LLC, All Rights Reserved.
 *
-* This file is part of the PACMod ROS 1.0 driver which is released under the MIT license.
+* This file is part of the PACMod ROS driver which is released under the MIT license.
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
 #include <memory>
 #include <mutex>
 
-#include <pacmod3_core.h>
+#include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>
 
 #include <pacmod_msgs/SystemCmdBool.h>
@@ -52,4 +52,4 @@
 #include <pacmod_msgs/WiperAuxRpt.h>
 #include <pacmod_msgs/YawRateRpt.h>
 
-#endif
+#endif  // PACMOD3_PACMOD3_COMMON_H
