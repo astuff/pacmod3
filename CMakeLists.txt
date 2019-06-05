@@ -49,6 +49,21 @@ target_link_libraries(${PROJECT_NAME}
 set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
 roslint_cpp()
 
+if(CATKIN_ENABLE_TESTING)
+  roslint_add_test()
+
+  find_package(catkin REQUIRED COMPONENTS rosunit)
+  catkin_add_gtest(${PROJECT_NAME}_core_tests
+    tests/${PROJECT_NAME}_core_tests.cpp
+    src/pacmod3_core.cpp
+  )
+  target_link_libraries(${PROJECT_NAME}_core_tests
+    ${catkin_LIBRARIES}
+  )
+
+  find_package(catkin REQUIRED COMPONENTS rostest)
+endif()
+
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
