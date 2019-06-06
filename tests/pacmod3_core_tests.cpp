@@ -11,6 +11,7 @@
 #include <vector>
 #include <memory>
 #include <unordered_map>
+#include <algorithm>
 
 using namespace AS::Drivers::PACMod3;  // NOLINT
 
@@ -39,7 +40,7 @@ TEST(PACMod3Core, generateRptMessages)
 
   for (const auto& msg : generated_msgs)
   {
-    auto id_valid = std::find(std::begin(rpt_ids), std::end(rpt_ids), msg.first);
+    auto id_valid = std::find(rpt_ids.begin(), rpt_ids.end(), msg.first);
 
     if (id_valid != rpt_ids.end())
     {
