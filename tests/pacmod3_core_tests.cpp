@@ -46,13 +46,15 @@ TEST(PACMod3Core, generateMessages)
     {
       // ID is a valid one so make_message
       // should return a valid shared_ptr
-      // ASSERT_NE(msg.second, invalid_ptr) << "Valid CAN ID 0x" << std::hex << msg.first << " did not return a valid message type.";
+      ASSERT_TRUE(msg.second) << "Valid CAN ID 0x"
+        << std::hex << msg.first << " did not return a valid message type.";
     }
     else
     {
       // ID is not a valid one so make_message
       // should return a shared_ptr to nullptr
-      ASSERT_EQ(msg.second, invalid_ptr) << "Invalid CAN ID 0x" << std::hex << msg.first << " generated a valid message type.";
+      ASSERT_FALSE(msg.second) << "Invalid CAN ID 0x"
+        << std::hex << msg.first << " generated a valid message type.";
     }
   }
 }
