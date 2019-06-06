@@ -45,14 +45,14 @@ TEST(PACMod3Core, generateRptMessages)
     {
       // ID is a valid one so make_rpt_message
       // should return a valid shared_ptr
-      ASSERT_TRUE(msg.second) << "Valid CAN ID 0x"
+      ASSERT_NE(msg.second.get(), nullptr) << "Valid CAN ID 0x"
         << std::hex << msg.first << " did not return a valid message type.";
     }
     else
     {
       // ID is not a valid one so make_rpt_message
       // should return a shared_ptr to nullptr
-      ASSERT_FALSE(msg.second) << "Invalid CAN ID 0x"
+      ASSERT_EQ(msg.second.get(), nullptr) << "Invalid CAN ID 0x"
         << std::hex << msg.first << " generated a valid message type.";
     }
   }
