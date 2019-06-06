@@ -71,7 +71,7 @@ enum ComponentFunction
 class Pacmod3TxMsg
 {
 public:
-  static std::shared_ptr<Pacmod3TxMsg> make_message(const uint32_t& can_id);
+  static std::shared_ptr<Pacmod3TxMsg> make_rpt_message(const uint32_t& can_id);
   virtual void parse(uint8_t *in) = 0;
   virtual bool isSystem();
 };

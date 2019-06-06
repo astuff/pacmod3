@@ -260,7 +260,7 @@ void can_write()
 
 void can_read(const can_msgs::Frame::ConstPtr &msg)
 {
-  auto parser_class = Pacmod3TxMsg::make_message(msg->id);
+  auto parser_class = Pacmod3TxMsg::make_rpt_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
   // Only parse messages for which we have a parser and a publisher.

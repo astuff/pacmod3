@@ -78,7 +78,7 @@ const uint32_t AS::Drivers::PACMod3::InteriorLightsRptMsg::CAN_ID = 0x416;
 const uint32_t AS::Drivers::PACMod3::DoorRptMsg::CAN_ID = 0x417;
 const uint32_t AS::Drivers::PACMod3::RearLightsRptMsg::CAN_ID = 0x418;
 
-std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
+std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_rpt_message(const uint32_t& can_id)
 {
   switch (can_id)
   {
@@ -120,6 +120,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
     break;
   case GlobalRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
+    break;
+  case HazardLightRptMsg::CAN_ID:
+    return std::shared_ptr<Pacmod3TxMsg>(new HazardLightRptMsg);
     break;
   case HeadlightRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new HeadlightRptMsg);

@@ -14,12 +14,11 @@
 
 using namespace AS::Drivers::PACMod3;  // NOLINT
 
-TEST(PACMod3Core, generateMessages)
+TEST(PACMod3Core, generateRptMessages)
 {
-  std::vector<uint32_t> valid_ids =
+  std::vector<uint32_t> rpt_ids =
   {
-     0x10,  0x20, 0x100, 0x104, 0x108, 0x10C, 0x110, 0x114,
-    0x118, 0x11C, 0x120, 0x124, 0x128, 0x12C, 0x130, 0x134,
+     0x10,  0x20,
     0x200, 0x204, 0x208, 0x20C, 0x210, 0x214, 0x218, 0x21C,
     0x220, 0x224, 0x228, 0x22C, 0x230, 0x234, 0x300, 0x304,
     0x318, 0x328, 0x32C, 0x330, 0x334, 0x400, 0x401, 0x402,
@@ -34,24 +33,24 @@ TEST(PACMod3Core, generateMessages)
 
   for (uint32_t i = 0; i < 0x800; i++)
   {
-    auto gen_msg = Pacmod3TxMsg::make_message(i);
+    auto gen_msg = Pacmod3TxMsg::make_rpt_message(i);
     generated_msgs[i] = gen_msg;
   }
 
   for (const auto& msg : generated_msgs)
   {
-    auto id_valid = std::find(valid_ids.begin(), valid_ids.end(), msg.first);
+    auto id_valid = std::find(rpt_ids.begin(), rpt_ids.end(), msg.first);
 
-    if (id_valid != valid_ids.end())
+    if (id_valid != rpt_ids.end())
     {
-      // ID is a valid one so make_message
+      // ID is a valid one so make_rpt_message
       // should return a valid shared_ptr
       ASSERT_TRUE(msg.second) << "Valid CAN ID 0x"
         << std::hex << msg.first << " did not return a valid message type.";
     }
     else
     {
-      // ID is not a valid one so make_message
+      // ID is not a valid one so make_rpt_message
       // should return a shared_ptr to nullptr
       ASSERT_FALSE(msg.second) << "Invalid CAN ID 0x"
         << std::hex << msg.first << " generated a valid message type.";
