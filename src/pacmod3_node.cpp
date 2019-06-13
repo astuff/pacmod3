@@ -38,6 +38,7 @@ ros::Publisher headlight_rpt_pub;
 ros::Publisher headlight_aux_rpt_pub;
 ros::Publisher horn_rpt_pub;
 ros::Publisher wheel_speed_rpt_pub;
+ros::Publisher hazards_rpt_pub;
 ros::Publisher steering_pid_rpt_1_pub;
 ros::Publisher steering_pid_rpt_2_pub;
 ros::Publisher steering_pid_rpt_3_pub;
@@ -494,11 +495,13 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::LEXUS_RX_450H)
   {
+    hazards_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazards_rpt", 20);
     steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
     steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
     steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
     steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
 
+    pub_tx_list.insert(std::make_pair(HazardLightRptMsg::CAN_ID, hazards_rpt_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, steering_pid_rpt_3_pub));
