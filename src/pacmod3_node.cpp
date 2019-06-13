@@ -217,7 +217,7 @@ void send_can(int32_t id, const std::vector<uint8_t>& vec)
   frame.is_rtr = false;
   frame.is_extended = false;
   frame.is_error = false;
-  frame.dlc = 8;
+  frame.dlc = vec.size();
   std::copy(vec.begin(), vec.end(), frame.data.begin());
 
   frame.header.stamp = ros::Time::now();
