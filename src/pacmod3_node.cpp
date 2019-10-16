@@ -341,6 +341,8 @@ int main(int argc, char *argv[])
       veh_type = INTERNATIONAL_PROSTAR_122;
     else if (veh_type_string == "LEXUS_RX_450H")
       veh_type = LEXUS_RX_450H;
+    else if (veh_type_string == "FREIGHTLINER_CASCADIA")
+      veh_type = FREIGHTLINER_CASCADIA;
     else if (veh_type_string == "VEHICLE_4")
       veh_type = VEHICLE_4;
     else if (veh_type_string == "VEHICLE_5")
