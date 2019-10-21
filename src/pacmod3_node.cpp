@@ -421,7 +421,7 @@ int main(int argc, char *argv[])
   std::shared_ptr<LockedData> shift_data(new LockedData);
   std::shared_ptr<LockedData> steer_data(new LockedData);
   std::shared_ptr<LockedData> turn_data(new LockedData);
-   std::shared_ptr<LockedData> door_data(new LockedData);
+  std::shared_ptr<LockedData> door_data(new LockedData);
 
   rx_list.insert(std::make_pair(AccelCmdMsg::CAN_ID, accel_data));
   rx_list.insert(std::make_pair(BrakeCmdMsg::CAN_ID, brake_data));
