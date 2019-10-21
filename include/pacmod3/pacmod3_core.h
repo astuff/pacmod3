@@ -261,12 +261,6 @@ public:
   static const uint32_t CAN_ID;
 };
 
-class DoorSignalRptMsg :
-  public SystemRptIntMsg
-{
-public:
-  static const uint32_t CAN_ID;
-};
 class WiperRptMsg :
   public SystemRptIntMsg
 {
@@ -867,12 +861,6 @@ public:
   static const uint32_t CAN_ID;
 };
 
-class DoorSignalCmdMsg :
-  public SystemCmdInt
-{
-public:
-  static const uint32_t CAN_ID;
-};
 class WiperCmdMsg :
   public SystemCmdInt
 {
