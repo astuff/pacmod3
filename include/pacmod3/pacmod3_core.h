@@ -29,7 +29,8 @@ enum VehicleType
   LEXUS_RX_450H,
   VEHICLE_4,
   VEHICLE_5,
-  VEHICLE_6
+  VEHICLE_6,
+  JUPITER_SPIRIT
 };
 
 enum DimLevel

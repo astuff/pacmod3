@@ -347,6 +347,8 @@ int main(int argc, char *argv[])
       veh_type = VEHICLE_5;
     else if (veh_type_string == "VEHICLE_6")
       veh_type = VEHICLE_6;
+    else if (veh_type_string == "JUPITER_SPIRIT")
+      veh_type = JUPITER_SPIRIT;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
@@ -450,6 +452,7 @@ int main(int argc, char *argv[])
   }
 
   if (veh_type == VehicleType::LEXUS_RX_450H ||
+      veh_type == VehicleType::JUPITER_SPIRIT ||
       veh_type == VehicleType::VEHICLE_5 ||
       veh_type == VehicleType::VEHICLE_6)
   {
@@ -492,7 +495,7 @@ int main(int argc, char *argv[])
     pub_tx_list.insert(std::make_pair(VehicleDynamicsRptMsg::CAN_ID, vehicle_dynamics_rpt_pub));
   }
 
-  if (veh_type == VehicleType::LEXUS_RX_450H)
+  if (veh_type == VehicleType::LEXUS_RX_450H || veh_type == VehicleType::JUPITER_SPIRIT)
   {
     steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
     steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
