@@ -1,6 +1,6 @@
 # PACMod (Platform Actuation and Control MODule) Vehicle Interface for Board Revision 3 #
 
-[![CircleCI](https://circleci.com/gh/astuff/pacmod3/tree/master.svg?style=svg)](https://circleci.com/gh/astuff/pacmod3/tree/master)
+[![CircleCI](https://circleci.com/gh/astuff/pacmod3/tree/dashing-devel.svg?style=svg)](https://circleci.com/gh/astuff/pacmod3/tree/dashing-devel)
 
 This ROS node is designed to allow the user to control a vehicle (see SUPPORTED VEHICLES below) with the PACMod drive-by-wire system, board revision 3. For more information about the topics, parameters, and details on the implementation, see [the ROS wiki](http://wiki.ros.org/pacmod3).
 

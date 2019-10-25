@@ -1,60 +1,89 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(pacmod3)
 
-## Add support for C++11, supported in ROS Kinetic and newer
-# For PACMod, this must be enabled to use mutexes.
-add_definitions(-std=c++11)
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS
-  roslint
-  roscpp
-  std_msgs
-  pacmod_msgs
-  can_msgs
-)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-catkin_package(CATKIN_DEPENDS
-  roscpp
-  std_msgs 
-  pacmod_msgs
-  can_msgs
-)
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(rclcpp_lifecycle REQUIRED)
+find_package(can_msgs REQUIRED)
+find_package(pacmod_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
 include_directories(
   include/
-  ${catkin_INCLUDE_DIRS}
 )
 
-## Declare a C++ executable
-add_executable(${PROJECT_NAME}
+add_library(
+  ${PROJECT_NAME}_node SHARED
   src/pacmod3_ros_msg_handler.cpp
-  src/pacmod3_node.cpp
   src/pacmod3_core.cpp
+  src/pacmod3_node.cpp
+)
+ament_target_dependencies(
+  ${PROJECT_NAME}_node
+  "rclcpp"
+  "rclcpp_components"
+  "rclcpp_lifecycle"
+  "can_msgs"
+  "pacmod_msgs"
+  "std_msgs"
+)
+rclcpp_components_register_nodes(
+  ${PROJECT_NAME}_node
+  "AS::Drivers::PACMod3Node"
 )
 
-## Add cmake target dependencies of the executable
-## same as for the library above
-add_dependencies(${PROJECT_NAME}
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
+add_executable(
+  ${PROJECT_NAME}_driver
+  src/pacmod3.cpp
+)
+ament_target_dependencies(
+  ${PROJECT_NAME}_driver
+  "rclcpp"
+  "lifecycle_msgs"
+)
+target_link_libraries(
+  ${PROJECT_NAME}_driver
+  ${PROJECT_NAME}_node
 )
 
-## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}
-  ${catkin_LIBRARIES}
+ament_export_include_directories(include)
+ament_export_interfaces(export_${PROJECT_NAME}_node HAS_LIBRARY_TARGET)
+ament_export_libraries(${PROJECT_NAME}_node)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()
+
+install(
+  TARGETS ${PROJECT_NAME}_node
+  EXPORT export_${PROJECT_NAME}_node
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
-set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
-roslint_cpp()
-
-install(TARGETS ${PROJECT_NAME}
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+install(
+  TARGETS ${PROJECT_NAME}_driver
+  DESTINATION lib/${PROJECT_NAME}
 )
 
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}/
 )
