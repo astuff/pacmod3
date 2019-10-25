@@ -5,7 +5,7 @@
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
-#include <pacmod3/pacmod3_core.h>
+#include "pacmod3/pacmod3_core.hpp"
 
 using namespace AS::Drivers::PACMod3;  // NOLINT
 

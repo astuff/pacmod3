@@ -5,7 +5,9 @@
 * See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
 */
 
-#include <pacmod3/pacmod3_ros_msg_handler.h>
+#include "pacmod3/pacmod3_node.hpp"
+#include "pacmod3/pacmod3_ros_msg_handler.hpp"
+
 #include <signal.h>
 #include <queue>
 #include <thread>
