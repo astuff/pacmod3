@@ -48,7 +48,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
            can_id == DashControlsLeftRptMsg::CAN_ID ||
            can_id == DashControlsRightRptMsg::CAN_ID ||
            can_id == TurnSignalRptMsg::CAN_ID ||
-           can_id == DoorSignalRptMsg::CAN_ID ||
+           can_id == SlidingDoorRptMsg::CAN_ID ||
            can_id == ShiftRptMsg::CAN_ID ||
            can_id == HeadlightRptMsg::CAN_ID ||
            can_id == MediaControlsRptMsg::CAN_ID ||
@@ -963,9 +963,9 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
-  else if (can_id == DoorSignalCmdMsg::CAN_ID)
+  else if (can_id == SlidingDoorCmdMsg::CAN_ID)
   {
-    DoorSignalCmdMsg encoder;
+    SlidingDoorCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,

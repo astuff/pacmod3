@@ -26,7 +26,7 @@ const uint32_t AS::Drivers::PACMod3::ParkingBrakeCmdMsg::CAN_ID = 0x124;
 const uint32_t AS::Drivers::PACMod3::ShiftCmdMsg::CAN_ID = 0x128;
 const uint32_t AS::Drivers::PACMod3::SteerCmdMsg::CAN_ID = 0x12C;
 const uint32_t AS::Drivers::PACMod3::TurnSignalCmdMsg::CAN_ID = 0x130;
-const uint32_t AS::Drivers::PACMod3::DoorSignalCmdMsg::CAN_ID = 0x140;
+const uint32_t AS::Drivers::PACMod3::SlidingDoorCmdMsg::CAN_ID = 0x140;
 const uint32_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x134;
 
 // System Reports
@@ -43,7 +43,7 @@ const uint32_t AS::Drivers::PACMod3::ParkingBrakeRptMsg::CAN_ID = 0x224;
 const uint32_t AS::Drivers::PACMod3::ShiftRptMsg::CAN_ID = 0x228;
 const uint32_t AS::Drivers::PACMod3::SteerRptMsg::CAN_ID = 0x22C;
 const uint32_t AS::Drivers::PACMod3::TurnSignalRptMsg::CAN_ID = 0x230;
-const uint32_t AS::Drivers::PACMod3::DoorSignalRptMsg::CAN_ID = 0x240;
+const uint32_t AS::Drivers::PACMod3::SlidingDoorRptMsg::CAN_ID = 0x240;
 const uint32_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x234;
 
 // System Aux Reports
@@ -177,8 +177,8 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
   case TurnSignalRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
     break;
-  case DoorSignalRptMsg::CAN_ID:
-    return std::shared_ptr<Pacmod3TxMsg>(new DoorSignalRptMsg);
+  case SlidingDoorRptMsg::CAN_ID:
+    return std::shared_ptr<Pacmod3TxMsg>(new SlidingDoorRptMsg);
     break;
   case VehicleSpecificRpt1Msg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpecificRpt1Msg);

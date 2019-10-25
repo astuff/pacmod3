@@ -65,7 +65,7 @@ ros::Publisher global_rpt_pub;
 ros::Publisher component_rpt_pub;
 ros::Publisher vin_rpt_pub;
 ros::Publisher turn_rpt_pub;
-ros::Publisher door_signal_rpt_pub;
+ros::Publisher sliding_door_rpt_pub;
 ros::Publisher shift_rpt_pub;
 ros::Publisher accel_rpt_pub;
 ros::Publisher steer_rpt_pub;
@@ -206,9 +206,9 @@ void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg
 }
 
 // Listens for incoming requests to change the state of the turn signals
-void callback_door_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_sliding_door_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(DoorSignalCmdMsg::CAN_ID, msg);
+  lookup_and_encode(SlidingDoorCmdMsg::CAN_ID, msg);
 }
 
 
@@ -373,7 +373,7 @@ int main(int argc, char *argv[])
   shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
   steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
   turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
-  door_signal_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/door_rpt", 20);
+  sliding_door_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/sliding_door_rpt", 20);
   vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
   vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
   accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
@@ -396,7 +396,7 @@ int main(int argc, char *argv[])
   pub_tx_list.insert(std::make_pair(ShiftRptMsg::CAN_ID, shift_rpt_pub));
   pub_tx_list.insert(std::make_pair(SteerRptMsg::CAN_ID, steer_rpt_pub));
   pub_tx_list.insert(std::make_pair(TurnSignalRptMsg::CAN_ID, turn_rpt_pub));
-  pub_tx_list.insert(std::make_pair(DoorSignalRptMsg::CAN_ID, door_signal_rpt_pub));
+  pub_tx_list.insert(std::make_pair(SlidingDoorRptMsg::CAN_ID, sliding_door_rpt_pub));
   pub_tx_list.insert(std::make_pair(VehicleSpeedRptMsg::CAN_ID, vehicle_speed_pub));
   pub_tx_list.insert(std::make_pair(VinRptMsg::CAN_ID, vin_rpt_pub));
   pub_tx_list.insert(std::make_pair(AccelAuxRptMsg::CAN_ID, accel_aux_rpt_pub));
@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
   ros::Subscriber shift_cmd_sub = n.subscribe("as_rx/shift_cmd", 20, callback_shift_set_cmd);
   ros::Subscriber steer_cmd_sub = n.subscribe("as_rx/steer_cmd", 20, callback_steer_cmd_sub);
   ros::Subscriber turn_cmd_sub = n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd);
-  ros::Subscriber door_signal_cmd_sub = n.subscribe("as_rx/door_cmd", 20, callback_door_signal_set_cmd);
+  ros::Subscriber sliding_door_cmd_sub = n.subscribe("as_rx/sliding_door_cmd", 20, callback_sliding_door_set_cmd);
 
   // Populate rx list
   std::shared_ptr<LockedData> accel_data(new LockedData);
@@ -422,13 +422,14 @@ int main(int argc, char *argv[])
   std::shared_ptr<LockedData> steer_data(new LockedData);
   std::shared_ptr<LockedData> turn_data(new LockedData);
   std::shared_ptr<LockedData> door_data(new LockedData);
+  std::shared_ptr<LockedData> sliding_door_data(new LockedData);
 
   rx_list.insert(std::make_pair(AccelCmdMsg::CAN_ID, accel_data));
   rx_list.insert(std::make_pair(BrakeCmdMsg::CAN_ID, brake_data));
   rx_list.insert(std::make_pair(ShiftCmdMsg::CAN_ID, shift_data));
   rx_list.insert(std::make_pair(SteerCmdMsg::CAN_ID, steer_data));
   rx_list.insert(std::make_pair(TurnSignalCmdMsg::CAN_ID, turn_data));
-  rx_list.insert(std::make_pair(DoorSignalCmdMsg::CAN_ID, door_data));
+  rx_list.insert(std::make_pair(SlidingDoorCmdMsg::CAN_ID, sliding_door_data));
 
   if (veh_type == VehicleType::POLARIS_GEM ||
       veh_type == VehicleType::POLARIS_RANGER ||
@@ -623,8 +624,8 @@ int main(int argc, char *argv[])
         kvp.key = "Steering";
       else if (system->first == TurnSignalRptMsg::CAN_ID)
         kvp.key = "Turn Signals";
-      else if (system->first == DoorSignalRptMsg::CAN_ID)
-        kvp.key = "Door Signals";
+      else if (system->first == SlidingDoorRptMsg::CAN_ID)
+        kvp.key = "Sliding Door";
       else if (system->first == WiperRptMsg::CAN_ID)
         kvp.key = "Wipers";
 

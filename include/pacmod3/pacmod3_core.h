@@ -261,7 +261,7 @@ public:
   static const uint32_t CAN_ID;
 };
 
-class DoorSignalRptMsg :
+class SlidingDoorRptMsg :
   public SystemRptIntMsg
 {
 public:
@@ -867,7 +867,7 @@ public:
   static const uint32_t CAN_ID;
 };
 
-class DoorSignalCmdMsg :
+class SlidingDoorCmdMsg :
   public SystemCmdInt
 {
 public:
