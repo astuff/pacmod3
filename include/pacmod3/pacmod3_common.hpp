@@ -23,9 +23,6 @@
 
 #include "pacmod3/pacmod3_core.hpp"
 
-#include <memory>
-#include <mutex>
-
 #include <rclcpp/rclcpp.hpp>
 
 #include <pacmod_msgs/msg/system_cmd_bool.hpp>
