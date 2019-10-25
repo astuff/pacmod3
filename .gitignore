@@ -8,3 +8,4 @@ polysync-viewer.config
 *.user
 *~
 .idea/
+.vscode/
