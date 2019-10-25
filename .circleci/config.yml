@@ -10,13 +10,12 @@ jobs:
           command: |
             apt-add-repository -y ppa:jwhitleyastuff/kvaser-linux
             apt-get update -qq && apt-get install -qq dpkg kvaser-canlib-dev
+            mkdir $CIRCLE_PROJECT_REPONAME
+            mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PROJECT_REPONAME/
       - run:
           name: Install Dependencies
           command: |
-            mkdir $CIRCLE_PROJECT_REPONAME
-            mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PORJECT_REPONAME/
             git clone https://github.com/jwhitleyastuff/ros_canopen -b dashing-devel
-            git clone https://github.com/ros/diagnostics -b dashing
             git clone https://github.com/astuff/kvaser_interface -b dashing-devel
             source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
