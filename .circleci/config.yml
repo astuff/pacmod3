@@ -1,64 +1,41 @@
 version: 2
 jobs:
-  kinetic:
+  dashing:
     docker:
-      - image: autonomoustuff/docker-builds:kinetic-ros-base
+      - image: autonomoustuff/docker-builds:dashing-ros-base
     steps:
       - checkout
       - run:
           name: Set Up Container
           command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
+            apt-add-repository -y ppa:jwhitleyastuff/kvaser-linux
+            apt-get update -qq && apt-get install -qq dpkg
+      - run:
+          name: Install Dependencies
+          command: |
+            mkdir $CIRCLE_PROJECT_REPONAME
+            mv `find -maxdepth 1 -not -name . -not -name $CIRCLE_PROJECT_REPONAME` $CIRCLE_PORJECT_REPONAME/
+            git clone https://github.com/jwhitleyastuff/ros_canopen -b dashing-devel
+            git clone https://github.com/ros/diagnostics -b dashing
+            git clone https://github.com/astuff/kvaser_interface -b dashing-devel
+            source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
       - run:
           name: Build
           command: |
             cd ..
-            catkin build
+            colcon build
       - run:
           name: Run Tests
           command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
+            source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
             cd ..
-            catkin run_tests
-            catkin_test_results
-    working_directory: ~/src
-
-  melodic:
-    docker:
-      - image: autonomoustuff/docker-builds:melodic-ros-base
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            cd ..
-            catkin build
-      - run:
-          name: Run Tests
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin run_tests
-            catkin_test_results
+            colcon test --packages-select $CIRCLE_PROJECT_REPONAME
+            colcon test-result
     working_directory: ~/src
 
 workflows:
   version: 2
   ros_build:
     jobs:
-      - kinetic
-      - melodic
+      - dashing
