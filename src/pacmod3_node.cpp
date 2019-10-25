@@ -126,7 +126,7 @@ void set_enable(bool val)
 }
 
 // Looks up the appropriate LockedData and inserts the command info
-void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
+void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdBool::ConstPtr& msg)
 {
   auto rx_it = rx_list.find(can_id);
 
@@ -136,7 +136,7 @@ void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdBool:
     ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
 }
 
-void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   auto rx_it = rx_list.find(can_id);
 
@@ -146,7 +146,7 @@ void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::
     ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
 }
 
-void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdFloat::ConstPtr& msg)
 {
   auto rx_it = rx_list.find(can_id);
 
@@ -157,57 +157,57 @@ void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat
 }
 
 // Listens for incoming requests to change the position of the throttle pedal
-void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+void callback_accel_cmd_sub(const pacmod_msgs::msg::SystemCmdFloat::ConstPtr& msg)
 {
   lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the position of the brake pedal
-void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+void callback_brake_cmd_sub(const pacmod_msgs::msg::SystemCmdFloat::ConstPtr& msg)
 {
   lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
-void callback_cruise_control_buttons_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_cruise_control_buttons_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
 }
 
-void callback_dash_controls_left_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_dash_controls_left_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
 }
 
-void callback_dash_controls_right_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_dash_controls_right_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the state of the headlights
-void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_headlight_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the state of the horn
-void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
+void callback_horn_set_cmd(const pacmod_msgs::msg::SystemCmdBool::ConstPtr& msg)
 {
   lookup_and_encode(HornCmdMsg::CAN_ID, msg);
 }
 
-void callback_media_controls_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_media_controls_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the gear shifter state
-void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_shift_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the position of the steering wheel with a speed limit
-void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
+void callback_steer_cmd_sub(const pacmod_msgs::msg::SteerSystemCmd::ConstPtr& msg)
 {
   auto can_id = SteerCmdMsg::CAN_ID;
   auto rx_it = rx_list.find(can_id);
@@ -219,13 +219,13 @@ void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 }
 
 // Listens for incoming requests to change the state of the turn signals
-void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_turn_signal_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the state of the windshield wipers
-void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_wiper_set_cmd(const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
@@ -378,24 +378,24 @@ int main(int argc, char *argv[])
 
   // Advertise published messages
   can_rx_pub = n.advertise<can_msgs::Frame>("can_rx", 20);
-  global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
-  component_rpt_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt", 20);
-  accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
-  brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
-  shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
-  steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
-  turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
-  vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
-  vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
-  accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-  brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
-  shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-  steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
-  turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
+  global_rpt_pub = n.advertise<pacmod_msgs::msg::GlobalRpt>("parsed_tx/global_rpt", 20);
+  component_rpt_pub = n.advertise<pacmod_msgs::msg::ComponentRpt>("parsed_tx/component_rpt", 20);
+  accel_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/accel_rpt", 20);
+  brake_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/brake_rpt", 20);
+  shift_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/shift_rpt", 20);
+  steer_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/steer_rpt", 20);
+  turn_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/turn_rpt", 20);
+  vehicle_speed_pub = n.advertise<pacmod_msgs::msg::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
+  vin_rpt_pub = n.advertise<pacmod_msgs::msg::VinRpt>("parsed_tx/vin_rpt", 5);
+  accel_aux_rpt_pub = n.advertise<pacmod_msgs::msg::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+  brake_aux_rpt_pub = n.advertise<pacmod_msgs::msg::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+  shift_aux_rpt_pub = n.advertise<pacmod_msgs::msg::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+  steer_aux_rpt_pub = n.advertise<pacmod_msgs::msg::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+  turn_aux_rpt_pub = n.advertise<pacmod_msgs::msg::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
 
   enabled_pub = n.advertise<std_msgs::Bool>("as_tx/enabled", 20, true);
   vehicle_speed_ms_pub = n.advertise<std_msgs::Float64>("as_tx/vehicle_speed", 20);
-  all_system_statuses_pub = n.advertise<pacmod_msgs::AllSystemStatuses>("as_tx/all_system_statuses", 20);
+  all_system_statuses_pub = n.advertise<pacmod_msgs::msg::AllSystemStatuses>("as_tx/all_system_statuses", 20);
 
   std::string frame_id = "pacmod";
 
@@ -441,12 +441,12 @@ int main(int argc, char *argv[])
       veh_type == VehicleType::POLARIS_RANGER ||
       veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
   {
-    brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
-    brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
-    brake_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
-    steering_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
-    steering_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
-    steering_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
+    brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::msg::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
+    brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::msg::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
+    brake_rpt_detail_3_pub = n.advertise<pacmod_msgs::msg::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
+    steering_rpt_detail_1_pub = n.advertise<pacmod_msgs::msg::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
+    steering_rpt_detail_2_pub = n.advertise<pacmod_msgs::msg::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
+    steering_rpt_detail_3_pub = n.advertise<pacmod_msgs::msg::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
 
     pub_tx_list.insert(std::make_pair(BrakeMotorRpt1Msg::CAN_ID, brake_rpt_detail_1_pub));
     pub_tx_list.insert(std::make_pair(BrakeMotorRpt2Msg::CAN_ID, brake_rpt_detail_2_pub));
@@ -458,8 +458,8 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
   {
-    wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
-    wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
+    wiper_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/wiper_rpt", 20);
+    wiper_aux_rpt_pub = n.advertise<pacmod_msgs::msg::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
 
     pub_tx_list.insert(std::make_pair(WiperRptMsg::CAN_ID, wiper_rpt_pub));
     pub_tx_list.insert(std::make_pair(WiperAuxRptMsg::CAN_ID, wiper_aux_rpt_pub));
@@ -476,14 +476,14 @@ int main(int argc, char *argv[])
       veh_type == VehicleType::VEHICLE_5 ||
       veh_type == VehicleType::VEHICLE_6)
   {
-    date_time_rpt_pub = n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
-    headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
-    horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
-    parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
-    wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
-    yaw_rate_rpt_pub = n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
-    headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
+    date_time_rpt_pub = n.advertise<pacmod_msgs::msg::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
+    headlight_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/headlight_rpt", 20);
+    horn_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptBool>("parsed_tx/horn_rpt", 20);
+    lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::msg::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
+    parking_brake_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
+    wheel_speed_rpt_pub = n.advertise<pacmod_msgs::msg::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
+    yaw_rate_rpt_pub = n.advertise<pacmod_msgs::msg::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
+    headlight_aux_rpt_pub = n.advertise<pacmod_msgs::msg::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
 
     pub_tx_list.insert(std::make_pair(DateTimeRptMsg::CAN_ID, date_time_rpt_pub));
     pub_tx_list.insert(std::make_pair(HeadlightRptMsg::CAN_ID, headlight_rpt_pub));
@@ -508,8 +508,8 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::VEHICLE_4)
   {
-    detected_object_rpt_pub = n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
-    vehicle_dynamics_rpt_pub = n.advertise<pacmod_msgs::VehicleDynamicsRpt>("parsed_tx/vehicle_dynamics_rpt", 20);
+    detected_object_rpt_pub = n.advertise<pacmod_msgs::msg::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
+    vehicle_dynamics_rpt_pub = n.advertise<pacmod_msgs::msg::VehicleDynamicsRpt>("parsed_tx/vehicle_dynamics_rpt", 20);
 
     pub_tx_list.insert(std::make_pair(DetectedObjectRptMsg::CAN_ID, detected_object_rpt_pub));
     pub_tx_list.insert(std::make_pair(VehicleDynamicsRptMsg::CAN_ID, vehicle_dynamics_rpt_pub));
@@ -517,10 +517,10 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::LEXUS_RX_450H || veh_type == VehicleType::JUPITER_SPIRIT)
   {
-    steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
-    steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
-    steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
-    steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
+    steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::msg::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
+    steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::msg::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
+    steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::msg::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
+    steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::msg::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
 
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
     pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
@@ -530,15 +530,15 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::VEHICLE_5)
   {
-    // cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>(
+    // cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>(
     //     "parsed_tx/cruise_control_buttons_rpt", 20);
-    // dash_controls_left_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_left_rpt", 20);
-    // dash_controls_right_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_controls_right_rpt", 20);
-    // media_controls_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_controls_rpt", 20);
-    occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
-    interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
-    door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
-    rear_lights_rpt_pub = n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
+    // dash_controls_left_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/dash_controls_left_rpt", 20);
+    // dash_controls_right_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/dash_controls_right_rpt", 20);
+    // media_controls_rpt_pub = n.advertise<pacmod_msgs::msg::SystemRptInt>("parsed_tx/media_controls_rpt", 20);
+    occupancy_rpt_pub = n.advertise<pacmod_msgs::msg::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
+    interior_lights_rpt_pub = n.advertise<pacmod_msgs::msg::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
+    door_rpt_pub = n.advertise<pacmod_msgs::msg::DoorRpt>("parsed_tx/door_rpt", 20);
+    rear_lights_rpt_pub = n.advertise<pacmod_msgs::msg::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
 
     // pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
     // pub_tx_list.insert(std::make_pair(DashControlsLeftRptMsg::CAN_ID, dash_controls_left_rpt_pub));
@@ -577,7 +577,7 @@ int main(int argc, char *argv[])
     {
       // Turn signals have non-0 initial value.
       TurnSignalCmdMsg turn_encoder;
-      turn_encoder.encode(false, false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+      turn_encoder.encode(false, false, false, false, pacmod_msgs::msg::SystemCmdInt::TURN_NONE);
       rx_it->second->setData(turn_encoder.data);
     }
     else
@@ -598,11 +598,11 @@ int main(int argc, char *argv[])
 
   while (ros::ok())
   {
-    pacmod_msgs::AllSystemStatuses ss_msg;
+    pacmod_msgs::msg::AllSystemStatuses ss_msg;
 
     for (auto system = system_statuses.begin(); system != system_statuses.end(); ++system)
     {
-      pacmod_msgs::KeyValuePair kvp;
+      pacmod_msgs::msg::KeyValuePair kvp;
 
       if (system->first == AccelRptMsg::CAN_ID)
         kvp.key = "Accelerator";
