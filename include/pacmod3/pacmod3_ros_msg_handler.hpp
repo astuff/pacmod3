@@ -21,12 +21,13 @@
 #ifndef PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
 #define PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
 
-#include "pacmod3/pacmod3_common.hpp"
+#include <rclcpp/rclcpp.hpp>
 
+#include <memory>
 #include <string>
 #include <vector>
 
-#include <rclcpp/rclcpp.hpp>
+#include "pacmod3/pacmod3_common.hpp"
 
 namespace AS
 {
@@ -51,149 +52,154 @@ private:
 class Pacmod3TxRosMsgHandler
 {
 public:
-  void fillAndPublish(const uint32_t & can_id,
-                      const std::string & frame_id,
-                      const std::shared_ptr<rclcpp::PublisherBase> & pub,
-                      const std::shared_ptr<Pacmod3TxMsg> & parser_class);
+  void fillAndPublish(
+    const uint32_t & can_id,
+    const std::string & frame_id,
+    const std::shared_ptr<rclcpp::PublisherBase> & pub,
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class);
 
 private:
   void fillSystemRptBool(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SystemRptBool * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SystemRptBool * new_msg,
+    const std::string & frame_id);
   void fillSystemRptInt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SystemRptInt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SystemRptInt * new_msg,
+    const std::string & frame_id);
   void fillSystemRptFloat(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SystemRptFloat * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SystemRptFloat * new_msg,
+    const std::string & frame_id);
   void fillGlobalRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::GlobalRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::GlobalRpt * new_msg,
+    const std::string & frame_id);
   void fillComponentRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::ComponentRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::ComponentRpt * new_msg,
+    const std::string & frame_id);
   void fillAccelAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::AccelAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::AccelAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillBrakeAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::BrakeAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::BrakeAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillDateTimeRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::DateTimeRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::DateTimeRpt * new_msg,
+    const std::string & frame_id);
   void fillDetectedObjectRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::DetectedObjectRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::DetectedObjectRpt * new_msg,
+    const std::string & frame_id);
   void fillDoorRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::DoorRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::DoorRpt * new_msg,
+    const std::string & frame_id);
   void fillHeadlightAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::HeadlightAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::HeadlightAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillInteriorLightsRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::InteriorLightsRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::InteriorLightsRpt * new_msg,
+    const std::string & frame_id);
   void fillLatLonHeadingRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::LatLonHeadingRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::LatLonHeadingRpt * new_msg,
+    const std::string & frame_id);
   void fillMotorRpt1(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::MotorRpt1 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::MotorRpt1 * new_msg,
+    const std::string & frame_id);
   void fillMotorRpt2(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::MotorRpt2 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::MotorRpt2 * new_msg,
+    const std::string & frame_id);
   void fillMotorRpt3(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::MotorRpt3 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::MotorRpt3 * new_msg,
+    const std::string & frame_id);
   void fillOccupancyRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::OccupancyRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::OccupancyRpt * new_msg,
+    const std::string & frame_id);
   void fillRearLightsRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::RearLightsRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::RearLightsRpt * new_msg,
+    const std::string & frame_id);
   void fillShiftAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::ShiftAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::ShiftAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillSteerAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SteerAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SteerAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillSteeringPIDRpt1(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SteeringPIDRpt1 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SteeringPIDRpt1 * new_msg,
+    const std::string & frame_id);
   void fillSteeringPIDRpt2(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SteeringPIDRpt2 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SteeringPIDRpt2 * new_msg,
+    const std::string & frame_id);
   void fillSteeringPIDRpt3(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SteeringPIDRpt3 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SteeringPIDRpt3 * new_msg,
+    const std::string & frame_id);
   void fillSteeringPIDRpt4(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::SteeringPIDRpt4 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::SteeringPIDRpt4 * new_msg,
+    const std::string & frame_id);
   void fillTurnAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::TurnAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::TurnAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillVehicleSpecificRpt1(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::VehicleSpecificRpt1 * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::VehicleSpecificRpt1 * new_msg,
+    const std::string & frame_id);
   void fillVehicleDynamicsRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::VehicleDynamicsRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::VehicleDynamicsRpt * new_msg,
+    const std::string & frame_id);
   void fillVehicleSpeedRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::VehicleSpeedRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::VehicleSpeedRpt * new_msg,
+    const std::string & frame_id);
   void fillVinRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::VinRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::VinRpt * new_msg,
+    const std::string & frame_id);
   void fillWheelSpeedRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::WheelSpeedRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::WheelSpeedRpt * new_msg,
+    const std::string & frame_id);
   void fillWiperAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::WiperAuxRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::WiperAuxRpt * new_msg,
+    const std::string & frame_id);
   void fillYawRateRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::msg::YawRateRpt * new_msg,
-      const std::string& frame_id);
+    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+    pacmod_msgs::msg::YawRateRpt * new_msg,
+    const std::string & frame_id);
 };
 
 class Pacmod3RxRosMsgHandler
 {
 public:
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdBool::SharedPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdFloat::SharedPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdInt::SharedPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SteerSystemCmd::SharedPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t & can_id, const pacmod_msgs::msg::SystemCmdBool::SharedPtr & msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t & can_id, const pacmod_msgs::msg::SystemCmdFloat::SharedPtr & msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t & can_id, const pacmod_msgs::msg::SystemCmdInt::SharedPtr & msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t & can_id, const pacmod_msgs::msg::SteerSystemCmd::SharedPtr & msg);
 };
 
 }  // namespace PACMod3

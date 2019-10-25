@@ -50,14 +50,14 @@ int main(int argc, char ** argv)
   // Transition node from UNCONFIGURED to CONFIGURED
   auto node_configure_state =
     pacmod_node->trigger_transition(
-      rclcpp_lifecycle::Transition(Transition::TRANSITION_CONFIGURE, "configure"));
+    rclcpp_lifecycle::Transition(Transition::TRANSITION_CONFIGURE, "configure"));
 
   // If CONFIGURE transition worked
   if (node_configure_state.id() == State::PRIMARY_STATE_INACTIVE) {
     // Transition node from CONFIGURED to ACTIVE
     auto node_activate_state =
       pacmod_node->trigger_transition(
-        rclcpp_lifecycle::Transition(Transition::TRANSITION_ACTIVATE, "activate"));
+      rclcpp_lifecycle::Transition(Transition::TRANSITION_ACTIVATE, "activate"));
 
     // If ACTIVATE transition worked
     if (node_activate_state.id() == State::PRIMARY_STATE_ACTIVE) {

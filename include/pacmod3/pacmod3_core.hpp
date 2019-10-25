@@ -92,46 +92,49 @@ public:
 class Pacmod3TxMsg
 {
 public:
-  static std::shared_ptr<Pacmod3TxMsg> make_message(const uint32_t& can_id);
+  static std::shared_ptr<Pacmod3TxMsg> make_message(const uint32_t & can_id);
   virtual void parse(const std::vector<uint8_t> & in) = 0;
   virtual bool isSystem();
 };
 
-class SystemCmdBool :
-  public Pacmod3RxMsg
+class SystemCmdBool
+  : public Pacmod3RxMsg
 {
 public:
-  void encode(bool enable,
-              bool ignore_overrides,
-              bool clear_override,
-              bool clear_faults,
-              bool cmd);
+  void encode(
+    bool enable,
+    bool ignore_overrides,
+    bool clear_override,
+    bool clear_faults,
+    bool cmd);
 };
 
-class SystemCmdFloat :
-  public Pacmod3RxMsg
+class SystemCmdFloat
+  : public Pacmod3RxMsg
 {
 public:
-  void encode(bool enable,
-              bool ignore_overrides,
-              bool clear_override,
-              bool clear_faults,
-              float cmd);
+  void encode(
+    bool enable,
+    bool ignore_overrides,
+    bool clear_override,
+    bool clear_faults,
+    float cmd);
 };
 
-class SystemCmdInt :
-  public Pacmod3RxMsg
+class SystemCmdInt
+  : public Pacmod3RxMsg
 {
 public:
-  void encode(bool enable,
-              bool ignore_overrides,
-              bool clear_override,
-              bool clear_faults,
-              uint8_t cmd);
+  void encode(
+    bool enable,
+    bool ignore_overrides,
+    bool clear_override,
+    bool clear_faults,
+    uint8_t cmd);
 };
 
-class SystemRptMsg :
-  public Pacmod3TxMsg
+class SystemRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   SystemRptMsg();
@@ -147,8 +150,8 @@ public:
   bool vehicle_fault;
 };
 
-class SystemRptBoolMsg :
-  public SystemRptMsg
+class SystemRptBoolMsg
+  : public SystemRptMsg
 {
 public:
   SystemRptBoolMsg();
@@ -160,8 +163,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SystemRptIntMsg :
-  public SystemRptMsg
+class SystemRptIntMsg
+  : public SystemRptMsg
 {
 public:
   SystemRptIntMsg();
@@ -173,8 +176,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SystemRptFloatMsg :
-  public SystemRptMsg
+class SystemRptFloatMsg
+  : public SystemRptMsg
 {
 public:
   SystemRptFloatMsg();
@@ -186,8 +189,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class GlobalRptMsg :
-  public Pacmod3TxMsg
+class GlobalRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x10;
@@ -206,8 +209,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class ComponentRptMsg :
-  public Pacmod3TxMsg
+class ComponentRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x20;
@@ -221,8 +224,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class MotorRpt1Msg :
-  public Pacmod3TxMsg
+class MotorRpt1Msg
+  : public Pacmod3TxMsg
 {
 public:
   double current;
@@ -231,8 +234,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class MotorRpt2Msg :
-  public Pacmod3TxMsg
+class MotorRpt2Msg
+  : public Pacmod3TxMsg
 {
 public:
   double encoder_temp;
@@ -242,8 +245,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class MotorRpt3Msg :
-  public Pacmod3TxMsg
+class MotorRpt3Msg
+  : public Pacmod3TxMsg
 {
 public:
   double torque_output;
@@ -253,213 +256,214 @@ public:
 };
 
 // System Commands
-class AccelCmdMsg :
-  public SystemCmdFloat
+class AccelCmdMsg
+  : public SystemCmdFloat
 {
 public:
   static const uint32_t CAN_ID = 0x100;
 };
 
-class BrakeCmdMsg :
-  public SystemCmdFloat
+class BrakeCmdMsg
+  : public SystemCmdFloat
 {
 public:
   static const uint32_t CAN_ID = 0x104;
 };
 
-class CruiseControlButtonsCmdMsg :
-  public SystemCmdInt
+class CruiseControlButtonsCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x108;
 };
 
-class DashControlsLeftCmdMsg :
-  public SystemCmdInt
+class DashControlsLeftCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x10C;
 };
 
-class DashControlsRightCmdMsg :
-  public SystemCmdInt
+class DashControlsRightCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x110;
 };
 
-class HazardLightCmdMsg :
-  public SystemCmdBool
+class HazardLightCmdMsg
+  : public SystemCmdBool
 {
 public:
   static const uint32_t CAN_ID = 0x114;
 };
 
-class HeadlightCmdMsg :
-  public SystemCmdInt
+class HeadlightCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x118;
 };
 
-class HornCmdMsg :
-  public SystemCmdBool
+class HornCmdMsg
+  : public SystemCmdBool
 {
 public:
   static const uint32_t CAN_ID = 0x11C;
 };
 
-class MediaControlsCmdMsg :
-  public SystemCmdInt
+class MediaControlsCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x120;
 };
 
-class ParkingBrakeCmdMsg :
-  public SystemCmdBool
+class ParkingBrakeCmdMsg
+  : public SystemCmdBool
 {
 public:
   static const uint32_t CAN_ID = 0x124;
 };
 
-class ShiftCmdMsg :
-  public SystemCmdInt
+class ShiftCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x128;
 };
 
-class SteerCmdMsg :
-  public SystemCmdFloat
+class SteerCmdMsg
+  : public SystemCmdFloat
 {
 public:
   static const uint32_t CAN_ID = 0x12C;
 
-  void encode(bool enabled,
-              bool ignore_overrides,
-              bool clear_override,
-              bool clear_faults,
-              float steer_pos,
-              float steer_spd);
+  void encode(
+    bool enabled,
+    bool ignore_overrides,
+    bool clear_override,
+    bool clear_faults,
+    float steer_pos,
+    float steer_spd);
 };
 
-class TurnSignalCmdMsg :
-  public SystemCmdInt
+class TurnSignalCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x130;
 };
 
-class WiperCmdMsg :
-  public SystemCmdInt
+class WiperCmdMsg
+  : public SystemCmdInt
 {
 public:
   static const uint32_t CAN_ID = 0x134;
 };
 
 // System Reports
-class AccelRptMsg :
-  public SystemRptFloatMsg
+class AccelRptMsg
+  : public SystemRptFloatMsg
 {
 public:
   static const uint32_t CAN_ID = 0x200;
 };
 
-class BrakeRptMsg :
-  public SystemRptFloatMsg
+class BrakeRptMsg
+  : public SystemRptFloatMsg
 {
 public:
   static const uint32_t CAN_ID = 0x204;
 };
 
-class CruiseControlButtonsRptMsg :
-  public SystemRptIntMsg
+class CruiseControlButtonsRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x208;
 };
 
-class DashControlsLeftRptMsg :
-  public SystemRptIntMsg
+class DashControlsLeftRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x20C;
 };
 
-class DashControlsRightRptMsg :
-  public SystemRptIntMsg
+class DashControlsRightRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x210;
 };
 
-class HazardLightRptMsg :
-  public SystemRptBoolMsg
+class HazardLightRptMsg
+  : public SystemRptBoolMsg
 {
 public:
   static const uint32_t CAN_ID = 0x214;
 };
 
-class HeadlightRptMsg :
-  public SystemRptIntMsg
+class HeadlightRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x218;
 };
 
-class HornRptMsg :
-  public SystemRptBoolMsg
+class HornRptMsg
+  : public SystemRptBoolMsg
 {
 public:
   static const uint32_t CAN_ID = 0x21C;
 };
 
-class MediaControlsRptMsg :
-  public SystemRptIntMsg
+class MediaControlsRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x220;
 };
 
-class ParkingBrakeRptMsg :
-  public SystemRptBoolMsg
+class ParkingBrakeRptMsg
+  : public SystemRptBoolMsg
 {
 public:
   static const uint32_t CAN_ID = 0x224;
 };
 
-class ShiftRptMsg :
-  public SystemRptIntMsg
+class ShiftRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x228;
 };
 
-class SteerRptMsg :
-  public SystemRptFloatMsg
+class SteerRptMsg
+  : public SystemRptFloatMsg
 {
 public:
   static const uint32_t CAN_ID = 0x22C;
 };
 
-class TurnSignalRptMsg :
-  public SystemRptIntMsg
+class TurnSignalRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x230;
 };
 
-class WiperRptMsg :
-  public SystemRptIntMsg
+class WiperRptMsg
+  : public SystemRptIntMsg
 {
 public:
   static const uint32_t CAN_ID = 0x234;
 };
 
 // System Aux Reports
-class AccelAuxRptMsg :
-  public Pacmod3TxMsg
+class AccelAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x300;
@@ -474,8 +478,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class BrakeAuxRptMsg :
-  public Pacmod3TxMsg
+class BrakeAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x304;
@@ -494,8 +498,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class HeadlightAuxRptMsg :
-  public Pacmod3TxMsg
+class HeadlightAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x318;
@@ -512,8 +516,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class ShiftAuxRptMsg :
-  public Pacmod3TxMsg
+class ShiftAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x328;
@@ -530,8 +534,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SteerAuxRptMsg :
-  public Pacmod3TxMsg
+class SteerAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x32C;
@@ -548,8 +552,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class TurnAuxRptMsg :
-  public Pacmod3TxMsg
+class TurnAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x330;
@@ -562,8 +566,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class WiperAuxRptMsg :
-  public Pacmod3TxMsg
+class WiperAuxRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x334;
@@ -585,8 +589,8 @@ public:
 };
 
 // Other Reports
-class VehicleSpeedRptMsg :
-  public Pacmod3TxMsg
+class VehicleSpeedRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x400;
@@ -598,50 +602,50 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class BrakeMotorRpt1Msg :
-  public MotorRpt1Msg
+class BrakeMotorRpt1Msg
+  : public MotorRpt1Msg
 {
 public:
   static const uint32_t CAN_ID = 0x401;
 };
 
-class BrakeMotorRpt2Msg :
-  public MotorRpt2Msg
+class BrakeMotorRpt2Msg
+  : public MotorRpt2Msg
 {
 public:
   static const uint32_t CAN_ID = 0x402;
 };
 
-class BrakeMotorRpt3Msg :
-  public MotorRpt3Msg
+class BrakeMotorRpt3Msg
+  : public MotorRpt3Msg
 {
 public:
   static const uint32_t CAN_ID = 0x403;
 };
 
-class SteerMotorRpt1Msg :
-  public MotorRpt1Msg
+class SteerMotorRpt1Msg
+  : public MotorRpt1Msg
 {
 public:
   static const uint32_t CAN_ID = 0x404;
 };
 
-class SteerMotorRpt2Msg :
-  public MotorRpt2Msg
+class SteerMotorRpt2Msg
+  : public MotorRpt2Msg
 {
 public:
   static const uint32_t CAN_ID = 0x405;
 };
 
-class SteerMotorRpt3Msg :
-  public MotorRpt3Msg
+class SteerMotorRpt3Msg
+  : public MotorRpt3Msg
 {
 public:
   static const uint32_t CAN_ID = 0x406;
 };
 
-class WheelSpeedRptMsg :
-  public Pacmod3TxMsg
+class WheelSpeedRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x407;
@@ -654,8 +658,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SteeringPIDRpt1Msg :
-  public Pacmod3TxMsg
+class SteeringPIDRpt1Msg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x408;
@@ -668,8 +672,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SteeringPIDRpt2Msg :
-  public Pacmod3TxMsg
+class SteeringPIDRpt2Msg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x409;
@@ -682,8 +686,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SteeringPIDRpt3Msg :
-  public Pacmod3TxMsg
+class SteeringPIDRpt3Msg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x40A;
@@ -696,8 +700,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class YawRateRptMsg :
-  public Pacmod3TxMsg
+class YawRateRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x40D;
@@ -707,8 +711,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class LatLonHeadingRptMsg :
-  public Pacmod3TxMsg
+class LatLonHeadingRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x40E;
@@ -724,8 +728,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class DateTimeRptMsg :
-  public Pacmod3TxMsg
+class DateTimeRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x40F;
@@ -740,8 +744,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SteeringPIDRpt4Msg :
-  public Pacmod3TxMsg
+class SteeringPIDRpt4Msg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x410;
@@ -752,8 +756,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class DetectedObjectRptMsg :
-  public Pacmod3TxMsg
+class DetectedObjectRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x411;
@@ -764,8 +768,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class VehicleSpecificRpt1Msg :
-  public Pacmod3TxMsg
+class VehicleSpecificRpt1Msg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x412;
@@ -776,8 +780,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class VehicleDynamicsRptMsg :
-  public Pacmod3TxMsg
+class VehicleDynamicsRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x413;
@@ -788,8 +792,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class VinRptMsg :
-  public Pacmod3TxMsg
+class VinRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x414;
@@ -803,8 +807,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class OccupancyRptMsg :
-  public Pacmod3TxMsg
+class OccupancyRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x415;
@@ -825,8 +829,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class InteriorLightsRptMsg :
-  public Pacmod3TxMsg
+class InteriorLightsRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x416;
@@ -843,8 +847,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class DoorRptMsg :
-  public Pacmod3TxMsg
+class DoorRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x417;
@@ -867,8 +871,8 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class RearLightsRptMsg :
-  public Pacmod3TxMsg
+class RearLightsRptMsg
+  : public Pacmod3TxMsg
 {
 public:
   static const uint32_t CAN_ID = 0x418;

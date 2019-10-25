@@ -30,6 +30,7 @@
 
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #include "pacmod3/pacmod3_common.hpp"
 
@@ -63,11 +64,11 @@ public:
   /// \brief Callback from transition to "deactivating" state.
   /// \param[in] state The current state that the node is in.
   LNI::CallbackReturn on_deactivate(const lc::State & state) override;
-  
+
   /// \brief Callback from transition to "unconfigured" state.
   /// \param[in] state The current state that the node is in.
   LNI::CallbackReturn on_cleanup(const lc::State & state) override;
-  
+
   /// \brief Callback from transition to "shutdown" state.
   /// \param[in] state The current state that the node is in.
   LNI::CallbackReturn on_shutdown(const lc::State & state) override;
@@ -87,7 +88,8 @@ private:
   std::unordered_map<unsigned int, std::shared_ptr<lc::LifecyclePublisherInterface>> can_pubs_;
   std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Bool>> pub_enabled_;
   std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Float64>> pub_vehicle_speed_ms_;
-  std::shared_ptr<lc::LifecyclePublisher<pacmod_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
+  std::shared_ptr<lc::LifecyclePublisher<
+      pacmod_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
 
   std::shared_ptr<rclcpp::Subscription<can_msgs::msg::Frame>> sub_can_tx_;
   std::unordered_map<unsigned int, std::shared_ptr<rclcpp::SubscriptionBase>> can_subs_;

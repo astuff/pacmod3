@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <string>
+
 #include "pacmod3/pacmod3_node.hpp"
 
 namespace lc = rclcpp_lifecycle;
@@ -31,7 +33,7 @@ namespace PACMod3
 {
 
 PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
-  : lc::LifecycleNode("pacmod3_driver", options)
+: lc::LifecycleNode("pacmod3_driver", options)
 {
   std::string vehicle_type_string = this->declare_parameter("vehicle_type", "POLARIS_GEM");
   frame_id_ = this->declare_parameter("frame_id", "pacmod");
@@ -55,7 +57,9 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
   } else {
     vehicle_type_string = "POLARIS_GEM";
     vehicle_type_ = VehicleType::POLARIS_GEM;
-    RCLCPP_WARN(this->get_logger(), "An invalid vehicle type was entered. Defaulting to POLARIS_GEM.");
+    RCLCPP_WARN(
+      this->get_logger(),
+      "An invalid vehicle type was entered. Defaulting to POLARIS_GEM.");
   }
 
   RCLCPP_INFO(this->get_logger(), "Got vehicle type: %s", vehicle_type_string.c_str());
@@ -68,38 +72,60 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
 
   pub_can_rx_ = this->create_publisher<can_msgs::msg::Frame>("can_rx", 100);
 
-  can_pubs_[GlobalRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::GlobalRpt>("parsed_tx/global_rpt", 20);
-  can_pubs_[ComponentRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::ComponentRpt>("parsed_tx/component_rpt", 20);
-  can_pubs_[AccelRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/accel_rpt", 20);
-  can_pubs_[BrakeRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/brake_rpt", 20);
-  can_pubs_[ShiftRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::SystemRptInt>("parsed_tx/shift_rpt", 20);
-  can_pubs_[SteerRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/steer_rpt", 20);
-  can_pubs_[TurnSignalRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::SystemRptInt>("parsed_tx/turn_rpt", 20);
-  can_pubs_[AccelAuxRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-  can_pubs_[BrakeAuxRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
-  can_pubs_[ShiftAuxRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-  can_pubs_[SteerAuxRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
-  can_pubs_[TurnAuxRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
-  can_pubs_[VehicleSpeedRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
-  can_pubs_[VinRptMsg::CAN_ID] = this->create_publisher<pacmod_msgs::msg::VinRpt>("parsed_tx/vin_rpt", 5);
+  can_pubs_[GlobalRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::GlobalRpt>("parsed_tx/global_rpt", 20);
+  can_pubs_[ComponentRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::ComponentRpt>("parsed_tx/component_rpt", 20);
+  can_pubs_[AccelRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/accel_rpt", 20);
+  can_pubs_[BrakeRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/brake_rpt", 20);
+  can_pubs_[ShiftRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptInt>("parsed_tx/shift_rpt", 20);
+  can_pubs_[SteerRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptFloat>("parsed_tx/steer_rpt", 20);
+  can_pubs_[TurnSignalRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptInt>("parsed_tx/turn_rpt", 20);
+  can_pubs_[AccelAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+  can_pubs_[BrakeAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+  can_pubs_[ShiftAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+  can_pubs_[SteerAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+  can_pubs_[TurnAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
+  can_pubs_[VehicleSpeedRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
+  can_pubs_[VinRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::VinRpt>("parsed_tx/vin_rpt", 5);
 
-  pub_enabled_ = this->create_publisher<std_msgs::msg::Bool>("as_tx/enabled", rclcpp::QoS(1).transient_local());
-  pub_vehicle_speed_ms_ = this->create_publisher<std_msgs::msg::Float64>("as_tx/vehicle_speed", 20);
-  pub_all_system_statuses_ = this->create_publisher<pacmod_msgs::msg::AllSystemStatuses>("as_tx/all_system_statuses", 20);
+  pub_enabled_ = this->create_publisher<std_msgs::msg::Bool>(
+    "as_tx/enabled", rclcpp::QoS(1).transient_local());
+  pub_vehicle_speed_ms_ = this->create_publisher<std_msgs::msg::Float64>(
+    "as_tx/vehicle_speed", 20);
+  pub_all_system_statuses_ = this->create_publisher<pacmod_msgs::msg::AllSystemStatuses>(
+    "as_tx/all_system_statuses", 20);
 
   sub_can_tx_ = this->create_subscription<can_msgs::msg::Frame>(
     "can_tx", 100, std::bind(&PACMod3Node::callback_can_tx, this, std::placeholders::_1));
 
   can_subs_[AccelCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
-    "as_rx/accel_cmd", 20, std::bind(&PACMod3Node::callback_accel_cmd, this, std::placeholders::_1));
+    "as_rx/accel_cmd", 20,
+    std::bind(&PACMod3Node::callback_accel_cmd, this, std::placeholders::_1));
   can_subs_[BrakeCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
-    "as_rx/brake_cmd", 20, std::bind(&PACMod3Node::callback_brake_cmd, this, std::placeholders::_1));
+    "as_rx/brake_cmd", 20,
+    std::bind(&PACMod3Node::callback_brake_cmd, this, std::placeholders::_1));
   can_subs_[ShiftCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-    "as_rx/shift_cmd", 20, std::bind(&PACMod3Node::callback_shift_cmd, this, std::placeholders::_1));
+    "as_rx/shift_cmd", 20,
+    std::bind(&PACMod3Node::callback_shift_cmd, this, std::placeholders::_1));
   can_subs_[SteerCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SteerSystemCmd>(
-    "as_rx/steer_cmd", 20, std::bind(&PACMod3Node::callback_steer_cmd, this, std::placeholders::_1));
+    "as_rx/steer_cmd", 20,
+    std::bind(&PACMod3Node::callback_steer_cmd, this, std::placeholders::_1));
   can_subs_[TurnSignalCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-    "as_rx/turn_cmd", 20, std::bind(&PACMod3Node::callback_turn_cmd, this, std::placeholders::_1));
+    "as_rx/turn_cmd", 20,
+    std::bind(&PACMod3Node::callback_turn_cmd, this, std::placeholders::_1));
 
   return LNI::CallbackReturn::SUCCESS;
 }
