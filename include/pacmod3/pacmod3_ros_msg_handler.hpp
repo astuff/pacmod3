@@ -1,14 +1,27 @@
-#ifndef PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
-#define PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
+// Copyright (c) 2019 AutonomouStuff, LLC
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
-/*
-* Unpublished Copyright (c) 2009-2019 AutonomouStuff, LLC, All Rights Reserved.
-*
-* This file is part of the PACMod ROS driver which is released under the MIT license.
-* See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
-*/
+#ifndef PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
+#define PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
 
-#include <pacmod3/pacmod3_common.h>
+#include "pacmod3/pacmod3_common.hpp"
 
 #include <string>
 #include <vector>
@@ -19,6 +32,7 @@ namespace Drivers
 {
 namespace PACMod3
 {
+
 class LockedData
 {
 public:
@@ -179,8 +193,9 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
 };
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS
 
-#endif  // PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
+#endif  // PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_

@@ -1,82 +1,100 @@
-/*
-* Unpublished Copyright (c) 2009-2019 AutonomouStuff, LLC, All Rights Reserved.
-*
-* This file is part of the PACMod v3 ROS driver which is released under the MIT license.
-* See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
-*/
+// Copyright (c) 2019 AutonomouStuff, LLC
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
 #include "pacmod3/pacmod3_core.hpp"
 
-using namespace AS::Drivers::PACMod3;  // NOLINT
+namespace AS
+{
+namespace Drivers
+{
+namespace PACMod3
+{
 
-const uint32_t AS::Drivers::PACMod3::GlobalRptMsg::CAN_ID = 0x10;
-const uint32_t AS::Drivers::PACMod3::ComponentRptMsg::CAN_ID = 0x20;
+const uint32_t GlobalRptMsg::CAN_ID = 0x10;
+const uint32_t ComponentRptMsg::CAN_ID = 0x20;
 
 // System Commands
-const uint32_t AS::Drivers::PACMod3::AccelCmdMsg::CAN_ID = 0x100;
-const uint32_t AS::Drivers::PACMod3::BrakeCmdMsg::CAN_ID = 0x104;
-const uint32_t AS::Drivers::PACMod3::CruiseControlButtonsCmdMsg::CAN_ID = 0x108;
-const uint32_t AS::Drivers::PACMod3::DashControlsLeftCmdMsg::CAN_ID = 0x10C;
-const uint32_t AS::Drivers::PACMod3::DashControlsRightCmdMsg::CAN_ID = 0x110;
-const uint32_t AS::Drivers::PACMod3::HazardLightCmdMsg::CAN_ID = 0x114;
-const uint32_t AS::Drivers::PACMod3::HeadlightCmdMsg::CAN_ID = 0x118;
-const uint32_t AS::Drivers::PACMod3::HornCmdMsg::CAN_ID = 0x11C;
-const uint32_t AS::Drivers::PACMod3::MediaControlsCmdMsg::CAN_ID = 0x120;
-const uint32_t AS::Drivers::PACMod3::ParkingBrakeCmdMsg::CAN_ID = 0x124;
-const uint32_t AS::Drivers::PACMod3::ShiftCmdMsg::CAN_ID = 0x128;
-const uint32_t AS::Drivers::PACMod3::SteerCmdMsg::CAN_ID = 0x12C;
-const uint32_t AS::Drivers::PACMod3::TurnSignalCmdMsg::CAN_ID = 0x130;
-const uint32_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x134;
+const uint32_t AccelCmdMsg::CAN_ID = 0x100;
+const uint32_t BrakeCmdMsg::CAN_ID = 0x104;
+const uint32_t CruiseControlButtonsCmdMsg::CAN_ID = 0x108;
+const uint32_t DashControlsLeftCmdMsg::CAN_ID = 0x10C;
+const uint32_t DashControlsRightCmdMsg::CAN_ID = 0x110;
+const uint32_t HazardLightCmdMsg::CAN_ID = 0x114;
+const uint32_t HeadlightCmdMsg::CAN_ID = 0x118;
+const uint32_t HornCmdMsg::CAN_ID = 0x11C;
+const uint32_t MediaControlsCmdMsg::CAN_ID = 0x120;
+const uint32_t ParkingBrakeCmdMsg::CAN_ID = 0x124;
+const uint32_t ShiftCmdMsg::CAN_ID = 0x128;
+const uint32_t SteerCmdMsg::CAN_ID = 0x12C;
+const uint32_t TurnSignalCmdMsg::CAN_ID = 0x130;
+const uint32_t WiperCmdMsg::CAN_ID = 0x134;
 
 // System Reports
-const uint32_t AS::Drivers::PACMod3::AccelRptMsg::CAN_ID = 0x200;
-const uint32_t AS::Drivers::PACMod3::BrakeRptMsg::CAN_ID = 0x204;
-const uint32_t AS::Drivers::PACMod3::CruiseControlButtonsRptMsg::CAN_ID = 0x208;
-const uint32_t AS::Drivers::PACMod3::DashControlsLeftRptMsg::CAN_ID = 0x20C;
-const uint32_t AS::Drivers::PACMod3::DashControlsRightRptMsg::CAN_ID = 0x210;
-const uint32_t AS::Drivers::PACMod3::HazardLightRptMsg::CAN_ID = 0x214;
-const uint32_t AS::Drivers::PACMod3::HeadlightRptMsg::CAN_ID = 0x218;
-const uint32_t AS::Drivers::PACMod3::HornRptMsg::CAN_ID = 0x21C;
-const uint32_t AS::Drivers::PACMod3::MediaControlsRptMsg::CAN_ID = 0x220;
-const uint32_t AS::Drivers::PACMod3::ParkingBrakeRptMsg::CAN_ID = 0x224;
-const uint32_t AS::Drivers::PACMod3::ShiftRptMsg::CAN_ID = 0x228;
-const uint32_t AS::Drivers::PACMod3::SteerRptMsg::CAN_ID = 0x22C;
-const uint32_t AS::Drivers::PACMod3::TurnSignalRptMsg::CAN_ID = 0x230;
-const uint32_t AS::Drivers::PACMod3::WiperRptMsg::CAN_ID = 0x234;
+const uint32_t AccelRptMsg::CAN_ID = 0x200;
+const uint32_t BrakeRptMsg::CAN_ID = 0x204;
+const uint32_t CruiseControlButtonsRptMsg::CAN_ID = 0x208;
+const uint32_t DashControlsLeftRptMsg::CAN_ID = 0x20C;
+const uint32_t DashControlsRightRptMsg::CAN_ID = 0x210;
+const uint32_t HazardLightRptMsg::CAN_ID = 0x214;
+const uint32_t HeadlightRptMsg::CAN_ID = 0x218;
+const uint32_t HornRptMsg::CAN_ID = 0x21C;
+const uint32_t MediaControlsRptMsg::CAN_ID = 0x220;
+const uint32_t ParkingBrakeRptMsg::CAN_ID = 0x224;
+const uint32_t ShiftRptMsg::CAN_ID = 0x228;
+const uint32_t SteerRptMsg::CAN_ID = 0x22C;
+const uint32_t TurnSignalRptMsg::CAN_ID = 0x230;
+const uint32_t WiperRptMsg::CAN_ID = 0x234;
 
 // System Aux Reports
-const uint32_t AS::Drivers::PACMod3::AccelAuxRptMsg::CAN_ID = 0x300;
-const uint32_t AS::Drivers::PACMod3::BrakeAuxRptMsg::CAN_ID = 0x304;
-const uint32_t AS::Drivers::PACMod3::HeadlightAuxRptMsg::CAN_ID = 0x318;
-const uint32_t AS::Drivers::PACMod3::ShiftAuxRptMsg::CAN_ID = 0x328;
-const uint32_t AS::Drivers::PACMod3::SteerAuxRptMsg::CAN_ID = 0x32C;
-const uint32_t AS::Drivers::PACMod3::TurnAuxRptMsg::CAN_ID = 0x330;
-const uint32_t AS::Drivers::PACMod3::WiperAuxRptMsg::CAN_ID = 0x334;
+const uint32_t AccelAuxRptMsg::CAN_ID = 0x300;
+const uint32_t BrakeAuxRptMsg::CAN_ID = 0x304;
+const uint32_t HeadlightAuxRptMsg::CAN_ID = 0x318;
+const uint32_t ShiftAuxRptMsg::CAN_ID = 0x328;
+const uint32_t SteerAuxRptMsg::CAN_ID = 0x32C;
+const uint32_t TurnAuxRptMsg::CAN_ID = 0x330;
+const uint32_t WiperAuxRptMsg::CAN_ID = 0x334;
 
 // Misc. Reports
-const uint32_t AS::Drivers::PACMod3::VehicleSpeedRptMsg::CAN_ID = 0x400;
-const uint32_t AS::Drivers::PACMod3::BrakeMotorRpt1Msg::CAN_ID = 0x401;
-const uint32_t AS::Drivers::PACMod3::BrakeMotorRpt2Msg::CAN_ID = 0x402;
-const uint32_t AS::Drivers::PACMod3::BrakeMotorRpt3Msg::CAN_ID = 0x403;
-const uint32_t AS::Drivers::PACMod3::SteerMotorRpt1Msg::CAN_ID = 0x404;
-const uint32_t AS::Drivers::PACMod3::SteerMotorRpt2Msg::CAN_ID = 0x405;
-const uint32_t AS::Drivers::PACMod3::SteerMotorRpt3Msg::CAN_ID = 0x406;
-const uint32_t AS::Drivers::PACMod3::WheelSpeedRptMsg::CAN_ID = 0x407;
-const uint32_t AS::Drivers::PACMod3::SteeringPIDRpt1Msg::CAN_ID = 0x408;
-const uint32_t AS::Drivers::PACMod3::SteeringPIDRpt2Msg::CAN_ID = 0x409;
-const uint32_t AS::Drivers::PACMod3::SteeringPIDRpt3Msg::CAN_ID = 0x40A;
-const uint32_t AS::Drivers::PACMod3::YawRateRptMsg::CAN_ID = 0x40D;
-const uint32_t AS::Drivers::PACMod3::LatLonHeadingRptMsg::CAN_ID = 0x40E;
-const uint32_t AS::Drivers::PACMod3::DateTimeRptMsg::CAN_ID = 0x40F;
-const uint32_t AS::Drivers::PACMod3::SteeringPIDRpt4Msg::CAN_ID = 0x410;
-const uint32_t AS::Drivers::PACMod3::DetectedObjectRptMsg::CAN_ID = 0x411;
-const uint32_t AS::Drivers::PACMod3::VehicleSpecificRpt1Msg::CAN_ID = 0x412;
-const uint32_t AS::Drivers::PACMod3::VehicleDynamicsRptMsg::CAN_ID = 0x413;
-const uint32_t AS::Drivers::PACMod3::VinRptMsg::CAN_ID = 0x414;
-const uint32_t AS::Drivers::PACMod3::OccupancyRptMsg::CAN_ID = 0x415;
-const uint32_t AS::Drivers::PACMod3::InteriorLightsRptMsg::CAN_ID = 0x416;
-const uint32_t AS::Drivers::PACMod3::DoorRptMsg::CAN_ID = 0x417;
-const uint32_t AS::Drivers::PACMod3::RearLightsRptMsg::CAN_ID = 0x418;
+const uint32_t VehicleSpeedRptMsg::CAN_ID = 0x400;
+const uint32_t BrakeMotorRpt1Msg::CAN_ID = 0x401;
+const uint32_t BrakeMotorRpt2Msg::CAN_ID = 0x402;
+const uint32_t BrakeMotorRpt3Msg::CAN_ID = 0x403;
+const uint32_t SteerMotorRpt1Msg::CAN_ID = 0x404;
+const uint32_t SteerMotorRpt2Msg::CAN_ID = 0x405;
+const uint32_t SteerMotorRpt3Msg::CAN_ID = 0x406;
+const uint32_t WheelSpeedRptMsg::CAN_ID = 0x407;
+const uint32_t SteeringPIDRpt1Msg::CAN_ID = 0x408;
+const uint32_t SteeringPIDRpt2Msg::CAN_ID = 0x409;
+const uint32_t SteeringPIDRpt3Msg::CAN_ID = 0x40A;
+const uint32_t YawRateRptMsg::CAN_ID = 0x40D;
+const uint32_t LatLonHeadingRptMsg::CAN_ID = 0x40E;
+const uint32_t DateTimeRptMsg::CAN_ID = 0x40F;
+const uint32_t SteeringPIDRpt4Msg::CAN_ID = 0x410;
+const uint32_t DetectedObjectRptMsg::CAN_ID = 0x411;
+const uint32_t VehicleSpecificRpt1Msg::CAN_ID = 0x412;
+const uint32_t VehicleDynamicsRptMsg::CAN_ID = 0x413;
+const uint32_t VinRptMsg::CAN_ID = 0x414;
+const uint32_t OccupancyRptMsg::CAN_ID = 0x415;
+const uint32_t InteriorLightsRptMsg::CAN_ID = 0x416;
+const uint32_t DoorRptMsg::CAN_ID = 0x417;
+const uint32_t RearLightsRptMsg::CAN_ID = 0x418;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
 {
@@ -874,3 +892,7 @@ void SteerCmdMsg::encode(bool enable,
   data[3] = (raw_spd & 0xFF00) >> 8;
   data[4] = raw_spd & 0x00FF;
 }
+
+}  // namespace PACMod3
+}  // namespace Drivers
+}  // namespace AS

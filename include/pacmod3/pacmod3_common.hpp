@@ -1,55 +1,69 @@
-#ifndef PACMOD3_PACMOD3_COMMON_H
-#define PACMOD3_PACMOD3_COMMON_H
+// Copyright (c) 2019 AutonomouStuff, LLC
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
-/*
-* Unpublished Copyright (c) 2009-2019 AutonomouStuff, LLC, All Rights Reserved.
-*
-* This file is part of the PACMod ROS driver which is released under the MIT license.
-* See file LICENSE included with this software or go to https://opensource.org/licenses/MIT for full license details.
-*/
+#ifndef PACMOD3__PACMOD3_COMMON_HPP_
+#define PACMOD3__PACMOD3_COMMON_HPP_
+
+#include "pacmod3/pacmod3_core.hpp"
 
 #include <memory>
 #include <mutex>
 
-#include <pacmod3/pacmod3_core.h>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 
-#include <pacmod_msgs/SystemCmdBool.h>
-#include <pacmod_msgs/SystemCmdFloat.h>
-#include <pacmod_msgs/SystemCmdInt.h>
-#include <pacmod_msgs/GlobalRpt.h>
-#include <pacmod_msgs/AccelAuxRpt.h>
-#include <pacmod_msgs/AllSystemStatuses.h>
-#include <pacmod_msgs/BrakeAuxRpt.h>
-#include <pacmod_msgs/ComponentRpt.h>
-#include <pacmod_msgs/DateTimeRpt.h>
-#include <pacmod_msgs/DetectedObjectRpt.h>
-#include <pacmod_msgs/DoorRpt.h>
-#include <pacmod_msgs/HeadlightAuxRpt.h>
-#include <pacmod_msgs/InteriorLightsRpt.h>
-#include <pacmod_msgs/LatLonHeadingRpt.h>
-#include <pacmod_msgs/MotorRpt1.h>
-#include <pacmod_msgs/MotorRpt2.h>
-#include <pacmod_msgs/MotorRpt3.h>
-#include <pacmod_msgs/OccupancyRpt.h>
-#include <pacmod_msgs/RearLightsRpt.h>
-#include <pacmod_msgs/ShiftAuxRpt.h>
-#include <pacmod_msgs/SteerAuxRpt.h>
-#include <pacmod_msgs/SteeringPIDRpt1.h>
-#include <pacmod_msgs/SteeringPIDRpt2.h>
-#include <pacmod_msgs/SteeringPIDRpt3.h>
-#include <pacmod_msgs/SteeringPIDRpt4.h>
-#include <pacmod_msgs/SteerSystemCmd.h>
-#include <pacmod_msgs/SystemRptBool.h>
-#include <pacmod_msgs/SystemRptFloat.h>
-#include <pacmod_msgs/SystemRptInt.h>
-#include <pacmod_msgs/TurnAuxRpt.h>
-#include <pacmod_msgs/VehicleDynamicsRpt.h>
-#include <pacmod_msgs/VehicleSpecificRpt1.h>
-#include <pacmod_msgs/VehicleSpeedRpt.h>
-#include <pacmod_msgs/VinRpt.h>
-#include <pacmod_msgs/WheelSpeedRpt.h>
-#include <pacmod_msgs/WiperAuxRpt.h>
-#include <pacmod_msgs/YawRateRpt.h>
+#include <pacmod_msgs/msg/SystemCmdBool.hpp>
+#include <pacmod_msgs/msg/SystemCmdFloat.hpp>
+#include <pacmod_msgs/msg/SystemCmdInt.hpp>
+#include <pacmod_msgs/msg/GlobalRpt.hpp>
+#include <pacmod_msgs/msg/AccelAuxRpt.hpp>
+#include <pacmod_msgs/msg/AllSystemStatuses.hpp>
+#include <pacmod_msgs/msg/BrakeAuxRpt.hpp>
+#include <pacmod_msgs/msg/ComponentRpt.hpp>
+#include <pacmod_msgs/msg/DateTimeRpt.hpp>
+#include <pacmod_msgs/msg/DetectedObjectRpt.hpp>
+#include <pacmod_msgs/msg/DoorRpt.hpp>
+#include <pacmod_msgs/msg/HeadlightAuxRpt.hpp>
+#include <pacmod_msgs/msg/InteriorLightsRpt.hpp>
+#include <pacmod_msgs/msg/LatLonHeadingRpt.hpp>
+#include <pacmod_msgs/msg/MotorRpt1.hpp>
+#include <pacmod_msgs/msg/MotorRpt2.hpp>
+#include <pacmod_msgs/msg/MotorRpt3.hpp>
+#include <pacmod_msgs/msg/OccupancyRpt.hpp>
+#include <pacmod_msgs/msg/RearLightsRpt.hpp>
+#include <pacmod_msgs/msg/ShiftAuxRpt.hpp>
+#include <pacmod_msgs/msg/SteerAuxRpt.hpp>
+#include <pacmod_msgs/msg/SteeringPIDRpt1.hpp>
+#include <pacmod_msgs/msg/SteeringPIDRpt2.hpp>
+#include <pacmod_msgs/msg/SteeringPIDRpt3.hpp>
+#include <pacmod_msgs/msg/SteeringPIDRpt4.hpppp>
+#include <pacmod_msgs/msg/SteerSystemCmd.hpp>
+#include <pacmod_msgs/msg/SystemRptBool.hpp>
+#include <pacmod_msgs/msg/SystemRptFloat.hpp>
+#include <pacmod_msgs/msg/SystemRptInt.hpp>
+#include <pacmod_msgs/msg/TurnAuxRpt.hpp>
+#include <pacmod_msgs/msg/VehicleDynamicsRpt.hpp>
+#include <pacmod_msgs/msg/VehicleSpecificRpt1.hpp>
+#include <pacmod_msgs/msg/VehicleSpeedRpt.hpp>
+#include <pacmod_msgs/msg/VinRpt.hpp>
+#include <pacmod_msgs/msg/WheelSpeedRpt.hpp>
+#include <pacmod_msgs/msg/WiperAuxRpt.hpp>
+#include <pacmod_msgs/msg/YawRateRpt.hpp>
 
-#endif  // PACMOD3_PACMOD3_COMMON_H
+#endif  // PACMOD3__PACMOD3_COMMON_HPP_

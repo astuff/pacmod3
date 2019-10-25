@@ -43,7 +43,7 @@ rclcpp_components_register_nodes(
 
 add_executable(
   ${PROJECT_NAME}_driver
-  src/pacmod3.cpp
+  src/pacmod3_driver.cpp
 )
 ament_target_dependencies(
   ${PROJECT_NAME}_driver
