@@ -25,6 +25,8 @@
 #include <rclcpp_components/register_node_macro.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <can_msgs/msg/frame.hpp>
+#include <std_msgs/msg/bool.hpp>
+#include <std_msgs/msg/float64.hpp>
 
 #include <memory>
 #include <string>
@@ -71,11 +73,24 @@ public:
   LNI::CallbackReturn on_shutdown(const lc::State & state) override;
 
 private:
+  void callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg);
+  void callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
+  void callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
+  void callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
+  void callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+
   VehicleType vehicle_type_;
   std::string frame_id_;
 
-  std::unordered_map<std::string, std::shared_ptr<rclcpp::PublisherBase>> pubs_;
-  std::unordered_map<std::string, std::shared_ptr<rclcpp::SubscriptionBase>> subs_;
+  std::shared_ptr<lc::LifecyclePublisher<can_msgs::msg::Frame>> pub_can_rx_;
+  std::unordered_map<unsigned int, std::shared_ptr<lc::LifecyclePublisherInterface>> can_pubs_;
+  std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Bool>> pub_enabled_;
+  std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Float64>> pub_vehicle_speed_ms_;
+  std::shared_ptr<lc::LifecyclePublisher<pacmod_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
+
+  std::shared_ptr<rclcpp::Subscription<can_msgs::msg::Frame>> sub_can_tx_;
+  std::unordered_map<unsigned int, std::shared_ptr<rclcpp::SubscriptionBase>> can_subs_;
 };
 
 }  // namespace PACMod3
