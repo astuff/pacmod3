@@ -20,6 +20,9 @@
 
 #include "pacmod3/pacmod3_node.hpp"
 
+namespace lc = rclcpp_lifecycle;
+using LNI = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface;
+
 namespace AS
 {
 namespace Drivers
@@ -69,6 +72,36 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
   return LNI::CallbackReturn::SUCCESS;
 }
 
+LNI::CallbackReturn PACMod3Node::on_activate(const lc::State & state)
+{
+  (void)state;
+
+  return LNI::CallbackReturn::SUCCESS;
+}
+
+LNI::CallbackReturn PACMod3Node::on_deactivate(const lc::State & state)
+{
+  (void)state;
+
+  return LNI::CallbackReturn::SUCCESS;
+}
+
+LNI::CallbackReturn PACMod3Node::on_cleanup(const lc::State & state)
+{
+  (void)state;
+
+  return LNI::CallbackReturn::SUCCESS;
+}
+
+LNI::CallbackReturn PACMod3Node::on_shutdown(const lc::State & state)
+{
+  (void)state;
+
+  return LNI::CallbackReturn::SUCCESS;
+}
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS
+
+RCLCPP_COMPONENTS_REGISTER_NODE(AS::Drivers::PACMod3::PACMod3Node)

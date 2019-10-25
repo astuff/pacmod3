@@ -38,7 +38,7 @@ ament_target_dependencies(
 )
 rclcpp_components_register_nodes(
   ${PROJECT_NAME}_node
-  "AS::Drivers::PACMod3Node"
+  "AS::Drivers::PACMod3::PACMod3Node"
 )
 
 add_executable(

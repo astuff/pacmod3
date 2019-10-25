@@ -26,6 +26,8 @@
 #include <string>
 #include <vector>
 
+#include <rclcpp/rclcpp.hpp>
+
 namespace AS
 {
 namespace Drivers
@@ -39,7 +41,7 @@ public:
   LockedData();
 
   std::vector<unsigned char> getData() const;
-  void setData(std::vector<unsigned char> new_data);
+  void setData(std::vector<unsigned char> && new_data);
 
 private:
   std::vector<unsigned char> _data;
@@ -49,10 +51,10 @@ private:
 class Pacmod3TxRosMsgHandler
 {
 public:
-  void fillAndPublish(const uint32_t& can_id,
-                      const std::string& frame_id,
-                      const ros::Publisher& pub,
-                      const std::shared_ptr<Pacmod3TxMsg>& parser_class);
+  void fillAndPublish(const uint32_t & can_id,
+                      const std::string & frame_id,
+                      const std::shared_ptr<rclcpp::PublisherBase> & pub,
+                      const std::shared_ptr<Pacmod3TxMsg> & parser_class);
 
 private:
   void fillSystemRptBool(
@@ -188,10 +190,10 @@ private:
 class Pacmod3RxRosMsgHandler
 {
 public:
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdBool::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdFloat::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdInt::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SteerSystemCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdBool::SharedPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdFloat::SharedPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SystemCmdInt::SharedPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::msg::SteerSystemCmd::SharedPtr& msg);
 };
 
 }  // namespace PACMod3
