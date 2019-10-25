@@ -23,6 +23,7 @@ jobs:
       - run:
           name: Build
           command: |
+            source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
             cd ..
             colcon build
       - run:
