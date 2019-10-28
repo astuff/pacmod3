@@ -110,27 +110,8 @@ void set_enable(bool val)
 }
 
 // Looks up the appropriate LockedData and inserts the command info
-void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
-{
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
-}
-
-void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
-{
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
-}
-
-void lookup_and_encode(const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+template<class T>
+void lookup_and_encode(const uint32_t& can_id, const T& msg)
 {
   auto rx_it = rx_list.find(can_id);
 
@@ -193,13 +174,7 @@ void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 // Listens for incoming requests to change the position of the steering wheel with a speed limit
 void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg)
 {
-  auto can_id = SteerCmdMsg::CAN_ID;
-  auto rx_it = rx_list.find(can_id);
-
-  if (rx_it != rx_list.end())
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
-  else
-    ROS_WARN("Received command message for ID 0x%u for which we did not have an encoder.", can_id);
+  lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
 }
 
 // Listens for incoming requests to change the state of the turn signals
