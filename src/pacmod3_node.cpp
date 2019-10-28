@@ -35,6 +35,9 @@ ros::Publisher all_system_statuses_pub;
 std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;
 std::map<uint32_t, std::tuple<bool, bool, bool>> system_statuses;
 
+constexpr auto SEND_CMD_INTERVAL = std::chrono::milliseconds(33);
+constexpr auto INTER_MSG_PAUSE = std::chrono::milliseconds(1);
+
 bool global_keep_going = true;
 std::mutex keep_going_mut;
 
@@ -158,51 +161,33 @@ void callback_sprayer_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
   lookup_and_encode(SprayerCmdMsg::CAN_ID, msg);
 }
 
-void send_can(int32_t id, const std::vector<uint8_t>& vec)
-{
-  can_msgs::Frame frame;
-  frame.id = id;
-  frame.is_rtr = false;
-  frame.is_extended = false;
-  frame.is_error = false;
-  frame.dlc = vec.size();
-  std::copy(vec.begin(), vec.end(), frame.data.begin());
-
-  frame.header.stamp = ros::Time::now();
-
-  can_rx_pub.publish(frame);
-}
-
 void can_write()
 {
-  std::vector<unsigned char> data;
-
-  const std::chrono::milliseconds loop_pause = std::chrono::milliseconds(33);
-  const std::chrono::milliseconds inter_msg_pause = std::chrono::milliseconds(1);
-  bool keep_going = true;
-
-  // Set local to global value before looping.
-  keep_going_mut.lock();
-  keep_going = global_keep_going;
-  keep_going_mut.unlock();
-
-  while (keep_going)
+  while (ros::ok())
   {
+    auto next_time = std::chrono::steady_clock::now() + SEND_CMD_INTERVAL;
+
     // Write all the data that we have received.
     for (const auto& element : rx_list)
     {
-      send_can(element.first, element.second->getData());
-      std::this_thread::sleep_for(inter_msg_pause);
+      auto data = element.second->getData();
+
+      can_msgs::Frame frame;
+      frame.id = element.first;
+      frame.is_rtr = false;
+      frame.is_extended = false;
+      frame.is_error = false;
+      frame.dlc = data.size();
+      std::move(data.begin(), data.end(), frame.data.begin());
+
+      frame.header.stamp = ros::Time::now();
+
+      can_rx_pub.publish(frame);
+
+      std::this_thread::sleep_for(INTER_MSG_PAUSE);
     }
 
-    std::chrono::system_clock::time_point next_time = std::chrono::system_clock::now();
-    next_time += loop_pause;
     std::this_thread::sleep_until(next_time);
-
-    // Set local to global immediately before next loop.
-    keep_going_mut.lock();
-    keep_going = global_keep_going;
-    keep_going_mut.unlock();
   }
 }
 
