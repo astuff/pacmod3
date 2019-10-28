@@ -205,12 +205,11 @@ void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg
   lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
-// Listens for incoming requests to change the state of the turn signals
+// Listens for incoming requests to change the state of the rear-pass-door signals
 void callback_rear_pass_door_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
 }
-
 
 // Listens for incoming requests to change the state of the windshield wipers
 void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
