@@ -27,61 +27,9 @@ using namespace AS::Drivers::PACMod3;  // NOLINT
 std::unordered_map<uint32_t, ros::Publisher> pub_tx_list;
 Pacmod3TxRosMsgHandler handler;
 
-// Vehicle-Specific Publishers
-ros::Publisher cruise_control_buttons_rpt_pub;
-ros::Publisher dash_controls_left_rpt_pub;
-ros::Publisher dash_controls_right_rpt_pub;
-ros::Publisher media_controls_rpt_pub;
-ros::Publisher wiper_rpt_pub;
-ros::Publisher wiper_aux_rpt_pub;
-ros::Publisher headlight_rpt_pub;
-ros::Publisher headlight_aux_rpt_pub;
-ros::Publisher horn_rpt_pub;
-ros::Publisher wheel_speed_rpt_pub;
-ros::Publisher steering_pid_rpt_1_pub;
-ros::Publisher steering_pid_rpt_2_pub;
-ros::Publisher steering_pid_rpt_3_pub;
-ros::Publisher steering_pid_rpt_4_pub;
-ros::Publisher lat_lon_heading_rpt_pub;
-ros::Publisher date_time_rpt_pub;
-ros::Publisher parking_brake_rpt_pub;
-ros::Publisher yaw_rate_rpt_pub;
-ros::Publisher steering_rpt_detail_1_pub;
-ros::Publisher steering_rpt_detail_2_pub;
-ros::Publisher steering_rpt_detail_3_pub;
-ros::Publisher brake_rpt_detail_1_pub;
-ros::Publisher brake_rpt_detail_2_pub;
-ros::Publisher brake_rpt_detail_3_pub;
-ros::Publisher detected_object_rpt_pub;
-ros::Publisher vehicle_specific_rpt_1_pub;
-ros::Publisher vehicle_dynamics_rpt_pub;
-ros::Publisher occupancy_rpt_pub;
-ros::Publisher interior_lights_rpt_pub;
-ros::Publisher door_rpt_pub;
-ros::Publisher rear_lights_rpt_pub;
-ros::Publisher engine_brake_rpt_pub;
-ros::Publisher marker_lamp_rpt_pub;
-ros::Publisher sprayer_rpt_pub;
-
-// Advertise published messages
-ros::Publisher global_rpt_pub;
-ros::Publisher component_rpt_pub;
-ros::Publisher vin_rpt_pub;
-ros::Publisher turn_rpt_pub;
-ros::Publisher rear_pass_door_rpt_pub;
-ros::Publisher shift_rpt_pub;
-ros::Publisher accel_rpt_pub;
-ros::Publisher steer_rpt_pub;
-ros::Publisher brake_rpt_pub;
-ros::Publisher vehicle_speed_pub;
 ros::Publisher vehicle_speed_ms_pub;
 ros::Publisher enabled_pub;
 ros::Publisher can_rx_pub;
-ros::Publisher accel_aux_rpt_pub;
-ros::Publisher brake_aux_rpt_pub;
-ros::Publisher shift_aux_rpt_pub;
-ros::Publisher steer_aux_rpt_pub;
-ros::Publisher turn_aux_rpt_pub;
 ros::Publisher all_system_statuses_pub;
 
 std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;
@@ -364,21 +312,21 @@ int main(int argc, char *argv[])
 
   // Advertise published messages
   can_rx_pub = n.advertise<can_msgs::Frame>("can_rx", 20);
-  global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
-  component_rpt_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt", 20);
-  accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
-  brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
-  shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
-  steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
-  turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
-  rear_pass_door_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
-  vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
-  vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
-  accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-  brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
-  shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-  steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
-  turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
+  ros::Publisher global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
+  ros::Publisher component_rpt_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt", 20);
+  ros::Publisher accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
+  ros::Publisher brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
+  ros::Publisher shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
+  ros::Publisher steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
+  ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
+  ros::Publisher rear_pass_door_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
+  ros::Publisher vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
+  ros::Publisher vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
+  ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+  ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+  ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+  ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+  ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
 
   enabled_pub = n.advertise<std_msgs::Bool>("as_tx/enabled", 20, true);
   vehicle_speed_ms_pub = n.advertise<std_msgs::Float64>("as_tx/vehicle_speed", 20);
@@ -387,21 +335,21 @@ int main(int argc, char *argv[])
   std::string frame_id = "pacmod";
 
   // Populate handler list
-  pub_tx_list.insert(std::make_pair(GlobalRptMsg::CAN_ID, global_rpt_pub));
-  pub_tx_list.insert(std::make_pair(ComponentRptMsg::CAN_ID, component_rpt_pub));
-  pub_tx_list.insert(std::make_pair(AccelRptMsg::CAN_ID, accel_rpt_pub));
-  pub_tx_list.insert(std::make_pair(BrakeRptMsg::CAN_ID, brake_rpt_pub));
-  pub_tx_list.insert(std::make_pair(ShiftRptMsg::CAN_ID, shift_rpt_pub));
-  pub_tx_list.insert(std::make_pair(SteerRptMsg::CAN_ID, steer_rpt_pub));
-  pub_tx_list.insert(std::make_pair(TurnSignalRptMsg::CAN_ID, turn_rpt_pub));
-  pub_tx_list.insert(std::make_pair(RearPassDoorRptMsg::CAN_ID, rear_pass_door_rpt_pub));
-  pub_tx_list.insert(std::make_pair(VehicleSpeedRptMsg::CAN_ID, vehicle_speed_pub));
-  pub_tx_list.insert(std::make_pair(VinRptMsg::CAN_ID, vin_rpt_pub));
-  pub_tx_list.insert(std::make_pair(AccelAuxRptMsg::CAN_ID, accel_aux_rpt_pub));
-  pub_tx_list.insert(std::make_pair(BrakeAuxRptMsg::CAN_ID, brake_aux_rpt_pub));
-  pub_tx_list.insert(std::make_pair(ShiftAuxRptMsg::CAN_ID, shift_aux_rpt_pub));
-  pub_tx_list.insert(std::make_pair(SteerAuxRptMsg::CAN_ID, steer_aux_rpt_pub));
-  pub_tx_list.insert(std::make_pair(TurnAuxRptMsg::CAN_ID, turn_aux_rpt_pub));
+  pub_tx_list.insert(std::make_pair(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(ComponentRptMsg::CAN_ID, std::move(component_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(AccelRptMsg::CAN_ID, std::move(accel_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(BrakeRptMsg::CAN_ID, std::move(brake_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(ShiftRptMsg::CAN_ID, std::move(shift_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(SteerRptMsg::CAN_ID, std::move(steer_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub)));
+  pub_tx_list.insert(std::make_pair(VinRptMsg::CAN_ID, std::move(vin_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub)));
+  pub_tx_list.insert(std::make_pair(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub)));
 
   // Subscribe to messages
   ros::Subscriber can_tx_sub = n.subscribe("can_tx", 20, can_read);
@@ -438,28 +386,28 @@ int main(int argc, char *argv[])
       veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
       veh_type == VehicleType::FREIGHTLINER_CASCADIA)
   {
-    brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
-    brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
-    brake_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
-    steering_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
-    steering_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
-    steering_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
+    ros::Publisher brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
+    ros::Publisher brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
+    ros::Publisher brake_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
+    ros::Publisher steering_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
+    ros::Publisher steering_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
+    ros::Publisher steering_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
 
-    pub_tx_list.insert(std::make_pair(BrakeMotorRpt1Msg::CAN_ID, brake_rpt_detail_1_pub));
-    pub_tx_list.insert(std::make_pair(BrakeMotorRpt2Msg::CAN_ID, brake_rpt_detail_2_pub));
-    pub_tx_list.insert(std::make_pair(BrakeMotorRpt3Msg::CAN_ID, brake_rpt_detail_3_pub));
-    pub_tx_list.insert(std::make_pair(SteerMotorRpt1Msg::CAN_ID, steering_rpt_detail_1_pub));
-    pub_tx_list.insert(std::make_pair(SteerMotorRpt2Msg::CAN_ID, steering_rpt_detail_2_pub));
-    pub_tx_list.insert(std::make_pair(SteerMotorRpt3Msg::CAN_ID, steering_rpt_detail_3_pub));
+    pub_tx_list.insert(std::make_pair(BrakeMotorRpt1Msg::CAN_ID, std::move(brake_rpt_detail_1_pub)));
+    pub_tx_list.insert(std::make_pair(BrakeMotorRpt2Msg::CAN_ID, std::move(brake_rpt_detail_2_pub)));
+    pub_tx_list.insert(std::make_pair(BrakeMotorRpt3Msg::CAN_ID, std::move(brake_rpt_detail_3_pub)));
+    pub_tx_list.insert(std::make_pair(SteerMotorRpt1Msg::CAN_ID, std::move(steering_rpt_detail_1_pub)));
+    pub_tx_list.insert(std::make_pair(SteerMotorRpt2Msg::CAN_ID, std::move(steering_rpt_detail_2_pub)));
+    pub_tx_list.insert(std::make_pair(SteerMotorRpt3Msg::CAN_ID, std::move(steering_rpt_detail_3_pub)));
   }
 
   if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 || veh_type == VehicleType::FREIGHTLINER_CASCADIA)
   {
-    wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
-    wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
+    ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
+    ros::Publisher wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
 
-    pub_tx_list.insert(std::make_pair(WiperRptMsg::CAN_ID, wiper_rpt_pub));
-    pub_tx_list.insert(std::make_pair(WiperAuxRptMsg::CAN_ID, wiper_aux_rpt_pub));
+    pub_tx_list.insert(std::make_pair(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub)));
 
     wiper_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
         new ros::Subscriber(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd)));
@@ -475,23 +423,23 @@ int main(int argc, char *argv[])
       veh_type == VehicleType::VEHICLE_5 ||
       veh_type == VehicleType::VEHICLE_6)
   {
-    date_time_rpt_pub = n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
-    headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
-    horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
-    parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
-    wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
-    yaw_rate_rpt_pub = n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
-    headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
+    ros::Publisher date_time_rpt_pub = n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
+    ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
+    ros::Publisher horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
+    ros::Publisher lat_lon_heading_rpt_pub = n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
+    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
+    ros::Publisher wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
+    ros::Publisher yaw_rate_rpt_pub = n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
+    ros::Publisher headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
 
-    pub_tx_list.insert(std::make_pair(DateTimeRptMsg::CAN_ID, date_time_rpt_pub));
-    pub_tx_list.insert(std::make_pair(HeadlightRptMsg::CAN_ID, headlight_rpt_pub));
-    pub_tx_list.insert(std::make_pair(HornRptMsg::CAN_ID, horn_rpt_pub));
-    pub_tx_list.insert(std::make_pair(LatLonHeadingRptMsg::CAN_ID, lat_lon_heading_rpt_pub));
-    pub_tx_list.insert(std::make_pair(ParkingBrakeRptMsg::CAN_ID, parking_brake_rpt_pub));
-    pub_tx_list.insert(std::make_pair(WheelSpeedRptMsg::CAN_ID, wheel_speed_rpt_pub));
-    pub_tx_list.insert(std::make_pair(YawRateRptMsg::CAN_ID, yaw_rate_rpt_pub));
-    pub_tx_list.insert(std::make_pair(HeadlightAuxRptMsg::CAN_ID, headlight_aux_rpt_pub));
+    pub_tx_list.insert(std::make_pair(DateTimeRptMsg::CAN_ID, std::move(date_time_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(HornRptMsg::CAN_ID, std::move(horn_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(LatLonHeadingRptMsg::CAN_ID, std::move(lat_lon_heading_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub)));
 
     headlight_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
         new ros::Subscriber(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd)));
@@ -545,37 +493,37 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::VEHICLE_4)
   {
-    detected_object_rpt_pub = n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
-    vehicle_dynamics_rpt_pub = n.advertise<pacmod_msgs::VehicleDynamicsRpt>("parsed_tx/vehicle_dynamics_rpt", 20);
+    ros::Publisher detected_object_rpt_pub = n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
+    ros::Publisher vehicle_dynamics_rpt_pub = n.advertise<pacmod_msgs::VehicleDynamicsRpt>("parsed_tx/vehicle_dynamics_rpt", 20);
 
-    pub_tx_list.insert(std::make_pair(DetectedObjectRptMsg::CAN_ID, detected_object_rpt_pub));
-    pub_tx_list.insert(std::make_pair(VehicleDynamicsRptMsg::CAN_ID, vehicle_dynamics_rpt_pub));
+    pub_tx_list.insert(std::make_pair(DetectedObjectRptMsg::CAN_ID, std::move(detected_object_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(VehicleDynamicsRptMsg::CAN_ID, std::move(vehicle_dynamics_rpt_pub)));
   }
 
   if (veh_type == VehicleType::LEXUS_RX_450H || veh_type == VehicleType::JUPITER_SPIRIT)
   {
-    steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
-    steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
-    steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
-    steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
+    ros::Publisher steering_pid_rpt_1_pub = n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
+    ros::Publisher steering_pid_rpt_2_pub = n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
+    ros::Publisher steering_pid_rpt_3_pub = n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
+    ros::Publisher steering_pid_rpt_4_pub = n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
 
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, steering_pid_rpt_1_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, steering_pid_rpt_2_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, steering_pid_rpt_3_pub));
-    pub_tx_list.insert(std::make_pair(SteeringPIDRpt4Msg::CAN_ID, steering_pid_rpt_4_pub));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt1Msg::CAN_ID, std::move(steering_pid_rpt_1_pub)));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt2Msg::CAN_ID, std::move(steering_pid_rpt_2_pub)));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt3Msg::CAN_ID, std::move(steering_pid_rpt_3_pub)));
+    pub_tx_list.insert(std::make_pair(SteeringPIDRpt4Msg::CAN_ID, std::move(steering_pid_rpt_4_pub)));
   }
 
   if (veh_type == VehicleType::VEHICLE_5)
   {
-    occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
-    interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
-    door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
-    rear_lights_rpt_pub = n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
+    ros::Publisher occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
+    ros::Publisher interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
+    ros::Publisher door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
+    ros::Publisher rear_lights_rpt_pub = n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
 
-    pub_tx_list.insert(std::make_pair(OccupancyRptMsg::CAN_ID, occupancy_rpt_pub));
-    pub_tx_list.insert(std::make_pair(InteriorLightsRptMsg::CAN_ID, interior_lights_rpt_pub));
-    pub_tx_list.insert(std::make_pair(DoorRptMsg::CAN_ID, door_rpt_pub));
-    pub_tx_list.insert(std::make_pair(RearLightsRptMsg::CAN_ID, rear_lights_rpt_pub));
+    pub_tx_list.insert(std::make_pair(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(DoorRptMsg::CAN_ID, std::move(door_rpt_pub)));
+    pub_tx_list.insert(std::make_pair(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub)));
   }
 
   // Initialize Turn Signal with non-0 value
