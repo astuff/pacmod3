@@ -415,12 +415,24 @@ int main(int argc, char *argv[])
   ros::Subscriber rear_pass_door_cmd_sub = n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd);
 
   // Populate rx list
-  rx_list.insert(std::make_pair(AccelCmdMsg::CAN_ID, new LockedData(AccelCmdMsg::DATA_LENGTH)));
-  rx_list.insert(std::make_pair(BrakeCmdMsg::CAN_ID, new LockedData(BrakeCmdMsg::DATA_LENGTH)));
-  rx_list.insert(std::make_pair(ShiftCmdMsg::CAN_ID, new LockedData(ShiftCmdMsg::DATA_LENGTH)));
-  rx_list.insert(std::make_pair(SteerCmdMsg::CAN_ID, new LockedData(SteerCmdMsg::DATA_LENGTH)));
-  rx_list.insert(std::make_pair(TurnSignalCmdMsg::CAN_ID, new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
-  rx_list.insert(std::make_pair(RearPassDoorCmdMsg::CAN_ID, new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
+  rx_list.insert(std::make_pair(
+    AccelCmdMsg::CAN_ID,
+    std::shared_ptr<LockedData>(new LockedData(AccelCmdMsg::DATA_LENGTH))));
+  rx_list.insert(std::make_pair(
+    BrakeCmdMsg::CAN_ID,
+    std::shared_ptr<LockedData>(new LockedData(BrakeCmdMsg::DATA_LENGTH))));
+  rx_list.insert(std::make_pair(
+    ShiftCmdMsg::CAN_ID,
+    std::shared_ptr<LockedData>(new LockedData(ShiftCmdMsg::DATA_LENGTH))));
+  rx_list.insert(std::make_pair(
+    SteerCmdMsg::CAN_ID,
+    std::shared_ptr<LockedData>(new LockedData(SteerCmdMsg::DATA_LENGTH))));
+  rx_list.insert(std::make_pair(
+    TurnSignalCmdMsg::CAN_ID,
+    std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH))));
+  rx_list.insert(std::make_pair(
+    RearPassDoorCmdMsg::CAN_ID,
+    std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH))));
 
   if (veh_type == VehicleType::POLARIS_GEM ||
       veh_type == VehicleType::POLARIS_RANGER ||
@@ -452,7 +464,9 @@ int main(int argc, char *argv[])
     wiper_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
         new ros::Subscriber(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd)));
 
-    rx_list.insert(std::make_pair(WiperCmdMsg::CAN_ID, new LockedData(WiperCmdMsg::DATA_LENGTH)));
+    rx_list.insert(std::make_pair(
+      WiperCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH))));
   }
 
   if (veh_type == VehicleType::LEXUS_RX_450H ||
@@ -483,8 +497,12 @@ int main(int argc, char *argv[])
     horn_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
         new ros::Subscriber(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd)));
 
-    rx_list.insert(std::make_pair(HeadlightCmdMsg::CAN_ID, new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
-    rx_list.insert(std::make_pair(HornCmdMsg::CAN_ID, new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+    rx_list.insert(std::make_pair(
+      HeadlightCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH))));
+    rx_list.insert(std::make_pair(
+      HornCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH))));
   }
 
   if (veh_type == VehicleType::VEHICLE_4)
