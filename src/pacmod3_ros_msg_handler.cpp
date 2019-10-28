@@ -13,10 +13,11 @@
 
 using namespace AS::Drivers::PACMod3;  // NOLINT
 
-LockedData::LockedData() :
+LockedData::LockedData(unsigned char data_length) :
   _data(),
   _data_mut()
 {
+  _data.assign(data_length, 0);
 }
 
 std::vector<unsigned char> LockedData::getData() const

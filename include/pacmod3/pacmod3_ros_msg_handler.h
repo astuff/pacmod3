@@ -22,7 +22,7 @@ namespace PACMod3
 class LockedData
 {
 public:
-  LockedData();
+  explicit LockedData(unsigned char data_length);
 
   std::vector<unsigned char> getData() const;
   void setData(std::vector<unsigned char> new_data);

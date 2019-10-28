@@ -29,6 +29,11 @@ const uint32_t AS::Drivers::PACMod3::TurnSignalCmdMsg::CAN_ID = 0x130;
 const uint32_t AS::Drivers::PACMod3::WiperCmdMsg::CAN_ID = 0x134;
 const uint32_t AS::Drivers::PACMod3::RearPassDoorCmdMsg::CAN_ID = 0x140;
 
+const uint8_t AS::Drivers::PACMod3::SystemCmdBool::DATA_LENGTH;
+const uint8_t AS::Drivers::PACMod3::SystemCmdFloat::DATA_LENGTH;
+const uint8_t AS::Drivers::PACMod3::SystemCmdInt::DATA_LENGTH;
+const uint8_t AS::Drivers::PACMod3::SteerCmdMsg::DATA_LENGTH;
+
 // System Reports
 const uint32_t AS::Drivers::PACMod3::AccelRptMsg::CAN_ID = 0x200;
 const uint32_t AS::Drivers::PACMod3::BrakeRptMsg::CAN_ID = 0x204;
