@@ -21,13 +21,15 @@
 #ifndef PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
 #define PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
 
-#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_lifecycle/lifecycle_publisher.hpp>
 
 #include <memory>
 #include <string>
 #include <vector>
 
 #include "pacmod3/pacmod3_common.hpp"
+
+namespace lc = rclcpp_lifecycle;
 
 namespace AS
 {
@@ -39,7 +41,7 @@ namespace PACMod3
 class LockedData
 {
 public:
-  LockedData();
+  LockedData(unsigned char data_length);
 
   std::vector<unsigned char> getData() const;
   void setData(std::vector<unsigned char> && new_data);
@@ -55,7 +57,7 @@ public:
   void fillAndPublish(
     const uint32_t & can_id,
     const std::string & frame_id,
-    const std::shared_ptr<rclcpp::PublisherBase> & pub,
+    const std::shared_ptr<lc::LifecyclePublisherInterface> & pub,
     const std::shared_ptr<Pacmod3TxMsg> & parser_class);
 
 private:

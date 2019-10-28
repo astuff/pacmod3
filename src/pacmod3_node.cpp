@@ -18,12 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include <lifecycle_msgs/msg/state.hpp>
+
+#include <chrono>
+#include <iostream>
+#include <memory>
 #include <string>
+#include <tuple>
 
 #include "pacmod3/pacmod3_node.hpp"
 
 namespace lc = rclcpp_lifecycle;
 using LNI = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface;
+using namespace std::chrono_literals;
 
 namespace AS
 {
@@ -31,6 +38,9 @@ namespace Drivers
 {
 namespace PACMod3
 {
+
+constexpr std::chrono::milliseconds PACMod3Node::SEND_CMD_INTERVAL;
+constexpr std::chrono::milliseconds PACMod3Node::INTER_MSG_PAUSE;
 
 PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
 : lc::LifecycleNode("pacmod3_driver", options)
@@ -64,6 +74,12 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
 
   RCLCPP_INFO(this->get_logger(), "Got vehicle type: %s", vehicle_type_string.c_str());
   RCLCPP_INFO(this->get_logger(), "Got frame id: %s", frame_id_.c_str());
+}
+
+PACMod3Node::~PACMod3Node() {
+  if (pub_thread_ && pub_thread_->joinable()) {
+    pub_thread_->join();
+  }
 }
 
 LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
@@ -111,21 +127,37 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
   sub_can_tx_ = this->create_subscription<can_msgs::msg::Frame>(
     "can_tx", 100, std::bind(&PACMod3Node::callback_can_tx, this, std::placeholders::_1));
 
-  can_subs_[AccelCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
-    "as_rx/accel_cmd", 20,
-    std::bind(&PACMod3Node::callback_accel_cmd, this, std::placeholders::_1));
-  can_subs_[BrakeCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
-    "as_rx/brake_cmd", 20,
-    std::bind(&PACMod3Node::callback_brake_cmd, this, std::placeholders::_1));
-  can_subs_[ShiftCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-    "as_rx/shift_cmd", 20,
-    std::bind(&PACMod3Node::callback_shift_cmd, this, std::placeholders::_1));
-  can_subs_[SteerCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SteerSystemCmd>(
-    "as_rx/steer_cmd", 20,
-    std::bind(&PACMod3Node::callback_steer_cmd, this, std::placeholders::_1));
-  can_subs_[TurnSignalCmdMsg::CAN_ID] = this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-    "as_rx/turn_cmd", 20,
-    std::bind(&PACMod3Node::callback_turn_cmd, this, std::placeholders::_1));
+  can_subs_[AccelCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
+      "as_rx/accel_cmd", 20,
+      std::bind(&PACMod3Node::callback_accel_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(AccelCmdMsg::DATA_LENGTH)));
+
+  can_subs_[BrakeCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
+      "as_rx/brake_cmd", 20,
+      std::bind(&PACMod3Node::callback_brake_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(BrakeCmdMsg::DATA_LENGTH)));
+
+  can_subs_[ShiftCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "as_rx/shift_cmd", 20,
+      std::bind(&PACMod3Node::callback_shift_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(ShiftCmdMsg::DATA_LENGTH)));
+  
+  can_subs_[SteerCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SteerSystemCmd>(
+      "as_rx/steer_cmd", 20,
+      std::bind(&PACMod3Node::callback_steer_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(SteerCmdMsg::DATA_LENGTH)));
+
+  can_subs_[TurnSignalCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "as_rx/turn_cmd", 20,
+      std::bind(&PACMod3Node::callback_turn_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
+
+  pub_thread_ = std::make_shared<std::thread>();
 
   return LNI::CallbackReturn::SUCCESS;
 }
@@ -144,12 +176,16 @@ LNI::CallbackReturn PACMod3Node::on_activate(const lc::State & state)
   pub_vehicle_speed_ms_->on_activate();
   pub_all_system_statuses_->on_activate();
 
+  pub_thread_ = std::make_shared<std::thread>(std::bind(&PACMod3Node::publish_cmds, this));
+  
   return LNI::CallbackReturn::SUCCESS;
 }
 
 LNI::CallbackReturn PACMod3Node::on_deactivate(const lc::State & state)
 {
   (void)state;
+
+  pub_thread_->join();
 
   pub_can_rx_->on_deactivate();
 
@@ -161,12 +197,25 @@ LNI::CallbackReturn PACMod3Node::on_deactivate(const lc::State & state)
   pub_vehicle_speed_ms_->on_deactivate();
   pub_all_system_statuses_->on_deactivate();
 
+  // Reset all data in commands to 0
+  for (auto & cmd : can_subs_) {
+    auto data = cmd.second.second->getData();
+    std::fill(data.begin(), data.end(), 0);
+    cmd.second.second->setData(std::move(data));
+  }
+
   return LNI::CallbackReturn::SUCCESS;
 }
 
 LNI::CallbackReturn PACMod3Node::on_cleanup(const lc::State & state)
 {
   (void)state;
+
+  if (pub_thread_ && pub_thread_->joinable()) {
+    pub_thread_->join();
+  }
+
+  pub_thread_.reset();
 
   sub_can_tx_.reset();
   can_subs_.clear();
@@ -184,32 +233,134 @@ LNI::CallbackReturn PACMod3Node::on_shutdown(const lc::State & state)
 {
   (void)state;
 
+  if (pub_thread_ && pub_thread_->joinable()) {
+    pub_thread_->join();
+  }
+
+  pub_thread_.reset();
+
   return LNI::CallbackReturn::SUCCESS;
+}
+
+LNI::CallbackReturn PACMod3Node::on_error(const lc::State & state)
+{
+  (void)state;
+
+  if (pub_thread_ && pub_thread_->joinable()) {
+    pub_thread_->join();
+  }
+
+  pub_thread_.reset();
+
+  return LNI::CallbackReturn::FAILURE;
 }
 
 void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
 {
-  RCLCPP_INFO(this->get_logger(), "Got a message with CAN ID: %u", msg->id);
+  auto parser_class = Pacmod3TxMsg::make_message(msg->id);
+  auto pub = can_pubs_.find(msg->id);
+
+  if (parser_class != nullptr && pub != can_pubs_.end()) {
+    const std::vector<uint8_t> data_copy(msg->data.begin(), msg->data.end());
+    parser_class->parse(data_copy);
+    tx_handler_.fillAndPublish(msg->id, frame_id_, pub->second, parser_class);
+
+    if (parser_class->isSystem()) {
+      auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
+
+      system_statuses[msg->id] = std::make_tuple(
+        dc_parser->enabled,
+        dc_parser->override_active,
+        (dc_parser->command_output_fault |
+         dc_parser->input_output_fault |
+         dc_parser->output_reported_fault |
+         dc_parser->pacmod_fault |
+         dc_parser->vehicle_fault));
+    }
+
+    if (msg->id == GlobalRptMsg::CAN_ID) {
+      auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
+
+      auto enabled_msg = std::make_shared<std_msgs::msg::Bool>();
+      enabled_msg->data = dc_parser->enabled;
+      pub_enabled_->publish(*enabled_msg);
+
+      if (dc_parser->override_active || dc_parser->fault_active) {
+        set_enable(false);
+      }
+    } else if (msg->id == VehicleSpeedRptMsg::CAN_ID) {
+      auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
+
+      auto msg = std::make_shared<std_msgs::msg::Float64>();
+      msg->data = dc_parser->vehicle_speed;
+      pub_vehicle_speed_ms_->publish(*msg);
+    }
+  }
 }
 
 void PACMod3Node::callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg)
 {
+  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg)
 {
+  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
+  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg)
 {
+  lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
+  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::publish_cmds()
+{
+  while (rclcpp::ok() &&
+    this->get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
+  {
+    for (auto & cmd : can_subs_) {
+      auto msg = std::make_shared<can_msgs::msg::Frame>();
+      auto data = cmd.second.second->getData();
+
+      msg->id = cmd.first;
+      msg->is_rtr = false;
+      msg->is_extended = false;
+      msg->is_error = false;
+      msg->dlc = data.size();
+      std::move(data.begin(), data.end(), msg->data.begin());
+
+      pub_can_rx_->publish(*msg);
+
+      std::this_thread::sleep_for(INTER_MSG_PAUSE);
+    }
+
+    std::this_thread::sleep_for(SEND_CMD_INTERVAL);
+  }
+}
+
+void PACMod3Node::set_enable(bool enable)
+{
+  for (auto & cmd : can_subs_) {
+    std::vector<uint8_t> current_data = cmd.second.second->getData();
+
+    if (enable) {
+      current_data[0] |= 0x01;  // Set Enable True
+    } else {
+      current_data[0] &= 0xFE;  // Set Enable False
+    }
+
+    cmd.second.second->setData(std::move(current_data));
+  }
 }
 
 }  // namespace PACMod3

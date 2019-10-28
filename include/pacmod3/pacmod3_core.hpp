@@ -101,6 +101,8 @@ class SystemCmdBool
   : public Pacmod3RxMsg
 {
 public:
+  static const uint8_t DATA_LENGTH = 2;
+
   void encode(
     bool enable,
     bool ignore_overrides,
@@ -113,6 +115,8 @@ class SystemCmdFloat
   : public Pacmod3RxMsg
 {
 public:
+  static const uint8_t DATA_LENGTH = 3;
+
   void encode(
     bool enable,
     bool ignore_overrides,
@@ -125,6 +129,8 @@ class SystemCmdInt
   : public Pacmod3RxMsg
 {
 public:
+  static const uint8_t DATA_LENGTH = 2;
+
   void encode(
     bool enable,
     bool ignore_overrides,
@@ -338,6 +344,7 @@ class SteerCmdMsg
 {
 public:
   static const uint32_t CAN_ID = 0x12C;
+  static const uint8_t DATA_LENGTH = 5;
 
   void encode(
     bool enabled,

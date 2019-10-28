@@ -36,10 +36,11 @@ namespace Drivers
 namespace PACMod3
 {
 
-LockedData::LockedData()
+LockedData::LockedData(unsigned char data_length)
 : _data(),
   _data_mut()
 {
+  _data.assign(data_length, 0);
 }
 
 std::vector<unsigned char> LockedData::getData() const
@@ -57,7 +58,7 @@ void LockedData::setData(std::vector<unsigned char> && new_data)
 void Pacmod3TxRosMsgHandler::fillAndPublish(
   const uint32_t & can_id,
   const std::string & frame_id,
-  const std::shared_ptr<rclcpp::PublisherBase> & pub,
+  const std::shared_ptr<lc::LifecyclePublisherInterface> & pub,
   const std::shared_ptr<Pacmod3TxMsg> & parser_class)
 {
   if (can_id == HornRptMsg::CAN_ID || can_id == ParkingBrakeRptMsg::CAN_ID) {

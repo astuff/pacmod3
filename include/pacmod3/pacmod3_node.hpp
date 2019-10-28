@@ -28,11 +28,16 @@
 #include <std_msgs/msg/bool.hpp>
 #include <std_msgs/msg/float64.hpp>
 
+#include <chrono>
+#include <map>
 #include <memory>
 #include <string>
+#include <thread>
+#include <tuple>
 #include <unordered_map>
 
 #include "pacmod3/pacmod3_common.hpp"
+#include "pacmod3/pacmod3_ros_msg_handler.hpp"
 
 namespace lc = rclcpp_lifecycle;
 using LNI = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface;
@@ -52,6 +57,7 @@ class PACMod3Node final
 public:
   /// \brief Default constructor
   explicit PACMod3Node(rclcpp::NodeOptions options);
+  ~PACMod3Node();
 
   /// \brief Callback from transition to "configuring" state.
   /// \param[in] state The current state that the node is in.
@@ -73,6 +79,10 @@ public:
   /// \param[in] state The current state that the node is in.
   LNI::CallbackReturn on_shutdown(const lc::State & state) override;
 
+  /// \brief Callback from transition to "error" state.
+  /// \param[in] state The current state that the node is in.
+  LNI::CallbackReturn on_error(const lc::State & state) override;
+
 private:
   void callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg);
   void callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
@@ -81,8 +91,31 @@ private:
   void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
   void callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
 
+  template <class T>
+  void lookup_and_encode(const unsigned int & can_id, const T & msg)
+  {
+    auto cmd = can_subs_.find(can_id);
+
+    if (cmd != can_subs_.end()) {
+      cmd->second.second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
+    } else {
+      RCLCPP_WARN(
+        this->get_logger(),
+        "Received a command message for ID 0x%x for which we do not have an encoder.",
+        can_id);
+    }
+  }
+
+  void publish_cmds();
+  void set_enable(bool enable);
+
+  static constexpr auto SEND_CMD_INTERVAL = std::chrono::milliseconds(33);
+  static constexpr auto INTER_MSG_PAUSE = std::chrono::milliseconds(1);
+
   VehicleType vehicle_type_;
   std::string frame_id_;
+  Pacmod3TxRosMsgHandler tx_handler_;
+  std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
 
   std::shared_ptr<lc::LifecyclePublisher<can_msgs::msg::Frame>> pub_can_rx_;
   std::unordered_map<unsigned int, std::shared_ptr<lc::LifecyclePublisherInterface>> can_pubs_;
@@ -92,7 +125,11 @@ private:
       pacmod_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
 
   std::shared_ptr<rclcpp::Subscription<can_msgs::msg::Frame>> sub_can_tx_;
-  std::unordered_map<unsigned int, std::shared_ptr<rclcpp::SubscriptionBase>> can_subs_;
+  std::unordered_map<unsigned int,
+    std::pair<std::shared_ptr<rclcpp::SubscriptionBase>,
+      std::shared_ptr<LockedData>>> can_subs_;
+
+  std::shared_ptr<std::thread> pub_thread_;
 };
 
 }  // namespace PACMod3

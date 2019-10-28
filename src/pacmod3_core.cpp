@@ -49,6 +49,11 @@ const uint32_t SteerCmdMsg::CAN_ID;
 const uint32_t TurnSignalCmdMsg::CAN_ID;
 const uint32_t WiperCmdMsg::CAN_ID;
 
+const uint8_t SystemCmdBool::DATA_LENGTH;
+const uint8_t SystemCmdInt::DATA_LENGTH;
+const uint8_t SystemCmdFloat::DATA_LENGTH;
+const uint8_t SteerCmdMsg::DATA_LENGTH;
+
 // System Reports
 const uint32_t AccelRptMsg::CAN_ID;
 const uint32_t BrakeRptMsg::CAN_ID;
