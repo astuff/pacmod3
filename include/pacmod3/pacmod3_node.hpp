@@ -34,6 +34,7 @@
 #include <string>
 #include <thread>
 #include <tuple>
+#include <utility>
 #include <unordered_map>
 
 #include "pacmod3/pacmod3_common.hpp"
@@ -91,7 +92,7 @@ private:
   void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
   void callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
 
-  template <class T>
+  template<class T>
   void lookup_and_encode(const unsigned int & can_id, const T & msg)
   {
     auto cmd = can_subs_.find(can_id);
@@ -127,7 +128,7 @@ private:
   std::shared_ptr<rclcpp::Subscription<can_msgs::msg::Frame>> sub_can_tx_;
   std::unordered_map<unsigned int,
     std::pair<std::shared_ptr<rclcpp::SubscriptionBase>,
-      std::shared_ptr<LockedData>>> can_subs_;
+    std::shared_ptr<LockedData>>> can_subs_;
 
   std::shared_ptr<std::thread> pub_thread_;
 };

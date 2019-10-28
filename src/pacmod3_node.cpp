@@ -25,6 +25,8 @@
 #include <memory>
 #include <string>
 #include <tuple>
+#include <utility>
+#include <vector>
 
 #include "pacmod3/pacmod3_node.hpp"
 
@@ -76,7 +78,8 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
   RCLCPP_INFO(this->get_logger(), "Got frame id: %s", frame_id_.c_str());
 }
 
-PACMod3Node::~PACMod3Node() {
+PACMod3Node::~PACMod3Node()
+{
   if (pub_thread_ && pub_thread_->joinable()) {
     pub_thread_->join();
   }
@@ -144,7 +147,7 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
       "as_rx/shift_cmd", 20,
       std::bind(&PACMod3Node::callback_shift_cmd, this, std::placeholders::_1)),
     std::shared_ptr<LockedData>(new LockedData(ShiftCmdMsg::DATA_LENGTH)));
-  
+
   can_subs_[SteerCmdMsg::CAN_ID] = std::make_pair(
     this->create_subscription<pacmod_msgs::msg::SteerSystemCmd>(
       "as_rx/steer_cmd", 20,
@@ -177,7 +180,7 @@ LNI::CallbackReturn PACMod3Node::on_activate(const lc::State & state)
   pub_all_system_statuses_->on_activate();
 
   pub_thread_ = std::make_shared<std::thread>(std::bind(&PACMod3Node::publish_cmds, this));
-  
+
   return LNI::CallbackReturn::SUCCESS;
 }
 
@@ -272,10 +275,10 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
         dc_parser->enabled,
         dc_parser->override_active,
         (dc_parser->command_output_fault |
-         dc_parser->input_output_fault |
-         dc_parser->output_reported_fault |
-         dc_parser->pacmod_fault |
-         dc_parser->vehicle_fault));
+        dc_parser->input_output_fault |
+        dc_parser->output_reported_fault |
+        dc_parser->pacmod_fault |
+        dc_parser->vehicle_fault));
     }
 
     if (msg->id == GlobalRptMsg::CAN_ID) {
