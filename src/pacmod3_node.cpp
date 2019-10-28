@@ -331,6 +331,8 @@ void PACMod3Node::publish_cmds()
   while (rclcpp::ok() &&
     this->get_current_state().id() == lifecycle_msgs::msg::State::PRIMARY_STATE_ACTIVE)
   {
+    auto next_time = std::chrono::steady_clock::now() + SEND_CMD_INTERVAL;
+
     for (auto & cmd : can_subs_) {
       auto msg = std::make_shared<can_msgs::msg::Frame>();
       auto data = cmd.second.second->getData();
@@ -347,7 +349,7 @@ void PACMod3Node::publish_cmds()
       std::this_thread::sleep_for(INTER_MSG_PAUSE);
     }
 
-    std::this_thread::sleep_for(SEND_CMD_INTERVAL);
+    std::this_thread::sleep_until(next_time);
   }
 }
 
