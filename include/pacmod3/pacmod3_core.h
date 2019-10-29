@@ -27,6 +27,7 @@ enum VehicleType
   POLARIS_RANGER,
   INTERNATIONAL_PROSTAR_122,
   LEXUS_RX_450H,
+  FREIGHTLINER_CASCADIA,
   VEHICLE_4,
   VEHICLE_5,
   VEHICLE_6,
@@ -205,6 +206,13 @@ public:
   static const uint32_t CAN_ID;
 };
 
+class EngineBrakeRptMsg :
+  public SystemRptIntMsg
+{
+  public:
+    static const uint32_t CAN_ID;
+};
+
 class HazardLightRptMsg :
   public SystemRptBoolMsg
 {
@@ -226,6 +234,13 @@ public:
   static const uint32_t CAN_ID;
 };
 
+class MarkerLampRptMsg :
+  public SystemRptBoolMsg
+{
+  public:
+    static const uint32_t CAN_ID;
+};
+
 class MediaControlsRptMsg :
   public SystemRptIntMsg
 {
@@ -242,6 +257,13 @@ public:
 
 class ShiftRptMsg :
   public SystemRptIntMsg
+{
+public:
+  static const uint32_t CAN_ID;
+};
+
+class SprayerRptMsg :
+  public SystemRptBoolMsg
 {
 public:
   static const uint32_t CAN_ID;
@@ -804,6 +826,13 @@ public:
   static const uint32_t CAN_ID;
 };
 
+class EngineBrakeCmdMsg :
+  public SystemCmdInt
+{
+  public:
+    static const uint32_t CAN_ID;
+};
+
 class HazardLightCmdMsg :
   public SystemCmdBool
 {
@@ -825,6 +854,13 @@ public:
   static const uint32_t CAN_ID;
 };
 
+class MarkerLampCmdMsg :
+  public SystemCmdBool
+{
+  public:
+    static const uint32_t CAN_ID;
+};
+
 class MediaControlsCmdMsg :
   public SystemCmdInt
 {
@@ -841,6 +877,13 @@ public:
 
 class ShiftCmdMsg :
   public SystemCmdInt
+{
+public:
+  static const uint32_t CAN_ID;
+};
+
+class SprayerCmdMsg :
+  public SystemCmdBool
 {
 public:
   static const uint32_t CAN_ID;

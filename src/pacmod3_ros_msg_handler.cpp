@@ -38,7 +38,9 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class)
 {
   if (can_id == HornRptMsg::CAN_ID ||
-      can_id == ParkingBrakeRptMsg::CAN_ID)
+      can_id == ParkingBrakeRptMsg::CAN_ID ||
+      can_id == MarkerLampRptMsg::CAN_ID ||
+      can_id == SprayerRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptBool new_msg;
     fillSystemRptBool(parser_class, &new_msg, frame_id);
@@ -52,7 +54,8 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
            can_id == ShiftRptMsg::CAN_ID ||
            can_id == HeadlightRptMsg::CAN_ID ||
            can_id == MediaControlsRptMsg::CAN_ID ||
-           can_id == WiperRptMsg::CAN_ID)
+           can_id == WiperRptMsg::CAN_ID ||
+           can_id == EngineBrakeRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptInt new_msg;
     fillSystemRptInt(parser_class, &new_msg, frame_id);
@@ -849,6 +852,26 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
+  else if (can_id == MarkerLampCmdMsg::CAN_ID)
+  {
+    MarkerLampCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->clear_faults,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == SprayerCmdMsg::CAN_ID)
+  {
+    SprayerCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->clear_faults,
+                   msg->command);
+    return encoder.data;
+  }
   else
   {
     std::vector<uint8_t> bad_id;
@@ -976,6 +999,16 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   else if (can_id == WiperCmdMsg::CAN_ID)
   {
     WiperCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->clear_faults,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == EngineBrakeCmdMsg::CAN_ID)
+  {
+    EngineBrakeCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
