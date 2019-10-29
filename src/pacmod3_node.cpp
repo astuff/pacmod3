@@ -59,6 +59,9 @@ ros::Publisher occupancy_rpt_pub;
 ros::Publisher interior_lights_rpt_pub;
 ros::Publisher door_rpt_pub;
 ros::Publisher rear_lights_rpt_pub;
+ros::Publisher engine_brake_rpt_pub;
+ros::Publisher marker_lamp_rpt_pub;
+ros::Publisher sprayer_rpt_pub;
 
 // Advertise published messages
 ros::Publisher global_rpt_pub;
@@ -210,6 +213,21 @@ void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
+void callback_engine_brake_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+}
+
+void callback_marker_lamp_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
+{
+  lookup_and_encode(MarkerLampCmdMsg::CAN_ID, msg);
+}
+
+void callback_sprayer_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
+{
+  lookup_and_encode(SprayerCmdMsg::CAN_ID, msg);
+}
+
 void send_can(int32_t id, const std::vector<uint8_t>& vec)
 {
   can_msgs::Frame frame;
@@ -323,7 +341,11 @@ int main(int argc, char *argv[])
       cruise_control_buttons_set_cmd_sub,
       dash_controls_left_set_cmd_sub,
       dash_controls_right_set_cmd_sub,
-      media_controls_set_cmd_sub;
+      engine_brake_set_cmd_sub,
+      marker_lamp_set_cmd_sub,
+      media_controls_set_cmd_sub,
+      sprayer_set_cmd_sub;
+
 
   // Wait for time to be valid
   ros::Time::waitForValid();
@@ -421,7 +443,8 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::POLARIS_GEM ||
       veh_type == VehicleType::POLARIS_RANGER ||
-      veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
+      veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
+      veh_type == VehicleType::FREIGHTLINER_CASCADIA)
   {
     brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
     brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
@@ -438,7 +461,7 @@ int main(int argc, char *argv[])
     pub_tx_list.insert(std::make_pair(SteerMotorRpt3Msg::CAN_ID, steering_rpt_detail_3_pub));
   }
 
-  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122)
+  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 || veh_type == VehicleType::FREIGHTLINER_CASCADIA)
   {
     wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
@@ -454,6 +477,7 @@ int main(int argc, char *argv[])
   }
 
   if (veh_type == VehicleType::LEXUS_RX_450H ||
+      veh_type == VehicleType::FREIGHTLINER_CASCADIA ||
       veh_type == VehicleType::JUPITER_SPIRIT ||
       veh_type == VehicleType::VEHICLE_5 ||
       veh_type == VehicleType::VEHICLE_6)
@@ -486,6 +510,32 @@ int main(int argc, char *argv[])
 
     rx_list.insert(std::make_pair(HeadlightCmdMsg::CAN_ID, headlight_data));
     rx_list.insert(std::make_pair(HornCmdMsg::CAN_ID, horn_data));
+  }
+
+  if (veh_type == VehicleType::FREIGHTLINER_CASCADIA)
+  {
+    engine_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
+    marker_lamp_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
+    sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
+
+    pub_tx_list.insert(std::make_pair(EngineBrakeRptMsg::CAN_ID, engine_brake_rpt_pub));
+    pub_tx_list.insert(std::make_pair(MarkerLampRptMsg::CAN_ID, marker_lamp_rpt_pub));
+    pub_tx_list.insert(std::make_pair(SprayerRptMsg::CAN_ID, sprayer_rpt_pub));
+
+    engine_brake_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
+      new ros::Subscriber(n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd)));
+    marker_lamp_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
+      new ros::Subscriber(n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd)));
+    sprayer_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
+      new ros::Subscriber(n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd)));
+
+    std::shared_ptr<LockedData> engine_brake_data(new LockedData);
+    std::shared_ptr<LockedData> marker_lamp_data(new LockedData);
+    std::shared_ptr<LockedData> sprayer_data(new LockedData);
+
+    rx_list.insert(std::make_pair(EngineBrakeCmdMsg::CAN_ID, engine_brake_data));
+    rx_list.insert(std::make_pair(MarkerLampCmdMsg::CAN_ID, marker_lamp_data));
+    rx_list.insert(std::make_pair(SprayerCmdMsg::CAN_ID, sprayer_data));
   }
 
   if (veh_type == VehicleType::VEHICLE_4)
