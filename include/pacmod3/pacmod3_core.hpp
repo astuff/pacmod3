@@ -37,14 +37,15 @@ namespace PACMod3
 
 enum class VehicleType
 {
+  FREIGHTLINER_CASCADIA,
+  INTERNATIONAL_PROSTAR_122,
+  JUPITER_SPIRIT,
+  LEXUS_RX_450H,
   POLARIS_GEM,
   POLARIS_RANGER,
-  INTERNATIONAL_PROSTAR_122,
-  LEXUS_RX_450H,
   VEHICLE_4,
   VEHICLE_5,
-  VEHICLE_6,
-  JUPITER_SPIRIT
+  VEHICLE_6
 };
 
 enum class DimLevel
@@ -297,6 +298,13 @@ public:
   static constexpr uint32_t CAN_ID = 0x110;
 };
 
+class EngineBrakeCmdMsg
+  : public SystemCmdInt
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x144;
+};
+
 class HazardLightCmdMsg
   : public SystemCmdBool
 {
@@ -318,6 +326,13 @@ public:
   static constexpr uint32_t CAN_ID = 0x11C;
 };
 
+class MarkerLampCmdMsg
+  : public SystemCmdBool
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x148;
+};
+
 class MediaControlsCmdMsg
   : public SystemCmdInt
 {
@@ -332,11 +347,25 @@ public:
   static constexpr uint32_t CAN_ID = 0x124;
 };
 
+class RearPassDoorCmdMsg
+  : public SystemCmdInt
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x140;
+};
+
 class ShiftCmdMsg
   : public SystemCmdInt
 {
 public:
   static constexpr uint32_t CAN_ID = 0x128;
+};
+
+class SprayerCmdMsg
+  : public SystemCmdBool
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x138;
 };
 
 class SteerCmdMsg
@@ -405,6 +434,13 @@ public:
   static constexpr uint32_t CAN_ID = 0x210;
 };
 
+class EngineBrakeRptMsg
+  : public SystemRptIntMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x244;
+};
+
 class HazardLightRptMsg
   : public SystemRptBoolMsg
 {
@@ -426,6 +462,13 @@ public:
   static constexpr uint32_t CAN_ID = 0x21C;
 };
 
+class MarkerLampRptMsg
+  : public SystemRptBoolMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x248;
+};
+
 class MediaControlsRptMsg
   : public SystemRptIntMsg
 {
@@ -440,11 +483,25 @@ public:
   static constexpr uint32_t CAN_ID = 0x224;
 };
 
+class RearPassDoorRptMsg
+  : public SystemRptIntMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x240;
+};
+
 class ShiftRptMsg
   : public SystemRptIntMsg
 {
 public:
   static constexpr uint32_t CAN_ID = 0x228;
+};
+
+class SprayerRptMsg
+  : public SystemRptBoolMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x238;
 };
 
 class SteerRptMsg
