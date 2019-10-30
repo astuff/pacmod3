@@ -820,7 +820,7 @@ void SystemCmdBool::encode(bool enable,
                            bool clear_faults,
                            bool cmd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = (enable ? 0x01 : 0x00);
   data[0] |= (ignore_overrides ? 0x02 : 0x00);
@@ -835,7 +835,7 @@ void SystemCmdFloat::encode(bool enable,
                             bool clear_faults,
                             float cmd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
@@ -853,7 +853,7 @@ void SystemCmdInt::encode(bool enable,
                           bool clear_faults,
                           uint8_t cmd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
@@ -869,7 +869,7 @@ void SteerCmdMsg::encode(bool enable,
                          float steer_pos,
                          float steer_spd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
