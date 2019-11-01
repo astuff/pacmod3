@@ -69,7 +69,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     can_id == DashControlsLeftRptMsg::CAN_ID || can_id == DashControlsRightRptMsg::CAN_ID ||
     can_id == TurnSignalRptMsg::CAN_ID || can_id == ShiftRptMsg::CAN_ID ||
     can_id == HeadlightRptMsg::CAN_ID || can_id == MediaControlsRptMsg::CAN_ID ||
-    can_id == WiperRptMsg::CAN_ID)
+    can_id == WiperRptMsg::CAN_ID || can_id == RearPassDoorRptMsg::CAN_ID)
   {
     pacmod_msgs::msg::SystemRptInt new_msg;
     auto dc_pub =
@@ -1004,6 +1004,15 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     return encoder.data;
   } else if (can_id == MediaControlsCmdMsg::CAN_ID) {
     MediaControlsCmdMsg encoder;
+    encoder.encode(
+      msg->enable,
+      msg->ignore_overrides,
+      msg->clear_override,
+      msg->clear_faults,
+      msg->command);
+    return encoder.data;
+  } else if (can_id == RearPassDoorCmdMsg::CAN_ID) {
+    RearPassDoorCmdMsg encoder;
     encoder.encode(
       msg->enable,
       msg->ignore_overrides,

@@ -88,6 +88,7 @@ private:
   void callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_horn_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_marker_lamp_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
+  void callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_sprayer_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
@@ -110,6 +111,7 @@ private:
   }
 
   void publish_cmds();
+  void publish_all_system_statuses();
   void set_enable(bool enable);
 
   static constexpr auto SEND_CMD_INTERVAL = std::chrono::milliseconds(33);
@@ -120,6 +122,7 @@ private:
   Pacmod3TxRosMsgHandler tx_handler_;
   std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
 
+  std::shared_ptr<rclcpp::TimerBase> system_statuses_timer_;
   std::shared_ptr<lc::LifecyclePublisher<can_msgs::msg::Frame>> pub_can_rx_;
   std::unordered_map<unsigned int, std::shared_ptr<lc::LifecyclePublisherInterface>> can_pubs_;
   std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Bool>> pub_enabled_;

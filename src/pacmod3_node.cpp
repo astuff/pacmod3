@@ -156,6 +156,11 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
       std::bind(&PACMod3Node::callback_turn_cmd, this, std::placeholders::_1)),
     std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
 
+  // Need to initialize TurnSignalCmdMsg with non-0 starting value
+  TurnSignalCmdMsg turn_encoder;
+  turn_encoder.encode(false, false, false, false, pacmod_msgs::msg::SystemCmdInt::TURN_NONE);
+  can_subs_[TurnSignalCmdMsg::CAN_ID].second->setData(std::move(turn_encoder.data));
+
   if (
     vehicle_type_ == VehicleType::POLARIS_GEM ||
     vehicle_type_ == VehicleType::POLARIS_RANGER ||
@@ -287,6 +292,14 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
       this->create_publisher<pacmod_msgs::msg::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
   }
 
+  if (vehicle_type_ == VehicleType::JUPITER_SPIRIT) {
+    can_subs_[RearPassDoorCmdMsg::CAN_ID] = std::make_pair(
+      this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+        "as_rx/rear_pass_door_cmd", 20,
+        std::bind(&PACMod3Node::callback_rear_pass_door_cmd, this, std::placeholders::_1)),
+      std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
+  }
+
   if (vehicle_type_ == VehicleType::VEHICLE_4) {
     can_pubs_[DetectedObjectRptMsg::CAN_ID] =
       this->create_publisher<pacmod_msgs::msg::DetectedObjectRpt>(
@@ -312,6 +325,9 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
   }
 
   pub_thread_ = std::make_shared<std::thread>();
+
+  system_statuses_timer_ = this->create_wall_timer(
+    33ms, std::bind(&PACMod3Node::publish_all_system_statuses, this));
 
   return LNI::CallbackReturn::SUCCESS;
 }
@@ -370,6 +386,7 @@ LNI::CallbackReturn PACMod3Node::on_cleanup(const lc::State & state)
   }
 
   pub_thread_.reset();
+  system_statuses_timer_.reset();
 
   sub_can_tx_.reset();
   can_subs_.clear();
@@ -435,9 +452,9 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
     if (msg->id == GlobalRptMsg::CAN_ID) {
       auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
 
-      auto enabled_msg = std::make_shared<std_msgs::msg::Bool>();
+      auto enabled_msg = std::make_unique<std_msgs::msg::Bool>();
       enabled_msg->data = dc_parser->enabled;
-      pub_enabled_->publish(*enabled_msg);
+      pub_enabled_->publish(std::move(enabled_msg));
 
       if (dc_parser->override_active || dc_parser->fault_active) {
         set_enable(false);
@@ -445,9 +462,9 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
     } else if (msg->id == VehicleSpeedRptMsg::CAN_ID) {
       auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
 
-      auto msg = std::make_shared<std_msgs::msg::Float64>();
+      auto msg = std::make_unique<std_msgs::msg::Float64>();
       msg->data = dc_parser->vehicle_speed;
-      pub_vehicle_speed_ms_->publish(*msg);
+      pub_vehicle_speed_ms_->publish(std::move(msg));
     }
   }
 }
@@ -488,6 +505,11 @@ void PACMod3Node::callback_marker_lamp_cmd(const pacmod_msgs::msg::SystemCmdBool
   lookup_and_encode(MarkerLampCmdMsg::CAN_ID, msg);
 }
 
+void PACMod3Node::callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+{
+  lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+}
+
 void PACMod3Node::callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
   lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
@@ -521,7 +543,7 @@ void PACMod3Node::publish_cmds()
     auto next_time = std::chrono::steady_clock::now() + SEND_CMD_INTERVAL;
 
     for (auto & cmd : can_subs_) {
-      auto msg = std::make_shared<can_msgs::msg::Frame>();
+      auto msg = std::make_unique<can_msgs::msg::Frame>();
       auto data = cmd.second.second->getData();
 
       msg->id = cmd.first;
@@ -531,13 +553,65 @@ void PACMod3Node::publish_cmds()
       msg->dlc = data.size();
       std::move(data.begin(), data.end(), msg->data.begin());
 
-      pub_can_rx_->publish(*msg);
+      pub_can_rx_->publish(std::move(msg));
 
       std::this_thread::sleep_for(INTER_MSG_PAUSE);
     }
 
     std::this_thread::sleep_until(next_time);
   }
+}
+
+void PACMod3Node::publish_all_system_statuses()
+{
+  auto ss_msg = std::make_unique<pacmod_msgs::msg::AllSystemStatuses>();
+
+  for (const auto & system : system_statuses) {
+    pacmod_msgs::msg::KeyValuePair kvp;
+
+    if (system.first == AccelRptMsg::CAN_ID) {
+      kvp.key = "Accelerator";
+    } else if (system.first == BrakeRptMsg::CAN_ID) {
+      kvp.key = "Brakes";
+    } else if (system.first == CruiseControlButtonsRptMsg::CAN_ID) {
+      kvp.key = "Cruise Control Buttons";
+    } else if (system.first == DashControlsLeftRptMsg::CAN_ID) {
+      kvp.key = "Dash Controls Left";
+    } else if (system.first == DashControlsRightRptMsg::CAN_ID) {
+      kvp.key = "Dash Controls Right";
+    } else if (system.first == HazardLightRptMsg::CAN_ID) {
+      kvp.key = "Hazard Lights";
+    } else if (system.first == HeadlightRptMsg::CAN_ID) {
+      kvp.key = "Headlights";
+    } else if (system.first == HornRptMsg::CAN_ID) {
+      kvp.key = "Horn";
+    } else if (system.first == MediaControlsRptMsg::CAN_ID) {
+      kvp.key = "Media Controls";
+    } else if (system.first == ParkingBrakeRptMsg::CAN_ID) {
+      kvp.key = "Parking Brake";
+    } else if (system.first == ShiftRptMsg::CAN_ID) {
+      kvp.key = "Shifter";
+    } else if (system.first == SteerRptMsg::CAN_ID) {
+      kvp.key = "Steering";
+    } else if (system.first == TurnSignalRptMsg::CAN_ID) {
+      kvp.key = "Turn Signals";
+    } else if (system.first == RearPassDoorRptMsg::CAN_ID) {
+      kvp.key = "Rear Passenger Door";
+    } else if (system.first == WiperRptMsg::CAN_ID) {
+      kvp.key = "Wipers";
+    }
+
+    kvp.value = std::get<0>(system.second) ? "True" : "False";
+    ss_msg->enabled_status.push_back(kvp);
+
+    kvp.value = std::get<1>(system.second) ? "True" : "False";
+    ss_msg->overridden_status.push_back(kvp);
+
+    kvp.value = std::get<2>(system.second) ? "True" : "False";
+    ss_msg->fault_status.push_back(kvp);
+  }
+
+  pub_all_system_statuses_->publish(std::move(ss_msg));
 }
 
 void PACMod3Node::set_enable(bool enable)

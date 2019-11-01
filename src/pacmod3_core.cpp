@@ -42,6 +42,7 @@ constexpr uint32_t HornCmdMsg::CAN_ID;
 constexpr uint32_t MediaControlsCmdMsg::CAN_ID;
 constexpr uint32_t MarkerLampCmdMsg::CAN_ID;
 constexpr uint32_t ParkingBrakeCmdMsg::CAN_ID;
+constexpr uint32_t RearPassDoorCmdMsg::CAN_ID;
 constexpr uint32_t ShiftCmdMsg::CAN_ID;
 constexpr uint32_t SprayerCmdMsg::CAN_ID;
 constexpr uint32_t SteerCmdMsg::CAN_ID;
@@ -66,6 +67,7 @@ constexpr uint32_t HornRptMsg::CAN_ID;
 constexpr uint32_t MediaControlsRptMsg::CAN_ID;
 constexpr uint32_t MarkerLampRptMsg::CAN_ID;
 constexpr uint32_t ParkingBrakeRptMsg::CAN_ID;
+constexpr uint32_t RearPassDoorRptMsg::CAN_ID;
 constexpr uint32_t ShiftRptMsg::CAN_ID;
 constexpr uint32_t SprayerRptMsg::CAN_ID;
 constexpr uint32_t SteerRptMsg::CAN_ID;
@@ -171,6 +173,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id
       break;
     case RearLightsRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new RearLightsRptMsg);
+      break;
+    case RearPassDoorRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new RearPassDoorRptMsg);
       break;
     case ShiftRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
