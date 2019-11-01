@@ -533,36 +533,39 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::FREIGHTLINER_CASCADIA)
   {
+    cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>(
+      "parsed_tx/cruise_control_buttons_rpt", 20);
     engine_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
     marker_lamp_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
     sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
-    cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>(
-      "parsed_tx/cruise_control_buttons_rpt", 20);
 
+    pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
     pub_tx_list.insert(std::make_pair(EngineBrakeRptMsg::CAN_ID, engine_brake_rpt_pub));
     pub_tx_list.insert(std::make_pair(MarkerLampRptMsg::CAN_ID, marker_lamp_rpt_pub));
     pub_tx_list.insert(std::make_pair(SprayerRptMsg::CAN_ID, sprayer_rpt_pub));
-    pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
 
+    cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
+      new ros::Subscriber(
+        n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
     engine_brake_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
       new ros::Subscriber(n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd)));
     marker_lamp_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
       new ros::Subscriber(n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd)));
     sprayer_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
       new ros::Subscriber(n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd)));
-    cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(
-        n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
 
-    std::shared_ptr<LockedData> engine_brake_data(new LockedData);
-    std::shared_ptr<LockedData> marker_lamp_data(new LockedData);
-    std::shared_ptr<LockedData> sprayer_data(new LockedData);
-    std::shared_ptr<LockedData> cruise_control_buttons_data(new LockedData);
-
-    rx_list.insert(std::make_pair(EngineBrakeCmdMsg::CAN_ID, engine_brake_data));
-    rx_list.insert(std::make_pair(MarkerLampCmdMsg::CAN_ID, marker_lamp_data));
-    rx_list.insert(std::make_pair(SprayerCmdMsg::CAN_ID, sprayer_data));
-    rx_list.insert(std::make_pair(CruiseControlButtonsCmdMsg::CAN_ID, cruise_control_buttons_data));
+    rx_list.insert(std::make_pair(
+      CruiseControlButtonsCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH))));
+    rx_list.insert(std::make_pair(
+      EngineBrakeCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH))));
+    rx_list.insert(std::make_pair(
+      MarkerLampCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH))));
+    rx_list.insert(std::make_pair(
+      SprayerCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH))));
   }
 
   if (veh_type == VehicleType::VEHICLE_4)
