@@ -11,7 +11,12 @@
 #include <string>
 #include <memory>
 
-using namespace AS::Drivers::PACMod3;  // NOLINT
+namespace AS
+{
+namespace Drivers
+{
+namespace PACMod3
+{
 
 LockedData::LockedData(unsigned char data_length) :
   _data(),
@@ -1048,3 +1053,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     return bad_id;
   }
 }
+
+}  // namespace PACMod3
+}  // namespace Drivers
+}  // namespace AS
