@@ -32,6 +32,11 @@ const uint32_t AS::Drivers::PACMod3::RearPassDoorCmdMsg::CAN_ID = 0x140;
 const uint32_t AS::Drivers::PACMod3::EngineBrakeCmdMsg::CAN_ID = 0x144;
 const uint32_t AS::Drivers::PACMod3::MarkerLampCmdMsg::CAN_ID = 0x148;
 
+constexpr uint8_t AS::Drivers::PACMod3::SystemCmdBool::DATA_LENGTH;
+constexpr uint8_t AS::Drivers::PACMod3::SystemCmdFloat::DATA_LENGTH;
+constexpr uint8_t AS::Drivers::PACMod3::SystemCmdInt::DATA_LENGTH;
+constexpr uint8_t AS::Drivers::PACMod3::SteerCmdMsg::DATA_LENGTH;
+
 // System Reports
 const uint32_t AS::Drivers::PACMod3::AccelRptMsg::CAN_ID = 0x200;
 const uint32_t AS::Drivers::PACMod3::BrakeRptMsg::CAN_ID = 0x204;
@@ -830,7 +835,7 @@ void SystemCmdBool::encode(bool enable,
                            bool clear_faults,
                            bool cmd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = (enable ? 0x01 : 0x00);
   data[0] |= (ignore_overrides ? 0x02 : 0x00);
@@ -845,7 +850,7 @@ void SystemCmdFloat::encode(bool enable,
                             bool clear_faults,
                             float cmd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
@@ -863,7 +868,7 @@ void SystemCmdInt::encode(bool enable,
                           bool clear_faults,
                           uint8_t cmd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
@@ -879,7 +884,7 @@ void SteerCmdMsg::encode(bool enable,
                          float steer_pos,
                          float steer_spd)
 {
-  data.assign(8, 0);
+  data.assign(DATA_LENGTH, 0);
 
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
