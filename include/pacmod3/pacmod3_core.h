@@ -210,7 +210,7 @@ class EngineBrakeRptMsg :
   public SystemRptIntMsg
 {
   public:
-    static const uint32_t CAN_ID;
+    static constexpr uint32_t CAN_ID = 0x244;
 };
 
 class HazardLightRptMsg :
@@ -238,7 +238,7 @@ class MarkerLampRptMsg :
   public SystemRptBoolMsg
 {
   public:
-    static const uint32_t CAN_ID;
+    static constexpr uint32_t CAN_ID = 0x248;
 };
 
 class MediaControlsRptMsg :
@@ -266,7 +266,7 @@ class SprayerRptMsg :
   public SystemRptBoolMsg
 {
 public:
-  static const uint32_t CAN_ID;
+  static constexpr uint32_t CAN_ID = 0x238;
 };
 
 class SteerRptMsg :
@@ -837,7 +837,7 @@ class EngineBrakeCmdMsg :
   public SystemCmdInt
 {
   public:
-    static const uint32_t CAN_ID;
+    static constexpr uint32_t CAN_ID = 0x144;
 };
 
 class HazardLightCmdMsg :
@@ -864,8 +864,8 @@ public:
 class MarkerLampCmdMsg :
   public SystemCmdBool
 {
-  public:
-    static const uint32_t CAN_ID;
+public:
+  static constexpr uint32_t CAN_ID = 0x148;
 };
 
 class MediaControlsCmdMsg :
@@ -893,7 +893,7 @@ class SprayerCmdMsg :
   public SystemCmdBool
 {
 public:
-  static const uint32_t CAN_ID;
+  static constexpr uint32_t CAN_ID = 0x138;
 };
 
 class SteerCmdMsg :

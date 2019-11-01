@@ -445,39 +445,41 @@ int main(int argc, char *argv[])
 
   if (veh_type == VehicleType::FREIGHTLINER_CASCADIA)
   {
-    cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>(
-      "parsed_tx/cruise_control_buttons_rpt", 20);
-    engine_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
-    marker_lamp_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
-    sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
+    ros::Publisher cruise_control_buttons_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
+    ros::Publisher engine_brake_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
+    ros::Publisher marker_lamp_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
+    ros::Publisher sprayer_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
 
-    pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
-    pub_tx_list.insert(std::make_pair(EngineBrakeRptMsg::CAN_ID, engine_brake_rpt_pub));
-    pub_tx_list.insert(std::make_pair(MarkerLampRptMsg::CAN_ID, marker_lamp_rpt_pub));
-    pub_tx_list.insert(std::make_pair(SprayerRptMsg::CAN_ID, sprayer_rpt_pub));
+    pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
+    pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
+    pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
+    pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
 
-    cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(
-        n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
-    engine_brake_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd)));
-    marker_lamp_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd)));
-    sprayer_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd)));
+    cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd));
+    engine_brake_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd));
+    marker_lamp_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd));
+    sprayer_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
 
-    rx_list.insert(std::make_pair(
+    rx_list.emplace(
       CruiseControlButtonsCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
+      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
       EngineBrakeCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
+      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
       MarkerLampCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
+      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
       SprayerCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH))));
+      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
   }
 
   if (veh_type == VehicleType::VEHICLE_4)
