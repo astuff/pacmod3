@@ -31,11 +31,7 @@
 
 namespace lc = rclcpp_lifecycle;
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 
 class LockedData
@@ -204,8 +200,6 @@ public:
     const uint32_t & can_id, const pacmod_msgs::msg::SteerSystemCmd::SharedPtr & msg);
 };
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
 
 #endif  // PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_

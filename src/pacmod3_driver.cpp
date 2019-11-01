@@ -42,7 +42,7 @@ int main(int argc, char ** argv)
   rclcpp::NodeOptions options;
 
   // Instantiate Node
-  auto pacmod_node = std::make_shared<AS::Drivers::PACMod3::PACMod3Node>(options);
+  auto pacmod_node = std::make_shared<pacmod3::PACMod3Node>(options);
 
   // Add to executor
   exec.add_node(pacmod_node->get_node_base_interface());

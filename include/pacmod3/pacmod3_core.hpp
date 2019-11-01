@@ -28,11 +28,7 @@
 #include <vector>
 #include <string>
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 
 enum class VehicleType
@@ -949,8 +945,6 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
 
 #endif  // PACMOD3__PACMOD3_CORE_HPP_

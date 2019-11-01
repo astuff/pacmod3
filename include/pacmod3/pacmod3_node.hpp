@@ -22,7 +22,6 @@
 #define PACMOD3__PACMOD3_NODE_HPP_
 
 #include <rclcpp/rclcpp.hpp>
-#include <rclcpp_components/register_node_macro.hpp>
 #include <rclcpp_lifecycle/lifecycle_node.hpp>
 #include <can_msgs/msg/frame.hpp>
 #include <std_msgs/msg/bool.hpp>
@@ -43,11 +42,7 @@
 namespace lc = rclcpp_lifecycle;
 using LNI = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface;
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 
 /// \brief PACMod3Node class which can translate messages
@@ -140,8 +135,6 @@ private:
   std::shared_ptr<std::thread> pub_thread_;
 };
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
 
 #endif  // PACMOD3__PACMOD3_NODE_HPP_

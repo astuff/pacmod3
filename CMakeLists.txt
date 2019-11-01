@@ -27,6 +27,10 @@ add_library(
   src/pacmod3_core.cpp
   src/pacmod3_node.cpp
 )
+target_compile_definitions(
+  ${PROJECT_NAME}_node
+  PRIVATE "COMPOSITION_BUILDING_DLL"
+)
 ament_target_dependencies(
   ${PROJECT_NAME}_node
   "rclcpp"
@@ -38,7 +42,7 @@ ament_target_dependencies(
 )
 rclcpp_components_register_nodes(
   ${PROJECT_NAME}_node
-  "AS::Drivers::PACMod3::PACMod3Node"
+  "pacmod3::PACMod3Node"
 )
 
 add_executable(
@@ -64,8 +68,6 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-ament_package()
-
 install(
   TARGETS ${PROJECT_NAME}_node
   EXPORT export_${PROJECT_NAME}_node
@@ -87,3 +89,5 @@ install(
 install(DIRECTORY launch
   DESTINATION share/${PROJECT_NAME}/
 )
+
+ament_package()

@@ -1,0 +1,4 @@
+pacmod3_driver:
+  ros__parameters:
+    vehicle_type: "POLARIS_GEM"
+    frame_id: "pacmod"

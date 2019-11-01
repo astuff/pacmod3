@@ -34,11 +34,7 @@ namespace lc = rclcpp_lifecycle;
 using LNI = rclcpp_lifecycle::node_interfaces::LifecycleNodeInterface;
 using namespace std::chrono_literals;
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 
 constexpr std::chrono::milliseconds PACMod3Node::SEND_CMD_INTERVAL;
@@ -559,8 +555,7 @@ void PACMod3Node::set_enable(bool enable)
   }
 }
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
 
-RCLCPP_COMPONENTS_REGISTER_NODE(AS::Drivers::PACMod3::PACMod3Node)
+#include <rclcpp_components/register_node_macro.hpp>  // NOLINT
+RCLCPP_COMPONENTS_REGISTER_NODE(pacmod3::PACMod3Node)
