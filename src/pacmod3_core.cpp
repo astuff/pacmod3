@@ -308,7 +308,7 @@ SystemRptFloatMsg::SystemRptFloatMsg() :
 {}
 
 // TX Messages
-void GlobalRptMsg::parse(uint8_t *in)
+void GlobalRptMsg::parse(const uint8_t *in)
 {
   enabled = in[0] & 0x01;
   override_active = ((in[0] & 0x02) > 0);
@@ -322,7 +322,7 @@ void GlobalRptMsg::parse(uint8_t *in)
   user_can_read_errors = ((in[6] << 8) | in[7]);
 }
 
-void ComponentRptMsg::parse(uint8_t *in)
+void ComponentRptMsg::parse(const uint8_t *in)
 {
   component_type = static_cast<ComponentType>(in[0]);
   component_func = static_cast<ComponentFunction>(in[1]);
@@ -331,7 +331,7 @@ void ComponentRptMsg::parse(uint8_t *in)
   config_fault = ((in[3] & 0x01) > 0);
 }
 
-void SystemRptBoolMsg::parse(uint8_t *in)
+void SystemRptBoolMsg::parse(const uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
@@ -346,7 +346,7 @@ void SystemRptBoolMsg::parse(uint8_t *in)
   output = ((in[3] & 0x01) > 0);
 }
 
-void SystemRptIntMsg::parse(uint8_t *in)
+void SystemRptIntMsg::parse(const uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
@@ -361,7 +361,7 @@ void SystemRptIntMsg::parse(uint8_t *in)
   output = in[3];
 }
 
-void SystemRptFloatMsg::parse(uint8_t *in)
+void SystemRptFloatMsg::parse(const uint8_t *in)
 {
   enabled = ((in[0] & 0x01) > 0);
   override_active = ((in[0] & 0x02) > 0);
@@ -383,7 +383,7 @@ void SystemRptFloatMsg::parse(uint8_t *in)
   output = static_cast<double>(temp / 1000.0);
 }
 
-void AccelAuxRptMsg::parse(uint8_t *in)
+void AccelAuxRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -399,7 +399,7 @@ void AccelAuxRptMsg::parse(uint8_t *in)
   user_interaction_is_valid = (in[5] & 0x04) > 0;
 }
 
-void BrakeAuxRptMsg::parse(uint8_t *in)
+void BrakeAuxRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -421,7 +421,7 @@ void BrakeAuxRptMsg::parse(uint8_t *in)
   brake_on_off_is_valid = (in[7] & 0x10) > 0;
 }
 
-void DateTimeRptMsg::parse(uint8_t *in)
+void DateTimeRptMsg::parse(const uint8_t *in)
 {
   year = in[0];
   month = in[1];
@@ -431,7 +431,7 @@ void DateTimeRptMsg::parse(uint8_t *in)
   second = in[5];
 }
 
-void DetectedObjectRptMsg::parse(uint8_t *in)
+void DetectedObjectRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -442,7 +442,7 @@ void DetectedObjectRptMsg::parse(uint8_t *in)
   front_object_distance_high_res = static_cast<double>(temp / 1000.0);
 }
 
-void DoorRptMsg::parse(uint8_t *in)
+void DoorRptMsg::parse(const uint8_t *in)
 {
   driver_door_open = ((in[0] & 0x01) > 0);
   driver_door_open_is_valid = ((in[1] & 0x01) > 0);
@@ -460,7 +460,7 @@ void DoorRptMsg::parse(uint8_t *in)
   fuel_door_open_is_valid = ((in[1] & 0x40) > 0);
 }
 
-void HeadlightAuxRptMsg::parse(uint8_t *in)
+void HeadlightAuxRptMsg::parse(const uint8_t *in)
 {
   headlights_on = (in[0] & 0x01) > 0;
   headlights_on_bright = (in[0] & 0x02) > 0;
@@ -472,7 +472,7 @@ void HeadlightAuxRptMsg::parse(uint8_t *in)
   headlights_mode_is_valid = (in[2] & 0x08) > 0;
 }
 
-void InteriorLightsRptMsg::parse(uint8_t *in)
+void InteriorLightsRptMsg::parse(const uint8_t *in)
 {
   front_dome_lights_on = ((in[0] & 0x01) > 0);
   front_dome_lights_on_is_valid = ((in[2] & 0x01) > 0);
@@ -484,7 +484,7 @@ void InteriorLightsRptMsg::parse(uint8_t *in)
   dim_level_is_valid = ((in[2] & 0x08) > 0);
 }
 
-void LatLonHeadingRptMsg::parse(uint8_t *in)
+void LatLonHeadingRptMsg::parse(const uint8_t *in)
 {
   latitude_degrees = static_cast<int8_t>(in[0]);
   latitude_minutes = in[1];
@@ -495,7 +495,7 @@ void LatLonHeadingRptMsg::parse(uint8_t *in)
   heading = ((static_cast<int16_t>(in[6]) << 8) | in[7]) / 100.0;
 }
 
-void MotorRpt1Msg::parse(uint8_t *in)
+void MotorRpt1Msg::parse(const uint8_t *in)
 {
   int32_t temp;
 
@@ -512,7 +512,7 @@ void MotorRpt1Msg::parse(uint8_t *in)
   position = static_cast<double>(temp / 1000.0);
 }
 
-void MotorRpt2Msg::parse(uint8_t *in)
+void MotorRpt2Msg::parse(const uint8_t *in)
 {
   int16_t temp16;
   int32_t temp32;
@@ -530,7 +530,7 @@ void MotorRpt2Msg::parse(uint8_t *in)
   velocity = static_cast<double>(temp32 / 10.0);
 }
 
-void MotorRpt3Msg::parse(uint8_t *in)
+void MotorRpt3Msg::parse(const uint8_t *in)
 {
   int32_t temp;
 
@@ -547,7 +547,7 @@ void MotorRpt3Msg::parse(uint8_t *in)
   torque_input = static_cast<double>(temp / 1000.0);
 }
 
-void OccupancyRptMsg::parse(uint8_t *in)
+void OccupancyRptMsg::parse(const uint8_t *in)
 {
   driver_seat_occupied = ((in[0] & 0x01) > 0);
   driver_seat_occupied_is_valid = ((in[1] & 0x01) > 0);
@@ -563,7 +563,7 @@ void OccupancyRptMsg::parse(uint8_t *in)
   rear_seatbelt_buckled_is_valid = ((in[1] & 0x20) > 0);
 }
 
-void RearLightsRptMsg::parse(uint8_t *in)
+void RearLightsRptMsg::parse(const uint8_t *in)
 {
   brake_lights_on = ((in[0] & 0x01) > 0);
   brake_lights_on_is_valid = ((in[1] & 0x01) > 0);
@@ -571,7 +571,7 @@ void RearLightsRptMsg::parse(uint8_t *in)
   reverse_lights_on_is_valid = ((in[1] & 0x02) > 0);
 }
 
-void ShiftAuxRptMsg::parse(uint8_t *in)
+void ShiftAuxRptMsg::parse(const uint8_t *in)
 {
   between_gears = (in[0] & 0x01) > 0;
   stay_in_neutral_mode = (in[0] & 0x02) > 0;
@@ -583,7 +583,7 @@ void ShiftAuxRptMsg::parse(uint8_t *in)
   speed_interlock_active_is_valid = (in[1] & 0x08) > 0;
 }
 
-void SteerAuxRptMsg::parse(uint8_t *in)
+void SteerAuxRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -605,7 +605,7 @@ void SteerAuxRptMsg::parse(uint8_t *in)
   user_interaction_is_valid = (in[7] & 0x08) > 0;
 }
 
-void SteeringPIDRpt1Msg::parse(uint8_t *in)
+void SteeringPIDRpt1Msg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -622,7 +622,7 @@ void SteeringPIDRpt1Msg::parse(uint8_t *in)
   Kd = static_cast<double>(temp / 1000.0);
 }
 
-void SteeringPIDRpt2Msg::parse(uint8_t *in)
+void SteeringPIDRpt2Msg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -639,7 +639,7 @@ void SteeringPIDRpt2Msg::parse(uint8_t *in)
   all_terms = static_cast<double>(temp / 1000.0);
 }
 
-void SteeringPIDRpt3Msg::parse(uint8_t *in)
+void SteeringPIDRpt3Msg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -656,7 +656,7 @@ void SteeringPIDRpt3Msg::parse(uint8_t *in)
   error = static_cast<double>(temp / 1000.0);
 }
 
-void SteeringPIDRpt4Msg::parse(uint8_t *in)
+void SteeringPIDRpt4Msg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -667,7 +667,7 @@ void SteeringPIDRpt4Msg::parse(uint8_t *in)
   angular_acceleration = static_cast<double>(temp / 1000.0);
 }
 
-void TurnAuxRptMsg::parse(uint8_t *in)
+void TurnAuxRptMsg::parse(const uint8_t *in)
 {
   driver_blinker_bulb_on = (in[0] & 0x01) > 0;
   passenger_blinker_bulb_on = (in[0] & 0x02) > 0;
@@ -675,13 +675,13 @@ void TurnAuxRptMsg::parse(uint8_t *in)
   passenger_blinker_bulb_on_is_valid = (in[1] & 0x02) > 0;
 }
 
-void VehicleSpecificRpt1Msg::parse(uint8_t *in)
+void VehicleSpecificRpt1Msg::parse(const uint8_t *in)
 {
   shift_pos_1 = in[0];
   shift_pos_2 = in[1];
 }
 
-void VehicleDynamicsRptMsg::parse(uint8_t *in)
+void VehicleDynamicsRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -691,7 +691,7 @@ void VehicleDynamicsRptMsg::parse(uint8_t *in)
   g_forces = in[0];
 }
 
-void VehicleSpeedRptMsg::parse(uint8_t *in)
+void VehicleSpeedRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -703,7 +703,7 @@ void VehicleSpeedRptMsg::parse(uint8_t *in)
   vehicle_speed_raw[1] = in[4];
 }
 
-void VinRptMsg::parse(uint8_t *in)
+void VinRptMsg::parse(const uint8_t *in)
 {
   std::ostringstream oss;
   oss << in[0] << in[1] << in[2];
@@ -805,7 +805,7 @@ void VinRptMsg::parse(uint8_t *in)
   serial = (serial << 8) | in[6];
 }
 
-void WheelSpeedRptMsg::parse(uint8_t *in)
+void WheelSpeedRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -822,7 +822,7 @@ void WheelSpeedRptMsg::parse(uint8_t *in)
   rear_right_wheel_speed = static_cast<double>(temp / 100.0);
 }
 
-void WiperAuxRptMsg::parse(uint8_t *in)
+void WiperAuxRptMsg::parse(const uint8_t *in)
 {
   front_wiping = (in[0] & 0x01) > 0;
   front_spraying = (in[0] & 0x02) > 0;
@@ -838,7 +838,7 @@ void WiperAuxRptMsg::parse(uint8_t *in)
   spray_empty_is_valid = (in[1] & 0x20) > 0;
 }
 
-void YawRateRptMsg::parse(uint8_t *in)
+void YawRateRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
