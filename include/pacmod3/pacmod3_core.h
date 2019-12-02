@@ -602,60 +602,6 @@ public:
   void parse(const uint8_t *in);
 };
 
-class SteeringPIDRpt1Msg :
-  public Pacmod3TxMsg
-{
-public:
-  static constexpr uint32_t CAN_ID = 0x408;
-
-  double dt;
-  double Kp;
-  double Ki;
-  double Kd;
-
-  void parse(const uint8_t *in);
-};
-
-class SteeringPIDRpt2Msg :
-  public Pacmod3TxMsg
-{
-public:
-  static constexpr uint32_t CAN_ID = 0x409;
-
-  double P_term;
-  double I_term;
-  double D_term;
-  double all_terms;
-
-  void parse(const uint8_t *in);
-};
-
-class SteeringPIDRpt3Msg :
-  public Pacmod3TxMsg
-{
-public:
-  static constexpr uint32_t CAN_ID = 0x40A;
-
-  double new_torque;
-  double str_angle_desired;
-  double str_angle_actual;
-  double error;
-
-  void parse(const uint8_t *in);
-};
-
-class SteeringPIDRpt4Msg :
-  public Pacmod3TxMsg
-{
-public:
-  static constexpr uint32_t CAN_ID = 0x410;
-
-  double angular_velocity;
-  double angular_acceleration;
-
-  void parse(const uint8_t *in);
-};
-
 class SteerMotorRpt1Msg :
   public MotorRpt1Msg
 {

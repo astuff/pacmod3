@@ -520,23 +520,6 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(VehicleDynamicsRptMsg::CAN_ID, std::move(vehicle_dynamics_rpt_pub));
   }
 
-  if (veh_type == VehicleType::LEXUS_RX_450H || veh_type == VehicleType::JUPITER_SPIRIT)
-  {
-    ros::Publisher steering_pid_rpt_1_pub =
-      n.advertise<pacmod_msgs::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
-    ros::Publisher steering_pid_rpt_2_pub =
-      n.advertise<pacmod_msgs::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
-    ros::Publisher steering_pid_rpt_3_pub =
-      n.advertise<pacmod_msgs::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
-    ros::Publisher steering_pid_rpt_4_pub =
-      n.advertise<pacmod_msgs::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
-
-    pub_tx_list.emplace(SteeringPIDRpt1Msg::CAN_ID, std::move(steering_pid_rpt_1_pub));
-    pub_tx_list.emplace(SteeringPIDRpt2Msg::CAN_ID, std::move(steering_pid_rpt_2_pub));
-    pub_tx_list.emplace(SteeringPIDRpt3Msg::CAN_ID, std::move(steering_pid_rpt_3_pub));
-    pub_tx_list.emplace(SteeringPIDRpt4Msg::CAN_ID, std::move(steering_pid_rpt_4_pub));
-  }
-
   if (veh_type == VehicleType::VEHICLE_5)
   {
     ros::Publisher occupancy_rpt_pub =

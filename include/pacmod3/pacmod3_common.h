@@ -48,10 +48,6 @@
 #include <pacmod_msgs/RearLightsRpt.h>
 #include <pacmod_msgs/ShiftAuxRpt.h>
 #include <pacmod_msgs/SteerAuxRpt.h>
-#include <pacmod_msgs/SteeringPIDRpt1.h>
-#include <pacmod_msgs/SteeringPIDRpt2.h>
-#include <pacmod_msgs/SteeringPIDRpt3.h>
-#include <pacmod_msgs/SteeringPIDRpt4.h>
 #include <pacmod_msgs/SteerSystemCmd.h>
 #include <pacmod_msgs/SystemRptBool.h>
 #include <pacmod_msgs/SystemRptFloat.h>
