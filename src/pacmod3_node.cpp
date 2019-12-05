@@ -40,54 +40,6 @@ using namespace AS::Drivers::PACMod3;  // NOLINT
 std::unordered_map<uint32_t, ros::Publisher> pub_tx_list;
 Pacmod3TxRosMsgHandler handler;
 
-// Vehicle-Specific Publishers
-ros::Publisher cruise_control_buttons_rpt_pub;
-ros::Publisher dash_controls_left_rpt_pub;
-ros::Publisher dash_controls_right_rpt_pub;
-ros::Publisher media_controls_rpt_pub;
-ros::Publisher wiper_rpt_pub;
-ros::Publisher wiper_aux_rpt_pub;
-ros::Publisher headlight_rpt_pub;
-ros::Publisher headlight_aux_rpt_pub;
-ros::Publisher horn_rpt_pub;
-ros::Publisher wheel_speed_rpt_pub;
-ros::Publisher steering_pid_rpt_1_pub;
-ros::Publisher steering_pid_rpt_2_pub;
-ros::Publisher steering_pid_rpt_3_pub;
-ros::Publisher steering_pid_rpt_4_pub;
-ros::Publisher lat_lon_heading_rpt_pub;
-ros::Publisher date_time_rpt_pub;
-ros::Publisher parking_brake_rpt_pub;
-ros::Publisher yaw_rate_rpt_pub;
-ros::Publisher steering_rpt_detail_1_pub;
-ros::Publisher steering_rpt_detail_2_pub;
-ros::Publisher steering_rpt_detail_3_pub;
-ros::Publisher brake_rpt_detail_1_pub;
-ros::Publisher brake_rpt_detail_2_pub;
-ros::Publisher brake_rpt_detail_3_pub;
-ros::Publisher detected_object_rpt_pub;
-ros::Publisher vehicle_specific_rpt_1_pub;
-ros::Publisher vehicle_dynamics_rpt_pub;
-ros::Publisher occupancy_rpt_pub;
-ros::Publisher interior_lights_rpt_pub;
-ros::Publisher door_rpt_pub;
-ros::Publisher rear_lights_rpt_pub;
-ros::Publisher engine_brake_rpt_pub;
-ros::Publisher marker_lamp_rpt_pub;
-ros::Publisher sprayer_rpt_pub;
-ros::Publisher hazard_lights_rpt_pub;
-
-// Advertise published messages
-ros::Publisher global_rpt_pub;
-ros::Publisher component_rpt_pub;
-ros::Publisher vin_rpt_pub;
-ros::Publisher turn_rpt_pub;
-ros::Publisher rear_pass_door_rpt_pub;
-ros::Publisher shift_rpt_pub;
-ros::Publisher accel_rpt_pub;
-ros::Publisher steer_rpt_pub;
-ros::Publisher brake_rpt_pub;
-ros::Publisher vehicle_speed_pub;
 ros::Publisher vehicle_speed_ms_pub;
 ros::Publisher enabled_pub;
 ros::Publisher can_rx_pub;
@@ -222,21 +174,6 @@ void callback_sprayer_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 void callback_hazard_lights_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
 {
   lookup_and_encode(HazardLightCmdMsg::CAN_ID, msg);
-}
-
-void send_can(int32_t id, const std::vector<uint8_t>& vec)
-{
-  can_msgs::Frame frame;
-  frame.id = id;
-  frame.is_rtr = false;
-  frame.is_extended = false;
-  frame.is_error = false;
-  frame.dlc = vec.size();
-  std::copy(vec.begin(), vec.end(), frame.data.begin());
-
-  frame.header.stamp = ros::Time::now();
-
-  can_rx_pub.publish(frame);
 }
 
 void can_write()
@@ -535,11 +472,14 @@ int main(int argc, char *argv[])
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
     ros::Publisher sprayer_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
+    ros::Publisher hazard_lights_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
 
     pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
     pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
     pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
     pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
+    pub_tx_list.insert(std::make_pair(HazardLightRptMsg::CAN_ID, hazard_lights_rpt_pub));
 
     cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
       n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd));
@@ -549,6 +489,8 @@ int main(int argc, char *argv[])
       n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd));
     sprayer_set_cmd_sub = std::make_shared<ros::Subscriber>(
       n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
+    hazard_lights_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
 
     rx_list.emplace(
       CruiseControlButtonsCmdMsg::CAN_ID,
@@ -562,48 +504,9 @@ int main(int argc, char *argv[])
     rx_list.emplace(
       SprayerCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
-
-    engine_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
-    marker_lamp_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
-    sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
-    cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>(
-      "parsed_tx/cruise_control_buttons_rpt", 20);
-    hazard_lights_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
-
-    pub_tx_list.insert(std::make_pair(EngineBrakeRptMsg::CAN_ID, engine_brake_rpt_pub));
-    pub_tx_list.insert(std::make_pair(MarkerLampRptMsg::CAN_ID, marker_lamp_rpt_pub));
-    pub_tx_list.insert(std::make_pair(SprayerRptMsg::CAN_ID, sprayer_rpt_pub));
-    pub_tx_list.insert(std::make_pair(CruiseControlButtonsRptMsg::CAN_ID, cruise_control_buttons_rpt_pub));
-    pub_tx_list.insert(std::make_pair(HazardLightRptMsg::CAN_ID, hazard_lights_rpt_pub));
-
-    engine_brake_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd)));
-    marker_lamp_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd)));
-    sprayer_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd)));
-    cruise_control_buttons_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(
-        n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd)));
-    hazard_lights_set_cmd_sub = std::shared_ptr<ros::Subscriber>(
-      new ros::Subscriber(
-        n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd)));
-
-    rx_list.insert(std::make_pair(
-      EngineBrakeCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
-      MarkerLampCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
-      SprayerCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
-      CruiseControlButtonsCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH))));
-    rx_list.insert(std::make_pair(
+    rx_list.emplace(
       HazardLightCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH))));
+      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
   }
 
   if (veh_type == VehicleType::VEHICLE_4)
