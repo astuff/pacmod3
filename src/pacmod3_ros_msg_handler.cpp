@@ -848,7 +848,6 @@ void Pacmod3TxRosMsgHandler::fillYawRateRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
-
 // Command messages
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)

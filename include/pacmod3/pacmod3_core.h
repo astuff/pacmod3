@@ -939,12 +939,14 @@ class RearPassDoorCmdMsg :
 public:
   static constexpr uint32_t CAN_ID = 0x140;
 };
+
 class WiperCmdMsg :
   public SystemCmdInt
 {
 public:
   static constexpr uint32_t CAN_ID = 0x134;
 };
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS
