@@ -104,6 +104,7 @@ constexpr uint32_t OccupancyRptMsg::CAN_ID;
 constexpr uint32_t InteriorLightsRptMsg::CAN_ID;
 constexpr uint32_t DoorRptMsg::CAN_ID;
 constexpr uint32_t RearLightsRptMsg::CAN_ID;
+constexpr uint32_t EngineRptMsg::CAN_ID;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
 {
@@ -147,6 +148,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
     break;
   case EngineBrakeRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new EngineBrakeRptMsg);
+    break;
+  case EngineRptMsg::CAN_ID:
+    return std::shared_ptr<Pacmod3TxMsg>(new EngineRptMsg);
     break;
   case GlobalRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
@@ -772,6 +776,13 @@ void YawRateRptMsg::parse(const uint8_t *in)
 
   temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   yaw_rate = static_cast<double>(temp / 100.0);
+}
+
+void EngineRptMsg::parse(uint8_t *in)
+{
+  float temp;
+  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
+  engine_speed = static_cast<float>(temp);
 }
 
 // RX Messages

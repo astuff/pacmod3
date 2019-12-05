@@ -893,6 +893,17 @@ public:
   static constexpr uint32_t CAN_ID = 0x134;
 };
 
+class EngineRptMsg :
+  public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x4FF;
+
+  double engine_speed;
+
+  void parse(uint8_t *in);
+};
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS

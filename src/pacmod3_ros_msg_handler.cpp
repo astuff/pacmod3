@@ -146,6 +146,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillDoorRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == EngineRptMsg::CAN_ID)
+  {
+    pacmod_msgs::EngineRpt new_msg;
+    fillEngineRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == HeadlightAuxRptMsg::CAN_ID)
   {
     pacmod_msgs::HeadlightAuxRpt new_msg;
@@ -444,6 +450,19 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(
   new_msg->trunk_open_is_valid = dc_parser->trunk_open_is_valid;
   new_msg->fuel_door_open = dc_parser->fuel_door_open;
   new_msg->fuel_door_open_is_valid = dc_parser->fuel_door_open_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillEngineRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::EngineRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<EngineRptMsg>(parser_class);
+
+  new_msg->engine_speed = dc_parser->engine_speed;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();

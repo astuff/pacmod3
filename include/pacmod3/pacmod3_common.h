@@ -38,6 +38,7 @@
 #include <pacmod_msgs/DateTimeRpt.h>
 #include <pacmod_msgs/DetectedObjectRpt.h>
 #include <pacmod_msgs/DoorRpt.h>
+#include <pacmod_msgs/EngineRpt.h>
 #include <pacmod_msgs/HeadlightAuxRpt.h>
 #include <pacmod_msgs/InteriorLightsRpt.h>
 #include <pacmod_msgs/LatLonHeadingRpt.h>
