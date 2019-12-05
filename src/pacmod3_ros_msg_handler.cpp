@@ -629,6 +629,8 @@ void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(
   new_msg->stay_in_neutral_mode_is_valid = dc_parser->stay_in_neutral_mode_is_valid;
   new_msg->brake_interlock_active_is_valid = dc_parser->brake_interlock_active_is_valid;
   new_msg->speed_interlock_active_is_valid = dc_parser->speed_interlock_active_is_valid;
+  new_msg->gear_number_avail = dc_parser->gear_number_avail;
+  new_msg->gear_number = dc_parser->gear_number;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();

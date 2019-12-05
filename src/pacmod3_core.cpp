@@ -581,6 +581,8 @@ void ShiftAuxRptMsg::parse(uint8_t *in)
   stay_in_neutral_mode_is_valid = (in[1] & 0x02) > 0;
   brake_interlock_active_is_valid = (in[1] & 0x04) > 0;
   speed_interlock_active_is_valid = (in[1] & 0x08) > 0;
+  gear_number_avail = (in[1] & 0x10) > 0;
+  gear_number = (in[0] & 0x10) > 0;
 }
 
 void SteerAuxRptMsg::parse(uint8_t *in)
