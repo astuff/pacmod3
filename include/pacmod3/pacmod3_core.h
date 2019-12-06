@@ -379,7 +379,7 @@ public:
   bool brake_interlock_active_is_valid;
   bool speed_interlock_active_is_valid;
   bool gear_number_avail;
-  uint8_t gear_number;
+  int8_t gear_number;
 
   void parse(uint8_t *in);
 };

@@ -584,11 +584,6 @@ void ShiftAuxRptMsg::parse(uint8_t *in)
   gear_number_avail = (in[1] & 0x20) > 0;
 
   gear_number = static_cast<int8_t>(in[2] & 0x3F);
-  // reverse gear
-  if (gear_number == 63)
-  {
-    gear_number = -1;
-  }
 }
 
 void SteerAuxRptMsg::parse(uint8_t *in)
