@@ -479,7 +479,7 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
     pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
     pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
-    pub_tx_list.emplace(std::make_pair(HazardLightRptMsg::CAN_ID, hazard_lights_rpt_pub));
+    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
 
     cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
       n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd));
