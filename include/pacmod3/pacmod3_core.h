@@ -378,6 +378,8 @@ public:
   bool stay_in_neutral_mode_is_valid;
   bool brake_interlock_active_is_valid;
   bool speed_interlock_active_is_valid;
+  bool gear_number_avail;
+  int8_t gear_number;
 
   void parse(const uint8_t *in);
 };
@@ -937,12 +939,14 @@ class RearPassDoorCmdMsg :
 public:
   static constexpr uint32_t CAN_ID = 0x140;
 };
+
 class WiperCmdMsg :
   public SystemCmdInt
 {
 public:
   static constexpr uint32_t CAN_ID = 0x134;
 };
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS
