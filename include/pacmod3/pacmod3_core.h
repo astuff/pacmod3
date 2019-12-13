@@ -913,7 +913,7 @@ class EngineRptMsg :
   public Pacmod3TxMsg
 {
 public:
-  static constexpr uint32_t CAN_ID = 0x4FF;
+  static constexpr uint32_t CAN_ID = 0x410;
 
   double engine_speed;
 
