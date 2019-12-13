@@ -97,7 +97,7 @@ private:
   void fillEngineRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::EngineRpt * new_msg,
-      const std::string& frame_id);      
+      const std::string& frame_id);
   void fillHeadlightAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::HeadlightAuxRpt * new_msg,
