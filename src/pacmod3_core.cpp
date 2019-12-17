@@ -451,6 +451,25 @@ void DoorRptMsg::parse(const uint8_t *in)
   fuel_door_open_is_valid = ((in[1] & 0x40) > 0);
 }
 
+void EngineRptMsg::parse(const uint8_t *in)
+{
+  uint16_t temp1, temp2;
+  uint8_t temp3;
+
+  temp1 = ((static_cast<uint16_t>(in[0]) << 8) | in[1])/4;
+  engine_speed = static_cast<float>(temp1);
+
+  temp2 = ((static_cast<uint16_t>(in[2]) << 8) | in[3])/16;
+  engine_torque = static_cast<float>(temp2);
+
+  temp3 = (static_cast<uint8_t>(in[4]) << 8) | in[5];
+  engine_coolant_temp = static_cast<int16_t>(temp3 - 40);
+
+  engine_speed_avail = ((in[5] & 0x01) > 0);
+  engine_torque_avail = ((in[5] & 0x02) > 0);
+  engine_coolant_temp_avail = ((in[5] & 0x4) > 0);
+}
+
 void HeadlightAuxRptMsg::parse(const uint8_t *in)
 {
   headlights_on = (in[0] & 0x01) > 0;
@@ -776,13 +795,6 @@ void YawRateRptMsg::parse(const uint8_t *in)
 
   temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
   yaw_rate = static_cast<double>(temp / 100.0);
-}
-
-void EngineRptMsg::parse(const uint8_t *in)
-{
-  float temp;
-  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-  engine_speed = static_cast<float>(temp/4);
 }
 
 // RX Messages

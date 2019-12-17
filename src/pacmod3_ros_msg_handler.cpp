@@ -463,6 +463,11 @@ void Pacmod3TxRosMsgHandler::fillEngineRpt(
   auto dc_parser = std::dynamic_pointer_cast<EngineRptMsg>(parser_class);
 
   new_msg->engine_speed = dc_parser->engine_speed;
+  new_msg->engine_torque = dc_parser->engine_torque;
+  new_msg->engine_coolant_temp = dc_parser->engine_coolant_temp;
+  new_msg->engine_speed_avail = dc_parser->engine_speed_avail;
+  new_msg->engine_torque_avail = dc_parser->engine_torque_avail;
+  new_msg->engine_coolant_temp_avail = dc_parser->engine_coolant_temp_avail;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
