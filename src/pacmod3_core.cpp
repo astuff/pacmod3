@@ -797,13 +797,6 @@ void YawRateRptMsg::parse(const uint8_t *in)
   yaw_rate = static_cast<double>(temp / 100.0);
 }
 
-void EngineRptMsg::parse(const uint8_t *in)
-{
-  float temp;
-  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-  engine_speed = static_cast<float>(temp/4);
-}
-
 // RX Messages
 void SystemCmdBool::encode(bool enable,
                            bool ignore_overrides,
