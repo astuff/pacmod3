@@ -85,6 +85,7 @@ private:
   void callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
   void callback_cruise_control_buttons_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_engine_brake_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_hazard_lights_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_horn_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_marker_lamp_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);

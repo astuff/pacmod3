@@ -15,8 +15,6 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
-            git clone https://github.com/jwhitleyastuff/ros_canopen -b dashing-devel
-            git clone https://github.com/astuff/astuff_sensor_msgs -b dashing-devel
             git clone https://github.com/astuff/kvaser_interface -b dashing-devel
             source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y

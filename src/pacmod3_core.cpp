@@ -150,6 +150,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id
     case GlobalRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
       break;
+    case HazardLightRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new HazardLightRptMsg);
+      break;
     case HeadlightRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new HeadlightRptMsg);
       break;
