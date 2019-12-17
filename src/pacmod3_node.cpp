@@ -171,6 +171,11 @@ void callback_sprayer_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
   lookup_and_encode(SprayerCmdMsg::CAN_ID, msg);
 }
 
+void callback_hazard_lights_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
+{
+  lookup_and_encode(HazardLightCmdMsg::CAN_ID, msg);
+}
+
 void can_write()
 {
   while (ros::ok())
@@ -267,6 +272,7 @@ int main(int argc, char *argv[])
       dash_controls_left_set_cmd_sub,
       dash_controls_right_set_cmd_sub,
       engine_brake_set_cmd_sub,
+      hazard_lights_set_cmd_sub,
       marker_lamp_set_cmd_sub,
       media_controls_set_cmd_sub,
       sprayer_set_cmd_sub;
@@ -466,11 +472,14 @@ int main(int argc, char *argv[])
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
     ros::Publisher sprayer_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
+    ros::Publisher hazard_lights_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
 
     pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
     pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
     pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
     pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
+    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
 
     cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
       n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd));
@@ -480,6 +489,8 @@ int main(int argc, char *argv[])
       n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd));
     sprayer_set_cmd_sub = std::make_shared<ros::Subscriber>(
       n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
+    hazard_lights_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
 
     rx_list.emplace(
       CruiseControlButtonsCmdMsg::CAN_ID,
@@ -493,6 +504,9 @@ int main(int argc, char *argv[])
     rx_list.emplace(
       SprayerCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      HazardLightCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
   }
 
   if (veh_type == VehicleType::VEHICLE_4)

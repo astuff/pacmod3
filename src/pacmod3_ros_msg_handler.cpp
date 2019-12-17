@@ -59,7 +59,8 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   if (can_id == HornRptMsg::CAN_ID ||
       can_id == ParkingBrakeRptMsg::CAN_ID ||
       can_id == MarkerLampRptMsg::CAN_ID ||
-      can_id == SprayerRptMsg::CAN_ID)
+      can_id == SprayerRptMsg::CAN_ID ||
+      can_id == HazardLightRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptBool new_msg;
     fillSystemRptBool(parser_class, &new_msg, frame_id);
@@ -885,6 +886,16 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   else if (can_id == SprayerCmdMsg::CAN_ID)
   {
     SprayerCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->clear_faults,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == HazardLightCmdMsg::CAN_ID)
+  {
+    HazardLightCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
