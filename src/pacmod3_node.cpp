@@ -281,17 +281,6 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
       std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
   }
 
-  if (vehicle_type_ == VehicleType::LEXUS_RX_450H || vehicle_type_ == VehicleType::JUPITER_SPIRIT) {
-    can_pubs_[SteeringPIDRpt1Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SteeringPIDRpt1>("parsed_tx/steer_pid_rpt_1", 20);
-    can_pubs_[SteeringPIDRpt2Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SteeringPIDRpt2>("parsed_tx/steer_pid_rpt_2", 20);
-    can_pubs_[SteeringPIDRpt3Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SteeringPIDRpt3>("parsed_tx/steer_pid_rpt_3", 20);
-    can_pubs_[SteeringPIDRpt4Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SteeringPIDRpt4>("parsed_tx/steer_pid_rpt_4", 20);
-  }
-
   if (vehicle_type_ == VehicleType::JUPITER_SPIRIT) {
     can_subs_[RearPassDoorCmdMsg::CAN_ID] = std::make_pair(
       this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(

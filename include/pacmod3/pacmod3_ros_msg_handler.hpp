@@ -137,22 +137,6 @@ private:
     const std::shared_ptr<Pacmod3TxMsg> & parser_class,
     pacmod_msgs::msg::SteerAuxRpt * new_msg,
     const std::string & frame_id);
-  void fillSteeringPIDRpt1(
-    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-    pacmod_msgs::msg::SteeringPIDRpt1 * new_msg,
-    const std::string & frame_id);
-  void fillSteeringPIDRpt2(
-    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-    pacmod_msgs::msg::SteeringPIDRpt2 * new_msg,
-    const std::string & frame_id);
-  void fillSteeringPIDRpt3(
-    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-    pacmod_msgs::msg::SteeringPIDRpt3 * new_msg,
-    const std::string & frame_id);
-  void fillSteeringPIDRpt4(
-    const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-    pacmod_msgs::msg::SteeringPIDRpt4 * new_msg,
-    const std::string & frame_id);
   void fillTurnAuxRpt(
     const std::shared_ptr<Pacmod3TxMsg> & parser_class,
     pacmod_msgs::msg::TurnAuxRpt * new_msg,

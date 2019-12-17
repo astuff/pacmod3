@@ -92,13 +92,9 @@ constexpr uint32_t SteerMotorRpt1Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt2Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt3Msg::CAN_ID;
 constexpr uint32_t WheelSpeedRptMsg::CAN_ID;
-constexpr uint32_t SteeringPIDRpt1Msg::CAN_ID;
-constexpr uint32_t SteeringPIDRpt2Msg::CAN_ID;
-constexpr uint32_t SteeringPIDRpt3Msg::CAN_ID;
 constexpr uint32_t YawRateRptMsg::CAN_ID;
 constexpr uint32_t LatLonHeadingRptMsg::CAN_ID;
 constexpr uint32_t DateTimeRptMsg::CAN_ID;
-constexpr uint32_t SteeringPIDRpt4Msg::CAN_ID;
 constexpr uint32_t DetectedObjectRptMsg::CAN_ID;
 constexpr uint32_t VehicleSpecificRpt1Msg::CAN_ID;
 constexpr uint32_t VehicleDynamicsRptMsg::CAN_ID;
@@ -179,18 +175,6 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id
       break;
     case ShiftRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
-      break;
-    case SteeringPIDRpt1Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt1Msg);
-      break;
-    case SteeringPIDRpt2Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt2Msg);
-      break;
-    case SteeringPIDRpt3Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt3Msg);
-      break;
-    case SteeringPIDRpt4Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteeringPIDRpt4Msg);
       break;
     case SteerMotorRpt1Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt1Msg);
@@ -592,68 +576,6 @@ void SteerAuxRptMsg::parse(const std::vector<uint8_t> & in)
   raw_torque_is_valid = (in[7] & 0x02) > 0;
   rotation_rate_is_valid = (in[7] & 0x04) > 0;
   user_interaction_is_valid = (in[7] & 0x08) > 0;
-}
-
-void SteeringPIDRpt1Msg::parse(const std::vector<uint8_t> & in)
-{
-  int16_t temp;
-
-  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-  dt = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-  Kp = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
-  Ki = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
-  Kd = static_cast<double>(temp / 1000.0);
-}
-
-void SteeringPIDRpt2Msg::parse(const std::vector<uint8_t> & in)
-{
-  int16_t temp;
-
-  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-  P_term = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-  I_term = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
-  D_term = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
-  all_terms = static_cast<double>(temp / 1000.0);
-}
-
-void SteeringPIDRpt3Msg::parse(const std::vector<uint8_t> & in)
-{
-  int16_t temp;
-
-  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-  new_torque = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-  str_angle_desired = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
-  str_angle_actual = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
-  error = static_cast<double>(temp / 1000.0);
-}
-
-void SteeringPIDRpt4Msg::parse(const std::vector<uint8_t> & in)
-{
-  int16_t temp;
-
-  temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-  angular_velocity = static_cast<double>(temp / 1000.0);
-
-  temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-  angular_acceleration = static_cast<double>(temp / 1000.0);
 }
 
 void TurnAuxRptMsg::parse(const std::vector<uint8_t> & in)
