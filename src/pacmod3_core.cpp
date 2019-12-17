@@ -467,7 +467,7 @@ void EngineRptMsg::parse(const uint8_t *in)
 
   engine_speed_avail = ((in[5] & 0x01) > 0);
   engine_torque_avail = ((in[5] & 0x02) > 0);
-  engine_coolant_temp_avail = ((in[5] & 0x4) > 0);
+  engine_coolant_temp_avail = ((in[5] & 0x04) > 0);
 }
 
 void HeadlightAuxRptMsg::parse(const uint8_t *in)
