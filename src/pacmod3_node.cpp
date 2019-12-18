@@ -468,6 +468,8 @@ int main(int argc, char *argv[])
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
     ros::Publisher engine_brake_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
+    ros::Publisher engine_rpt_pub =
+      n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
     ros::Publisher marker_lamp_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
     ros::Publisher sprayer_rpt_pub =
@@ -477,6 +479,7 @@ int main(int argc, char *argv[])
 
     pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
     pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
+    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
     pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
     pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
     pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));

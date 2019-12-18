@@ -104,6 +104,7 @@ constexpr uint32_t OccupancyRptMsg::CAN_ID;
 constexpr uint32_t InteriorLightsRptMsg::CAN_ID;
 constexpr uint32_t DoorRptMsg::CAN_ID;
 constexpr uint32_t RearLightsRptMsg::CAN_ID;
+constexpr uint32_t EngineRptMsg::CAN_ID;
 
 std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
 {
@@ -147,6 +148,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
     break;
   case EngineBrakeRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new EngineBrakeRptMsg);
+    break;
+  case EngineRptMsg::CAN_ID:
+    return std::shared_ptr<Pacmod3TxMsg>(new EngineRptMsg);
     break;
   case GlobalRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
@@ -445,6 +449,25 @@ void DoorRptMsg::parse(const uint8_t *in)
   trunk_open_is_valid = ((in[1] & 0x20) > 0);
   fuel_door_open = ((in[0] & 0x40) > 0);
   fuel_door_open_is_valid = ((in[1] & 0x40) > 0);
+}
+
+void EngineRptMsg::parse(const uint8_t *in)
+{
+  uint16_t temp1, temp2;
+  uint8_t temp3;
+
+  temp1 = ((static_cast<uint16_t>(in[0]) << 8) | in[1]);
+  engine_speed = static_cast<float>(temp1 / 4.0);
+
+  temp2 = ((static_cast<uint16_t>(in[2]) << 8) | in[3]);
+  engine_torque = static_cast<float>(temp2 / 16.0);
+
+  temp3 = (static_cast<uint8_t>(in[4]) << 8) | in[5];
+  engine_coolant_temp = static_cast<int16_t>(temp3 - 40);
+
+  engine_speed_avail = ((in[5] & 0x01) > 0);
+  engine_torque_avail = ((in[5] & 0x02) > 0);
+  engine_coolant_temp_avail = ((in[5] & 0x04) > 0);
 }
 
 void HeadlightAuxRptMsg::parse(const uint8_t *in)

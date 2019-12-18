@@ -585,6 +585,22 @@ public:
   void parse(const uint8_t *in);
 };
 
+class EngineRptMsg :
+  public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x410;
+
+  float engine_speed;
+  float engine_torque;
+  int16_t engine_coolant_temp;
+  bool engine_speed_avail;
+  bool engine_torque_avail;
+  bool engine_coolant_temp_avail;
+
+  void parse(const uint8_t *in);
+};
+
 class LatLonHeadingRptMsg :
   public Pacmod3TxMsg
 {

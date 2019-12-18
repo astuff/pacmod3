@@ -94,6 +94,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::DoorRpt * new_msg,
       const std::string& frame_id);
+  void fillEngineRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::EngineRpt * new_msg,
+      const std::string& frame_id);
   void fillHeadlightAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::HeadlightAuxRpt * new_msg,
