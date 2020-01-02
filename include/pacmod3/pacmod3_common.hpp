@@ -46,10 +46,6 @@
 #include <pacmod_msgs/msg/rear_lights_rpt.hpp>
 #include <pacmod_msgs/msg/shift_aux_rpt.hpp>
 #include <pacmod_msgs/msg/steer_aux_rpt.hpp>
-#include <pacmod_msgs/msg/steering_pid_rpt1.hpp>
-#include <pacmod_msgs/msg/steering_pid_rpt2.hpp>
-#include <pacmod_msgs/msg/steering_pid_rpt3.hpp>
-#include <pacmod_msgs/msg/steering_pid_rpt4.hpp>
 #include <pacmod_msgs/msg/steer_system_cmd.hpp>
 #include <pacmod_msgs/msg/system_rpt_bool.hpp>
 #include <pacmod_msgs/msg/system_rpt_float.hpp>

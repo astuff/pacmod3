@@ -216,38 +216,6 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillSteerAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == SteeringPIDRpt1Msg::CAN_ID) {
-    pacmod_msgs::msg::SteeringPIDRpt1 new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::SteeringPIDRpt1>>(pub);
-
-    fillSteeringPIDRpt1(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == SteeringPIDRpt2Msg::CAN_ID) {
-    pacmod_msgs::msg::SteeringPIDRpt2 new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::SteeringPIDRpt2>>(pub);
-
-    fillSteeringPIDRpt2(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == SteeringPIDRpt3Msg::CAN_ID) {
-    pacmod_msgs::msg::SteeringPIDRpt3 new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::SteeringPIDRpt3>>(pub);
-
-    fillSteeringPIDRpt3(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == SteeringPIDRpt4Msg::CAN_ID) {
-    pacmod_msgs::msg::SteeringPIDRpt4 new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::SteeringPIDRpt4>>(pub);
-
-    fillSteeringPIDRpt4(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
   } else if (can_id == TurnAuxRptMsg::CAN_ID) {
     pacmod_msgs::msg::TurnAuxRpt new_msg;
     auto dc_pub =
@@ -705,68 +673,6 @@ void Pacmod3TxRosMsgHandler::fillSteerAuxRpt(
   new_msg->raw_torque_is_valid = dc_parser->raw_torque_is_valid;
   new_msg->rotation_rate_is_valid = dc_parser->rotation_rate_is_valid;
   new_msg->user_interaction_is_valid = dc_parser->user_interaction_is_valid;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt1(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::SteeringPIDRpt1 * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt1Msg>(parser_class);
-
-  new_msg->dt = dc_parser->dt;
-  new_msg->kp = dc_parser->Kp;
-  new_msg->ki = dc_parser->Ki;
-  new_msg->kd = dc_parser->Kd;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt2(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::SteeringPIDRpt2 * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt2Msg>(parser_class);
-
-  new_msg->p_term = dc_parser->P_term;
-  new_msg->i_term = dc_parser->I_term;
-  new_msg->d_term = dc_parser->D_term;
-  new_msg->all_terms = dc_parser->all_terms;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt3(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::SteeringPIDRpt3 * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt3Msg>(parser_class);
-
-  new_msg->new_torque = dc_parser->new_torque;
-  new_msg->str_angle_desired = dc_parser->str_angle_desired;
-  new_msg->str_angle_actual = dc_parser->str_angle_actual;
-  new_msg->error = dc_parser->error;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillSteeringPIDRpt4(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::SteeringPIDRpt4 * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<SteeringPIDRpt4Msg>(parser_class);
-
-  new_msg->angular_velocity = dc_parser->angular_velocity;
-  new_msg->angular_acceleration = dc_parser->angular_acceleration;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = rclcpp::Clock().now();
