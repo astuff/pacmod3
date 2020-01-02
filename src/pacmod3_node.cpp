@@ -255,6 +255,9 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
     can_pubs_[SprayerRptMsg::CAN_ID] =
       this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
       "parsed_tx/sprayer_rpt", 20);
+    can_pubs_[HazardLightRptMsg::CAN_ID] =
+      this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+      "parsed_tx/hazard_lights_rpt", 20);
 
     can_subs_[CruiseControlButtonsCmdMsg::CAN_ID] = std::make_pair(
       this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
@@ -279,6 +282,12 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
         "as_rx/sprayer_cmd", 20,
         std::bind(&PACMod3Node::callback_sprayer_cmd, this, std::placeholders::_1)),
       std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
+
+    can_subs_[HazardLightCmdMsg::CAN_ID] = std::make_pair(
+      this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
+        "as_rx/hazard_lights_cmd", 20,
+        std::bind(&PACMod3Node::callback_hazard_lights_cmd, this, std::placeholders::_1)),
+      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
   }
 
   if (vehicle_type_ == VehicleType::JUPITER_SPIRIT) {
@@ -482,6 +491,11 @@ void PACMod3Node::callback_engine_brake_cmd(const pacmod_msgs::msg::SystemCmdInt
 void PACMod3Node::callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
   lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_hazard_lights_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg)
+{
+  lookup_and_encode(HazardLightCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_horn_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg)

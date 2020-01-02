@@ -57,7 +57,10 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   const std::shared_ptr<lc::LifecyclePublisherInterface> & pub,
   const std::shared_ptr<Pacmod3TxMsg> & parser_class)
 {
-  if (can_id == HornRptMsg::CAN_ID || can_id == ParkingBrakeRptMsg::CAN_ID) {
+  if (can_id == HornRptMsg::CAN_ID ||
+    can_id == ParkingBrakeRptMsg::CAN_ID ||
+    can_id == HazardLightRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::SystemRptBool new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -825,6 +828,15 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     return encoder.data;
   } else if (can_id == ParkingBrakeCmdMsg::CAN_ID) {
     ParkingBrakeCmdMsg encoder;
+    encoder.encode(
+      msg->enable,
+      msg->ignore_overrides,
+      msg->clear_override,
+      msg->clear_faults,
+      msg->command);
+    return encoder.data;
+  } else if (can_id == HazardLightCmdMsg::CAN_ID) {
+    HazardLightCmdMsg encoder;
     encoder.encode(
       msg->enable,
       msg->ignore_overrides,
