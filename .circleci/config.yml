@@ -16,6 +16,7 @@ jobs:
           name: Install Dependencies
           command: |
             git clone https://github.com/astuff/kvaser_interface -b dashing-devel
+            git clone https://github.com/astuff/pacmod3_core
             source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
       - run:
