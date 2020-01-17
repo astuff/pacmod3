@@ -19,14 +19,15 @@
 // THE SOFTWARE.
 
 #include <lifecycle_msgs/msg/state.hpp>
+#include <pacmod3_core/pacmod3_core.hpp>
 
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <tuple>
 #include <utility>
-#include <vector>
 
 #include "pacmod3/pacmod3_node.hpp"
 
@@ -367,9 +368,7 @@ LNI::CallbackReturn PACMod3Node::on_deactivate(const lc::State & state)
 
   // Reset all data in commands to 0
   for (auto & cmd : can_subs_) {
-    auto data = cmd.second.second->getData();
-    std::fill(data.begin(), data.end(), 0);
-    cmd.second.second->setData(std::move(data));
+    cmd.second.second->reset();
   }
 
   return LNI::CallbackReturn::SUCCESS;
@@ -430,8 +429,7 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
   auto pub = can_pubs_.find(msg->id);
 
   if (parser_class != nullptr && pub != can_pubs_.end()) {
-    const std::vector<uint8_t> data_copy(msg->data.begin(), msg->data.end());
-    parser_class->parse(data_copy);
+    parser_class->parse(&(msg->data[0]));
     tx_handler_.fillAndPublish(msg->id, frame_id_, pub->second, parser_class);
 
     if (parser_class->isSystem()) {
@@ -553,8 +551,8 @@ void PACMod3Node::publish_cmds()
       msg->is_rtr = false;
       msg->is_extended = false;
       msg->is_error = false;
-      msg->dlc = data.size();
-      std::move(data.begin(), data.end(), msg->data.begin());
+      msg->dlc = cmd.second.second->getDataLength();
+      std::copy(data->begin(), data->end(), msg->data.begin());
 
       pub_can_rx_->publish(std::move(msg));
 
@@ -620,15 +618,7 @@ void PACMod3Node::publish_all_system_statuses()
 void PACMod3Node::set_enable(bool enable)
 {
   for (auto & cmd : can_subs_) {
-    std::vector<uint8_t> current_data = cmd.second.second->getData();
-
-    if (enable) {
-      current_data[0] |= 0x01;  // Set Enable True
-    } else {
-      current_data[0] &= 0xFE;  // Set Enable False
-    }
-
-    cmd.second.second->setData(std::move(current_data));
+    cmd.second.second->setEnableBit(enable);
   }
 }
 

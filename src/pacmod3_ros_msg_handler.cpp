@@ -20,10 +20,12 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
+#include <pacmod3_core/pacmod3_core.hpp>
 
-#include <vector>
-#include <string>
+#include <algorithm>
+#include <array>
 #include <memory>
+#include <string>
 
 #include "pacmod3/pacmod3_ros_msg_handler.hpp"
 
@@ -33,22 +35,49 @@ namespace pacmod3
 {
 
 LockedData::LockedData(unsigned char data_length)
-: _data(),
-  _data_mut()
+: _data_mut(),
+  _data_length(data_length)
 {
-  _data.assign(data_length, 0);
+  _data = std::shared_ptr<std::array<unsigned char, 8>>(
+    new std::array<unsigned char, 8>{0, 0, 0, 0, 0, 0, 0, 0});
 }
 
-std::vector<unsigned char> LockedData::getData() const
+LockedData::LockedData(unsigned char data_length, std::array<unsigned char, 8> && arr)
+: _data_mut(),
+  _data_length(data_length)
+{
+  _data = std::shared_ptr<std::array<unsigned char, 8>>(&arr);
+}
+
+const std::shared_ptr<const std::array<unsigned char, 8>> LockedData::getData() const
 {
   std::lock_guard<std::mutex> lck(_data_mut);
   return _data;
 }
 
-void LockedData::setData(std::vector<unsigned char> && new_data)
+void LockedData::setData(const std::array<unsigned char, 8> & new_data)
 {
   std::lock_guard<std::mutex> lck(_data_mut);
-  _data = new_data;
+  std::copy(new_data.begin(), new_data.end(), _data->begin());
+}
+
+void LockedData::setEnableBit(bool enable)
+{
+  if (enable) {
+    (*_data)[0] |= 0x01;  // Set Enable True
+  } else {
+    (*_data)[0] &= 0xFE;  // Set Enable False
+  }
+}
+
+void LockedData::reset()
+{
+  std::fill(_data->begin(), _data->end(), 0);
+}
+
+unsigned char LockedData::getDataLength()
+{
+  return _data_length;
 }
 
 void Pacmod3TxRosMsgHandler::fillAndPublish(
@@ -813,7 +842,7 @@ void Pacmod3TxRosMsgHandler::fillYawRateRpt(
 
 
 // Command messages
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::array<uint8_t, 8> Pacmod3RxRosMsgHandler::unpackAndEncode(
   const uint32_t & can_id,
   const pacmod_msgs::msg::SystemCmdBool::SharedPtr & msg)
 {
@@ -845,13 +874,11 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
       msg->command);
     return encoder.data;
   } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
+    return {0, 0, 0, 0, 0, 0, 0, 0};
   }
 }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::array<uint8_t, 8> Pacmod3RxRosMsgHandler::unpackAndEncode(
   const uint32_t & can_id,
   const pacmod_msgs::msg::SystemCmdFloat::SharedPtr & msg)
 {
@@ -874,13 +901,11 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
       msg->command);
     return encoder.data;
   } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
+    return {0, 0, 0, 0, 0, 0, 0, 0};
   }
 }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::array<uint8_t, 8> Pacmod3RxRosMsgHandler::unpackAndEncode(
   const uint32_t & can_id,
   const pacmod_msgs::msg::SystemCmdInt::SharedPtr & msg)
 {
@@ -966,13 +991,11 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
       msg->command);
     return encoder.data;
   } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
+    return {0, 0, 0, 0, 0, 0, 0, 0};
   }
 }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::array<uint8_t, 8> Pacmod3RxRosMsgHandler::unpackAndEncode(
   const uint32_t & can_id,
   const pacmod_msgs::msg::SteerSystemCmd::SharedPtr & msg)
 {
@@ -987,9 +1010,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
       msg->rotation_rate);
     return encoder.data;
   } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
+    return {0, 0, 0, 0, 0, 0, 0, 0};
   }
 }
 

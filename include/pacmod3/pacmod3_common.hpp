@@ -21,8 +21,6 @@
 #ifndef PACMOD3__PACMOD3_COMMON_HPP_
 #define PACMOD3__PACMOD3_COMMON_HPP_
 
-#include "pacmod3/pacmod3_core.hpp"
-
 #include <rclcpp/rclcpp.hpp>
 
 #include <pacmod_msgs/msg/system_cmd_bool.hpp>

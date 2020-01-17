@@ -22,10 +22,11 @@
 #define PACMOD3__PACMOD3_ROS_MSG_HANDLER_HPP_
 
 #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
+#include <pacmod3_core/pacmod3_core.hpp>
 
+#include <array>
 #include <memory>
 #include <string>
-#include <vector>
 
 #include "pacmod3/pacmod3_common.hpp"
 
@@ -38,13 +39,18 @@ class LockedData
 {
 public:
   explicit LockedData(unsigned char data_length);
+  LockedData(unsigned char data_length, std::array<unsigned char, 8> && arr);
 
-  std::vector<unsigned char> getData() const;
-  void setData(std::vector<unsigned char> && new_data);
+  const std::shared_ptr<const std::array<unsigned char, 8>> getData() const;
+  void setData(const std::array<unsigned char, 8> & new_data);
+  void setEnableBit(bool enable);
+  void reset();
+  unsigned char getDataLength();
 
 private:
-  std::vector<unsigned char> _data;
+  std::shared_ptr<std::array<unsigned char, 8>> _data;
   mutable std::mutex _data_mut;
+  unsigned char _data_length;
 };
 
 class Pacmod3TxRosMsgHandler
@@ -174,13 +180,13 @@ private:
 class Pacmod3RxRosMsgHandler
 {
 public:
-  static std::vector<uint8_t> unpackAndEncode(
+  static std::array<uint8_t, 8> unpackAndEncode(
     const uint32_t & can_id, const pacmod_msgs::msg::SystemCmdBool::SharedPtr & msg);
-  static std::vector<uint8_t> unpackAndEncode(
+  static std::array<uint8_t, 8> unpackAndEncode(
     const uint32_t & can_id, const pacmod_msgs::msg::SystemCmdFloat::SharedPtr & msg);
-  static std::vector<uint8_t> unpackAndEncode(
+  static std::array<uint8_t, 8> unpackAndEncode(
     const uint32_t & can_id, const pacmod_msgs::msg::SystemCmdInt::SharedPtr & msg);
-  static std::vector<uint8_t> unpackAndEncode(
+  static std::array<uint8_t, 8> unpackAndEncode(
     const uint32_t & can_id, const pacmod_msgs::msg::SteerSystemCmd::SharedPtr & msg);
 };
 
