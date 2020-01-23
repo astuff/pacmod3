@@ -22,6 +22,12 @@ jobs:
             cd ..
             catkin build
       - run:
+          name: Lint
+          command: |
+            source `find /opt/ros -name setup.bash | sort | head -1`
+            cd ..
+            catkin build pacmod3 --no-deps --make-args roslint
+      - run:
           name: Run Tests
           command: |
             source `find /opt/ros -name setup.bash | sort | head -1`
@@ -49,8 +55,14 @@ jobs:
       - run:
           name: Build
           command: |
+            source `find /opt/ros -name setup.bash | sort | head -1`
             cd ..
             catkin build
+      - run:
+          name: Lint
+          command: |
+            cd ..
+            catkin build pacmod3 --no-deps --make-args roslint
       - run:
           name: Run Tests
           command: |
