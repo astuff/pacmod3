@@ -2,6 +2,72 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.0 (2020-01-23)
+------------------
+* Merge pull request `#59 <https://github.com/astuff/pacmod3/issues/59>`_ from astuff/maint/hybrid_ros1_ros2_msgs
+  ROS1/ROS2 Hybrid Messages
+* CI: Updating CI to build with hybrid messages.
+* Merge pull request `#63 <https://github.com/astuff/pacmod3/issues/63>`_ from astuff/maint/add_engine_report
+  Adding Engine Report
+* Merge pull request `#64 <https://github.com/astuff/pacmod3/issues/64>`_ from astuff/maint/remove_unused_pid_rpts
+  Removing unused PID reports.
+* Adding Hazard Lights Cmd and Rpt Message (`#61 <https://github.com/astuff/pacmod3/issues/61>`_)
+* Merge pull request `#62 <https://github.com/astuff/pacmod3/issues/62>`_ from astuff/maint/make_parse_const
+  Maint/make parse const
+* Merge branch 'master' into maint/make_parse_const
+* Merge pull request `#60 <https://github.com/astuff/pacmod3/issues/60>`_ from astuff/maint/add_gearN_w_avail
+  Add gear number and availability.
+* Use master branch of astuff_sensor_msgs
+* Adding gear number availability and number.
+* Adding Gear number to Shift Aux Report.
+* Make the input to all of the parse functions a const pointer since they shouldn't be modifying the raw data
+* Merge pull request `#57 <https://github.com/astuff/pacmod3/issues/57>`_ from astuff/maint/cpp_11_updates
+  Maint/cpp 11 updates
+* Moving CAN_ID values to header file.
+* Simplifying syntax in pacmod3_node.cpp.
+* Simplifying the can_read function.
+* Simplifying publishers.
+* templatizing lookup_and_encode.
+* Merge pull request `#56 <https://github.com/astuff/pacmod3/issues/56>`_ from astuff/fix/give_cmd_msgs_dlcs
+  Adding DATA_LENGTH. Removing unused code.
+* Merge pull request `#53 <https://github.com/astuff/pacmod3/issues/53>`_ from astuff/feature/freightliner_cascadia
+  Initial Commit - Adding Freightliner Cascadia Trucks
+* Reordering CAN messages, adding cruise control to freightliner.
+* Merge branch 'master' into feature/freightliner_cascadia
+* Adding freightliner specific messages - engine braking, marker lamp, sprayer.
+* Making DATA_LENGTH constexpr.
+* Adding DATA_LENGTH. Removing unused code.
+  DATA_LENGTH is a property which defines the length of the data payload
+  on a given CAN message. This is now used to initialize command message
+  data storage.
+* Merge pull request `#55 <https://github.com/astuff/pacmod3/issues/55>`_ from astuff/feature/door_system_remake
+  Feature/door system remake
+* Merge branch 'master' into feature/freightliner_cascadia
+* Merge pull request `#54 <https://github.com/astuff/pacmod3/issues/54>`_ from astuff/feature/add_Jupiter_Spirit
+  Feature/add jupiter spirit
+* added vehicle Jupiter_Spirit
+* Adding Freightliner Cascadia Trucks
+* Merge pull request `#50 <https://github.com/astuff/pacmod3/issues/50>`_ from astuff/maint/dlc_agnosticism
+  Making driver DLC-agnostic.
+* Merge pull request `#48 <https://github.com/astuff/pacmod3/issues/48>`_ from astuff/maint/add_roslint
+  Maint/add roslint
+* Replaced all int64_t CAN IDs with uint32_ts.
+* Shared Pointers everywhere!
+* Fixing more C-style casts.
+* Lint and copyright clean-up.
+* Update src/pacmod3_ros_msg_handler.cpp
+  Recommendation from @zoakesAStuff
+  Co-Authored-By: JWhitleyAStuff <jwhitley@autonomoustuff.com>
+* CI: Adding catkin_test_results.
+* Added roslint. Implemented suggestions. Changed to raw pointers.
+* Merge pull request `#47 <https://github.com/astuff/pacmod3/issues/47>`_ from astuff/maint/ci_remove_lunar
+  CI: Removing Lunar build AND fixing tests.
+* Merge pull request `#46 <https://github.com/astuff/pacmod3/issues/46>`_ from astuff/maint/can_api_changes
+  Changed motor_rpt_2 scale values to match new dbc
+* Removing DBC. CI: Removing DBC validation.
+* Updating reference to DBC in README.
+* Contributors: Daniel Stanek, Joshua Whitley, Sam Rustan, Sanaz Fattahalhosseini, Zach Oakes, Sneha Ganesh, Mike Lemm
+
 1.2.1 (2018-12-07)
 ------------------
 * Merge pull request `#43 <https://github.com/astuff/pacmod3/issues/43>`_ from astuff/maint/add_urls
