@@ -2,7 +2,7 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
+1.3.1 (2020-01-31)
 ------------------
 * Added missing dependency to package.xml.
 * Contributors: Joshua Whitley
