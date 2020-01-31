@@ -2,6 +2,11 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+------------------
+* Added missing dependency to package.xml.
+* Contributors: Joshua Whitley
+
 1.3.0 (2020-01-27)
 ------------------
 * Ported to ROS2 Dashing
