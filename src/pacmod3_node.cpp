@@ -459,7 +459,7 @@ int main(int argc, char *argv[])
       std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
     rx_list.emplace(
       HornCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+      std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
   }
 
   if (veh_type == VehicleType::FREIGHTLINER_CASCADIA)
