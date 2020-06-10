@@ -227,7 +227,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
                                   dc_parser->input_output_fault |
                                   dc_parser->output_reported_fault |
                                   dc_parser->pacmod_fault |
-                                  dc_parser->vehicle_fault));
+                                  dc_parser->vehicle_fault |
+                                  dc_parser->command_timeout));
     }
 
     if (msg->id == GlobalRptMsg::CAN_ID)
@@ -239,7 +240,19 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       enabled_pub.publish(bool_pub_msg);
 
       if (dc_parser->override_active ||
-          dc_parser->fault_active)
+          dc_parser->pacmod_sys_fault_active)
+        set_enable(false);
+    }
+    else if (msg->id == GlobalRpt2Msg::CAN_ID)
+    {
+      auto dc_parser = std::dynamic_pointer_cast<GlobalRpt2Msg>(parser_class);
+
+      std_msgs::Bool bool_pub_msg;
+      bool_pub_msg.data = (dc_parser->system_enabled);
+      enabled_pub.publish(bool_pub_msg);
+
+      if (dc_parser->system_override_active ||
+          dc_parser->system_fault_active)
         set_enable(false);
     }
     else if (msg->id == VehicleSpeedRptMsg::CAN_ID)
@@ -337,7 +350,7 @@ int main(int argc, char *argv[])
 
   // Populate handler list
   pub_tx_list.emplace(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub));
-  pub_tx_list.emplace(ComponentRptMsg::CAN_ID, std::move(component_rpt_pub));
+  pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt_pub));
   pub_tx_list.emplace(AccelRptMsg::CAN_ID, std::move(accel_rpt_pub));
   pub_tx_list.emplace(BrakeRptMsg::CAN_ID, std::move(brake_rpt_pub));
   pub_tx_list.emplace(ShiftRptMsg::CAN_ID, std::move(shift_rpt_pub));
@@ -516,11 +529,8 @@ int main(int argc, char *argv[])
   {
     ros::Publisher detected_object_rpt_pub =
       n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
-    ros::Publisher vehicle_dynamics_rpt_pub =
-      n.advertise<pacmod_msgs::VehicleDynamicsRpt>("parsed_tx/vehicle_dynamics_rpt", 20);
 
     pub_tx_list.emplace(DetectedObjectRptMsg::CAN_ID, std::move(detected_object_rpt_pub));
-    pub_tx_list.emplace(VehicleDynamicsRptMsg::CAN_ID, std::move(vehicle_dynamics_rpt_pub));
   }
 
   if (veh_type == VehicleType::VEHICLE_5)
@@ -542,7 +552,7 @@ int main(int argc, char *argv[])
 
   // Initialize Turn Signal with non-0 value
   TurnSignalCmdMsg turn_encoder;
-  turn_encoder.encode(false, false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+  turn_encoder.encode(false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
   rx_list[TurnSignalCmdMsg::CAN_ID]->setData(std::move(turn_encoder.data));
 
   // Set initial state

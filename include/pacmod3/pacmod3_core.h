@@ -36,7 +36,7 @@ namespace PACMod3
 {
 
 /***  Enum Classes   ***/
-  enum class ComponentType
+  enum ComponentType
   {
     PACMOD = 0,
     PACMINI = 1,
@@ -44,7 +44,7 @@ namespace PACMod3
     NONE = 255
   };
 
-  enum class DimLevel
+  enum DimLevel
   {
     DIM_LEVEL_MIN = 0,
     DIM_LEVEL_1 = 1,
@@ -58,10 +58,22 @@ namespace PACMod3
     DIM_LEVEL_9 = 9,
     DIM_LEVEL_10 = 10,
     DIM_LEVEL_11 = 11,
-    DIM_LEVEL_MAX = 12
+    DIM_LEVEL_MAX = 12,
+    DIM_LEVEL_12 = 13,
+    DIM_LEVEL_13 = 14,
+    DIM_LEVEL_14 = 15,
+    DIM_LEVEL_15 = 16,
+    DIM_LEVEL_16 = 17,
+    DIM_LEVEL_17 = 18,
+    DIM_LEVEL_18 = 19,
+    DIM_LEVEL_19 = 20,
+    DIM_LEVEL_20 = 21,
+    DIM_LEVEL_21 = 22,
+    DIM_LEVEL_22 = 23,
+    DIM_LEVEL_23 = 24
   };
 
-  enum class Gears : int8_t
+  enum Gears : int8_t
   {
     R_TENTH = -10,
     R_NINTH = -9,
@@ -94,7 +106,7 @@ namespace PACMod3
     EIGHTEENTH = 18
   };
 
-  enum class HeadlightSystemState
+  enum HeadlightSystemState
   {
     HEADLIGHTS_SYSTEM_OFF = 0,
     HEADLIGHTS_SYSTEM_PARKING = 1,
@@ -102,7 +114,7 @@ namespace PACMod3
     HEADLIGHTS_SYSTEM_AUTO = 3
   };
 
-  enum class VehicleType
+  enum VehicleType
   {
     FREIGHTLINER_CASCADIA,
     INTERNATIONAL_PROSTAR_122,
@@ -115,14 +127,14 @@ namespace PACMod3
     VEHICLE_6
   };
 
-  enum class XBR_EBI_Mode
+  enum XBR_EBI_Mode
   {
     NO_ENDURANCE_BRAKE_INTEGRATION_ALLOWED = 0,
     ONLY_ENDURANCE_BRAKES_ALLOWED = 1,
     ENDURANCE_BRAKE_INTEGRATION_ALLOWED = 2
   };
 
-  enum class XBRPriority
+  enum XBRPriority
   {
     HIGHEST_PRIORITY = 0,
     HIGH_PRIORITY = 1,
@@ -130,14 +142,14 @@ namespace PACMod3
     LOW_PRIORITY = 3
   };
 
-  enum class XBRControlMode
+  enum XBRControlMode
   {
     OVERRIDE_DISABLE = 0,
     ACCELERATION_CONTROL_WITH_ADDITION_MODE = 1,
     ACCELERATION_CONTROL_WITH_MAXIMUM_MODE = 2
   };
 
-  enum class XBRActiveControlMode
+  enum XBRActiveControlMode
   {
     NO_BRAKE_DEMAND = 0,
     DRIVERS_BRAKE_DEMAND = 1,
@@ -145,19 +157,19 @@ namespace PACMod3
     MAXIMUM_MODE_OF_XBR_ACCELERATION_CONTROL = 3
   };
 
-  enum class XBRSystemState
+  enum XBRSystemState
   {
     ANY_EXTERNAL_BRAKE_DEMAND_WILL_BE_ACCEPTED = 0,
     NO_EXTERNAL_BRAKE_DEMAND_WILL_BE_ACCEPTED = 2
   };
 
-  enum class FoundationBrakeState
+  enum FoundationBrakeState
   {
     FOUNDATION_BRAKES_NOT_IN_USE = 0,
     FOUNDATION_BRAKES_IN_USE = 1
   };
 
-  enum class HillHolderMode
+  enum HillHolderMode
   {
     INACTIVE = 0,
     ACTIVE = 1,
@@ -170,7 +182,7 @@ namespace PACMod3
   class Pacmod3RxMsg
   {
     public:
-      std::array<uint8_t, 8> data = {0, 0, 0, 0, 0, 0, 0, 0};
+      std::vector<uint8_t> data;
   };
 
   class Pacmod3TxMsg
@@ -297,7 +309,7 @@ namespace PACMod3
         bool media_controls;
         bool parking_brake;
         bool shift;
-        bool spray;
+        bool sprayer;
         bool steering;
         bool turn;
         bool wiper;
@@ -306,6 +318,9 @@ namespace PACMod3
         bool rear_pass_door;
         bool engine_brake;
         bool marker_lamp;
+        bool cabin_climate;
+        bool cabin_fan_speed;
+        bool cabin_temp;
 
         uint8_t counter;
         uint8_t complement;
@@ -392,10 +407,25 @@ namespace PACMod3
         bool brake_can_timeout;
         bool subsystem_can_timeout;
         bool vehicle_can_timeout;
-        bool fault_active;
+        bool pacmod_sys_fault_active;
         bool supervisory_enable_required;
         bool config_fault_active;
         uint16_t user_can_read_errors;
+
+        void parse(const uint8_t * in);
+    };
+
+    class GlobalRpt2Msg : public Pacmod3TxMsg
+    {
+      public:
+        GlobalRpt2Msg();
+
+        static constexpr uint32_t CAN_ID = 0x11;
+
+        bool system_enabled;
+        bool system_override_active;
+        bool system_fault_active;
+        bool supervisory_enable_required;
 
         void parse(const uint8_t * in);
     };
@@ -679,11 +709,7 @@ namespace PACMod3
 
         static constexpr uint32_t CAN_ID = 0x300;
 
-        float raw_pedal_pos;
-        float raw_pedal_force;
         bool operator_interaction;
-        bool raw_pedal_pos_avail;
-        bool raw_pedal_force_avail;
         bool operator_interaction_avail;
 
         void parse(const uint8_t * in);
@@ -696,14 +722,10 @@ namespace PACMod3
 
         static constexpr uint32_t CAN_ID = 0x304;
 
-        float raw_pedal_pos;
-        float raw_pedal_force;
-        float raw_brake_pressure;
+        float brake_pressure;
         bool operator_interaction;
         bool brake_on_off;
-        bool raw_pedal_pos_avail;
-        bool raw_pedal_force_avail;
-        bool raw_brake_pressure_avail;
+        bool brake_pressure_avail;
         bool operator_interaction_avail;
         bool brake_on_off_avail;
 
@@ -779,16 +801,16 @@ namespace PACMod3
 
         static constexpr uint32_t CAN_ID = 0x32C;
 
-        float raw_position;
-        float raw_torque;
+        float steering_torque;
         float rotation_rate;
         bool operator_interaction;
         bool rotation_rate_sign;
-        bool raw_position_avail;
-        bool raw_torque_avail;
+        bool vehicle_angle_calib_status;
+        bool steering_torque_avail;
         bool rotation_rate_avail;
         bool operator_interaction_avail;
         bool rotation_rate_sign_avail;
+        bool vehicle_angle_calib_status_avail;
 
         void parse(const uint8_t * in);
     };
@@ -976,9 +998,9 @@ namespace PACMod3
 
         static constexpr uint32_t CAN_ID = 0x41A;
 
-        bool pitch_new_data_x;
-        bool roll_new_data_x;
-        bool yaw_new_data_x;
+        bool pitch_new_data_rx;
+        bool roll_new_data_rx;
+        bool yaw_new_data_rx;
         bool pitch_valid;
         bool roll_valid;
         bool yaw_valid;
@@ -1075,6 +1097,8 @@ namespace PACMod3
         bool engine_speed_avail;
         bool engine_torque_avail;
         bool engine_coolant_temp_avail;
+        bool fuel_level_avail;
+        double fuel_level;
 
         void parse(const uint8_t * in);
     };
@@ -1087,13 +1111,16 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x416;
 
         bool front_dome_lights_on;
-        bool front_dome_lights_on_avail;
         bool rear_dome_lights_on;
-        bool rear_dome_lights_on_avail;
         bool mood_lights_on;
-        bool mood_lights_on_avail;
+        bool ambient_light_sensor;
         DimLevel dim_level;
+
+        bool front_dome_lights_on_avail;
+        bool rear_dome_lights_on_avail;
+        bool mood_lights_on_avail;
         bool dim_level_avail;
+        bool ambient_light_sensor_avail;
 
         void parse(const uint8_t * in);
     };
@@ -1144,17 +1171,21 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x415;
 
         bool driver_seat_occupied;
-        bool driver_seat_occupied_avail;
         bool passenger_seat_occupied;
-        bool passenger_seat_occupied_avail;
         bool rear_seat_occupied;
-        bool rear_seat_occupied_avail;
         bool driver_seatbelt_buckled;
-        bool driver_seatbelt_buckled_avail;
         bool passenger_seatbelt_buckled;
+        bool driver_rear_seatbelt_buckled;
+        bool pass_rear_seatbelt_buckled;
+        bool center_rear_seatbelt_buckled;
+        bool driver_seat_occupied_avail;
+        bool passenger_seat_occupied_avail;
+        bool rear_seat_occupied_avail;
+        bool driver_seatbelt_buckled_avail;
         bool passenger_seatbelt_buckled_avail;
-        bool rear_seatbelt_buckled;
-        bool rear_seatbelt_buckled_avail;
+        bool driver_rear_seatbelt_buckled_avail;
+        bool pass_rear_seatbelt_buckled_avail;
+        bool center_rear_seatbelt_buckled_avail;
 
         void parse(const uint8_t * in);
     };

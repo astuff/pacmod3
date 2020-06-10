@@ -30,6 +30,7 @@ namespace PACMod3
 // Global
 constexpr uint32_t GlobalCmdMsg::CAN_ID;
 constexpr uint32_t GlobalRptMsg::CAN_ID;
+constexpr uint32_t GlobalRpt2Msg::CAN_ID;
 constexpr uint32_t SupervisoryCtrlMsg::CAN_ID;
 
 // System Commands
@@ -162,6 +163,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
         break;
       case GlobalRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
+        break;
+      case GlobalRpt2Msg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new GlobalRpt2Msg);
         break;
       case HeadlightRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new HeadlightRptMsg);
@@ -372,6 +376,18 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       output(0)
     {}
 
+    void SystemCmdLimitRpt::parse(const uint8_t * in)
+    {
+      int16_t temp;
+
+      temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
+      sys_cmd_limit = static_cast<double>(temp / 1000.0);
+
+      temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
+      limited_sys_cmd = static_cast<double>(temp / 1000.0);
+
+    }
+
     void SystemRptBoolMsg::parse(const uint8_t * in)
     {
       enabled = ((in[0] & 0x01) > 0);
@@ -381,6 +397,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       output_reported_fault = ((in[0] & 0x10) > 0);
       pacmod_fault = ((in[0] & 0x20) > 0);
       vehicle_fault = ((in[0] & 0x40) > 0);
+      command_timeout = ((in[0] & 0x80) > 0);
 
       manual_input = ((in[1] & 0x01) > 0);
       command = ((in[2] & 0x01) > 0);
@@ -396,6 +413,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       output_reported_fault = ((in[0] & 0x10) > 0);
       pacmod_fault = ((in[0] & 0x20) > 0);
       vehicle_fault = ((in[0] & 0x40) > 0);
+      command_timeout = ((in[0] & 0x80) > 0);
 
       manual_input = in[1];
       command = in[2];
@@ -411,6 +429,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       output_reported_fault = ((in[0] & 0x10) > 0);
       pacmod_fault = ((in[0] & 0x20) > 0);
       vehicle_fault = ((in[0] & 0x40) > 0);
+      command_timeout = ((in[0] & 0x80) > 0);
 
       int16_t temp;
 
@@ -438,7 +457,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       media_controls(false),
       parking_brake(false),
       shift(false),
-      spray(false),
+      sprayer(false),
       steering(false),
       turn(false),
       wiper(false),
@@ -447,6 +466,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       rear_pass_door(false),
       engine_brake(false),
       marker_lamp(false),
+      cabin_climate(false),
+      cabin_fan_speed(false),
+      cabin_temp(false),
       counter(0),
       complement(15),
       config_fault(false),
@@ -458,10 +480,44 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
     void ComponentRptMsg::parse(const uint8_t * in)
     {
-      component_type = static_cast<ComponentType>(in[0]);
-      counter = in[2] & 0x0F;
-      complement = ((in[2] & 0xF0) >> 4);
-      config_fault = ((in[3] & 0x01) > 0);
+      component_type = static_cast<ComponentType>(in[0] & 0x0F);
+
+      accel = ((in[0] & 0x10) > 0);
+      brake = ((in[0] & 0x20) > 0);
+      cruise_control_buttons = ((in[0] & 0x40) > 0);
+      dash_controls_left = ((in[0] & 0x80) > 0);
+
+      dash_controls_right = ((in[1] & 0x01) > 0);
+      hazard_lights = ((in[1] & 0x02) > 0);
+      headlight = ((in[1] & 0x04) > 0);
+      horn = ((in[1] & 0x08) > 0);
+      media_controls = ((in[1] & 0x10) > 0);
+      parking_brake = ((in[1] & 0x20) > 0);
+      shift = ((in[1] & 0x40) > 0);
+      sprayer = ((in[1] & 0x80) > 0);
+
+      steering = ((in[2] & 0x01) > 0);
+      turn = ((in[2] & 0x02) > 0);
+      wiper = ((in[2] & 0x04) > 0);
+      watchdog = ((in[2] & 0x08) > 0);
+      brake_deccel = ((in[2] & 0x10) > 0);
+      rear_pass_door = ((in[2] & 0x20) > 0);
+      engine_brake = ((in[2] & 0x40) > 0);
+      marker_lamp = ((in[2] & 0x80) > 0);
+
+      cabin_climate = ((in[3] & 0x01) > 0);
+      cabin_fan_speed = ((in[3] & 0x02) > 0);
+      cabin_temp = ((in[3] & 0x04) > 0);
+
+      counter = in[4] & 0x0F;
+      complement = ((in[4] & 0xF0) >> 4);
+      
+      config_fault = ((in[5] & 0x01) > 0);
+      can_timeout_fault = ((in[5] & 0x02) > 0);
+      internal_supply_voltage_fault = ((in[5] & 0x04) > 0);
+      supervisory_timeout = ((in[5] & 0x08) > 0);
+      supervisory_sanity_fault = ((in[5] & 0x10) > 0);
+
     }
 
     SoftwareVerRptMsg::SoftwareVerRptMsg() :
@@ -638,7 +694,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       brake_can_timeout(false),
       subsystem_can_timeout(false),
       vehicle_can_timeout(false),
-      fault_active(false),
+      pacmod_sys_fault_active(false),
       supervisory_enable_required(false),
       config_fault_active(false),
       user_can_read_errors(0)
@@ -648,53 +704,52 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     {
       enabled = in[0] & 0x01;
       override_active = ((in[0] & 0x02) > 0);
-      fault_active = ((in[0] & 0x80) > 0);
-      config_fault_active = ((in[1] & 0x01) > 0);
       user_can_timeout = ((in[0] & 0x04) > 0);
       steering_can_timeout = ((in[0] & 0x08) > 0);
       brake_can_timeout = ((in[0] & 0x10) > 0);
       subsystem_can_timeout = ((in[0] & 0x20) > 0);
       vehicle_can_timeout = ((in[0] & 0x40) > 0);
+      pacmod_sys_fault_active = ((in[0] & 0x80) > 0);
+      supervisory_enable_required = ((in[1] & 0x02) > 0);
+      config_fault_active = ((in[1] & 0x01) > 0);
       user_can_read_errors = ((in[6] << 8) | in[7]);
+    }
+
+    GlobalRpt2Msg::GlobalRpt2Msg() :
+      Pacmod3TxMsg(),
+      system_enabled(false),
+      system_override_active(false),
+      system_fault_active(false),
+      supervisory_enable_required(false)
+    {}
+
+    void GlobalRpt2Msg::parse(const uint8_t * in)
+    {
+      system_enabled = in[0] & 0x01;
+      system_override_active = ((in[0] & 0x02) > 0);
+      system_fault_active = ((in[0] & 0x04) > 0);
+      supervisory_enable_required = ((in[0] & 0x08) > 0);
     }
 
   // Aux Reports
     AccelAuxRptMsg::AccelAuxRptMsg() :
       Pacmod3TxMsg(),
-      raw_pedal_pos(0),
-      raw_pedal_force(0),
       operator_interaction(false),
-      raw_pedal_pos_avail(false),
-      raw_pedal_force_avail(false),
       operator_interaction_avail(false)
     {}
 
     void AccelAuxRptMsg::parse(const uint8_t * in)
     {
-      int16_t temp;
-
-      temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-      raw_pedal_pos = static_cast<float>(temp / 1000.0);
-
-      temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-      raw_pedal_force = static_cast<float>(temp / 1000.0);
-
       operator_interaction = (in[4] & 0x01) > 0;
-      raw_pedal_pos_avail = (in[5] & 0x01) > 0;
-      raw_pedal_force_avail = (in[5] & 0x02) > 0;
       operator_interaction_avail = (in[5] & 0x04) > 0;
     }
 
     BrakeAuxRptMsg::BrakeAuxRptMsg() :
       Pacmod3TxMsg(),
-      raw_pedal_pos(0),
-      raw_pedal_force(0),
-      raw_brake_pressure(0),
+      brake_pressure(0),
       operator_interaction(false),
       brake_on_off(false),
-      raw_pedal_pos_avail(false),
-      raw_pedal_force_avail(false),
-      raw_brake_pressure_avail(false),
+      brake_pressure_avail(false),
       operator_interaction_avail(false),
       brake_on_off_avail(false)
     {}
@@ -703,20 +758,12 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     {
       int16_t temp;
 
-      temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-      raw_pedal_pos = static_cast<float>(temp / 1000.0);
-
-      temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-      raw_pedal_force = static_cast<float>(temp / 1000.0);
-
       temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
-      raw_brake_pressure = static_cast<float>(temp / 1000.0);
+      brake_pressure = static_cast<float>(temp / 1000.0);
 
       operator_interaction = (in[6] & 0x01) > 0;
       brake_on_off = (in[6] & 0x02) > 0;
-      raw_pedal_pos_avail = (in[7] & 0x01) > 0;
-      raw_pedal_force_avail = (in[7] & 0x02) > 0;
-      raw_brake_pressure_avail = (in[7] & 0x04) > 0;
+      brake_pressure_avail = (in[7] & 0x04) > 0;
       operator_interaction_avail = (in[7] & 0x08) > 0;
       brake_on_off_avail = (in[7] & 0x10) > 0;
     }
@@ -795,27 +842,24 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
     SteerAuxRptMsg::SteerAuxRptMsg() :
       Pacmod3TxMsg(),
-      raw_position(0),
-      raw_torque(0),
+      steering_torque(0),
       rotation_rate(0),
       operator_interaction(false),
       rotation_rate_sign(false),
-      raw_position_avail(false),
-      raw_torque_avail(false),
+      vehicle_angle_calib_status(false),
+      steering_torque_avail(false),
       rotation_rate_avail(false),
       operator_interaction_avail(false),
-      rotation_rate_sign_avail(false)
+      rotation_rate_sign_avail(false),
+      vehicle_angle_calib_status_avail(false)
     {}
 
     void SteerAuxRptMsg::parse(const uint8_t * in)
     {
       int16_t temp;
 
-      temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-      raw_position = temp / 10.0;
-
       temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-      raw_torque = temp / 10.0;
+      steering_torque = temp / 10.0;
 
       uint16_t temp2;
 
@@ -823,10 +867,15 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       rotation_rate = temp2 / 100.0;
 
       operator_interaction = (in[6] & 0x01) > 0;
-      raw_position_avail = (in[7] & 0x01) > 0;
-      raw_torque_avail = (in[7] & 0x02) > 0;
+      // rotation_rate_sign = > 0;
+      // vehicle_angle_calib_status = > 0;
+
+      steering_torque_avail = (in[7] & 0x02) > 0;
       rotation_rate_avail = (in[7] & 0x04) > 0;
-      operator_interaction_avail = (in[7] & 0x08) > 0;
+      // operator_interaction_avail = () > 0;
+      // rotation_rate_sign_avail = () > 0;
+      // vehicle_angle_calib_status_avail = () > 0;
+
     }
 
     TurnAuxRptMsg::TurnAuxRptMsg() :
@@ -878,6 +927,41 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     }
 
   // Misc. Reports
+
+    AngVelRptMsg::AngVelRptMsg() :
+      Pacmod3TxMsg(),
+      pitch_new_data_rx(false),
+      roll_new_data_rx(false),
+      yaw_new_data_rx(false),
+      pitch_valid(false),
+      roll_valid(false),
+      yaw_valid(false),
+      pitch_vel(0),
+      roll_vel(0),
+      yaw_vel(0)
+    {}
+
+    void AngVelRptMsg::parse(const uint8_t * in)
+    {
+      int16_t temp;
+
+      pitch_new_data_rx = (in[0] & 0x01) > 0;
+      roll_new_data_rx = (in[0] & 0x02) > 0;
+      yaw_new_data_rx = (in[0] & 0x04) > 0;
+      pitch_valid = (in[0] & 0x08) > 0;
+      roll_valid = (in[0] & 0x10) > 0;
+      yaw_valid = (in[0] & 0x20) > 0;
+
+      temp = ((static_cast<int16_t>(in[1]) << 8) | in[2]);
+      pitch_vel = static_cast<double>(temp / 1000.0);
+
+      temp = ((static_cast<int16_t>(in[3]) << 8) | in[4]);
+      roll_vel = static_cast<double>(temp / 1000.0);
+
+      temp = ((static_cast<int16_t>(in[5]) << 8) | in[6]);
+      yaw_vel = static_cast<double>(temp / 1000.0);
+    }
+
     DateTimeRptMsg::DateTimeRptMsg() :
       Pacmod3TxMsg(),
       year(0),
@@ -959,7 +1043,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       engine_coolant_temp(0),
       engine_speed_avail(false),
       engine_torque_avail(false),
-      engine_coolant_temp_avail(false)
+      engine_coolant_temp_avail(false),
+      fuel_level_avail(false),
+      fuel_level(0)
     {}
 
     void EngineRptMsg::parse(const uint8_t * in)
@@ -968,25 +1054,30 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     InteriorLightsRptMsg::InteriorLightsRptMsg() :
       Pacmod3TxMsg(),
       front_dome_lights_on(false),
-      front_dome_lights_on_avail(false),
       rear_dome_lights_on(false),
-      rear_dome_lights_on_avail(false),
       mood_lights_on(false),
-      mood_lights_on_avail(false),
+      ambient_light_sensor(false),
       dim_level(DimLevel::DIM_LEVEL_MIN),
-      dim_level_avail(false)
+      front_dome_lights_on_avail(false),
+      rear_dome_lights_on_avail(false),
+      mood_lights_on_avail(false),
+      dim_level_avail(false),
+      ambient_light_sensor_avail(false)
     {}
 
     void InteriorLightsRptMsg::parse(const uint8_t * in)
     {
       front_dome_lights_on = ((in[0] & 0x01) > 0);
-      front_dome_lights_on_avail = ((in[2] & 0x01) > 0);
       rear_dome_lights_on = ((in[0] & 0x02) > 0);
-      rear_dome_lights_on_avail = ((in[2] & 0x02) > 0);
       mood_lights_on = ((in[0] & 0x04) > 0);
-      mood_lights_on_avail = ((in[2] & 0x04) > 0);
+      ambient_light_sensor = ((in[0] & 0x04) > 0);
       dim_level = static_cast<DimLevel>(in[1]);
+
+      front_dome_lights_on_avail = ((in[2] & 0x01) > 0);
+      rear_dome_lights_on_avail = ((in[2] & 0x02) > 0);
+      mood_lights_on_avail = ((in[2] & 0x04) > 0);
       dim_level_avail = ((in[2] & 0x08) > 0);
+      ambient_light_sensor_avail = ((in[2] & 0x10) > 0);
     }
 
     LatLonHeadingRptMsg::LatLonHeadingRptMsg() :
@@ -1031,33 +1122,43 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     OccupancyRptMsg::OccupancyRptMsg() :
       Pacmod3TxMsg(),
       driver_seat_occupied(false),
-      driver_seat_occupied_avail(false),
       passenger_seat_occupied(false),
-      passenger_seat_occupied_avail(false),
       rear_seat_occupied(false),
-      rear_seat_occupied_avail(false),
       driver_seatbelt_buckled(false),
-      driver_seatbelt_buckled_avail(false),
       passenger_seatbelt_buckled(false),
+      driver_rear_seatbelt_buckled(false),
+      pass_rear_seatbelt_buckled(false),
+      center_rear_seatbelt_buckled(false),
+      driver_seat_occupied_avail(false),
+      passenger_seat_occupied_avail(false),
+      rear_seat_occupied_avail(false),
+      driver_seatbelt_buckled_avail(false),
       passenger_seatbelt_buckled_avail(false),
-      rear_seatbelt_buckled(false),
-      rear_seatbelt_buckled_avail(false)
+      driver_rear_seatbelt_buckled_avail(false),
+      pass_rear_seatbelt_buckled_avail(false),
+      center_rear_seatbelt_buckled_avail(false)
     {}
 
     void OccupancyRptMsg::parse(const uint8_t * in)
     {
       driver_seat_occupied = ((in[0] & 0x01) > 0);
-      driver_seat_occupied_avail = ((in[1] & 0x01) > 0);
       passenger_seat_occupied = ((in[0] & 0x02) > 0);
-      passenger_seat_occupied_avail = ((in[1] & 0x02) > 0);
       rear_seat_occupied = ((in[0] & 0x04) > 0);
-      rear_seat_occupied_avail = ((in[1] & 0x04) > 0);
       driver_seatbelt_buckled = ((in[0] & 0x08) > 0);
-      driver_seatbelt_buckled_avail = ((in[1] & 0x08) > 0);
       passenger_seatbelt_buckled = ((in[0] & 0x10) > 0);
+      driver_rear_seatbelt_buckled = ((in[0] & 0x20) > 0);
+      pass_rear_seatbelt_buckled = ((in[0] & 0x40) > 0);
+      center_rear_seatbelt_buckled = ((in[0] & 0x80) > 0);
+
+      driver_seat_occupied_avail = ((in[1] & 0x01) > 0);
+      passenger_seat_occupied_avail = ((in[1] & 0x02) > 0);
+      rear_seat_occupied_avail = ((in[1] & 0x04) > 0);
+      driver_seatbelt_buckled_avail = ((in[1] & 0x08) > 0);
       passenger_seatbelt_buckled_avail = ((in[1] & 0x10) > 0);
-      rear_seatbelt_buckled = ((in[0] & 0x20) > 0);
-      rear_seatbelt_buckled_avail = ((in[1] & 0x20) > 0);
+      driver_rear_seatbelt_buckled_avail = ((in[1] & 0x20) > 0);
+      pass_rear_seatbelt_buckled_avail = ((in[1] & 0x40) > 0);
+      center_rear_seatbelt_buckled_avail = ((in[1] & 0x80) > 0);
+
     }
 
     RearLightsRptMsg::RearLightsRptMsg() :
