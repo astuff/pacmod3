@@ -41,7 +41,7 @@ namespace PACMod3
     PACMOD = 0,
     PACMINI = 1,
     PACMICRO = 2,
-    NONE = 255
+    NONE = 15
   };
 
   enum DimLevel
@@ -177,6 +177,57 @@ namespace PACMod3
     ERROR = 6
   };
 
+  enum SafetyFunctionCommand
+  {
+    CMD_NONE = 0,
+    CMD_AUTO_READY = 1,
+    CMD_AUTO = 2,
+    CMD_MANUAL_READY = 3,
+    CMD_CRITICAL_STOP1 = 4,
+    CMD_CRITICAL_STOP = 5
+  };
+
+  enum SafetyFunctionState
+  {
+    MANUAL_BRAKED_STATE = 0,
+    MANUAL_UNBRAKED_STATE = 1,
+    AUTO_READY_STATE = 2,
+    AUTO_INACTIVE_STATE = 3,
+    AUTO_ACTIVE_BRAKED_STATE = 4,
+    AUTO_ACTIVE_UNBRAKED_STATE = 5,
+    MANUAL_READY_STATE = 6,
+    CRITICAL_STOP1_STATE = 7,
+    CRITICAL_STOP2_STATE = 8,
+    STARTUP_STATE = 9
+  };
+
+  enum AutoManualOpCtrl
+  {
+    AUTO_MAN_INVALID = 0,
+    AUTO_MAN_MANUAL = 1,
+    AUTO_MAN_AUTO = 2
+  };
+  
+  enum CabinSafetyBrakeState
+  {
+    CABIN_BRAKE_INVALID = 0,
+    CABIN_BRAKE_APPLIED = 1,
+    CABIN_BRAKE_UNAPPLIED = 2
+  };
+
+  enum RemoteStopState
+  {
+    REMOTE_STOP_STATE_INVALID = 0,
+    REMOTE_STOP_STATE_GO = 1,
+    REMOTE_STOP_STATE_STOP = 2
+  };
+
+  enum SafetyFuncFaults
+  {
+    OKAY = 0,
+    FAULT = 1,
+    TIMEOUT = 2
+  };
 
 /***  Message Classes  ***/
   class Pacmod3RxMsg
@@ -227,10 +278,10 @@ namespace PACMod3
                     uint8_t cmd);
     };
 
-    class SystemCmdLimitRpt : public  Pacmod3TxMsg
+    class SystemCmdLimitRptMsg : public  Pacmod3TxMsg
     {
       public:
-        SystemCmdLimitRpt();
+        SystemCmdLimitRptMsg();
 
         double sys_cmd_limit;
         double limited_sys_cmd;
@@ -472,6 +523,24 @@ namespace PACMod3
                     XBRControlMode xbr_control_mode);
     };
 
+    class CabinClimateCmdMsg : public Pacmod3RxMsg
+    {
+      public:
+        static constexpr uint8_t DATA_LENGTH = 3;
+
+        static constexpr uint32_t CAN_ID = 0x154;
+
+        void encode(bool enable,
+                    bool ignore_overrides,
+                    bool clear_override,
+                    uint8_t cmd_ac_off_on,
+                    uint8_t cmd_max_ac_off_on,
+                    uint8_t cmd_defrost_off_on,
+                    uint8_t cmd_max_defrost_off_on,
+                    uint8_t cmd_dir_up_off_on,
+                    uint8_t cmd_dir_down_off_on);
+    };
+
     class CruiseControlButtonsCmdMsg : public SystemCmdInt
     {
       public:
@@ -536,6 +605,26 @@ namespace PACMod3
     {
       public:
         static constexpr uint32_t CAN_ID = 0x140;
+    };
+
+    class SafetyBrakeCmdMsg : public Pacmod3RxMsg
+    {
+      public:
+        static constexpr uint8_t DATA_LENGTH = 1;
+
+        static constexpr uint32_t CAN_ID = 0xC1;
+
+        void encode(bool safety_brake_cmd);
+    };
+
+    class SafetyFuncCmdMsg : public Pacmod3RxMsg
+    {
+      public:
+        static constexpr uint8_t DATA_LENGTH = 1;
+
+        static constexpr uint32_t CAN_ID = 0xC0;
+
+        void encode(SafetyFunctionCommand command);
     };
 
     class ShiftCmdMsg : public SystemCmdInt
@@ -605,6 +694,35 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x23C;
     };
 
+    class CabinClimateRptMsg : public SystemRptMsg
+    {
+      public:
+        CabinClimateRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x254;
+
+        uint8_t man_ac_off_on;
+        uint8_t man_max_ac_off_on;
+        uint8_t man_defrost_off_on;
+        uint8_t man_max_defrost_off_on;
+        uint8_t man_dir_up_off_on;
+        uint8_t man_dir_down_off_on;
+        uint8_t cmd_ac_off_on;
+        uint8_t cmd_max_ac_off_on;
+        uint8_t cmd_defrost_off_on;
+        uint8_t cmd_max_defrost_off_on;
+        uint8_t cmd_dir_up_off_on;
+        uint8_t cmd_dir_down_off_on;
+        uint8_t out_ac_off_on;
+        uint8_t out_max_ac_off_on;
+        uint8_t out_defrost_off_on;
+        uint8_t out_max_defrost_off_on;
+        uint8_t out_dir_up_off_on;
+        uint8_t out_dir_down_off_on;
+
+        void parse(const uint8_t * in);
+    };
+
     class CruiseControlButtonsRptMsg : public SystemRptIntMsg
     {
       public:
@@ -670,6 +788,51 @@ namespace PACMod3
       public:
         static constexpr uint32_t CAN_ID = 0x240;
     };
+
+    class SafetyBrakeRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        SafetyBrakeRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x41;
+
+        bool commanded_val;
+        bool output_val;
+        bool reported_fault;
+        bool cmd_reported_fault;
+        bool cmd_timeout;
+        bool cmd_permitted;
+
+        void parse(const uint8_t * in);
+    };
+
+    class SafetyFuncRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        SafetyFuncRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x40;
+
+        SafetyFunctionCommand commanded_value;
+        SafetyFunctionState state;
+        AutoManualOpCtrl automanual_opctrl;
+        CabinSafetyBrakeState cabin_safety_brake;
+        RemoteStopState remote_stop_status;
+        bool engine_status;
+        bool pacmod_system_status;
+        SafetyFuncFaults user_pc_fault;
+        SafetyFuncFaults pacmod_system_fault;
+        SafetyFuncFaults vehicle_fault;
+        bool manual_state_obtainable;
+        bool auto_ready_state_obtainable;
+        bool auto_state_obtainable;
+        bool manual_ready_state_obtainable;
+        bool critical_stop1_state_obtainable;
+        bool critical_stop2_state_obtainable;
+
+        void parse(const uint8_t * in);
+    };
+    
 
     class ShiftRptMsg : public SystemRptIntMsg
     {
@@ -1084,6 +1247,23 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
 
+    class DriveTrainRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        DriveTrainRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x41F;
+
+        bool antilock_brake_active;
+        bool traction_control_active;
+        bool four_wheel_drive_active;
+        bool antilock_brake_active_avail;
+        bool traction_control_active_avail;
+        bool four_wheel_drive_active_avail;
+
+        void parse(const uint8_t * in);
+    };
+
     class EngineRptMsg : public Pacmod3TxMsg
     {
       public:
@@ -1280,13 +1460,13 @@ namespace PACMod3
     };
 
 
-    class AccelCmdLimitRptMsg : public SystemCmdLimitRpt
+    class AccelCmdLimitRptMsg : public SystemCmdLimitRptMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x201;
     };
 
-    class BrakeCmdLimitRptMsg : public SystemCmdLimitRpt
+    class BrakeCmdLimitRptMsg : public SystemCmdLimitRptMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x205;

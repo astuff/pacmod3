@@ -85,6 +85,20 @@ private:
       pacmod_msgs::MotorRpt3 * new_msg,
       const std::string& frame_id);
 
+  void fillCabinClimateRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::CabinClimateRpt * new_msg,
+      const std::string& frame_id);
+  void fillSafetyBrakeRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::SafetyBrakeRpt * new_msg,
+      const std::string& frame_id);
+  void fillSafetyFuncRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::SafetyFuncRpt * new_msg,
+      const std::string& frame_id);
+
+
 // Global
   void fillGlobalRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -103,6 +117,10 @@ private:
   void fillBrakeAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::BrakeAuxRpt * new_msg,
+      const std::string& frame_id);
+  void fillBrakeDeccelAuxRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::BrakeDeccelAuxRpt * new_msg,
       const std::string& frame_id);
   void fillHeadlightAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -142,6 +160,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::DoorRpt * new_msg,
       const std::string& frame_id);
+  void fillDriveTrainRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::DriveTrainRpt * new_msg,
+      const std::string& frame_id);
   void fillEngineRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::EngineRpt * new_msg,
@@ -153,6 +175,10 @@ private:
   void fillLatLonHeadingRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::LatLonHeadingRpt * new_msg,
+      const std::string& frame_id);
+  void fillLinearAccelRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::LinearAccelRpt * new_msg,
       const std::string& frame_id);
   void fillOccupancyRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -178,6 +204,16 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::YawRateRpt * new_msg,
       const std::string& frame_id);
+
+  void fillSystemCmdLimitRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::SystemCmdLimitRpt * new_msg,
+      const std::string& frame_id);
+  void fillSteerCmdLimitRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::SteerCmdLimitRpt * new_msg,
+      const std::string& frame_id);
+
 };
 
 class Pacmod3RxRosMsgHandler

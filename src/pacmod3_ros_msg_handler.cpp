@@ -413,6 +413,73 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt3(
   new_msg->header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillCabinClimateRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::CabinClimateRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<CabinClimateRptMsg>(parser_class);
+
+  new_msg->man_ac_off_on = dc_parser->man_ac_off_on;
+  new_msg->man_max_ac_off_on = dc_parser->man_max_ac_off_on;
+  new_msg->man_defrost_off_on = dc_parser->man_defrost_off_on;
+  new_msg->man_max_defrost_off_on = dc_parser->man_max_defrost_off_on;
+  new_msg->man_dir_up_off_on = dc_parser->man_dir_up_off_on;
+  new_msg->man_dir_down_off_on = dc_parser->man_dir_down_off_on;
+
+  new_msg->cmd_ac_off_on = dc_parser->man_ac_off_on;
+  new_msg->cmd_max_ac_off_on = dc_parser->man_max_ac_off_on;
+  new_msg->cmd_defrost_off_on = dc_parser->man_defrost_off_on;
+  new_msg->cmd_max_defrost_off_on = dc_parser->man_max_defrost_off_on;
+  new_msg->cmd_dir_up_off_on = dc_parser->man_dir_up_off_on;
+  new_msg->cmd_dir_down_off_on = dc_parser->man_dir_down_off_on;
+
+  new_msg->out_ac_off_on = dc_parser->man_ac_off_on;
+  new_msg->out_max_ac_off_on = dc_parser->man_max_ac_off_on;
+  new_msg->out_defrost_off_on = dc_parser->man_defrost_off_on;
+  new_msg->out_max_defrost_off_on = dc_parser->man_max_defrost_off_on;
+  new_msg->out_dir_up_off_on = dc_parser->man_dir_up_off_on;
+  new_msg->out_dir_down_off_on = dc_parser->man_dir_down_off_on;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+
+}
+
+void Pacmod3TxRosMsgHandler::fillSafetyBrakeRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SafetyBrakeRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<SafetyBrakeRptMsg>(parser_class);
+
+  new_msg->commanded_val = dc_parser->commanded_val;
+  new_msg->output_val = dc_parser->output_val;
+  new_msg->reported_fault = dc_parser->reported_fault;
+  new_msg->cmd_reported_fault = dc_parser->cmd_reported_fault;
+  new_msg->cmd_timeout = dc_parser->cmd_timeout;
+  new_msg->cmd_permitted = dc_parser->cmd_permitted;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+
+}
+
+void Pacmod3TxRosMsgHandler::fillSafetyFuncRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SafetyFuncRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<SafetyFuncRptMsg>(parser_class);
+
+  // new_msg->torque_output = dc_parser->torque_output;
+  // new_msg->torque_input = dc_parser->torque_input;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+
+}
+
 
 // Global
 void Pacmod3TxRosMsgHandler::fillGlobalRpt(
@@ -486,6 +553,21 @@ void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillBrakeDeccelAuxRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::BrakeDeccelAuxRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<BrakeDeccelAuxRptMsg>(parser_class);
+
+  // new_msg->brake_pressure = dc_parser->brake_pressure;
+  // new_msg->operator_interaction = dc_parser->operator_interaction;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+
 }
 
 void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
@@ -680,6 +762,20 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
+void fillDriveTrainRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::DriveTrainRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<DriveTrainRptMsg>(parser_class);
+
+  // new_msg->driver_door_open = dc_parser->driver_door_open;
+  // new_msg->passenger_door_open = dc_parser->passenger_door_open;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillEngineRpt(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
     pacmod_msgs::EngineRpt * new_msg,
@@ -738,6 +834,20 @@ void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(
   new_msg->longitude_minutes = dc_parser->longitude_minutes;
   new_msg->longitude_seconds = dc_parser->longitude_seconds;
   new_msg->heading = dc_parser->heading;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void fillLinearAccelRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::LinearAccelRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<LinearAccelRptMsg>(parser_class);
+
+  // new_msg->driver_door_open = dc_parser->driver_door_open;
+  // new_msg->passenger_door_open = dc_parser->passenger_door_open;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
@@ -844,6 +954,34 @@ void Pacmod3TxRosMsgHandler::fillYawRateRpt(
   auto dc_parser = std::dynamic_pointer_cast<YawRateRptMsg>(parser_class);
 
   new_msg->yaw_rate = dc_parser->yaw_rate;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void fillSystemCmdLimitRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SystemCmdLimitRpt * new_msg,
+    const std::string& frame_id)
+{
+    auto dc_parser = std::dynamic_pointer_cast<SystemCmdLimitRptMsg>(parser_class);
+
+  // new_msg->driver_door_open = dc_parser->driver_door_open;
+  // new_msg->passenger_door_open = dc_parser->passenger_door_open;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void fillSteerCmdLimitRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::SteerCmdLimitRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<SteerCmdLimitRptMsg>(parser_class);
+
+  // new_msg->driver_door_open = dc_parser->driver_door_open;
+  // new_msg->passenger_door_open = dc_parser->passenger_door_open;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();

@@ -37,6 +37,7 @@ constexpr uint32_t SupervisoryCtrlMsg::CAN_ID;
 constexpr uint32_t AccelCmdMsg::CAN_ID;
 constexpr uint32_t BrakeCmdMsg::CAN_ID;
 constexpr uint32_t BrakeDeccelCmdMsg::CAN_ID;
+constexpr uint32_t CabinClimateCmdMsg::CAN_ID;
 constexpr uint32_t CruiseControlButtonsCmdMsg::CAN_ID;
 constexpr uint32_t DashControlsLeftCmdMsg::CAN_ID;
 constexpr uint32_t DashControlsRightCmdMsg::CAN_ID;
@@ -48,6 +49,8 @@ constexpr uint32_t MediaControlsCmdMsg::CAN_ID;
 constexpr uint32_t MarkerLampCmdMsg::CAN_ID;
 constexpr uint32_t ParkingBrakeCmdMsg::CAN_ID;
 constexpr uint32_t RearPassDoorCmdMsg::CAN_ID;
+constexpr uint32_t SafetyBrakeCmdMsg::CAN_ID;
+constexpr uint32_t SafetyFuncCmdMsg::CAN_ID;
 constexpr uint32_t ShiftCmdMsg::CAN_ID;
 constexpr uint32_t SprayerCmdMsg::CAN_ID;
 constexpr uint32_t SteerCmdMsg::CAN_ID;
@@ -61,6 +64,9 @@ constexpr uint8_t SystemCmdFloat::DATA_LENGTH;
 constexpr uint8_t SteerCmdMsg::DATA_LENGTH;
 constexpr uint8_t GlobalCmdMsg::DATA_LENGTH;
 constexpr uint8_t BrakeDeccelCmdMsg::DATA_LENGTH;
+constexpr uint8_t CabinClimateCmdMsg::DATA_LENGTH;
+constexpr uint8_t SafetyBrakeCmdMsg::DATA_LENGTH;
+constexpr uint8_t SafetyFuncCmdMsg::DATA_LENGTH;
 constexpr uint8_t SupervisoryCtrlMsg::DATA_LENGTH;
 constexpr uint8_t UserNotificationCmdMsg::DATA_LENGTH;
 
@@ -68,6 +74,7 @@ constexpr uint8_t UserNotificationCmdMsg::DATA_LENGTH;
 constexpr uint32_t AccelRptMsg::CAN_ID;
 constexpr uint32_t BrakeRptMsg::CAN_ID;
 constexpr uint32_t BrakeDeccelRptMsg::CAN_ID;
+constexpr uint32_t CabinClimateRptMsg::CAN_ID;
 constexpr uint32_t CruiseControlButtonsRptMsg::CAN_ID;
 constexpr uint32_t DashControlsLeftRptMsg::CAN_ID;
 constexpr uint32_t DashControlsRightRptMsg::CAN_ID;
@@ -79,6 +86,8 @@ constexpr uint32_t MediaControlsRptMsg::CAN_ID;
 constexpr uint32_t MarkerLampRptMsg::CAN_ID;
 constexpr uint32_t ParkingBrakeRptMsg::CAN_ID;
 constexpr uint32_t RearPassDoorRptMsg::CAN_ID;
+constexpr uint32_t SafetyBrakeRptMsg::CAN_ID;
+constexpr uint32_t SafetyFuncRptMsg::CAN_ID;
 constexpr uint32_t ShiftRptMsg::CAN_ID;
 constexpr uint32_t SprayerRptMsg::CAN_ID;
 constexpr uint32_t SteerRptMsg::CAN_ID;
@@ -115,6 +124,7 @@ constexpr uint32_t BrakeMotorRpt3Msg::CAN_ID;
 constexpr uint32_t DateTimeRptMsg::CAN_ID;
 constexpr uint32_t DetectedObjectRptMsg::CAN_ID;
 constexpr uint32_t DoorRptMsg::CAN_ID;
+constexpr uint32_t DriveTrainRptMsg::CAN_ID;
 constexpr uint32_t EngineRptMsg::CAN_ID;
 constexpr uint32_t InteriorLightsRptMsg::CAN_ID;
 constexpr uint32_t LatLonHeadingRptMsg::CAN_ID;
@@ -133,7 +143,6 @@ constexpr uint32_t AccelCmdLimitRptMsg::CAN_ID;
 constexpr uint32_t BrakeCmdLimitRptMsg::CAN_ID;
 constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
-
 /*** TX Messages   ***/
 
   std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id)
@@ -148,6 +157,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
         break;
       case BrakeDeccelRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new BrakeDeccelRptMsg);
+        break;
+      case CabinClimateRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new CabinClimateRptMsg);
         break;
       case CruiseControlButtonsRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new CruiseControlButtonsRptMsg);
@@ -181,6 +193,12 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
         break;
       case RearPassDoorRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new RearPassDoorRptMsg);
+        break;
+      case SafetyBrakeRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new SafetyBrakeRptMsg);
+        break;
+      case SafetyFuncRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new SafetyFuncRptMsg);
         break;
       case ShiftRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
@@ -273,6 +291,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       case DoorRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new DoorRptMsg);
         break;
+      case DriveTrainRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new DriveTrainRptMsg);
+        break;
       case EngineRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new EngineRptMsg);
         break;
@@ -349,7 +370,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       return true;
     }
 
-    SystemCmdLimitRpt::SystemCmdLimitRpt() :
+    SystemCmdLimitRptMsg::SystemCmdLimitRptMsg() :
       Pacmod3TxMsg(),
       sys_cmd_limit(0),
       limited_sys_cmd(0)
@@ -376,7 +397,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       output(0)
     {}
 
-    void SystemCmdLimitRpt::parse(const uint8_t * in)
+    void SystemCmdLimitRptMsg::parse(const uint8_t * in)
     {
       int16_t temp;
 
@@ -684,6 +705,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     void WatchdogRptMsg::parse(const uint8_t * in)
     {}
 
+
   // Global Report
     GlobalRptMsg::GlobalRptMsg() :
       Pacmod3TxMsg(),
@@ -730,6 +752,67 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       system_fault_active = ((in[0] & 0x04) > 0);
       supervisory_enable_required = ((in[0] & 0x08) > 0);
     }
+
+    CabinClimateRptMsg::CabinClimateRptMsg() :
+      SystemRptMsg(),
+      man_ac_off_on(0),
+      man_max_ac_off_on(0),
+      man_defrost_off_on(0),
+      man_max_defrost_off_on(0),
+      man_dir_up_off_on(0),
+      man_dir_down_off_on(0),
+      cmd_ac_off_on(0),
+      cmd_max_ac_off_on(0),
+      cmd_defrost_off_on(0),
+      cmd_max_defrost_off_on(0),
+      cmd_dir_up_off_on(0),
+      cmd_dir_down_off_on(0),
+      out_ac_off_on(0),
+      out_max_ac_off_on(0),
+      out_defrost_off_on(0),
+      out_max_defrost_off_on(0),
+      out_dir_up_off_on(0),
+      out_dir_down_off_on(0)
+    {}
+
+    void CabinClimateRptMsg::parse(const uint8_t * in)
+    {}
+
+    SafetyBrakeRptMsg::SafetyBrakeRptMsg() :
+      Pacmod3TxMsg(),
+      commanded_val(false),
+      output_val(false),
+      reported_fault(false),
+      cmd_reported_fault(false),
+      cmd_timeout(false),
+      cmd_permitted(false)
+    {}
+
+    void SafetyBrakeRptMsg::parse(const uint8_t * in)
+    {}
+
+    SafetyFuncRptMsg::SafetyFuncRptMsg():
+      Pacmod3TxMsg(),
+      commanded_value(SafetyFunctionCommand::CMD_NONE),
+      state(SafetyFunctionState::AUTO_ACTIVE_BRAKED_STATE),
+      automanual_opctrl(AutoManualOpCtrl::AUTO_MAN_AUTO),
+      cabin_safety_brake(CabinSafetyBrakeState::CABIN_BRAKE_APPLIED),
+      remote_stop_status(RemoteStopState::REMOTE_STOP_STATE_GO),
+      engine_status(false),
+      pacmod_system_status(false),
+      user_pc_fault(SafetyFuncFaults::OKAY),
+      pacmod_system_fault(SafetyFuncFaults::OKAY),
+      vehicle_fault(SafetyFuncFaults::OKAY),
+      manual_state_obtainable(false),
+      auto_ready_state_obtainable(false),
+      auto_state_obtainable(false),
+      manual_ready_state_obtainable(false),
+      critical_stop1_state_obtainable(false),
+      critical_stop2_state_obtainable(false)
+    {}
+
+    void SafetyFuncRptMsg::parse(const uint8_t * in)
+    {}
 
   // Aux Reports
     AccelAuxRptMsg::AccelAuxRptMsg() :
@@ -1034,6 +1117,27 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       hood_open_avail = ((in[1] & 0x10) > 0);
       trunk_open_avail = ((in[1] & 0x20) > 0);
       fuel_door_open_avail = ((in[1] & 0x40) > 0);
+    }
+
+    DriveTrainRptMsg::DriveTrainRptMsg() : 
+      Pacmod3TxMsg(),
+      antilock_brake_active(false),
+      traction_control_active(false),
+      four_wheel_drive_active(false),
+      antilock_brake_active_avail(false),
+      traction_control_active_avail(false),
+      four_wheel_drive_active_avail(false)
+    {}
+
+    void DriveTrainRptMsg::parse(const uint8_t * in)
+    {
+      antilock_brake_active = ((in[0] & 0x01) > 0);
+      traction_control_active = ((in[0] & 0x02) > 0);
+      traction_control_active = ((in[0] & 0x04) > 0);
+
+      antilock_brake_active_avail = ((in[0] & 0x10) > 0);
+      traction_control_active_avail = ((in[0] & 0x20) > 0);
+      four_wheel_drive_active_avail = ((in[0] & 0x40) > 0);
     }
 
     EngineRptMsg::EngineRptMsg() : 
@@ -1401,6 +1505,29 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
                       XBRPriority xbr_priority,
                       XBRControlMode xbr_control_mode)
     {}
+
+  // Cabin Climate Command
+    void CabinClimateCmdMsg::encode(bool enable,
+                      bool ignore_overrides,
+                      bool clear_override,
+                      uint8_t cmd_ac_off_on,
+                      uint8_t cmd_max_ac_off_on,
+                      uint8_t cmd_defrost_off_on,
+                      uint8_t cmd_max_defrost_off_on,
+                      uint8_t cmd_dir_up_off_on,
+                      uint8_t cmd_dir_down_off_on)
+    {}
+
+  // Safety Brake Command
+    void SafetyBrakeCmdMsg::encode(bool safety_brake_cmd)
+    {
+      data[0] = (safety_brake_cmd ? 0x01 : 0x00);
+    }
+
+  // Safety Function Command
+    void SafetyFuncCmdMsg::encode(SafetyFunctionCommand command)
+    {}
+
   // Steer Command
     void SteerCmdMsg::encode(bool enable,
                             bool ignore_overrides,
