@@ -72,6 +72,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::ComponentRpt * new_msg,
       const std::string& frame_id);
+  void fillSoftwareVersionRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::SoftwareVersionRpt * new_msg,
+      const std::string& frame_id);
   void fillMotorRpt1(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::MotorRpt1 * new_msg,
@@ -97,7 +101,14 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::SafetyFuncRpt * new_msg,
       const std::string& frame_id);
-
+  void fillEStopRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::EStopRpt * new_msg,
+      const std::string& frame_id);
+  void fillWatchdogRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::WatchdogRpt * new_msg,
+      const std::string& frame_id);
 
 // Global
   void fillGlobalRpt(
@@ -223,6 +234,15 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::GlobalCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::BrakeDeccelCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::CabinClimateCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyBrakeCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyFuncCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
+
+
 };
 }  // namespace PACMod3
 }  // namespace Drivers

@@ -384,10 +384,10 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
 
-    class SoftwareVerRptMsg : public Pacmod3TxMsg
+    class SoftwareVersionRptMsg : public Pacmod3TxMsg
     {
       public:
-        SoftwareVerRptMsg();
+        SoftwareVersionRptMsg();
 
         uint8_t mjr;
         uint8_t mnr;
@@ -518,9 +518,9 @@ namespace PACMod3
                     bool ignore_overrides,
                     bool clear_override,
                     float brake_deccel_command,
-                    XBR_EBI_Mode xbr_ebi_mode,
-                    XBRPriority xbr_priority,
-                    XBRControlMode xbr_control_mode);
+                    uint8_t xbr_ebi_mode,
+                    uint8_t xbr_priority,
+                    uint8_t xbr_control_mode);
     };
 
     class CabinClimateCmdMsg : public Pacmod3RxMsg
@@ -624,7 +624,7 @@ namespace PACMod3
 
         static constexpr uint32_t CAN_ID = 0xC0;
 
-        void encode(SafetyFunctionCommand command);
+        void encode(uint8_t command);
     };
 
     class ShiftCmdMsg : public SystemCmdInt
@@ -813,10 +813,10 @@ namespace PACMod3
 
         static constexpr uint32_t CAN_ID = 0x40;
 
-        SafetyFunctionCommand commanded_value;
+        SafetyFunctionCommand commanded_val;
         SafetyFunctionState state;
         AutoManualOpCtrl automanual_opctrl;
-        CabinSafetyBrakeState cabin_safety_brake;
+        CabinSafetyBrakeState cabin_safety_brake_opctrl;
         RemoteStopState remote_stop_status;
         bool engine_status;
         bool pacmod_system_status;
@@ -833,7 +833,6 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
     
-
     class ShiftRptMsg : public SystemRptIntMsg
     {
       public:
@@ -1041,25 +1040,25 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x23;
     };
 
-    class SoftwareVerRptMsg00 : public SoftwareVerRptMsg
+    class SoftwareVerRptMsg00 : public SoftwareVersionRptMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x408;
     };
 
-    class SoftwareVerRptMsg01 : public SoftwareVerRptMsg
+    class SoftwareVerRptMsg01 : public SoftwareVersionRptMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x409;
     };
 
-    class SoftwareVerRptMsg02 : public SoftwareVerRptMsg
+    class SoftwareVerRptMsg02 : public SoftwareVersionRptMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x40A;
     };
 
-    class SoftwareVerRptMsg03 : public SoftwareVerRptMsg
+    class SoftwareVerRptMsg03 : public SoftwareVersionRptMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x40B;
@@ -1089,6 +1088,7 @@ namespace PACMod3
         bool global_override_active;
         bool global_command_timeout_error;
         bool global_pacmod_subsystem_timeout;
+        bool global_vehicle_can_timeout;
         bool global_pacmod_system_fault_active;
         bool global_config_fault_active;
         bool global_timeout;
