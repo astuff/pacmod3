@@ -155,7 +155,7 @@ constexpr uint32_t HydraulicsAuxRptMsg::CAN_ID;
 constexpr uint32_t RPMDialRptMsg::CAN_ID;
 constexpr uint32_t WorklightsRptMsg::CAN_ID;
 
-// Extra Debug Messages
+// Optional Debug Messages
 constexpr uint32_t FaultDebugRptMsg00::CAN_ID;
 constexpr uint32_t FaultDebugRptMsg01::CAN_ID;
 constexpr uint32_t JoystickRptMsg::CAN_ID;
@@ -373,7 +373,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       case WorklightsRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new WorklightsRptMsg);
         break;
-    // Extra Debug Messages
+    // Optional Debug Messages
       case FaultDebugRptMsg00::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new FaultDebugRptMsg);
         break;

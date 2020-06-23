@@ -234,7 +234,7 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::WorklightsRpt * new_msg,
       const std::string& frame_id);
-// Extra Debug Messages
+// Optional Debug Messages
   void fillFaultDebugRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::FaultDebugRpt * new_msg,

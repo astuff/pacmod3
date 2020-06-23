@@ -342,7 +342,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillWorklightsRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
-// Extra Debug Messages
+// Optional Debug Messages
   else if (can_id == FaultDebugRptMsg00::CAN_ID ||
            can_id == FaultDebugRptMsg01::CAN_ID)
   {
@@ -1284,7 +1284,7 @@ void Pacmod3TxRosMsgHandler::fillWorklightsRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
-// Extra Debug Messages
+// Optional Debug Messages
 void Pacmod3TxRosMsgHandler::fillFaultDebugRpt(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
     pacmod_msgs::FaultDebugRpt * new_msg,

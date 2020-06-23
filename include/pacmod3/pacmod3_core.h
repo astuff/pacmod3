@@ -124,7 +124,9 @@ namespace PACMod3
     POLARIS_RANGER,
     VEHICLE_4,
     VEHICLE_5,
-    VEHICLE_6
+    VEHICLE_6,
+    VEHICLE_T7F,
+    VEHICLE_R8F
   };
 
   enum XBR_EBI_Mode
@@ -1558,7 +1560,7 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
 
-// Extra Debug Messages
+// Optional Debug Messages
     class FaultDebugRptMsg : public  Pacmod3TxMsg
     {
       public:
