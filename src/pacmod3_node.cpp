@@ -206,6 +206,11 @@ void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
+void callback_hydraulics_set_cmd(const pacmod_msgs::HydraulicsCmd::ConstPtr& msg)
+{
+  lookup_and_encode(HydraulicsCmdMsg::CAN_ID, msg);
+}
+
 
 void can_write()
 {

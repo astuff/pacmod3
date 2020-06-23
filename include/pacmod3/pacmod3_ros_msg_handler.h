@@ -225,6 +225,29 @@ private:
       pacmod_msgs::SteerCmdLimitRpt * new_msg,
       const std::string& frame_id);
 
+// Extra Messages
+  void fillHydraulicsAuxRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::HydraulicsAuxRpt * new_msg,
+      const std::string& frame_id);
+  void fillWorklightsRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::WorklightsRpt * new_msg,
+      const std::string& frame_id);
+// Extra Debug Messages
+  void fillFaultDebugRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::FaultDebugRpt * new_msg,
+      const std::string& frame_id);
+  void fillJoystickRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::JoystickRpt * new_msg,
+      const std::string& frame_id);
+  void fillMFAButtonsRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::MFAButtonsRpt * new_msg,
+      const std::string& frame_id);
+
 };
 
 class Pacmod3RxRosMsgHandler
@@ -242,6 +265,7 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
 
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::HydraulicsCmd::ConstPtr& msg);
 
 };
 }  // namespace PACMod3

@@ -69,13 +69,14 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   else if (can_id == CruiseControlButtonsRptMsg::CAN_ID ||
            can_id == DashControlsLeftRptMsg::CAN_ID ||
            can_id == DashControlsRightRptMsg::CAN_ID ||
-           can_id == TurnSignalRptMsg::CAN_ID ||
+           can_id == HeadlightRptMsg::CAN_ID ||
+           can_id == EngineBrakeRptMsg::CAN_ID ||
+           can_id == MediaControlsRptMsg::CAN_ID ||
            can_id == RearPassDoorRptMsg::CAN_ID ||
            can_id == ShiftRptMsg::CAN_ID ||
-           can_id == HeadlightRptMsg::CAN_ID ||
-           can_id == MediaControlsRptMsg::CAN_ID ||
+           can_id == TurnSignalRptMsg::CAN_ID ||
            can_id == WiperRptMsg::CAN_ID ||
-           can_id == EngineBrakeRptMsg::CAN_ID)
+           can_id == RPMDialRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptInt new_msg;
     fillSystemRptInt(parser_class, &new_msg, frame_id);
@@ -83,7 +84,8 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   }
   else if (can_id == AccelRptMsg::CAN_ID ||
            can_id == BrakeRptMsg::CAN_ID ||
-           can_id == SteerRptMsg::CAN_ID)
+           can_id == SteerRptMsg::CAN_ID ||
+           can_id == HydraulicsRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptFloat new_msg;
     fillSystemRptFloat(parser_class, &new_msg, frame_id);
@@ -325,6 +327,39 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   {
     pacmod_msgs::SteerCmdLimitRpt new_msg;
     fillSteerCmdLimitRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+// Extra Messages
+  else if (can_id == HydraulicsAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::HydraulicsAuxRpt new_msg;
+    fillHydraulicsAuxRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == WorklightsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::WorklightsRpt new_msg;
+    fillWorklightsRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+// Extra Debug Messages
+  else if (can_id == FaultDebugRptMsg00::CAN_ID ||
+           can_id == FaultDebugRptMsg01::CAN_ID)
+  {
+    pacmod_msgs::FaultDebugRpt new_msg;
+    fillFaultDebugRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == JoystickRptMsg::CAN_ID)
+  {
+    pacmod_msgs::JoystickRpt new_msg;
+    fillJoystickRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == MFAButtonsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::MFAButtonsRpt new_msg;
+    fillMFAButtonsRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
 
@@ -1214,6 +1249,123 @@ void Pacmod3TxRosMsgHandler::fillSteerCmdLimitRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
+// Extra Messages
+void Pacmod3TxRosMsgHandler::fillHydraulicsAuxRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::HydraulicsAuxRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<HydraulicsAuxRptMsg>(parser_class);
+
+  new_msg->hydraulics_implement_id = dc_parser->hydraulics_implement_id;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillWorklightsRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::WorklightsRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<WorklightsRptMsg>(parser_class);
+
+  new_msg->enabled = dc_parser->enabled;
+  new_msg->command_timeout = dc_parser->command_timeout;
+  new_msg->command_output_fault = dc_parser->command_output_fault;
+
+  new_msg->beacon = dc_parser->beacon;
+  new_msg->worklight_fh = dc_parser->worklight_fh;
+  new_msg->worklight_rh = dc_parser->worklight_rh;
+  new_msg->worklight_fl = dc_parser->worklight_fl;
+  new_msg->worklight_rl = dc_parser->worklight_rl;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+// Extra Debug Messages
+void Pacmod3TxRosMsgHandler::fillFaultDebugRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::FaultDebugRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<FaultDebugRptMsg>(parser_class);
+
+  new_msg->power_12V_fault = dc_parser->power_12V_fault;
+  new_msg->power_5V_fault = dc_parser->power_5V_fault;
+  new_msg->power_3V3_fault = dc_parser->power_3V3_fault;
+  new_msg->fd_can0_timeout = dc_parser->fd_can0_timeout;
+  new_msg->fd_can1_timeout = dc_parser->fd_can1_timeout;
+  new_msg->fd_can2_timeout = dc_parser->fd_can2_timeout;
+  new_msg->fd_can3_timeout = dc_parser->fd_can3_timeout;
+  new_msg->fd_can4_timeout = dc_parser->fd_can4_timeout;
+
+  new_msg->fd_systems_cmd_timeout = dc_parser->fd_systems_cmd_timeout;
+  new_msg->fd_system_fault = dc_parser->fd_system_fault;
+  new_msg->fd_systems_override = dc_parser->fd_systems_override;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillJoystickRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::JoystickRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<JoystickRptMsg>(parser_class);
+
+  new_msg->joystick_interlock_en_manual = dc_parser->joystick_interlock_en_manual;
+  new_msg->joystick_sens_manual = dc_parser->joystick_sens_manual;
+  new_msg->joystick_pos_manual = dc_parser->joystick_pos_manual;
+
+  new_msg->joystick_manual_state_machine = dc_parser->joystick_manual_state_machine;
+  
+  new_msg->joystick_interlock_en_out = dc_parser->joystick_interlock_en_out;
+  new_msg->joystick_sens_out = dc_parser->joystick_sens_out;
+  new_msg->joystick_pos_out = dc_parser->joystick_pos_out;
+  
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillMFAButtonsRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::MFAButtonsRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<MFAButtonsRptMsg>(parser_class);
+
+  new_msg->mfa_sys_joystick_enabled = dc_parser->mfa_sys_joystick_enabled;
+  new_msg->mfa_sys_steer_enabled = dc_parser->mfa_sys_steer_enabled;
+  new_msg->mfa_sys_auto_steer_enabled = dc_parser->mfa_sys_auto_steer_enabled;
+  new_msg->mfa_sys_hydraulics_enabled = dc_parser->mfa_sys_hydraulics_enabled;
+  new_msg->commmand_output_fault = dc_parser->commmand_output_fault;
+  new_msg->input_output_fault = dc_parser->input_output_fault;
+
+  new_msg->mfa_joystick_enable_in = dc_parser->mfa_joystick_enable_in;
+  new_msg->mfa_steer_can_in = dc_parser->mfa_steer_can_in;
+  new_msg->mfa_steer_auto_in = dc_parser->mfa_steer_auto_in;
+  new_msg->mfa_hydraulics_unlock_in = dc_parser->mfa_hydraulics_unlock_in;
+  new_msg->mfa_tms_in = dc_parser->mfa_tms_in;
+
+  new_msg->mfa_joystick_enable_cmd = dc_parser->mfa_joystick_enable_cmd;
+  new_msg->mfa_steer_can_cmd = dc_parser->mfa_steer_can_cmd;
+  new_msg->mfa_steer_auto_cmd = dc_parser->mfa_steer_auto_cmd;
+  new_msg->mfa_hydraulics_unlock_cmd = dc_parser->mfa_hydraulics_unlock_cmd;
+  new_msg->mfa_tms_cmd = dc_parser->mfa_tms_cmd;
+
+  new_msg->mfa_joystick_enable_out = dc_parser->mfa_joystick_enable_out;
+  new_msg->mfa_steer_can_out = dc_parser->mfa_steer_can_out;
+  new_msg->mfa_steer_auto_out = dc_parser->mfa_steer_auto_out;
+  new_msg->mfa_hydraulics_unlock_out = dc_parser->mfa_hydraulics_unlock_out;
+  new_msg->mfa_tms_out = dc_parser->mfa_tms_out;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
 // Command messages
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg)
@@ -1332,6 +1484,15 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
+  else if (can_id == EngineBrakeCmdMsg::CAN_ID)
+  {
+    EngineBrakeCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->command);
+    return encoder.data;
+  }
   else if (can_id == HeadlightCmdMsg::CAN_ID)
   {
     HeadlightCmdMsg encoder;
@@ -1344,6 +1505,15 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   else if (can_id == MediaControlsCmdMsg::CAN_ID)
   {
     MediaControlsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == RearPassDoorCmdMsg::CAN_ID)
+  {
+    RearPassDoorCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
@@ -1368,15 +1538,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
-  else if (can_id == RearPassDoorCmdMsg::CAN_ID)
-  {
-    RearPassDoorCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
   else if (can_id == WiperCmdMsg::CAN_ID)
   {
     WiperCmdMsg encoder;
@@ -1386,9 +1547,18 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
-  else if (can_id == EngineBrakeCmdMsg::CAN_ID)
+  else if (can_id == RPMDialCmdMsg::CAN_ID)
   {
-    EngineBrakeCmdMsg encoder;
+    RPMDialCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->command);
+    return encoder.data;
+  }
+  else if (can_id == WorklightsCmdMsg::CAN_ID)
+  {
+    WorklightsCmdMsg encoder;
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
@@ -1565,6 +1735,28 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     std::vector<uint8_t> bad_id;
     bad_id.assign(8, 0);
     ROS_ERROR("The notification command matching the provided CAN ID could not be found.");
+    return bad_id;
+  }
+}
+
+std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+    const uint32_t& can_id, const pacmod_msgs::HydraulicsCmd::ConstPtr& msg)
+{
+  if (can_id == HydraulicsCmdMsg::CAN_ID)
+  {
+    HydraulicsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->hydraulics_cmd,
+                   msg->hydraulics_implement_id);
+    return encoder.data;
+  }
+  else
+  {
+    std::vector<uint8_t> bad_id;
+    bad_id.assign(8, 0);
+    ROS_ERROR("The hydraulics command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }

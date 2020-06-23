@@ -270,12 +270,12 @@ namespace PACMod3
     class SystemCmdInt : public Pacmod3RxMsg
     {
       public:
-        static constexpr uint8_t DATA_LENGTH = 2;
+        static constexpr uint8_t DATA_LENGTH = 3;
 
         void encode(bool enable,
                     bool ignore_overrides,
                     bool clear_override,
-                    uint8_t cmd);
+                    uint16_t cmd);
     };
 
     class SystemCmdLimitRptMsg : public  Pacmod3TxMsg
@@ -323,9 +323,9 @@ namespace PACMod3
       public:
         SystemRptIntMsg();
 
-        uint8_t manual_input;
-        uint8_t command;
-        uint8_t output;
+        uint16_t manual_input;
+        uint16_t command;
+        uint16_t output;
 
         void parse(const uint8_t * in);
     };
@@ -1486,7 +1486,164 @@ namespace PACMod3
         
         void parse(const uint8_t * in);
     };
+
+// Extra Command Messages
+    class HydraulicsCmdMsg : public Pacmod3RxMsg
+    {
+      public:
+        static constexpr uint8_t DATA_LENGTH = 4;
+
+        static constexpr uint32_t CAN_ID = 0x152;
+
+        void encode(bool enable,
+                    bool ignore_overrides,
+                    bool clear_override,
+                    float hydraulics_cmd,
+                    uint8_t hydraulics_implement_id);
+    };
+
+    class RPMDialCmdMsg : public SystemCmdInt
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x162;
+    };
+
+    class WorklightsCmdMsg : public SystemCmdInt
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x15E;
+    };
+
+// Extra Report Messages
+    class HydraulicsRptMsg : public  SystemRptFloatMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x252;
+    };
     
+    class HydraulicsAuxRptMsg : public  Pacmod3TxMsg
+    {
+      public:
+        HydraulicsAuxRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x352;
+
+        uint8_t hydraulics_implement_id;
+
+        void parse(const uint8_t * in);
+    };
+
+    class RPMDialRptMsg : public SystemRptIntMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x262;
+    };
+
+    class WorklightsRptMsg : public  Pacmod3TxMsg
+    {
+      public:
+        WorklightsRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x25E;
+
+        bool enabled;
+        bool command_timeout;
+        bool command_output_fault;
+        uint8_t beacon;
+        uint8_t worklight_fh;
+        uint8_t worklight_rh;
+        uint8_t worklight_fl;
+        uint8_t worklight_rl;
+        
+        void parse(const uint8_t * in);
+    };
+
+// Extra Debug Messages
+    class FaultDebugRptMsg : public  Pacmod3TxMsg
+    {
+      public:
+        FaultDebugRptMsg();
+        
+        bool power_12V_fault;
+        bool power_5V_fault;
+        bool power_3V3_fault;
+        bool fd_can0_timeout;
+        bool fd_can1_timeout;
+        bool fd_can2_timeout;
+        bool fd_can3_timeout;
+        bool fd_can4_timeout;
+        bool fd_systems_cmd_timeout;
+        bool fd_system_fault;
+        bool fd_systems_override;
+
+        void parse(const uint8_t * in);
+    };
+
+    class FaultDebugRptMsg00 : public FaultDebugRptMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x510;
+    };
+
+    class FaultDebugRptMsg01 : public FaultDebugRptMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x511;
+    };
+
+    class JoystickRptMsg : public  Pacmod3TxMsg
+    {
+      public:
+        JoystickRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x25A;
+        
+        bool joystick_interlock_en_manual;
+        uint8_t joystick_sens_manual;
+        uint8_t joystick_pos_manual;        
+        uint8_t joystick_manual_state_machine;
+        bool joystick_interlock_en_out;      
+        uint16_t joystick_sens_out;     
+        uint16_t joystick_pos_out;    
+
+        void parse(const uint8_t * in);
+    };
+
+    class MFAButtonsRptMsg : public  Pacmod3TxMsg
+    {
+      public:
+        MFAButtonsRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x256;
+        
+        bool mfa_sys_joystick_enabled;       
+        bool mfa_sys_steer_enabled;          
+        bool mfa_sys_auto_steer_enabled;     
+        bool mfa_sys_hydraulics_enabled;     
+        bool commmand_output_fault;           
+        bool input_output_fault;     
+
+        bool mfa_joystick_enable_in;         
+        bool mfa_steer_can_in;               
+        bool mfa_steer_auto_in;              
+        bool mfa_hydraulics_unlock_in;       
+        bool mfa_tms_in;                     
+
+        bool mfa_joystick_enable_cmd;        
+        bool mfa_steer_can_cmd;              
+        bool mfa_steer_auto_cmd;             
+        bool mfa_hydraulics_unlock_cmd;      
+        bool mfa_tms_cmd;                    
+        
+        bool mfa_joystick_enable_out;        
+        bool mfa_steer_can_out;              
+        bool mfa_steer_auto_out;             
+        bool mfa_hydraulics_unlock_out;      
+        bool mfa_tms_out;                    
+
+        void parse(const uint8_t * in);
+    };
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS

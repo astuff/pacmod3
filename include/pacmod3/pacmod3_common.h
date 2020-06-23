@@ -82,4 +82,11 @@
 #include <pacmod_msgs/WiperAuxRpt.h>
 #include <pacmod_msgs/YawRateRpt.h>
 
+#include <pacmod_msgs/FaultDebugRpt.h>
+#include <pacmod_msgs/HydraulicsAuxRpt.h>
+#include <pacmod_msgs/HydraulicsCmd.h>
+#include <pacmod_msgs/JoystickRpt.h>
+#include <pacmod_msgs/MFAButtonsRpt.h>
+#include <pacmod_msgs/WorklightsRpt.h>
+
 #endif  // PACMOD3_PACMOD3_COMMON_H

@@ -143,6 +143,24 @@ constexpr uint32_t AccelCmdLimitRptMsg::CAN_ID;
 constexpr uint32_t BrakeCmdLimitRptMsg::CAN_ID;
 constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
+// Extra Messages
+constexpr uint32_t HydraulicsCmdMsg::CAN_ID;
+constexpr uint32_t RPMDialCmdMsg::CAN_ID;
+constexpr uint32_t WorklightsCmdMsg::CAN_ID;
+
+constexpr uint8_t HydraulicsCmdMsg::DATA_LENGTH;
+
+constexpr uint32_t HydraulicsRptMsg::CAN_ID;
+constexpr uint32_t HydraulicsAuxRptMsg::CAN_ID;
+constexpr uint32_t RPMDialRptMsg::CAN_ID;
+constexpr uint32_t WorklightsRptMsg::CAN_ID;
+
+// Extra Debug Messages
+constexpr uint32_t FaultDebugRptMsg00::CAN_ID;
+constexpr uint32_t FaultDebugRptMsg01::CAN_ID;
+constexpr uint32_t JoystickRptMsg::CAN_ID;
+constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
+
 /*** TX Messages   ***/
 
   std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id)
@@ -342,6 +360,32 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       case SteerCmdLimitRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SteerCmdLimitRptMsg);
         break;
+    // Extra Messages
+      case HydraulicsRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new HydraulicsRptMsg);
+        break;
+      case HydraulicsAuxRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new HydraulicsAuxRptMsg);
+        break;
+      case RPMDialRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new RPMDialRptMsg);
+        break;
+      case WorklightsRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new WorklightsRptMsg);
+        break;
+    // Extra Debug Messages
+      case FaultDebugRptMsg00::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new FaultDebugRptMsg);
+        break;
+      case FaultDebugRptMsg01::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new FaultDebugRptMsg);
+        break;
+      case JoystickRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new JoystickRptMsg);
+        break;
+      case MFAButtonsRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new MFAButtonsRptMsg);
+        break;
       default:
         return nullptr;
     }
@@ -436,9 +480,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       vehicle_fault = ((in[0] & 0x40) > 0);
       command_timeout = ((in[0] & 0x80) > 0);
 
-      manual_input = in[1];
-      command = in[2];
-      output = in[3];
+      manual_input = ((in[1] << 8) | in[2]);
+      command = ((in[3] << 8) | in[3]);
+      output = ((in[5] << 8) | in[6]);
     }
 
     void SystemRptFloatMsg::parse(const uint8_t * in)
@@ -788,7 +832,6 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       mini_system_present_fault = ((in[7] & 0x40) > 0);
       global_internal_power_supply_fault = ((in[7] & 0x80) > 0);
     }
-
 
   // Global Report
     GlobalRptMsg::GlobalRptMsg() :
@@ -1652,6 +1695,150 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       limited_rotation_rate_cmd = static_cast<double>(temp / 1000.0);
     }
 
+  // Extra Messages
+    HydraulicsAuxRptMsg::HydraulicsAuxRptMsg() :
+      Pacmod3TxMsg(),
+      hydraulics_implement_id(0)
+    {}
+
+    void HydraulicsAuxRptMsg::parse(const uint8_t * in)
+    {
+      hydraulics_implement_id = in[0];
+    }
+
+    WorklightsRptMsg::WorklightsRptMsg() :
+      Pacmod3TxMsg(),
+      enabled(false),
+      command_timeout(false),
+      command_output_fault(false),
+      beacon(0),
+      worklight_fh(0),
+      worklight_rh(0),
+      worklight_fl(0),
+      worklight_rl(0)
+    {}
+
+    void WorklightsRptMsg::parse(const uint8_t * in)
+    {
+      enabled = ((in[0] & 0x01) > 0);
+      command_timeout = ((in[0] & 0x02) > 0);
+      command_output_fault = ((in[0] & 0x04) > 0);
+
+      beacon = (in[0] & 0xC0);
+      worklight_fh = (in[1] & 0x03);
+      worklight_rh = (in[1] & 0x0C);
+      worklight_fl = (in[1] & 0x30);
+      worklight_rl = (in[1] & 0xC0);
+    }
+
+    FaultDebugRptMsg::FaultDebugRptMsg() :
+      Pacmod3TxMsg(),
+      power_12V_fault(false),
+      power_5V_fault(false),
+      power_3V3_fault(false),
+      fd_can0_timeout(false),
+      fd_can1_timeout(false),
+      fd_can2_timeout(false),
+      fd_can3_timeout(false),
+      fd_can4_timeout(false),
+      fd_systems_cmd_timeout(false),
+      fd_system_fault(false),
+      fd_systems_override(false)
+    {}
+
+    void FaultDebugRptMsg::parse(const uint8_t * in)
+    {
+      power_12V_fault = ((in[0] & 0x01) > 0);
+      power_5V_fault = ((in[0] & 0x02) > 0);
+      power_3V3_fault = ((in[0] & 0x04) > 0);
+      fd_can0_timeout = ((in[0] & 0x08) > 0);
+      fd_can1_timeout = ((in[0] & 0x10) > 0);
+      fd_can2_timeout = ((in[0] & 0x20) > 0);
+      fd_can3_timeout = ((in[0] & 0x40) > 0);
+      fd_can4_timeout = ((in[0] & 0x80) > 0);
+
+      fd_systems_cmd_timeout = ((in[1] & 0x01) > 0);
+      fd_system_fault = ((in[1] & 0x02) > 0);
+      fd_systems_override = ((in[1] & 0x04) > 0);
+    }
+
+    JoystickRptMsg::JoystickRptMsg() :
+      Pacmod3TxMsg(),
+      joystick_interlock_en_manual(false),
+      joystick_sens_manual(0),
+      joystick_pos_manual(0),   
+      joystick_manual_state_machine(0),
+      joystick_interlock_en_out(false),
+      joystick_sens_out(0),
+      joystick_pos_out(0)
+    {}
+
+    void JoystickRptMsg::parse(const uint8_t * in)
+    {
+      joystick_interlock_en_manual = ((in[0] & 0x01) > 0);
+      joystick_sens_manual = (in[0] & 0x06);
+      joystick_pos_manual = (in[0] & 0x70);
+
+      joystick_manual_state_machine = in[1];
+      
+      joystick_interlock_en_out = ((in[2] & 0x01) > 0);
+      joystick_sens_out = (in[2] & 0x06);
+      joystick_pos_out = (in[2] & 0x70);
+    }
+
+    MFAButtonsRptMsg::MFAButtonsRptMsg() :
+      Pacmod3TxMsg(),
+      mfa_sys_joystick_enabled(false),
+      mfa_sys_steer_enabled(false),          
+      mfa_sys_auto_steer_enabled(false),     
+      mfa_sys_hydraulics_enabled(false),     
+      commmand_output_fault(false),           
+      input_output_fault(false),             
+      mfa_joystick_enable_in(false),         
+      mfa_steer_can_in(false),               
+      mfa_steer_auto_in(false),              
+      mfa_hydraulics_unlock_in(false),       
+      mfa_tms_in(false),                     
+      mfa_joystick_enable_cmd(false),        
+      mfa_steer_can_cmd(false),              
+      mfa_steer_auto_cmd(false),             
+      mfa_hydraulics_unlock_cmd(false),      
+      mfa_tms_cmd(false),         
+      mfa_joystick_enable_out(false),        
+      mfa_steer_can_out(false),              
+      mfa_steer_auto_out(false),             
+      mfa_hydraulics_unlock_out(false),      
+      mfa_tms_out(false)                    
+    {}
+
+    void MFAButtonsRptMsg::parse(const uint8_t * in)
+    {
+      mfa_sys_joystick_enabled = ((in[0] & 0x01) > 0);
+      mfa_sys_steer_enabled = ((in[0] & 0x02) > 0);
+      mfa_sys_auto_steer_enabled = ((in[0] & 0x04) > 0);
+      mfa_sys_hydraulics_enabled = ((in[0] & 0x08) > 0);
+      commmand_output_fault = ((in[0] & 0x10) > 0);
+      input_output_fault = ((in[0] & 0x20) > 0);
+
+      mfa_joystick_enable_in = ((in[1] & 0x01) > 0);
+      mfa_steer_can_in = ((in[1] & 0x02) > 0);
+      mfa_steer_auto_in = ((in[1] & 0x04) > 0);
+      mfa_hydraulics_unlock_in = ((in[1] & 0x08) > 0);
+      mfa_tms_in = ((in[1] & 0x10) > 0);
+
+      mfa_joystick_enable_cmd = ((in[2] & 0x01) > 0);
+      mfa_steer_can_cmd = ((in[2] & 0x02) > 0);
+      mfa_steer_auto_cmd = ((in[2] & 0x04) > 0);
+      mfa_hydraulics_unlock_cmd = ((in[2] & 0x08) > 0);
+      mfa_tms_cmd = ((in[2] & 0x10) > 0);
+
+      mfa_joystick_enable_out = ((in[3] & 0x01) > 0);
+      mfa_steer_can_out = ((in[3] & 0x02) > 0);
+      mfa_steer_auto_out = ((in[3] & 0x04) > 0);
+      mfa_hydraulics_unlock_out = ((in[3] & 0x08) > 0);
+      mfa_tms_out = ((in[3] & 0x10) > 0);
+    }
+
 /*** RX Messages   ***/
   // General Classes
     void SystemCmdBool::encode(bool enable,
@@ -1682,12 +1869,14 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     void SystemCmdInt::encode(bool enable,
                               bool ignore_overrides,
                               bool clear_override,
-                              uint8_t cmd)
+                              uint16_t cmd)
     {
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
-      data[1] = cmd;
+      
+      data[1] = ((cmd & 0xFF00) >> 8);
+      data[2] = (cmd & 0xFF00);
     }
 
   // Global Command
@@ -1790,6 +1979,23 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     {
       data[0] = buzzer_mute ? 0x01 : 0x00;
       data[0] |= underdash_lights_white ? 0x02 : 0x00;
+    }
+
+    void HydraulicsCmdMsg::encode(bool enable,
+                                  bool ignore_overrides,
+                                  bool clear_override,
+                                  float hydraulics_cmd,
+                                  uint8_t hydraulics_implement_id)
+    {
+      data[0] = enable ? 0x01 : 0x00;
+      data[0] |= ignore_overrides ? 0x02 : 0x00;
+      data[0] |= clear_override ? 0x04 : 0x00;
+
+      int16_t raw_cmd = static_cast<int16_t>(1000.0 * hydraulics_cmd);
+      data[1] = (raw_cmd & 0xFF00) >> 8;
+      data[2] = raw_cmd & 0x00FF;
+
+      data[3] = hydraulics_implement_id;
     }
 
 
