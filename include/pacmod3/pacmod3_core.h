@@ -935,6 +935,18 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
 
+    class ParkingBrakeAuxRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        ParkingBrakeAuxRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x324;
+
+        uint8_t parking_brake_status;
+        bool parking_brake_status_avail;
+        void parse(const uint8_t * in);
+    };
+
     class ShiftAuxRptMsg : public Pacmod3TxMsg
     {
       public:
@@ -1405,6 +1417,20 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x406;
     };
 
+    class TirePressureRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        TirePressureRptMsg();
+
+        static constexpr uint32_t CAN_ID = 0x41E;
+
+        uint8_t front_left_tire_pressure;
+        uint8_t front_right_tire_pressure;
+        uint8_t rear_left_tire_pressure;
+        uint8_t rear_right_tire_pressure;
+
+        void parse(const uint8_t * in);
+    };
     class VehicleSpeedRptMsg : public Pacmod3TxMsg
     {
       public:

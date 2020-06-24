@@ -200,6 +200,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillHeadlightAuxRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == ParkingBrakeAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::ParkingBrakeAuxRpt new_msg;
+    fillParkingBrakeAuxRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == ShiftAuxRptMsg::CAN_ID)
   {
     pacmod_msgs::ShiftAuxRpt new_msg;
@@ -290,6 +296,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   {
     pacmod_msgs::RearLightsRpt new_msg;
     fillRearLightsRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == TirePressureRptMsg::CAN_ID)
+  {
+    pacmod_msgs::TirePressureRpt new_msg;
+    fillTirePressureRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
   else if (can_id == VehicleSpeedRptMsg::CAN_ID)
@@ -838,6 +850,20 @@ void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillParkingBrakeAuxRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::ParkingBrakeAuxRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<ParkingBrakeAuxRptMsg>(parser_class);
+
+  new_msg->parking_brake_status = dc_parser->parking_brake_status;
+  new_msg->parking_brake_status_avail = dc_parser->parking_brake_status_avail;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
     pacmod_msgs::ShiftAuxRpt * new_msg,
@@ -1154,6 +1180,22 @@ void Pacmod3TxRosMsgHandler::fillRearLightsRpt(
 
   new_msg->brake_lights_on_avail = dc_parser->brake_lights_on_avail;
   new_msg->reverse_lights_on_avail = dc_parser->reverse_lights_on_avail;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillTirePressureRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::TirePressureRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<TirePressureRptMsg>(parser_class);
+
+  new_msg->front_left_tire_pressure = dc_parser->front_left_tire_pressure;
+  new_msg->front_right_tire_pressure = dc_parser->front_right_tire_pressure;
+  new_msg->rear_left_tire_pressure = dc_parser->rear_left_tire_pressure;
+  new_msg->rear_right_tire_pressure = dc_parser->rear_right_tire_pressure;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();

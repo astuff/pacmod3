@@ -137,6 +137,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::HeadlightAuxRpt * new_msg,
       const std::string& frame_id);
+  void fillParkingBrakeAuxRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::ParkingBrakeAuxRpt * new_msg,
+      const std::string& frame_id);
   void fillShiftAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::ShiftAuxRpt * new_msg,
@@ -198,6 +202,10 @@ private:
   void fillRearLightsRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::RearLightsRpt * new_msg,
+      const std::string& frame_id);
+  void fillTirePressureRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::TirePressureRpt * new_msg,
       const std::string& frame_id);
   void fillVehicleSpeedRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,

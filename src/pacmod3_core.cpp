@@ -99,6 +99,7 @@ constexpr uint32_t AccelAuxRptMsg::CAN_ID;
 constexpr uint32_t BrakeAuxRptMsg::CAN_ID;
 constexpr uint32_t BrakeDeccelAuxRptMsg::CAN_ID;
 constexpr uint32_t HeadlightAuxRptMsg::CAN_ID;
+constexpr uint32_t ParkingBrakeAuxRptMsg::CAN_ID;
 constexpr uint32_t ShiftAuxRptMsg::CAN_ID;
 constexpr uint32_t SteerAuxRptMsg::CAN_ID;
 constexpr uint32_t TurnAuxRptMsg::CAN_ID;
@@ -134,6 +135,7 @@ constexpr uint32_t RearLightsRptMsg::CAN_ID;
 constexpr uint32_t SteerMotorRpt1Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt2Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt3Msg::CAN_ID;
+constexpr uint32_t TirePressureRptMsg::CAN_ID;
 constexpr uint32_t VehicleSpeedRptMsg::CAN_ID;
 constexpr uint32_t VinRptMsg::CAN_ID;
 constexpr uint32_t WheelSpeedRptMsg::CAN_ID;
@@ -243,6 +245,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       case HeadlightAuxRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new HeadlightAuxRptMsg);
         break;
+      case ParkingBrakeAuxRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new ParkingBrakeAuxRptMsg);
+        break;
       case ShiftAuxRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new ShiftAuxRptMsg);
         break;
@@ -338,6 +343,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
         break;
       case SteerMotorRpt3Msg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt3Msg);
+        break;
+      case TirePressureRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new TirePressureRptMsg);
         break;
       case VehicleSpeedRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpeedRptMsg);
@@ -1084,6 +1092,18 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       headlights_mode_avail = (in[2] & 0x08) > 0;
     }
 
+    ParkingBrakeAuxRptMsg::ParkingBrakeAuxRptMsg() :
+      Pacmod3TxMsg(),
+      parking_brake_status(0),
+      parking_brake_status_avail(false)
+    {}
+
+    void ParkingBrakeAuxRptMsg::parse(const uint8_t * in)
+    {
+      parking_brake_status = (in[0] & 0x03);
+      parking_brake_status_avail = (in[1] & 0x01) > 0;
+    }
+
     ShiftAuxRptMsg::ShiftAuxRptMsg() :
       Pacmod3TxMsg(),
       between_gears(false),
@@ -1508,6 +1528,22 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       brake_lights_on_avail = ((in[1] & 0x01) > 0);
       reverse_lights_on = ((in[0] & 0x02) > 0);
       reverse_lights_on_avail = ((in[1] & 0x02) > 0);
+    }
+
+    TirePressureRptMsg::TirePressureRptMsg() :
+      Pacmod3TxMsg(),
+      front_left_tire_pressure(0),
+      front_right_tire_pressure(0),
+      rear_left_tire_pressure(0),
+      rear_right_tire_pressure(0)
+    {}
+
+    void TirePressureRptMsg::parse(const uint8_t * in)
+    {
+      front_left_tire_pressure = (in[0] / 4);
+      front_right_tire_pressure = (in[1] / 4);
+      rear_left_tire_pressure = (in[2] / 4);
+      rear_right_tire_pressure = (in[3] / 4);
     }
 
     VehicleSpeedRptMsg::VehicleSpeedRptMsg() :
