@@ -666,19 +666,17 @@ int main(int argc, char *argv[])
   if (veh_type == VehicleType::VEHICLE_T7F)
   {
   // Reports
+    ros::Publisher engine_rpt_pub = n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
+
     ros::Publisher hazard_lights_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
     ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
-    ros::Publisher headlight_aux_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_aux_rpt", 20);
     ros::Publisher horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    ros::Publisher occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
     ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parkin_brake_rpt", 20);
     ros::Publisher sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
     ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/wiper_rpt", 20);
-    ros::Publisher wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
 
     // Extra Messages
     ros::Publisher hydraulics_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/hydraulics_rpt", 20);
-    ros::Publisher hydraulics_aux_rpt_pub = n.advertise<pacmod_msgs::HydraulicsAuxRpt>("parsed_tx/hydraulics_aux_rpt", 20);
     ros::Publisher rpm_dial_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rpm_dial_rpt", 20);
     ros::Publisher worklights_rpt_pub = n.advertise<pacmod_msgs::WorklightsRpt>("parsed_tx/worklights_rpt", 20);
 
@@ -688,18 +686,16 @@ int main(int argc, char *argv[])
     ros::Publisher joystick_rpt_pub = n.advertise<pacmod_msgs::JoystickRpt>("parsed_tx/joystick_rpt", 20);
     ros::Publisher mfa_buttons_rpt_pub = n.advertise<pacmod_msgs::MFAButtonsRpt>("parsed_tx/mfa_buttons_rpt", 20);
 
+    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
+
     pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
     pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
-    pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
     pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
-    pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
     pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
     pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
     pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
-    pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
 
     pub_tx_list.emplace(HydraulicsRptMsg::CAN_ID, std::move(hydraulics_rpt_pub));
-    pub_tx_list.emplace(HydraulicsAuxRptMsg::CAN_ID, std::move(hydraulics_aux_rpt_pub));
     pub_tx_list.emplace(RPMDialRptMsg::CAN_ID, std::move(rpm_dial_rpt_pub));
     pub_tx_list.emplace(WorklightsRptMsg::CAN_ID, std::move(worklights_rpt_pub));
 
