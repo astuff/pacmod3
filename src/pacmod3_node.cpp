@@ -379,6 +379,10 @@ int main(int argc, char *argv[])
       veh_type = VEHICLE_6;
     else if (veh_type_string == "JUPITER_SPIRIT")
       veh_type = JUPITER_SPIRIT;
+    else if (veh_type_string == "VEHICLE_T7F")
+      veh_type = VEHICLE_T7F;
+    else if (veh_type_string == "VEHICLE_R8F")
+      veh_type = VEHICLE_R8F;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
