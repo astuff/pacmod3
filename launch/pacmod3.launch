@@ -11,6 +11,8 @@
   <arg name="kvaser_circuit_id" default="0" />
   <arg name="use_socketcan" default="false" />
   <arg name="socketcan_device" default="can0" />
+  <arg name="use_supervisory_ctrl" default="false" />
+  <arg name="use_safety_ecu" default="false" />
 
   <include file="$(find kvaser_interface)/launch/kvaser_can_bridge.launch" if="$(arg use_kvaser)">
     <arg name="can_hardware_id" value="$(arg kvaser_hardware_id)" />
@@ -26,5 +28,8 @@
 
   <node pkg="pacmod3" type="pacmod3" name="pacmod">
     <param name="vehicle_type" value="$(arg pacmod_vehicle_type)" />
+    <param name="use_supervisory_ctrl" type ="bool" value="$(arg use_supervisory_ctrl)"  />
+    <param name="use_safety_ecu" type ="bool" value="$(arg use_safety_ecu)"  />
   </node>  
+
 </launch>

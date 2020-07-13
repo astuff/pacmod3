@@ -87,7 +87,7 @@ void callback_global_cmd_sub(const pacmod_msgs::GlobalCmd::ConstPtr& msg)
   lookup_and_encode(GlobalCmdMsg::CAN_ID, msg);
 }
 
-void callback_supervisory_ctrl_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+void callback_supervisory_ctrl_cmd_sub(const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg)
 {
   lookup_and_encode(SupervisoryCtrlMsg::CAN_ID, msg);
 }
@@ -330,6 +330,8 @@ int main(int argc, char *argv[])
   ros::NodeHandle priv("~");
   ros::Rate loop_rate(30);  // PACMod3 is sending at ~30Hz.
   std::string veh_type_string = "POLARIS_GEM";
+  bool supervisory_ctrl_flag = false;
+  bool safety_ecu_flag = false;
   VehicleType veh_type = VehicleType::POLARIS_GEM;
 
   // Vehicle-Specific Subscribers
@@ -388,6 +390,34 @@ int main(int argc, char *argv[])
       veh_type = VehicleType::POLARIS_GEM;
       ROS_WARN("PACMod3 - An invalid vehicle type was entered. Assuming POLARIS_GEM.");
     }
+  }
+
+  if (priv.getParam("use_supervisory_ctrl", supervisory_ctrl_flag))
+  {
+    if(supervisory_ctrl_flag)
+    {
+      ROS_INFO("PACMod3 - Supervisory Ctrl Message is required in this system");
+      ros::Subscriber supervisory_ctrl_cmd_sub = n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub);
+      rx_list.emplace(
+        SupervisoryCtrlMsg::CAN_ID,
+        std::shared_ptr<LockedData>(new LockedData(SupervisoryCtrlMsg::DATA_LENGTH)));
+    }
+    else
+      ROS_INFO("PACMod3 - Supervisory Ctrl Message is NOT required in this system");
+  }
+
+  if (priv.getParam("use_safety_ecu", safety_ecu_flag))
+  {
+    if(safety_ecu_flag)
+    {
+      ROS_INFO("PACMod3 - Safety ECU is present in this system");
+      ros::Subscriber safety_func_cmd_sub = n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd);
+      rx_list.emplace(
+        SafetyFuncCmdMsg::CAN_ID,
+        std::shared_ptr<LockedData>(new LockedData(SafetyFuncCmdMsg::DATA_LENGTH)));
+    }
+    else
+      ROS_INFO("PACMod3 - Safety ECU is NOT present in this system");    
   }
 
   // Advertise published messages
@@ -462,7 +492,6 @@ int main(int argc, char *argv[])
 
   ros::Subscriber global_cmd_sub = n.subscribe("as_rx/global_cmd", 20, callback_global_cmd_sub);
   ros::Subscriber user_notification_cmd_sub = n.subscribe("as_rx/user_notification_cmd", 20, callback_user_notification_set_cmd);
-  ros::Subscriber supervisory_ctrl_cmd_sub = n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub);
 
   ros::Subscriber accel_cmd_sub = n.subscribe("as_rx/accel_cmd", 20, callback_accel_cmd_sub);
   ros::Subscriber brake_cmd_sub = n.subscribe("as_rx/brake_cmd", 20, callback_brake_cmd_sub);
@@ -472,7 +501,6 @@ int main(int argc, char *argv[])
   ros::Subscriber rear_pass_door_cmd_sub = n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd);
 
   ros::Subscriber safety_brake_cmd_sub = n.subscribe("as_rx/safety_brake_cmd", 20, callback_safety_brake_set_cmd);
-  ros::Subscriber safety_func_cmd_sub = n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd);
 
   // Populate rx list
   rx_list.emplace(
@@ -481,9 +509,6 @@ int main(int argc, char *argv[])
   rx_list.emplace(
     UserNotificationCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(UserNotificationCmdMsg::DATA_LENGTH)));
-  rx_list.emplace(
-    SupervisoryCtrlMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(SupervisoryCtrlMsg::DATA_LENGTH)));
 
   rx_list.emplace(
     AccelCmdMsg::CAN_ID,
@@ -507,9 +532,6 @@ int main(int argc, char *argv[])
   rx_list.emplace(
     SafetyBrakeCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(SafetyBrakeCmdMsg::DATA_LENGTH)));
-  rx_list.emplace(
-    SafetyFuncCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(SafetyFuncCmdMsg::DATA_LENGTH)));
 
   // Vehicle Specific Reports
 
