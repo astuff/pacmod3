@@ -82,7 +82,7 @@ void lookup_and_encode(const uint32_t& can_id, const T& msg)
     ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
 }
 
-void callback_global_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg)
+void callback_global_cmd_sub(const pacmod_msgs::GlobalCmd::ConstPtr& msg)
 {
   lookup_and_encode(GlobalCmdMsg::CAN_ID, msg);
 }
