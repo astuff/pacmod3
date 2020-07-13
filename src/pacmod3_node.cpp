@@ -330,7 +330,6 @@ int main(int argc, char *argv[])
   ros::NodeHandle priv("~");
   ros::Rate loop_rate(30);  // PACMod3 is sending at ~30Hz.
   std::string veh_type_string = "POLARIS_GEM";
-  bool supervisory_ctrl_flag = false;
   bool safety_ecu_flag = false;
   VehicleType veh_type = VehicleType::POLARIS_GEM;
 
@@ -392,30 +391,10 @@ int main(int argc, char *argv[])
     }
   }
 
-  if (priv.getParam("use_supervisory_ctrl", supervisory_ctrl_flag))
-  {
-    if(supervisory_ctrl_flag)
-    {
-      ROS_INFO("PACMod3 - Supervisory Ctrl Message is required in this system");
-      ros::Subscriber supervisory_ctrl_cmd_sub = n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub);
-      rx_list.emplace(
-        SupervisoryCtrlMsg::CAN_ID,
-        std::shared_ptr<LockedData>(new LockedData(SupervisoryCtrlMsg::DATA_LENGTH)));
-    }
-    else
-      ROS_INFO("PACMod3 - Supervisory Ctrl Message is NOT required in this system");
-  }
-
   if (priv.getParam("use_safety_ecu", safety_ecu_flag))
   {
     if(safety_ecu_flag)
-    {
       ROS_INFO("PACMod3 - Safety ECU is present in this system");
-      ros::Subscriber safety_func_cmd_sub = n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd);
-      rx_list.emplace(
-        SafetyFuncCmdMsg::CAN_ID,
-        std::shared_ptr<LockedData>(new LockedData(SafetyFuncCmdMsg::DATA_LENGTH)));
-    }
     else
       ROS_INFO("PACMod3 - Safety ECU is NOT present in this system");    
   }
@@ -502,6 +481,12 @@ int main(int argc, char *argv[])
 
   ros::Subscriber safety_brake_cmd_sub = n.subscribe("as_rx/safety_brake_cmd", 20, callback_safety_brake_set_cmd);
 
+  if (safety_ecu_flag)
+  {
+    ros::Subscriber safety_func_cmd_sub = n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd);
+    ros::Subscriber supervisory_ctrl_cmd_sub = n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub);
+  }
+
   // Populate rx list
   rx_list.emplace(
     GlobalCmdMsg::CAN_ID,
@@ -532,6 +517,16 @@ int main(int argc, char *argv[])
   rx_list.emplace(
     SafetyBrakeCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(SafetyBrakeCmdMsg::DATA_LENGTH)));
+  
+  if (safety_ecu_flag)
+  {
+    rx_list.emplace(
+      SafetyFuncCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(SafetyFuncCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      SupervisoryCtrlMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(SupervisoryCtrlMsg::DATA_LENGTH)));
+  }
 
   // Vehicle Specific Reports
 
@@ -732,17 +727,26 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(MFAButtonsRptMsg::CAN_ID, std::move(mfa_buttons_rpt_pub));
 
   // Commands
-    ros::Subscriber hazard_lights_set_cmd_sub = n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd);
-    ros::Subscriber headlight_set_cmd_sub = n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd);
-    ros::Subscriber horn_set_cmd_sub = n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd);
-    ros::Subscriber parking_brake_cmd_sub = n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd);
-    ros::Subscriber sprayer_cmd_sub = n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd);
-    ros::Subscriber wiper_cmd_sub = n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd);
+    hazard_lights_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
+    headlight_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
+    horn_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
+    parking_brake_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd));
+    sprayer_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
+    wiper_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
   
     // Extra Commands
-    ros::Subscriber hydraulics_cmd_sub = n.subscribe("as_rx/hydraulics_cmd", 20, callback_hydraulics_set_cmd);
-    ros::Subscriber rpm_dial_cmd_sub = n.subscribe("as_rx/rpm_dial_cmd", 20, callback_rpm_dial_set_cmd);
-    ros::Subscriber worklights_cmd_sub = n.subscribe("as_rx/worklights_cmd", 20, callback_worklights_set_cmd);
+    hydraulics_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hydraulics_cmd", 20, callback_hydraulics_set_cmd));
+    rpm_dial_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/rpm_dial_cmd", 20, callback_rpm_dial_set_cmd));
+    worklights_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/worklights_cmd", 20, callback_worklights_set_cmd));
 
     rx_list.emplace(
       HazardLightCmdMsg::CAN_ID,
@@ -818,8 +822,8 @@ int main(int argc, char *argv[])
     ros::Subscriber hazard_lights_set_cmd_sub = n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd);
     ros::Subscriber headlight_set_cmd_sub = n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd);
     ros::Subscriber horn_set_cmd_sub = n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd);
-    ros::Subscriber parking_brake_cmd_sub = n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd);
-    ros::Subscriber wiper_cmd_sub = n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd);
+    ros::Subscriber parking_brake_set_cmd_sub = n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd);
+    ros::Subscriber wiper_set_cmd_sub = n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd);
 
     rx_list.emplace(
       CabinClimateCmdMsg::CAN_ID,
