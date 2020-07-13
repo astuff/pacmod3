@@ -1320,6 +1320,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                               bool clear_override,
                               bool cmd)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = (enable ? 0x01 : 0x00);
       data[0] |= (ignore_overrides ? 0x02 : 0x00);
       data[0] |= clear_override ? 0x04 : 0x00;
@@ -1331,6 +1332,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                                 bool clear_override,
                                 float cmd)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
@@ -1345,6 +1347,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                               bool clear_override,
                               uint16_t cmd)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
@@ -1356,6 +1359,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
   // Global Command
     void GlobalCmdMsg::encode(bool clear_faults)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = (clear_faults ? 0x01 : 0x00);
     }
 
@@ -1364,6 +1368,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                                     uint8_t counter,
                                     uint8_t complement)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enabled ? 0x01 : 0x00;
       data[1] = (counter & 0x0F);
       data[1] |= (complement & 0x0F);
@@ -1378,6 +1383,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                       uint8_t xbr_priority,
                       uint8_t xbr_control_mode)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
@@ -1402,6 +1408,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                       uint8_t cmd_dir_up_off_on,
                       uint8_t cmd_dir_down_off_on)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
@@ -1418,12 +1425,14 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
   // Safety Brake Command
     void SafetyBrakeCmdMsg::encode(bool safety_brake_cmd)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = (safety_brake_cmd ? 0x01 : 0x00);
     }
 
   // Safety Function Command
     void SafetyFuncCmdMsg::encode(uint8_t command)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = (command & 0x0F);
     }
 
@@ -1434,6 +1443,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                             float steer_pos,
                             float steer_spd)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
@@ -1451,6 +1461,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void UserNotificationCmdMsg::encode(bool buzzer_mute,
                                         bool underdash_lights_white)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = buzzer_mute ? 0x01 : 0x00;
       data[0] |= underdash_lights_white ? 0x02 : 0x00;
     }
@@ -1461,6 +1472,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
                                   float hydraulics_cmd,
                                   uint8_t hydraulics_implement_id)
     {
+      data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
