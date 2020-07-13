@@ -349,6 +349,9 @@ int main(int argc, char *argv[])
       sprayer_set_cmd_sub,
       wiper_set_cmd_sub,
       
+      safety_func_cmd_sub,
+      supervisory_ctrl_cmd_sub,
+      
       hydraulics_cmd_sub,
       rpm_dial_cmd_sub,
       worklights_cmd_sub;
@@ -483,8 +486,10 @@ int main(int argc, char *argv[])
 
   if (safety_ecu_flag)
   {
-    ros::Subscriber safety_func_cmd_sub = n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd);
-    ros::Subscriber supervisory_ctrl_cmd_sub = n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub);
+    safety_func_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd));
+    supervisory_ctrl_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub));
   }
 
   // Populate rx list
@@ -818,12 +823,18 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
 
   // Commands
-    ros::Subscriber cabin_climate_set_cmd_sub = n.subscribe("as_rx/cabin_climate_cmd", 20, callback_cabin_climate_set_cmd);
-    ros::Subscriber hazard_lights_set_cmd_sub = n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd);
-    ros::Subscriber headlight_set_cmd_sub = n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd);
-    ros::Subscriber horn_set_cmd_sub = n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd);
-    ros::Subscriber parking_brake_set_cmd_sub = n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd);
-    ros::Subscriber wiper_set_cmd_sub = n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd);
+    cabin_climate_set_cmd_sub =
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/cabin_climate_cmd", 20, callback_cabin_climate_set_cmd));
+    hazard_lights_set_cmd_sub =
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
+    headlight_set_cmd_sub =
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
+    horn_set_cmd_sub =
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
+    parking_brake_set_cmd_sub =
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd));
+    wiper_set_cmd_sub =
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
 
     rx_list.emplace(
       CabinClimateCmdMsg::CAN_ID,
