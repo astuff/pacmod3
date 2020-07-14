@@ -351,7 +351,8 @@ int main(int argc, char *argv[])
       
       safety_func_cmd_sub,
       supervisory_ctrl_cmd_sub,
-      
+      safety_brake_cmd_sub,
+
       hydraulics_cmd_sub,
       rpm_dial_cmd_sub,
       worklights_cmd_sub;
@@ -482,14 +483,14 @@ int main(int argc, char *argv[])
   ros::Subscriber turn_cmd_sub = n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd);
   ros::Subscriber rear_pass_door_cmd_sub = n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd);
 
-  ros::Subscriber safety_brake_cmd_sub = n.subscribe("as_rx/safety_brake_cmd", 20, callback_safety_brake_set_cmd);
-
   if (safety_ecu_flag)
   {
     safety_func_cmd_sub =
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd));
     supervisory_ctrl_cmd_sub =
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub));
+    safety_brake_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_brake_cmd", 20, callback_safety_brake_set_cmd));
   }
 
   // Populate rx list
@@ -518,10 +519,6 @@ int main(int argc, char *argv[])
   rx_list.emplace(
     RearPassDoorCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
-
-  rx_list.emplace(
-    SafetyBrakeCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(SafetyBrakeCmdMsg::DATA_LENGTH)));
   
   if (safety_ecu_flag)
   {
@@ -531,6 +528,9 @@ int main(int argc, char *argv[])
     rx_list.emplace(
       SupervisoryCtrlMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(SupervisoryCtrlMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      SafetyBrakeCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(SafetyBrakeCmdMsg::DATA_LENGTH)));
   }
 
   // Vehicle Specific Reports
