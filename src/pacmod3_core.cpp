@@ -200,6 +200,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       case GlobalRpt2Msg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new GlobalRpt2Msg);
         break;
+      case HazardLightRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new HazardLightRptMsg);
+        break;
       case HeadlightRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new HeadlightRptMsg);
         break;
@@ -223,6 +226,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
         break;
       case ShiftRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
+        break;
+      case SprayerRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new SprayerRptMsg);
         break;
       case SteerRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
