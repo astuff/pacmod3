@@ -151,6 +151,7 @@ constexpr uint32_t RPMDialCmdMsg::CAN_ID;
 constexpr uint32_t WorklightsCmdMsg::CAN_ID;
 
 constexpr uint8_t HydraulicsCmdMsg::DATA_LENGTH;
+constexpr uint8_t RPMDialCmdMsg::DATA_LENGTH;
 
 constexpr uint32_t HydraulicsRptMsg::CAN_ID;
 constexpr uint32_t HydraulicsAuxRptMsg::CAN_ID;
@@ -488,9 +489,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       vehicle_fault = ((in[0] & 0x40) > 0);
       command_timeout = ((in[0] & 0x80) > 0);
 
-      manual_input = ((in[1] << 8) | in[2]);
-      command = ((in[3] << 8) | in[3]);
-      output = ((in[5] << 8) | in[6]);
+      manual_input = in[1];
+      command = in[2];
+      output = in[3];
     }
 
     void SystemRptFloatMsg::parse(const uint8_t * in)
@@ -858,7 +859,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       speed_interlock_active_avail = (in[1] & 0x08) > 0;
       write_to_config_is_valid = (in[1] & 0x10) > 0;
       gear_number_avail = (in[1] & 0x20) > 0;
-      gear_number = static_cast<Gears>(in[2] & 0x3F);
+      gear_number = static_cast<int8_t>(in[2] & 0x3F);
     }
 
     void SteerAuxRptMsg::parse(const uint8_t * in)
@@ -983,24 +984,25 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
 
     void EngineRptMsg::parse(const uint8_t * in)
     {
-      int16_t temp;
+      uint16_t temp1, temp2, temp3;
+      uint8_t temp4;
 
-      temp = (static_cast<int16_t>(in[0]) << 8) | in[1];
-      engine_speed = static_cast<double>(temp / 4.0);
+      temp1 = (static_cast<uint16_t>(in[0]) << 8) | in[1];
+      engine_speed = static_cast<float>(temp1 / 4.0);
 
-      temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-      engine_speed = static_cast<double>(temp / 16.0);
+      temp2 = (static_cast<uint16_t>(in[2]) << 8) | in[3];
+      engine_speed = static_cast<float>(temp2 / 16.0);
 
-      temp = static_cast<int8_t>(in[4]);
-      engine_coolant_temp = temp - 40;
+      temp4 = static_cast<uint8_t>(in[4]);
+      engine_coolant_temp = static_cast<int16_t>(temp4 - 40);
 
       engine_speed_avail = ((in[5] & 0x01) > 0);
       engine_torque_avail = ((in[5] & 0x02) > 0);
       engine_coolant_temp_avail = ((in[5] & 0x04) > 0);
       fuel_level_avail = ((in[5] & 0x08) > 0);
 
-      temp = static_cast<int16_t>(in[6]);
-      fuel_level = static_cast<double>(temp / 200.0);
+      temp3 = (static_cast<uint16_t>(in[6]) << 8) | in[7];
+      fuel_level = static_cast<float>(temp3 / 200.0);
 
     }
 
@@ -1243,6 +1245,22 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       hydraulics_implement_id = in[0];
     }
 
+    void RPMDialRptMsg::parse(const uint8_t * in)
+    {
+      enabled = ((in[0] & 0x01) > 0);
+      override_active = ((in[0] & 0x02) > 0);
+      command_output_fault = ((in[0] & 0x04) > 0);
+      input_output_fault = ((in[0] & 0x08) > 0);
+      output_reported_fault = ((in[0] & 0x10) > 0);
+      pacmod_fault = ((in[0] & 0x20) > 0);
+      vehicle_fault = ((in[0] & 0x40) > 0);
+      command_timeout = ((in[0] & 0x80) > 0);
+
+      manual_input = ((in[1] << 8) | in[2]);
+      command = ((in[3] << 8) | in[3]);
+      output = ((in[5] << 8) | in[6]);
+    }
+
     void WorklightsRptMsg::parse(const uint8_t * in)
     {
       enabled = ((in[0] & 0x01) > 0);
@@ -1345,15 +1363,14 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void SystemCmdInt::encode(bool enable,
                               bool ignore_overrides,
                               bool clear_override,
-                              uint16_t cmd)
+                              uint8_t cmd)
     {
       data.assign(DATA_LENGTH, 0);
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
       
-      data[1] = ((cmd & 0xFF00) >> 8);
-      data[2] = (cmd & 0xFF00);
+      data[1] = cmd;
     }
 
   // Global Command
@@ -1484,6 +1501,20 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       data[3] = hydraulics_implement_id;
     }
 
+    void RPMDialCmdMsg::encode(bool enable,
+                                bool ignore_overrides,
+                                bool clear_override,
+                                uint16_t cmd)
+  {
+      data.assign(DATA_LENGTH, 0);
+
+      data[0] = enable ? 0x01 : 0x00;
+      data[0] |= ignore_overrides ? 0x02 : 0x00;
+      data[0] |= clear_override ? 0x04 : 0x00;
+
+      data[1] = (cmd & 0xFF00) >> 8;
+      data[2] = cmd & 0x00FF;
+    }
 
 }  // namespace PACMod3
 }  // namespace Drivers

@@ -272,12 +272,12 @@ namespace PACMod3
     class SystemCmdInt : public Pacmod3RxMsg
     {
       public:
-        static constexpr uint8_t DATA_LENGTH = 3;
+        static constexpr uint8_t DATA_LENGTH = 2;
 
         void encode(bool enable,
                     bool ignore_overrides,
                     bool clear_override,
-                    uint16_t cmd);
+                    uint8_t cmd);
     };
 
     class SystemCmdLimitRptMsg : public  Pacmod3TxMsg
@@ -296,7 +296,7 @@ namespace PACMod3
       public:
         SystemRptMsg();
 
-        bool isSystem() override;
+        bool isSystem();
 
         bool enabled;
         bool override_active;
@@ -933,7 +933,7 @@ namespace PACMod3
         bool speed_interlock_active_avail;
         bool write_to_config_is_valid;
         bool gear_number_avail;
-        Gears gear_number;
+        int8_t gear_number;
 
         void parse(const uint8_t * in);
     };
@@ -1231,14 +1231,14 @@ namespace PACMod3
       public:
         static constexpr uint32_t CAN_ID = 0x410;
 
-        double engine_speed;
-        double engine_torque;
-        int engine_coolant_temp;
+        float engine_speed;
+        float engine_torque;
+        int16_t engine_coolant_temp;
         bool engine_speed_avail;
         bool engine_torque_avail;
         bool engine_coolant_temp_avail;
         bool fuel_level_avail;
-        double fuel_level;
+        float fuel_level;
 
         void parse(const uint8_t * in);
     };
@@ -1454,10 +1454,17 @@ namespace PACMod3
                     uint8_t hydraulics_implement_id);
     };
 
-    class RPMDialCmdMsg : public SystemCmdInt
+    class RPMDialCmdMsg : public Pacmod3RxMsg
     {
       public:
+        static constexpr uint8_t DATA_LENGTH = 3;
+
         static constexpr uint32_t CAN_ID = 0x162;
+
+        void encode(bool enable,
+                    bool ignore_overrides,
+                    bool clear_override,
+                    uint16_t cmd);
     };
 
     class WorklightsCmdMsg : public SystemCmdInt
@@ -1483,10 +1490,26 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
 
-    class RPMDialRptMsg : public SystemRptIntMsg
+    class RPMDialRptMsg : public Pacmod3TxMsg
     {
       public:
         static constexpr uint32_t CAN_ID = 0x262;
+
+        bool enabled;
+        bool override_active;
+        bool command_output_fault;
+        bool input_output_fault;
+        bool output_reported_fault;
+        bool pacmod_fault;
+        bool vehicle_fault;
+        bool command_timeout;
+
+        uint16_t manual_input;
+        uint16_t command;
+        uint16_t output;
+
+        void parse(const uint8_t * in);
+
     };
 
     class WorklightsRptMsg : public  Pacmod3TxMsg

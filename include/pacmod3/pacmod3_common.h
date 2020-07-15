@@ -87,6 +87,8 @@
 #include <pacmod_msgs/HydraulicsCmd.h>
 #include <pacmod_msgs/JoystickRpt.h>
 #include <pacmod_msgs/MFAButtonsRpt.h>
+#include <pacmod_msgs/RPMDialCmd.h>
+#include <pacmod_msgs/RPMDialRpt.h>
 #include <pacmod_msgs/WorklightsRpt.h>
 
 #endif  // PACMOD3_PACMOD3_COMMON_H

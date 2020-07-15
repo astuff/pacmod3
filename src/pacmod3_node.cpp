@@ -221,7 +221,7 @@ void callback_hydraulics_set_cmd(const pacmod_msgs::HydraulicsCmd::ConstPtr& msg
 {
   lookup_and_encode(HydraulicsCmdMsg::CAN_ID, msg);
 }
-void callback_rpm_dial_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_rpm_dial_set_cmd(const pacmod_msgs::RPMDialCmd::ConstPtr& msg)
 {
   lookup_and_encode(RPMDialCmdMsg::CAN_ID, msg);
 }
@@ -483,16 +483,6 @@ int main(int argc, char *argv[])
   ros::Subscriber turn_cmd_sub = n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd);
   ros::Subscriber rear_pass_door_cmd_sub = n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd);
 
-  if (safety_ecu_flag)
-  {
-    safety_func_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd));
-    supervisory_ctrl_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub));
-    safety_brake_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_brake_cmd", 20, callback_safety_brake_set_cmd));
-  }
-
   // Populate rx list
   rx_list.emplace(
     GlobalCmdMsg::CAN_ID,
@@ -522,6 +512,19 @@ int main(int argc, char *argv[])
   
   if (safety_ecu_flag)
   {
+    ros::Publisher safety_func_rpt_pub = n.advertise<pacmod_msgs::SafetyFuncRpt>("parsed_tx/safety_func_rpt", 20);
+    ros::Publisher safety_brake_rpt_pub = n.advertise<pacmod_msgs::SafetyBrakeRpt>("parsed_tx/safety_brake_rpt", 20);
+
+    pub_tx_list.emplace(SafetyFuncRptMsg::CAN_ID, std::move(safety_func_rpt_pub));
+    pub_tx_list.emplace(SafetyBrakeRptMsg::CAN_ID, std::move(safety_brake_rpt_pub));
+
+    safety_func_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_func_cmd", 20, callback_safety_func_set_cmd));
+    supervisory_ctrl_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/supervisory_ctrl_cmd", 20, callback_supervisory_ctrl_cmd_sub));
+    safety_brake_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/safety_brake_cmd", 20, callback_safety_brake_set_cmd));
+
     rx_list.emplace(
       SafetyFuncCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(SafetyFuncCmdMsg::DATA_LENGTH)));
@@ -698,13 +701,13 @@ int main(int argc, char *argv[])
     ros::Publisher hazard_lights_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
     ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
     ros::Publisher horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parkin_brake_rpt", 20);
+    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_rpt", 20);
     ros::Publisher sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
     ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
 
     // Extra Messages
     ros::Publisher hydraulics_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/hydraulics_rpt", 20);
-    ros::Publisher rpm_dial_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rpm_dial_rpt", 20);
+    ros::Publisher rpm_dial_rpt_pub = n.advertise<pacmod_msgs::RPMDialRpt>("parsed_tx/rpm_dial_rpt", 20);
     ros::Publisher worklights_rpt_pub = n.advertise<pacmod_msgs::WorklightsRpt>("parsed_tx/worklights_rpt", 20);
 
     // Optional Debug Messages
@@ -781,7 +784,7 @@ int main(int argc, char *argv[])
       std::shared_ptr<LockedData>(new LockedData(RPMDialCmdMsg::DATA_LENGTH)));
     rx_list.emplace(
       WorklightsCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(WorklightsCmdMsg::DATA_LENGTH)));
+      std::shared_ptr<LockedData>(new LockedData(WorklightsCmdMsg::DATA_LENGTH)));
 
   }
 
@@ -800,7 +803,7 @@ int main(int argc, char *argv[])
     ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
     ros::Publisher headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
     ros::Publisher horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parkin_brake_rpt", 20);
+    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_rpt", 20);
     ros::Publisher parking_brake_aux_rpt_pub = n.advertise<pacmod_msgs::ParkingBrakeAuxRpt>("parsed_tx/parkin_brake_aux_rpt", 20);
     ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     ros::Publisher wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);

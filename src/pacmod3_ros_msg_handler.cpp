@@ -75,8 +75,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
            can_id == RearPassDoorRptMsg::CAN_ID ||
            can_id == ShiftRptMsg::CAN_ID ||
            can_id == TurnSignalRptMsg::CAN_ID ||
-           can_id == WiperRptMsg::CAN_ID ||
-           can_id == RPMDialRptMsg::CAN_ID)
+           can_id == WiperRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemRptInt new_msg;
     fillSystemRptInt(parser_class, &new_msg, frame_id);
@@ -346,6 +345,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   {
     pacmod_msgs::HydraulicsAuxRpt new_msg;
     fillHydraulicsAuxRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
+  else if (can_id == RPMDialRptMsg::CAN_ID)
+  {
+    pacmod_msgs::RPMDialRpt new_msg;
+    fillRPMDialRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
   else if (can_id == WorklightsRptMsg::CAN_ID)
@@ -1305,6 +1310,30 @@ void Pacmod3TxRosMsgHandler::fillHydraulicsAuxRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillRPMDialRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::RPMDialRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<RPMDialRptMsg>(parser_class);
+
+  new_msg->enabled = dc_parser->enabled;
+  new_msg->override_active = dc_parser->override_active;
+  new_msg->command_output_fault = dc_parser->command_output_fault;
+  new_msg->input_output_fault = dc_parser->input_output_fault;
+  new_msg->output_reported_fault = dc_parser->output_reported_fault;
+  new_msg->pacmod_fault = dc_parser->pacmod_fault;
+  new_msg->vehicle_fault = dc_parser->vehicle_fault;
+  new_msg->command_timeout = dc_parser->command_timeout;
+
+  new_msg->manual_input = dc_parser->manual_input;
+  new_msg->command = dc_parser->command;
+  new_msg->output = dc_parser->output;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillWorklightsRpt(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
     pacmod_msgs::WorklightsRpt * new_msg,
@@ -1589,15 +1618,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
-  else if (can_id == RPMDialCmdMsg::CAN_ID)
-  {
-    RPMDialCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
   else if (can_id == WorklightsCmdMsg::CAN_ID)
   {
     WorklightsCmdMsg encoder;
@@ -1799,6 +1819,27 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     std::vector<uint8_t> bad_id;
     bad_id.assign(8, 0);
     ROS_ERROR("The hydraulics command matching the provided CAN ID could not be found.");
+    return bad_id;
+  }
+}
+
+std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+    const uint32_t& can_id, const pacmod_msgs::RPMDialCmd::ConstPtr& msg)
+{
+  if (can_id == RPMDialCmdMsg::CAN_ID)
+  {
+    RPMDialCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->cmd);
+    return encoder.data;
+  }
+  else
+  {
+    std::vector<uint8_t> bad_id;
+    bad_id.assign(8, 0);
+    ROS_ERROR("The RPM Dial command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }
