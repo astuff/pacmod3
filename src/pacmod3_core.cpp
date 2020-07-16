@@ -993,13 +993,13 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       uint16_t temp1, temp2, temp3;
       uint8_t temp4;
 
-      temp1 = (static_cast<uint16_t>(in[0]) << 8) | in[1];
+      temp1 = ((static_cast<uint16_t>(in[0]) << 8) | in[1]);
       engine_speed = static_cast<float>(temp1 / 4.0);
 
-      temp2 = (static_cast<uint16_t>(in[2]) << 8) | in[3];
-      engine_speed = static_cast<float>(temp2 / 16.0);
+      temp2 = ((static_cast<uint16_t>(in[2]) << 8) | in[3]);
+      engine_torque = static_cast<float>(temp2 / 16.0);
 
-      temp4 = static_cast<uint8_t>(in[4]);
+      temp4 = (static_cast<uint8_t>(in[4]));
       engine_coolant_temp = static_cast<int16_t>(temp4 - 40);
 
       engine_speed_avail = ((in[5] & 0x01) > 0);
@@ -1007,7 +1007,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       engine_coolant_temp_avail = ((in[5] & 0x04) > 0);
       fuel_level_avail = ((in[5] & 0x08) > 0);
 
-      temp3 = (static_cast<uint16_t>(in[6]) << 8) | in[7];
+      temp3 = ((static_cast<uint16_t>(in[6]) << 8) | in[7]);
       fuel_level = static_cast<float>(temp3 / 200.0);
 
     }
