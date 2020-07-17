@@ -1464,7 +1464,7 @@ namespace PACMod3
         void encode(bool enable,
                     bool ignore_overrides,
                     bool clear_override,
-                    uint8_t cmd);
+                    uint16_t dial_cmd);
     };
 
     class WorklightsCmdMsg : public SystemCmdInt

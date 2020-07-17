@@ -1832,7 +1832,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     encoder.encode(msg->enable,
                    msg->ignore_overrides,
                    msg->clear_override,
-                   msg->cmd);
+                   msg->dial_cmd);
     return encoder.data;
   }
   else

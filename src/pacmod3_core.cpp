@@ -1510,7 +1510,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void RPMDialCmdMsg::encode(bool enable,
                                 bool ignore_overrides,
                                 bool clear_override,
-                                uint8_t cmd)
+                                uint16_t dial_cmd)
   {
       data.assign(DATA_LENGTH, 0);
 
@@ -1518,8 +1518,8 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
 
-      data[1] = (cmd & 0xFF00) >> 8;
-      data[2] = cmd & 0x00FF;
+      data[1] = (dial_cmd & 0xFF00) >> 8;
+      data[2] = dial_cmd & 0x00FF;
     }
 
 }  // namespace PACMod3
