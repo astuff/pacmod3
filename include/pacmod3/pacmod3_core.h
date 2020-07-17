@@ -1464,7 +1464,7 @@ namespace PACMod3
         void encode(bool enable,
                     bool ignore_overrides,
                     bool clear_override,
-                    uint16_t cmd);
+                    uint8_t cmd);
     };
 
     class WorklightsCmdMsg : public SystemCmdInt

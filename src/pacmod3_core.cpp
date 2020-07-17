@@ -1510,7 +1510,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void RPMDialCmdMsg::encode(bool enable,
                                 bool ignore_overrides,
                                 bool clear_override,
-                                uint16_t cmd)
+                                uint8_t cmd)
   {
       data.assign(DATA_LENGTH, 0);
 
