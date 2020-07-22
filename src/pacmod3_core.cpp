@@ -1306,14 +1306,14 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void JoystickRptMsg::parse(const uint8_t * in)
     {
       joystick_interlock_en_manual = ((in[0] & 0x01) > 0);
-      joystick_sens_manual = (in[0] & 0x06);
-      joystick_pos_manual = (in[0] & 0x70);
+      joystick_sens_manual = ((in[0] & 0x06) >> 1);
+      joystick_pos_manual = ((in[0] & 0x70) >> 4);
 
       joystick_manual_state_machine = in[1];
       
       joystick_interlock_en_out = ((in[2] & 0x01) > 0);
-      joystick_sens_out = (in[2] & 0x06);
-      joystick_pos_out = (in[2] & 0x70);
+      joystick_sens_out = ((in[2] & 0x06) >> 1);
+      joystick_pos_out = ((in[2] & 0x70) >> 4);
     }
 
     void MFAButtonsRptMsg::parse(const uint8_t * in)
