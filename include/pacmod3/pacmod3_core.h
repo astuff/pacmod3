@@ -1464,7 +1464,7 @@ namespace PACMod3
         void encode(bool enable,
                     bool ignore_overrides,
                     bool clear_override,
-                    uint16_t dial_cmd);
+                    float dial_cmd);
     };
 
     class WorklightsCmdMsg : public SystemCmdInt
@@ -1504,9 +1504,9 @@ namespace PACMod3
         bool vehicle_fault;
         bool command_timeout;
 
-        uint16_t manual_input;
-        uint16_t command;
-        uint16_t output;
+        double manual_input;
+        double command;
+        double output;
 
         void parse(const uint8_t * in);
 

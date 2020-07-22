@@ -1262,9 +1262,16 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       vehicle_fault = ((in[0] & 0x40) > 0);
       command_timeout = ((in[0] & 0x80) > 0);
 
-      manual_input = ((in[1] << 8) | in[2]);
-      command = ((in[3] << 8) | in[3]);
-      output = ((in[5] << 8) | in[6]);
+      int16_t temp;
+
+      temp = (static_cast<int16_t>(in[1]) << 8) | in[2];
+      manual_input = static_cast<double>(temp / 1000.0);
+
+      temp = (static_cast<int16_t>(in[3]) << 8) | in[4];
+      command = static_cast<double>(temp / 1000.0);
+
+      temp = (static_cast<int16_t>(in[5]) << 8) | in[6];
+      output = static_cast<double>(temp / 1000.0);
     }
 
     void WorklightsRptMsg::parse(const uint8_t * in)
@@ -1510,7 +1517,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void RPMDialCmdMsg::encode(bool enable,
                                 bool ignore_overrides,
                                 bool clear_override,
-                                uint16_t dial_cmd)
+                                float dial_cmd)
   {
       data.assign(DATA_LENGTH, 0);
 
@@ -1518,8 +1525,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
 
-      data[1] = (dial_cmd & 0xFF00) >> 8;
-      data[2] = dial_cmd & 0x00FF;
+      uint16_t cmd_float = static_cast<uint16_t>(dial_cmd * 1000.0);
+      data[1] = (cmd_float & 0xFF00) >> 8;
+      data[2] = cmd_float & 0x00FF;
     }
 
 }  // namespace PACMod3
