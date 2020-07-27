@@ -58,8 +58,10 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   const std::shared_ptr<Pacmod3TxMsg> & parser_class)
 {
   if (can_id == HornRptMsg::CAN_ID ||
-    can_id == ParkingBrakeRptMsg::CAN_ID ||
-    can_id == HazardLightRptMsg::CAN_ID)
+      can_id == HazardLightRptMsg::CAN_ID ||
+      can_id == MarkerLampRptMsg::CAN_ID ||
+      can_id == ParkingBrakeRptMsg::CAN_ID ||
+      can_id == SprayerRptMsg::CAN_ID)
   {
     pacmod_msgs::msg::SystemRptBool new_msg;
     auto dc_pub =
@@ -68,11 +70,18 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillSystemRptBool(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == CruiseControlButtonsRptMsg::CAN_ID ||  // NOLINT
-    can_id == DashControlsLeftRptMsg::CAN_ID || can_id == DashControlsRightRptMsg::CAN_ID ||
-    can_id == TurnSignalRptMsg::CAN_ID || can_id == ShiftRptMsg::CAN_ID ||
-    can_id == HeadlightRptMsg::CAN_ID || can_id == MediaControlsRptMsg::CAN_ID ||
-    can_id == WiperRptMsg::CAN_ID || can_id == RearPassDoorRptMsg::CAN_ID)
+  }
+  else if (can_id == CabinFanSpeedRptMsg::CAN_ID ||
+           can_id == CruiseControlButtonsRptMsg::CAN_ID ||
+           can_id == DashControlsLeftRptMsg::CAN_ID ||
+           can_id == DashControlsRightRptMsg::CAN_ID ||
+           can_id == HeadlightRptMsg::CAN_ID ||
+           can_id == EngineBrakeRptMsg::CAN_ID || 
+           can_id == MediaControlsRptMsg::CAN_ID ||
+           can_id == RearPassDoorRptMsg::CAN_ID ||
+           can_id == ShiftRptMsg::CAN_ID ||
+           can_id == TurnSignalRptMsg::CAN_ID || 
+           can_id == WiperRptMsg::CAN_ID)
   {
     pacmod_msgs::msg::SystemRptInt new_msg;
     auto dc_pub =
@@ -81,8 +90,11 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillSystemRptInt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == AccelRptMsg::CAN_ID || can_id == BrakeRptMsg::CAN_ID ||  // NOLINT
-    can_id == SteerRptMsg::CAN_ID)
+  }
+  else if (can_id == AccelRptMsg::CAN_ID ||
+           can_id == BrakeRptMsg::CAN_ID ||
+           can_id == SteerRptMsg::CAN_ID ||
+           can_id == CabinTempRptMsg::CAN_ID)
   {
     pacmod_msgs::msg::SystemRptFloat new_msg;
     auto dc_pub =
@@ -91,15 +103,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillSystemRptFloat(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == GlobalRptMsg::CAN_ID) {
-    pacmod_msgs::msg::GlobalRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::GlobalRpt>>(pub);
-
-    fillGlobalRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == ComponentRptMsg::CAN_ID) {
+  }
+  else if (can_id == ComponentRptMsg00::CAN_ID ||
+           can_id == ComponentRptMsg01::CAN_ID ||
+           can_id == ComponentRptMsg02::CAN_ID ||
+           can_id == ComponentRptMsg03::CAN_ID) 
+  {
     pacmod_msgs::msg::ComponentRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -107,7 +116,23 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillComponentRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == BrakeMotorRpt1Msg::CAN_ID || can_id == SteerMotorRpt1Msg::CAN_ID) {
+  }
+    else if (can_id == SoftwareVerRptMsg00::CAN_ID ||
+           can_id == SoftwareVerRptMsg01::CAN_ID ||
+           can_id == SoftwareVerRptMsg02::CAN_ID ||
+           can_id == SoftwareVerRptMsg03::CAN_ID) 
+  {
+    pacmod_msgs::msg::SoftwareVersionRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::SoftwareVersionRpt>>(pub);
+
+    fillSoftwareVersionRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == BrakeMotorRpt1Msg::CAN_ID ||
+           can_id == SteerMotorRpt1Msg::CAN_ID)
+  {
     pacmod_msgs::msg::MotorRpt1 new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -115,7 +140,10 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillMotorRpt1(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == BrakeMotorRpt2Msg::CAN_ID || can_id == SteerMotorRpt2Msg::CAN_ID) {
+  }
+  else if (can_id == BrakeMotorRpt2Msg::CAN_ID ||
+           can_id == SteerMotorRpt2Msg::CAN_ID) 
+  {
     pacmod_msgs::msg::MotorRpt2 new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -123,7 +151,10 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillMotorRpt2(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == BrakeMotorRpt3Msg::CAN_ID || can_id == SteerMotorRpt3Msg::CAN_ID) {
+  }
+  else if (can_id == BrakeMotorRpt3Msg::CAN_ID ||
+           can_id == SteerMotorRpt3Msg::CAN_ID)
+  {
     pacmod_msgs::msg::MotorRpt3 new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -131,7 +162,83 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillMotorRpt3(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == AccelAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == CabinClimateRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::CabinClimateRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::CabinClimateRpt>>(pub);
+
+    fillCabinClimateRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == SafetyBrakeRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::SafetyBrakeRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::SafetyBrakeRpt>>(pub);
+
+    fillSafetyBrakeRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == SafetyFuncRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::SafetyFuncRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::SafetyFuncRpt>>(pub);
+
+    fillSafetyFuncRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == EStopRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::EStopRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::EStopRpt>>(pub);
+
+    fillEStopRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == WatchdogRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::WatchdogRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::WatchdogRpt>>(pub);
+
+    fillWatchdogRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+
+// Global
+  else if (can_id == GlobalRptMsg::CAN_ID) 
+  {
+    pacmod_msgs::msg::GlobalRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::GlobalRpt>>(pub);
+
+    fillGlobalRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == GlobalRpt2Msg::CAN_ID) 
+  {
+    pacmod_msgs::msg::GlobalRpt2 new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::GlobalRpt2>>(pub);
+
+    fillGlobalRpt2(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+
+// System Aux Reports
+  else if (can_id == AccelAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::AccelAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -139,7 +246,9 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillAccelAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == BrakeAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == BrakeAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::BrakeAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -147,23 +256,19 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillBrakeAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == DateTimeRptMsg::CAN_ID) {
-    pacmod_msgs::msg::DateTimeRpt new_msg;
+  }
+  else if (can_id == BrakeDeccelAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::BrakeDeccelAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::DateTimeRpt>>(pub);
+      lc::LifecyclePublisher<pacmod_msgs::msg::BrakeDeccelAuxRpt>>(pub);
 
-    fillDateTimeRpt(parser_class, &new_msg, frame_id);
+    fillBrakeDeccelAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == DoorRptMsg::CAN_ID) {
-    pacmod_msgs::msg::DoorRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::DoorRpt>>(pub);
-
-    fillDoorRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == HeadlightAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == HeadlightAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::HeadlightAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -171,39 +276,19 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillHeadlightAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == InteriorLightsRptMsg::CAN_ID) {
-    pacmod_msgs::msg::InteriorLightsRpt new_msg;
+  }
+  else if (can_id == ParkingBrakeAuxRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::ParkingBrakeAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::InteriorLightsRpt>>(pub);
+      lc::LifecyclePublisher<pacmod_msgs::msg::ParkingBrakeAuxRpt>>(pub);
 
-    fillInteriorLightsRpt(parser_class, &new_msg, frame_id);
+    fillParkingBrakeAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == LatLonHeadingRptMsg::CAN_ID) {
-    pacmod_msgs::msg::LatLonHeadingRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::LatLonHeadingRpt>>(pub);
-
-    fillLatLonHeadingRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == OccupancyRptMsg::CAN_ID) {
-    pacmod_msgs::msg::OccupancyRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::OccupancyRpt>>(pub);
-
-    fillOccupancyRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == RearLightsRptMsg::CAN_ID) {
-    pacmod_msgs::msg::RearLightsRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::RearLightsRpt>>(pub);
-
-    fillRearLightsRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == ShiftAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == ShiftAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::ShiftAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -211,7 +296,9 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillShiftAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == SteerAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == SteerAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::SteerAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -219,7 +306,9 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillSteerAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == TurnAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == TurnAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::TurnAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -227,39 +316,9 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillTurnAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == YawRateRptMsg::CAN_ID) {
-    pacmod_msgs::msg::YawRateRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::YawRateRpt>>(pub);
-
-    fillYawRateRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == VehicleSpeedRptMsg::CAN_ID) {
-    pacmod_msgs::msg::VehicleSpeedRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::VehicleSpeedRpt>>(pub);
-
-    fillVehicleSpeedRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == VinRptMsg::CAN_ID) {
-    pacmod_msgs::msg::VinRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::VinRpt>>(pub);
-
-    fillVinRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == WheelSpeedRptMsg::CAN_ID) {
-    pacmod_msgs::msg::WheelSpeedRpt new_msg;
-    auto dc_pub =
-      std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::WheelSpeedRpt>>(pub);
-
-    fillWheelSpeedRpt(parser_class, &new_msg, frame_id);
-    dc_pub->publish(new_msg);
-  } else if (can_id == WiperAuxRptMsg::CAN_ID) {
+  }
+  else if (can_id == WiperAuxRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::WiperAuxRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -267,7 +326,31 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillWiperAuxRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == DetectedObjectRptMsg::CAN_ID) {
+  }
+
+// Misc Reports
+  else if (can_id == AngVelRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::AngVelRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::AngVelRpt>>(pub);
+
+    fillAngVelRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == DateTimeRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::DateTimeRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::DateTimeRpt>>(pub);
+
+    fillDateTimeRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == DetectedObjectRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::DetectedObjectRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
@@ -275,21 +358,166 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
 
     fillDetectedObjectRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == VehicleSpecificRpt1Msg::CAN_ID) {
-    pacmod_msgs::msg::VehicleSpecificRpt1 new_msg;
+  }
+  else if (can_id == DoorRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::DoorRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
-      lc::LifecyclePublisher<pacmod_msgs::msg::VehicleSpecificRpt1>>(pub);
+      lc::LifecyclePublisher<pacmod_msgs::msg::DoorRpt>>(pub);
 
-    fillVehicleSpecificRpt1(parser_class, &new_msg, frame_id);
+    fillDoorRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
-  } else if (can_id == VehicleDynamicsRptMsg::CAN_ID) {
+  }
+  else if (can_id == DriveTrainRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::DriveTrainRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::DriveTrainRpt>>(pub);
+
+    fillDriveTrainRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == EngineRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::EngineRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::EngineRpt>>(pub);
+
+    fillEngineRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == InteriorLightsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::InteriorLightsRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::InteriorLightsRpt>>(pub);
+
+    fillInteriorLightsRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == LatLonHeadingRptMsg::CAN_ID) 
+  {
+    pacmod_msgs::msg::LatLonHeadingRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::LatLonHeadingRpt>>(pub);
+
+    fillLatLonHeadingRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == LinearAccelRptMsg::CAN_ID) 
+  {
+    pacmod_msgs::msg::LinearAccelRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::LinearAccelRpt>>(pub);
+
+    fillLinearAccelRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == OccupancyRptMsg::CAN_ID) 
+  {
+    pacmod_msgs::msg::OccupancyRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::OccupancyRpt>>(pub);
+
+    fillOccupancyRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == RearLightsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::RearLightsRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::RearLightsRpt>>(pub);
+
+    fillRearLightsRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == TirePressureRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::TirePressureRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::TirePressureRpt>>(pub);
+
+    fillTirePressureRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == VehicleDynamicsRptMsg::CAN_ID)
+  {
     pacmod_msgs::msg::VehicleDynamicsRpt new_msg;
     auto dc_pub =
       std::dynamic_pointer_cast<
       lc::LifecyclePublisher<pacmod_msgs::msg::VehicleDynamicsRpt>>(pub);
 
     fillVehicleDynamicsRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == VehicleSpeedRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::VehicleSpeedRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::VehicleSpeedRpt>>(pub);
+
+    fillVehicleSpeedRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == VinRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::VinRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::VinRpt>>(pub);
+
+    fillVinRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == WheelSpeedRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::WheelSpeedRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::WheelSpeedRpt>>(pub);
+
+    fillWheelSpeedRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == YawRateRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::YawRateRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::YawRateRpt>>(pub);
+
+    fillYawRateRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == AccelCmdLimitRptMsg::CAN_ID ||
+           can_id == BrakeCmdLimitRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::SystemCmdLimitRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::SystemCmdLimitRpt>>(pub);
+
+    fillSystemCmdLimitRpt(parser_class, &new_msg, frame_id);
+    dc_pub->publish(new_msg);
+  }
+  else if (can_id == SteerCmdLimitRptMsg::CAN_ID)
+  {
+    pacmod_msgs::msg::SteerCmdLimitRpt new_msg;
+    auto dc_pub =
+      std::dynamic_pointer_cast<
+      lc::LifecyclePublisher<pacmod_msgs::msg::SteerCmdLimitRpt>>(pub);
+
+    fillSteerCmdLimitRpt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
   }
 }
@@ -364,198 +592,56 @@ void Pacmod3TxRosMsgHandler::fillSystemRptFloat(
   new_msg->header.stamp = rclcpp::Clock().now();
 }
 
-void Pacmod3TxRosMsgHandler::fillGlobalRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::GlobalRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
-
-  new_msg->enabled = dc_parser->enabled;
-  new_msg->override_active = dc_parser->override_active;
-  new_msg->fault_active = dc_parser->fault_active;
-  new_msg->config_fault_active = dc_parser->config_fault_active;
-  new_msg->user_can_timeout = dc_parser->user_can_timeout;
-  new_msg->steering_can_timeout = dc_parser->steering_can_timeout;
-  new_msg->brake_can_timeout = dc_parser->brake_can_timeout;
-  new_msg->subsystem_can_timeout = dc_parser->subsystem_can_timeout;
-  new_msg->vehicle_can_timeout = dc_parser->vehicle_can_timeout;
-  new_msg->user_can_read_errors = dc_parser->user_can_read_errors;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
 void Pacmod3TxRosMsgHandler::fillComponentRpt(
   const std::shared_ptr<Pacmod3TxMsg> & parser_class,
   pacmod_msgs::msg::ComponentRpt * new_msg,
   const std::string & frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<ComponentRptMsg>(parser_class);
+  
+  new_msg->component_type = dc_parser->component_type;
 
-  new_msg->component_type = static_cast<unsigned char>(dc_parser->component_type);
-  new_msg->component_func = static_cast<unsigned char>(dc_parser->component_func);
+  new_msg->accel = dc_parser->accel;
+  new_msg->brake = dc_parser->brake;
+  new_msg->cruise_control_buttons = dc_parser->cruise_control_buttons;
+  new_msg->dash_controls_left = dc_parser->dash_controls_left;
+  new_msg->dash_controls_right = dc_parser->dash_controls_right;
+  new_msg->hazard_lights = dc_parser->hazard_lights;
+  new_msg->headlight = dc_parser->headlight;
+  new_msg->horn = dc_parser->horn;
+  new_msg->media_controls = dc_parser->media_controls;
+  new_msg->parking_brake = dc_parser->parking_brake;
+  new_msg->shift = dc_parser->shift;
+  new_msg->sprayer = dc_parser->sprayer;
+  new_msg->steering = dc_parser->steering;
+  new_msg->turn = dc_parser->turn;
+  new_msg->wiper = dc_parser->wiper;
+  new_msg->watchdog = dc_parser->watchdog;
+  new_msg->brake_deccel = dc_parser->brake_deccel;
+  new_msg->rear_pass_door = dc_parser->rear_pass_door;
+  new_msg->engine_brake = dc_parser->engine_brake;
+  new_msg->marker_lamp = dc_parser->marker_lamp;
+  new_msg->cabin_climate = dc_parser->cabin_climate;
+  new_msg->cabin_fan_speed = dc_parser->cabin_fan_speed;
+  new_msg->cabin_temp = dc_parser->cabin_temp;
+
   new_msg->counter = dc_parser->counter;
   new_msg->complement = dc_parser->complement;
   new_msg->config_fault = dc_parser->config_fault;
+  new_msg->can_timeout_fault = dc_parser->can_timeout_fault;
+  new_msg->internal_supply_voltage_fault = dc_parser->internal_supply_voltage_fault;
+  new_msg->supervisory_timeout = dc_parser->supervisory_timeout;
+  new_msg->supervisory_sanity_fault = dc_parser->supervisory_sanity_fault;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = rclcpp::Clock().now();
 }
 
-void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(
+void Pacmod3TxRosMsgHandler::fillSoftwareVersionRpt(
   const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::AccelAuxRpt * new_msg,
+  pacmod_msgs::msg::SoftwareVersionRpt * new_msg,
   const std::string & frame_id)
 {
-  auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
-
-  new_msg->raw_pedal_pos = dc_parser->raw_pedal_pos;
-  new_msg->raw_pedal_force = dc_parser->raw_pedal_force;
-  new_msg->user_interaction = dc_parser->user_interaction;
-  new_msg->raw_pedal_pos_is_valid = dc_parser->raw_pedal_pos_is_valid;
-  new_msg->raw_pedal_force_is_valid = dc_parser->raw_pedal_force_is_valid;
-  new_msg->user_interaction_is_valid = dc_parser->user_interaction_is_valid;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::BrakeAuxRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
-
-  new_msg->raw_pedal_pos = dc_parser->raw_pedal_pos;
-  new_msg->raw_pedal_force = dc_parser->raw_pedal_force;
-  new_msg->raw_brake_pressure = dc_parser->raw_brake_pressure;
-  new_msg->user_interaction = dc_parser->user_interaction;
-  new_msg->brake_on_off = dc_parser->brake_on_off;
-  new_msg->raw_pedal_pos_is_valid = dc_parser->raw_pedal_pos_is_valid;
-  new_msg->raw_pedal_force_is_valid = dc_parser->raw_pedal_force_is_valid;
-  new_msg->user_interaction_is_valid = dc_parser->user_interaction_is_valid;
-  new_msg->brake_on_off_is_valid = dc_parser->brake_on_off_is_valid;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillDateTimeRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::DateTimeRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<DateTimeRptMsg>(parser_class);
-
-  new_msg->year = dc_parser->year;
-  new_msg->month = dc_parser->month;
-  new_msg->day = dc_parser->day;
-  new_msg->hour = dc_parser->hour;
-  new_msg->minute = dc_parser->minute;
-  new_msg->second = dc_parser->second;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillDetectedObjectRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::DetectedObjectRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
-
-  new_msg->front_object_distance_low_res = dc_parser->front_object_distance_low_res;
-  new_msg->front_object_distance_high_res = dc_parser->front_object_distance_high_res;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-void Pacmod3TxRosMsgHandler::fillDoorRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::DoorRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
-
-  new_msg->driver_door_open = dc_parser->driver_door_open;
-  new_msg->driver_door_open_is_valid = dc_parser->driver_door_open_is_valid;
-  new_msg->passenger_door_open = dc_parser->passenger_door_open;
-  new_msg->passenger_door_open_is_valid = dc_parser->passenger_door_open_is_valid;
-  new_msg->rear_driver_door_open = dc_parser->rear_driver_door_open;
-  new_msg->rear_driver_door_open_is_valid = dc_parser->rear_driver_door_open_is_valid;
-  new_msg->rear_passenger_door_open = dc_parser->rear_passenger_door_open;
-  new_msg->rear_passenger_door_open_is_valid = dc_parser->rear_passenger_door_open_is_valid;
-  new_msg->hood_open = dc_parser->hood_open;
-  new_msg->hood_open_is_valid = dc_parser->hood_open_is_valid;
-  new_msg->trunk_open = dc_parser->trunk_open;
-  new_msg->trunk_open_is_valid = dc_parser->trunk_open_is_valid;
-  new_msg->fuel_door_open = dc_parser->fuel_door_open;
-  new_msg->fuel_door_open_is_valid = dc_parser->fuel_door_open_is_valid;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::HeadlightAuxRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
-
-  new_msg->headlights_on = dc_parser->headlights_on;
-  new_msg->headlights_on_bright = dc_parser->headlights_on_bright;
-  new_msg->fog_lights_on = dc_parser->fog_lights_on;
-  new_msg->headlights_mode = dc_parser->headlights_mode;
-  new_msg->headlights_on_is_valid = dc_parser->headlights_on_is_valid;
-  new_msg->headlights_on_bright_is_valid = dc_parser->headlights_on_bright_is_valid;
-  new_msg->fog_lights_on_is_valid = dc_parser->fog_lights_on_is_valid;
-  new_msg->headlights_mode_is_valid = dc_parser->headlights_mode_is_valid;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::InteriorLightsRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
-
-  new_msg->front_dome_lights_on = dc_parser->front_dome_lights_on;
-  new_msg->front_dome_lights_on_is_valid = dc_parser->front_dome_lights_on_is_valid;
-  new_msg->rear_dome_lights_on = dc_parser->rear_dome_lights_on;
-  new_msg->rear_dome_lights_on_is_valid = dc_parser->rear_dome_lights_on_is_valid;
-  new_msg->mood_lights_on = dc_parser->mood_lights_on;
-  new_msg->mood_lights_on_is_valid = dc_parser->mood_lights_on_is_valid;
-  new_msg->dim_level = static_cast<unsigned char>(dc_parser->dim_level);
-  new_msg->dim_level_is_valid = dc_parser->dim_level_is_valid;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::LatLonHeadingRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<LatLonHeadingRptMsg>(parser_class);
-
-  new_msg->latitude_degrees = dc_parser->latitude_degrees;
-  new_msg->latitude_minutes = dc_parser->latitude_minutes;
-  new_msg->latitude_seconds = dc_parser->latitude_seconds;
-  new_msg->longitude_degrees = dc_parser->longitude_degrees;
-  new_msg->longitude_minutes = dc_parser->longitude_minutes;
-  new_msg->longitude_seconds = dc_parser->longitude_seconds;
-  new_msg->heading = dc_parser->heading;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
 }
 
 void Pacmod3TxRosMsgHandler::fillMotorRpt1(
@@ -601,41 +687,127 @@ void Pacmod3TxRosMsgHandler::fillMotorRpt3(
   new_msg->header.stamp = rclcpp::Clock().now();
 }
 
-void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
+void Pacmod3TxRosMsgHandler::fillCabinClimateRpt(
   const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::OccupancyRpt * new_msg,
+  pacmod_msgs::msg::CabinClimateRpt * new_msg,
   const std::string & frame_id)
 {
-  auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
+}
 
-  new_msg->driver_seat_occupied = dc_parser->driver_seat_occupied;
-  new_msg->driver_seat_occupied_is_valid = dc_parser->driver_seat_occupied_is_valid;
-  new_msg->passenger_seat_occupied = dc_parser->passenger_seat_occupied;
-  new_msg->passenger_seat_occupied_is_valid = dc_parser->passenger_seat_occupied_is_valid;
-  new_msg->rear_seat_occupied = dc_parser->rear_seat_occupied;
-  new_msg->rear_seat_occupied_is_valid = dc_parser->rear_seat_occupied_is_valid;
-  new_msg->driver_seatbelt_buckled = dc_parser->driver_seatbelt_buckled;
-  new_msg->driver_seatbelt_buckled_is_valid = dc_parser->driver_seatbelt_buckled_is_valid;
-  new_msg->passenger_seatbelt_buckled = dc_parser->passenger_seatbelt_buckled;
-  new_msg->passenger_seatbelt_buckled_is_valid = dc_parser->passenger_seatbelt_buckled_is_valid;
-  new_msg->rear_seatbelt_buckled = dc_parser->rear_seatbelt_buckled;
-  new_msg->rear_seatbelt_buckled_is_valid = dc_parser->rear_seatbelt_buckled_is_valid;
+void Pacmod3TxRosMsgHandler::fillSafetyBrakeRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::SafetyBrakeRpt * new_msg,
+  const std::string & frame_id)
+{
+}
+
+void Pacmod3TxRosMsgHandler::fillSafetyFuncRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::SafetyFuncRpt * new_msg,
+  const std::string & frame_id)
+{
+}
+
+void Pacmod3TxRosMsgHandler::fillEStopRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::EStopRpt * new_msg,
+  const std::string & frame_id)
+{
+}
+
+void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::WatchdogRpt * new_msg,
+  const std::string & frame_id)
+{
+}
+
+// Global
+void Pacmod3TxRosMsgHandler::fillGlobalRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::GlobalRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
+
+  new_msg->enabled = dc_parser->enabled;
+  new_msg->override_active = dc_parser->override_active;
+  new_msg->user_can_timeout = dc_parser->user_can_timeout;
+  new_msg->steering_can_timeout = dc_parser->steering_can_timeout;
+  new_msg->brake_can_timeout = dc_parser->brake_can_timeout;
+  new_msg->subsystem_can_timeout = dc_parser->subsystem_can_timeout;
+  new_msg->vehicle_can_timeout = dc_parser->vehicle_can_timeout;
+  new_msg->pacmod_sys_fault_active = dc_parser->pacmod_sys_fault_active;
+  new_msg->supervisory_enable_required = dc_parser->supervisory_enable_required;  
+  new_msg->config_fault_active = dc_parser->config_fault_active;
+  new_msg->user_can_read_errors = dc_parser->user_can_read_errors;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = rclcpp::Clock().now();
 }
 
-void Pacmod3TxRosMsgHandler::fillRearLightsRpt(
+void Pacmod3TxRosMsgHandler::fillGlobalRpt2(
   const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::RearLightsRpt * new_msg,
+  pacmod_msgs::msg::GlobalRpt2 * new_msg,
   const std::string & frame_id)
 {
-  auto dc_parser = std::dynamic_pointer_cast<RearLightsRptMsg>(parser_class);
+}
 
-  new_msg->brake_lights_on = dc_parser->brake_lights_on;
-  new_msg->brake_lights_on_is_valid = dc_parser->brake_lights_on_is_valid;
-  new_msg->reverse_lights_on = dc_parser->reverse_lights_on;
-  new_msg->reverse_lights_on_is_valid = dc_parser->reverse_lights_on_is_valid;
+// System Aux Reports
+void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::AccelAuxRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
+
+  new_msg->raw_pedal_pos = dc_parser->raw_pedal_pos;
+  new_msg->raw_pedal_force = dc_parser->raw_pedal_force;
+  new_msg->user_interaction = dc_parser->user_interaction;
+  new_msg->raw_pedal_pos_is_valid = dc_parser->raw_pedal_pos_is_valid;
+  new_msg->raw_pedal_force_is_valid = dc_parser->raw_pedal_force_is_valid;
+  new_msg->user_interaction_is_valid = dc_parser->user_interaction_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::BrakeAuxRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
+
+  new_msg->raw_pedal_pos = dc_parser->raw_pedal_pos;
+  new_msg->raw_pedal_force = dc_parser->raw_pedal_force;
+  new_msg->raw_brake_pressure = dc_parser->raw_brake_pressure;
+  new_msg->user_interaction = dc_parser->user_interaction;
+  new_msg->brake_on_off = dc_parser->brake_on_off;
+  new_msg->raw_pedal_pos_is_valid = dc_parser->raw_pedal_pos_is_valid;
+  new_msg->raw_pedal_force_is_valid = dc_parser->raw_pedal_force_is_valid;
+  new_msg->user_interaction_is_valid = dc_parser->user_interaction_is_valid;
+  new_msg->brake_on_off_is_valid = dc_parser->brake_on_off_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::HeadlightAuxRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
+
+  new_msg->headlights_on = dc_parser->headlights_on;
+  new_msg->headlights_on_bright = dc_parser->headlights_on_bright;
+  new_msg->fog_lights_on = dc_parser->fog_lights_on;
+  new_msg->headlights_mode = dc_parser->headlights_mode;
+  new_msg->headlights_on_is_valid = dc_parser->headlights_on_is_valid;
+  new_msg->headlights_on_bright_is_valid = dc_parser->headlights_on_bright_is_valid;
+  new_msg->fog_lights_on_is_valid = dc_parser->fog_lights_on_is_valid;
+  new_msg->headlights_mode_is_valid = dc_parser->headlights_mode_is_valid;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = rclcpp::Clock().now();
@@ -697,6 +869,170 @@ void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(
   new_msg->header.stamp = rclcpp::Clock().now();
 }
 
+void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::WiperAuxRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<WiperAuxRptMsg>(parser_class);
+
+  new_msg->front_wiping = dc_parser->front_wiping;
+  new_msg->front_spraying = dc_parser->front_spraying;
+  new_msg->rear_wiping = dc_parser->rear_wiping;
+  new_msg->rear_spraying = dc_parser->rear_spraying;
+  new_msg->spray_near_empty = dc_parser->spray_near_empty;
+  new_msg->spray_empty = dc_parser->spray_empty;
+  new_msg->front_wiping_is_valid = dc_parser->front_wiping_is_valid;
+  new_msg->front_spraying_is_valid = dc_parser->front_spraying_is_valid;
+  new_msg->rear_wiping_is_valid = dc_parser->rear_wiping_is_valid;
+  new_msg->rear_spraying_is_valid = dc_parser->rear_spraying_is_valid;
+  new_msg->spray_near_empty_is_valid = dc_parser->spray_near_empty_is_valid;
+  new_msg->spray_empty_is_valid = dc_parser->spray_empty_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+// Misc Reports
+void Pacmod3TxRosMsgHandler::fillDateTimeRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::DateTimeRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<DateTimeRptMsg>(parser_class);
+
+  new_msg->year = dc_parser->year;
+  new_msg->month = dc_parser->month;
+  new_msg->day = dc_parser->day;
+  new_msg->hour = dc_parser->hour;
+  new_msg->minute = dc_parser->minute;
+  new_msg->second = dc_parser->second;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+void Pacmod3TxRosMsgHandler::fillDetectedObjectRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::DetectedObjectRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
+
+  new_msg->front_object_distance_low_res = dc_parser->front_object_distance_low_res;
+  new_msg->front_object_distance_high_res = dc_parser->front_object_distance_high_res;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+void Pacmod3TxRosMsgHandler::fillDoorRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::DoorRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
+
+  new_msg->driver_door_open = dc_parser->driver_door_open;
+  new_msg->driver_door_open_is_valid = dc_parser->driver_door_open_is_valid;
+  new_msg->passenger_door_open = dc_parser->passenger_door_open;
+  new_msg->passenger_door_open_is_valid = dc_parser->passenger_door_open_is_valid;
+  new_msg->rear_driver_door_open = dc_parser->rear_driver_door_open;
+  new_msg->rear_driver_door_open_is_valid = dc_parser->rear_driver_door_open_is_valid;
+  new_msg->rear_passenger_door_open = dc_parser->rear_passenger_door_open;
+  new_msg->rear_passenger_door_open_is_valid = dc_parser->rear_passenger_door_open_is_valid;
+  new_msg->hood_open = dc_parser->hood_open;
+  new_msg->hood_open_is_valid = dc_parser->hood_open_is_valid;
+  new_msg->trunk_open = dc_parser->trunk_open;
+  new_msg->trunk_open_is_valid = dc_parser->trunk_open_is_valid;
+  new_msg->fuel_door_open = dc_parser->fuel_door_open;
+  new_msg->fuel_door_open_is_valid = dc_parser->fuel_door_open_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+
+void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::InteriorLightsRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
+
+  new_msg->front_dome_lights_on = dc_parser->front_dome_lights_on;
+  new_msg->front_dome_lights_on_is_valid = dc_parser->front_dome_lights_on_is_valid;
+  new_msg->rear_dome_lights_on = dc_parser->rear_dome_lights_on;
+  new_msg->rear_dome_lights_on_is_valid = dc_parser->rear_dome_lights_on_is_valid;
+  new_msg->mood_lights_on = dc_parser->mood_lights_on;
+  new_msg->mood_lights_on_is_valid = dc_parser->mood_lights_on_is_valid;
+  new_msg->dim_level = static_cast<unsigned char>(dc_parser->dim_level);
+  new_msg->dim_level_is_valid = dc_parser->dim_level_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+void Pacmod3TxRosMsgHandler::fillLatLonHeadingRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::LatLonHeadingRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<LatLonHeadingRptMsg>(parser_class);
+
+  new_msg->latitude_degrees = dc_parser->latitude_degrees;
+  new_msg->latitude_minutes = dc_parser->latitude_minutes;
+  new_msg->latitude_seconds = dc_parser->latitude_seconds;
+  new_msg->longitude_degrees = dc_parser->longitude_degrees;
+  new_msg->longitude_minutes = dc_parser->longitude_minutes;
+  new_msg->longitude_seconds = dc_parser->longitude_seconds;
+  new_msg->heading = dc_parser->heading;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+
+void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::OccupancyRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
+
+  new_msg->driver_seat_occupied = dc_parser->driver_seat_occupied;
+  new_msg->driver_seat_occupied_is_valid = dc_parser->driver_seat_occupied_is_valid;
+  new_msg->passenger_seat_occupied = dc_parser->passenger_seat_occupied;
+  new_msg->passenger_seat_occupied_is_valid = dc_parser->passenger_seat_occupied_is_valid;
+  new_msg->rear_seat_occupied = dc_parser->rear_seat_occupied;
+  new_msg->rear_seat_occupied_is_valid = dc_parser->rear_seat_occupied_is_valid;
+  new_msg->driver_seatbelt_buckled = dc_parser->driver_seatbelt_buckled;
+  new_msg->driver_seatbelt_buckled_is_valid = dc_parser->driver_seatbelt_buckled_is_valid;
+  new_msg->passenger_seatbelt_buckled = dc_parser->passenger_seatbelt_buckled;
+  new_msg->passenger_seatbelt_buckled_is_valid = dc_parser->passenger_seatbelt_buckled_is_valid;
+  new_msg->rear_seatbelt_buckled = dc_parser->rear_seatbelt_buckled;
+  new_msg->rear_seatbelt_buckled_is_valid = dc_parser->rear_seatbelt_buckled_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
+void Pacmod3TxRosMsgHandler::fillRearLightsRpt(
+  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
+  pacmod_msgs::msg::RearLightsRpt * new_msg,
+  const std::string & frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<RearLightsRptMsg>(parser_class);
+
+  new_msg->brake_lights_on = dc_parser->brake_lights_on;
+  new_msg->brake_lights_on_is_valid = dc_parser->brake_lights_on_is_valid;
+  new_msg->reverse_lights_on = dc_parser->reverse_lights_on;
+  new_msg->reverse_lights_on_is_valid = dc_parser->reverse_lights_on_is_valid;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = rclcpp::Clock().now();
+}
+
 void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(
   const std::shared_ptr<Pacmod3TxMsg> & parser_class,
   pacmod_msgs::msg::VehicleDynamicsRpt * new_msg,
@@ -706,20 +1042,6 @@ void Pacmod3TxRosMsgHandler::fillVehicleDynamicsRpt(
 
   new_msg->g_forces = dc_parser->g_forces;
   new_msg->brake_torque = dc_parser->brake_torque;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillVehicleSpecificRpt1(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::VehicleSpecificRpt1 * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<VehicleSpecificRpt1Msg>(parser_class);
-
-  new_msg->shift_pos_1 = dc_parser->shift_pos_1;
-  new_msg->shift_pos_2 = dc_parser->shift_pos_2;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = rclcpp::Clock().now();
@@ -769,30 +1091,6 @@ void Pacmod3TxRosMsgHandler::fillWheelSpeedRpt(
   new_msg->front_right_wheel_speed = dc_parser->front_right_wheel_speed;
   new_msg->rear_left_wheel_speed = dc_parser->rear_left_wheel_speed;
   new_msg->rear_right_wheel_speed = dc_parser->rear_right_wheel_speed;
-
-  new_msg->header.frame_id = frame_id;
-  new_msg->header.stamp = rclcpp::Clock().now();
-}
-
-void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class,
-  pacmod_msgs::msg::WiperAuxRpt * new_msg,
-  const std::string & frame_id)
-{
-  auto dc_parser = std::dynamic_pointer_cast<WiperAuxRptMsg>(parser_class);
-
-  new_msg->front_wiping = dc_parser->front_wiping;
-  new_msg->front_spraying = dc_parser->front_spraying;
-  new_msg->rear_wiping = dc_parser->rear_wiping;
-  new_msg->rear_spraying = dc_parser->rear_spraying;
-  new_msg->spray_near_empty = dc_parser->spray_near_empty;
-  new_msg->spray_empty = dc_parser->spray_empty;
-  new_msg->front_wiping_is_valid = dc_parser->front_wiping_is_valid;
-  new_msg->front_spraying_is_valid = dc_parser->front_spraying_is_valid;
-  new_msg->rear_wiping_is_valid = dc_parser->rear_wiping_is_valid;
-  new_msg->rear_spraying_is_valid = dc_parser->rear_spraying_is_valid;
-  new_msg->spray_near_empty_is_valid = dc_parser->spray_near_empty_is_valid;
-  new_msg->spray_empty_is_valid = dc_parser->spray_empty_is_valid;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = rclcpp::Clock().now();
