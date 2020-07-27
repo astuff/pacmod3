@@ -1305,6 +1305,7 @@ void Pacmod3TxRosMsgHandler::fillHydraulicsAuxRpt(
   auto dc_parser = std::dynamic_pointer_cast<HydraulicsAuxRptMsg>(parser_class);
 
   new_msg->hydraulics_implement_id = dc_parser->hydraulics_implement_id;
+  new_msg->hydraulics_rear_hitch_height = dc_parser->hydraulics_rear_hitch_height;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();

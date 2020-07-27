@@ -1249,6 +1249,11 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void HydraulicsAuxRptMsg::parse(const uint8_t * in)
     {
       hydraulics_implement_id = in[0];
+
+      int16_t temp;
+
+      temp = static_cast<int16_t>(in[1]);
+      hydraulics_rear_hitch_height = static_cast<double>(temp / 100.0);
     }
 
     void RPMDialRptMsg::parse(const uint8_t * in)
@@ -1510,6 +1515,15 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       int16_t raw_cmd = static_cast<int16_t>(1000.0 * hydraulics_cmd);
       data[1] = (raw_cmd & 0xFF00) >> 8;
       data[2] = raw_cmd & 0x00FF;
+
+      if (hydraulics_implement_id != 0x1 ||
+          hydraulics_implement_id != 0x2 ||
+          hydraulics_implement_id != 0x3 ||
+          hydraulics_implement_id != 0x4 ||
+          hydraulics_implement_id != 0x5 ||
+          hydraulics_implement_id != 0x6 ||
+          hydraulics_implement_id != 0x7)
+        hydraulics_implement_id = 0x0;
 
       data[3] = hydraulics_implement_id;
     }

@@ -769,6 +769,7 @@ int main(int argc, char *argv[])
 
     // Extra Messages
     ros::Publisher hydraulics_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/hydraulics_rpt", 20);
+    ros::Publisher hydraulics_aux_rpt_pub = n.advertise<pacmod_msgs::HydraulicsAuxRpt>("parsed_tx/hydraulics_aux_rpt", 20);
     ros::Publisher rpm_dial_rpt_pub = n.advertise<pacmod_msgs::RPMDialRpt>("parsed_tx/rpm_dial_rpt", 20);
     ros::Publisher worklights_rpt_pub = n.advertise<pacmod_msgs::WorklightsRpt>("parsed_tx/worklights_rpt", 20);
 
@@ -788,6 +789,7 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
 
     pub_tx_list.emplace(HydraulicsRptMsg::CAN_ID, std::move(hydraulics_rpt_pub));
+    pub_tx_list.emplace(HydraulicsAuxRptMsg::CAN_ID, std::move(hydraulics_aux_rpt_pub));
     pub_tx_list.emplace(RPMDialRptMsg::CAN_ID, std::move(rpm_dial_rpt_pub));
     pub_tx_list.emplace(WorklightsRptMsg::CAN_ID, std::move(worklights_rpt_pub));
 

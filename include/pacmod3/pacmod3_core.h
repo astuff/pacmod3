@@ -1486,7 +1486,8 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x352;
 
         uint8_t hydraulics_implement_id;
-
+        double hydraulics_rear_hitch_height;
+        
         void parse(const uint8_t * in);
     };
 
