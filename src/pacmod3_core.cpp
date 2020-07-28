@@ -1285,11 +1285,11 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       command_timeout = ((in[0] & 0x02) > 0);
       command_output_fault = ((in[0] & 0x04) > 0);
 
-      beacon = (in[0] & 0xC0);
+      beacon = ((in[0] & 0xC0) >> 6);
       worklight_fh = (in[1] & 0x03);
-      worklight_rh = (in[1] & 0x0C);
-      worklight_fl = (in[1] & 0x30);
-      worklight_rl = (in[1] & 0xC0);
+      worklight_rh = ((in[1] & 0x0C) >> 2);
+      worklight_fl = ((in[1] & 0x30) >> 4);
+      worklight_rl = ((in[1] & 0xC0) >> 6);
     }
 
     void FaultDebugRptMsg::parse(const uint8_t * in)
