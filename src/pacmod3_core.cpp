@@ -1516,13 +1516,7 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       data[1] = (raw_cmd & 0xFF00) >> 8;
       data[2] = raw_cmd & 0x00FF;
 
-      if (hydraulics_implement_id != 0x1 ||
-          hydraulics_implement_id != 0x2 ||
-          hydraulics_implement_id != 0x3 ||
-          hydraulics_implement_id != 0x4 ||
-          hydraulics_implement_id != 0x5 ||
-          hydraulics_implement_id != 0x6 ||
-          hydraulics_implement_id != 0x7)
+      if (hydraulics_implement_id >= 0x8)
         hydraulics_implement_id = 0x0;
 
       data[3] = hydraulics_implement_id;
