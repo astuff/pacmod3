@@ -1619,15 +1619,6 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
                    msg->command);
     return encoder.data;
   }
-  else if (can_id == WorklightsCmdMsg::CAN_ID)
-  {
-    WorklightsCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
   else
   {
     std::vector<uint8_t> bad_id;
@@ -1841,6 +1832,31 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
     std::vector<uint8_t> bad_id;
     bad_id.assign(8, 0);
     ROS_ERROR("The RPM Dial command matching the provided CAN ID could not be found.");
+    return bad_id;
+  }
+}
+
+std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+    const uint32_t& can_id, const pacmod_msgs::WorklightsCmd::ConstPtr& msg)
+{
+  if (can_id == WorklightsCmdMsg::CAN_ID)
+  {
+    WorklightsCmdMsg encoder;
+    encoder.encode(msg->enable,
+                   msg->ignore_overrides,
+                   msg->clear_override,
+                   msg->worklight_fh,
+                   msg->worklight_rh,
+                   msg->worklight_fl,
+                   msg->worklight_rl,
+                   msg->worklight_beacon);
+    return encoder.data;
+  }
+  else
+  {
+    std::vector<uint8_t> bad_id;
+    bad_id.assign(8, 0);
+    ROS_ERROR("The Worklights command matching the provided CAN ID could not be found.");
     return bad_id;
   }
 }

@@ -279,6 +279,7 @@ public:
 
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::HydraulicsCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::RPMDialCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::WorklightsCmd::ConstPtr& msg);
 
 };
 }  // namespace PACMod3

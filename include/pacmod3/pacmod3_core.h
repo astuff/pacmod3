@@ -1467,10 +1467,21 @@ namespace PACMod3
                     float dial_cmd);
     };
 
-    class WorklightsCmdMsg : public SystemCmdInt
+    class WorklightsCmdMsg : public Pacmod3RxMsg
     {
       public:
+        static constexpr uint8_t DATA_LENGTH = 2;
+
         static constexpr uint32_t CAN_ID = 0x15E;
+
+        void encode(bool enable,
+                    bool ignore_overrides,
+                    bool clear_override,
+                    bool worklight_fh,
+                    bool worklight_rh,
+                    bool worklight_fl,
+                    bool worklight_rl,
+                    bool worklight_beacon);
     };
 
 // Extra Report Messages

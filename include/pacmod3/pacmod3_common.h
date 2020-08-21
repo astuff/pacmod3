@@ -90,5 +90,6 @@
 #include <pacmod_msgs/RPMDialCmd.h>
 #include <pacmod_msgs/RPMDialRpt.h>
 #include <pacmod_msgs/WorklightsRpt.h>
+#include <pacmod_msgs/WorklightsCmd.h>
 
 #endif  // PACMOD3_PACMOD3_COMMON_H

@@ -152,6 +152,7 @@ constexpr uint32_t WorklightsCmdMsg::CAN_ID;
 
 constexpr uint8_t HydraulicsCmdMsg::DATA_LENGTH;
 constexpr uint8_t RPMDialCmdMsg::DATA_LENGTH;
+constexpr uint8_t WorklightsCmdMsg::DATA_LENGTH;
 
 constexpr uint32_t HydraulicsRptMsg::CAN_ID;
 constexpr uint32_t HydraulicsAuxRptMsg::CAN_ID;
@@ -1536,6 +1537,28 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       uint16_t cmd_float = static_cast<uint16_t>(dial_cmd * 1000.0);
       data[1] = (cmd_float & 0xFF00) >> 8;
       data[2] = cmd_float & 0x00FF;
+    }
+
+    void WorklightsCmdMsg::encode(bool enable,
+                                bool ignore_overrides,
+                                bool clear_override,
+                                bool worklight_fh,
+                                bool worklight_rh,
+                                bool worklight_fl,
+                                bool worklight_rl,
+                                bool worklight_beacon)
+  {
+      data.assign(DATA_LENGTH, 0);
+
+      data[0] = enable ? 0x01 : 0x00;
+      data[0] |= ignore_overrides ? 0x02 : 0x00;
+      data[0] |= clear_override ? 0x04 : 0x00;
+
+      data[1] = worklight_fh ? 0x01 : 0x00;
+      data[1] |= worklight_rh ? 0x02 : 0x00;
+      data[1] != worklight_fl ? 0x04 : 0x00;
+      data[1] |= worklight_rl ? 0x08 : 0x00;
+      data[1] |= worklight_beacon ? 0x10 : 0x00;
     }
 
 }  // namespace PACMod3

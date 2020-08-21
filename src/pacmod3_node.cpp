@@ -225,7 +225,7 @@ void callback_rpm_dial_set_cmd(const pacmod_msgs::RPMDialCmd::ConstPtr& msg)
 {
   lookup_and_encode(RPMDialCmdMsg::CAN_ID, msg);
 }
-void callback_worklights_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
+void callback_worklights_set_cmd(const pacmod_msgs::WorklightsCmd::ConstPtr& msg)
 {
   lookup_and_encode(WorklightsCmdMsg::CAN_ID, msg);
 }
