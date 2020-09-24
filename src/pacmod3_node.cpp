@@ -389,8 +389,8 @@ int main(int argc, char *argv[])
       veh_type = VEHICLE_6;
     else if (veh_type_string == "JUPITER_SPIRIT")
       veh_type = JUPITER_SPIRIT;
-    else if (veh_type_string == "VEHICLE_T7F")
-      veh_type = VEHICLE_T7F;
+    else if (veh_type_string == "HEXAGON_TRACTOR")
+      veh_type = HEXAGON_TRACTOR;
     else if (veh_type_string == "VEHICLE_R8F")
       veh_type = VEHICLE_R8F;
     else
@@ -531,7 +531,7 @@ int main(int argc, char *argv[])
 
   }
 
-  if (veh_type == VehicleType::VEHICLE_T7F ||
+  if (veh_type == VehicleType::HEXAGON_TRACTOR ||
       veh_type == VehicleType::VEHICLE_R8F)
   {
     ros::Publisher global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
@@ -558,7 +558,7 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
     pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
 
-    if (veh_type != VehicleType::VEHICLE_T7F)
+    if (veh_type != VehicleType::HEXAGON_TRACTOR)
     {
       ros::Publisher software_ver_rpt0_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
       ros::Publisher software_ver_rpt1_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
@@ -755,7 +755,7 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
   }
 
-  if (veh_type == VehicleType::VEHICLE_T7F)
+  if (veh_type == VehicleType::HEXAGON_TRACTOR)
   {
   // Reports
     ros::Publisher engine_rpt_pub = n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
