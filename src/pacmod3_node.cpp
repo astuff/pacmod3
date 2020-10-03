@@ -385,7 +385,8 @@ int main(int argc, char *argv[])
   if (veh_type == VehicleType::POLARIS_GEM ||
       veh_type == VehicleType::POLARIS_RANGER ||
       veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
-      veh_type == VehicleType::FREIGHTLINER_CASCADIA)
+      veh_type == VehicleType::FREIGHTLINER_CASCADIA ||
+      veh_type == VehicleType::JUPITER_SPIRIT)
   {
     ros::Publisher brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
     ros::Publisher brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
