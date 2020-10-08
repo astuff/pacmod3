@@ -11,7 +11,7 @@ jobs:
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
-            git clone https://github.com/astuff/astuff_sensor_msgs
+            git clone -b devel/dbc_extra https://github.com/astuff/astuff_sensor_msgs
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
@@ -47,7 +47,7 @@ jobs:
             apt-get update -qq
             source `find /opt/ros -name setup.bash | sort | head -1`
             mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
-            git clone https://github.com/astuff/astuff_sensor_msgs
+            git clone -b devel/dbc_extra https://github.com/astuff/astuff_sensor_msgs
             rosdep install --from-paths . --ignore-src -y
             cd ..
             catkin init
