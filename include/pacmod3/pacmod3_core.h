@@ -380,6 +380,8 @@ namespace PACMod3
         bool internal_supply_voltage_fault;
         bool supervisory_timeout;           
         bool supervisory_sanity_fault;
+        bool watchdog_sanity_fault;
+        bool watchdog_system_present_fault;
 
         void parse(const uint8_t * in);
     };
@@ -790,6 +792,37 @@ namespace PACMod3
         void parse(const uint8_t * in);
     };
 
+    class SafetyFuncCriticalStopRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x420;
+
+        bool automaual_opctrl_fault;         
+        bool remote_stop_fault;              
+        bool safety_brake_opctrl_off;        
+        bool safety_brake_cmd_timeout;       
+        bool safety_func_cmd_timeout;        
+        bool safety_func_critical_stop_1_cmd;
+        bool safety_func_critical_stop_2_cmd;
+        bool safety_func_none_cmd;           
+        bool pacmod_system_timeout;          
+        bool pacmod_system_fault;            
+        bool pacmod_system_not_active;       
+        bool vehicle_report_timeout;        
+        bool vehicle_report_fault;           
+        bool low_engine_rpm;                 
+        bool pri_safety_brake_signal_1_fault;
+        bool pri_safety_brake_signal_2_fault;
+        bool sec_safety_brake_signal_1_fault;
+        bool sec_safety_brake_signal_2_fault;
+        bool primary_processor_fault;        
+        bool secondary_processor_fault;      
+        bool remote_stop_cmd;                
+        bool pri_safety_brake_pressure_fault;
+
+        void parse(const uint8_t * in);
+    };
+
     class SafetyFuncRptMsg : public Pacmod3TxMsg
     {
       public:
@@ -804,7 +837,7 @@ namespace PACMod3
         bool pacmod_system_status;
         SafetyFuncFaults user_pc_fault;
         SafetyFuncFaults pacmod_system_fault;
-        SafetyFuncFaults vehicle_fault;
+
         bool manual_state_obtainable;
         bool auto_ready_state_obtainable;
         bool auto_state_obtainable;
@@ -852,7 +885,9 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x300;
 
         bool operator_interaction;
+        bool accel_limiting_active;
         bool operator_interaction_avail;
+        bool accel_limiting_active_avail;
 
         void parse(const uint8_t * in);
     };
@@ -865,9 +900,11 @@ namespace PACMod3
         float brake_pressure;
         bool operator_interaction;
         bool brake_on_off;
+        bool brake_limiting_function;
         bool brake_pressure_avail;
         bool operator_interaction_avail;
         bool brake_on_off_avail;
+        bool brake_limiting_function_avail;
 
         void parse(const uint8_t * in);
     };
@@ -948,11 +985,13 @@ namespace PACMod3
         bool operator_interaction;
         bool rotation_rate_sign;
         bool vehicle_angle_calib_status;
+        bool steering_limiting_active;
         bool steering_torque_avail;
         bool rotation_rate_avail;
         bool operator_interaction_avail;
         bool rotation_rate_sign_avail;
         bool vehicle_angle_calib_status_avail;
+        bool steering_limiting_active_avail;
 
         void parse(const uint8_t * in);
     };
@@ -1016,6 +1055,12 @@ namespace PACMod3
         static constexpr uint32_t CAN_ID = 0x23;
     };
 
+    class ComponentRptMsg04 : public ComponentRptMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x24;
+    };
+
     class SoftwareVerRptMsg00 : public SoftwareVersionRptMsg
     {
       public:
@@ -1038,6 +1083,12 @@ namespace PACMod3
     {
       public:
         static constexpr uint32_t CAN_ID = 0x40B;
+    };
+
+    class SoftwareVerRptMsg04 : public SoftwareVersionRptMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x40C;
     };
 
     class EStopRptMsg : public Pacmod3TxMsg
@@ -1120,6 +1171,55 @@ namespace PACMod3
         bool mod_system_present_fault;
         bool mini_system_present_fault;
         bool global_internal_power_supply_fault;
+
+        void parse(const uint8_t * in);  
+    };
+
+    class WatchdogRpt2Msg : public Pacmod3TxMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x421;
+
+        bool accel_rpt_timeout;
+        bool brake_rpt_timeout;
+        bool brake_deccel_rpt_timeout;
+        bool cabin_climate_rpt_timeout;
+        bool cabin_fan_speed_rpt_timeout;
+        bool cabin_temp_rpt_timeout;
+        bool cruise_control_rpt_timeout;
+        bool dash_left_rpt_timeout;
+        bool dash_right_rpt_timeout;
+        bool engine_brake_rpt_timeout;
+        bool hazard_lights_rpt_timeout;
+        bool headlight_rpt_timeout;
+        bool horn_rpt_timeout;
+        bool marker_lamp_rpt_timeout;
+        bool media_controls_rpt_timeout;
+        bool parking_brake_rpt_timeout;
+        bool rear_pass_door_rpt_timeout;
+        bool shift_rpt_timeout;
+        bool sprayer_rpt_timeout;
+        bool steering_rpt_timeout;
+        bool turn_rpt_timeout;
+        bool wiper_rpt_timeout;
+        bool mod1_sanity_fault;
+        bool mod2_sanity_fault;
+        bool mod3_sanity_fault;
+        bool mini1_sanity_fault;
+        bool mini2_sanity_fault;
+        bool mini3_sanity_fault;
+        bool mod1_component_rpt_timeout;
+        bool mod2_component_rpt_timeout;
+        bool mod3_component_rpt_timeout;
+        bool mini1_component_rpt_timeout;
+        bool mini2_component_rpt_timeout;
+        bool mini3_component_rpt_timeout;
+        bool mod1_system_present_fault;
+        bool mod2_system_present_fault;
+        bool mod3_system_present_fault;
+        bool mini1_system_present_fault;
+        bool mini2_system_present_fault;
+        bool mini3_system_present_fault;
 
         void parse(const uint8_t * in);  
     };
@@ -1365,6 +1465,16 @@ namespace PACMod3
 
         void parse(const uint8_t * in);
     };
+    class VehDynamicsRptMsg : public Pacmod3TxMsg
+    {
+      public:
+        static constexpr uint32_t CAN_ID = 0x413;
+
+        double veh_g_forces;
+
+        void parse(const uint8_t * in);
+    };
+
     class VehicleSpeedRptMsg : public Pacmod3TxMsg
     {
       public:
@@ -1436,188 +1546,6 @@ namespace PACMod3
         double rotation_rate_cmd_limit;
         double limited_rotation_rate_cmd;
         
-        void parse(const uint8_t * in);
-    };
-
-// Extra Command Messages
-    class HydraulicsCmdMsg : public Pacmod3RxMsg
-    {
-      public:
-        static constexpr uint8_t DATA_LENGTH = 4;
-
-        static constexpr uint32_t CAN_ID = 0x152;
-
-        void encode(bool enable,
-                    bool ignore_overrides,
-                    bool clear_override,
-                    float hydraulics_cmd,
-                    uint8_t hydraulics_implement_id);
-    };
-
-    class RPMDialCmdMsg : public Pacmod3RxMsg
-    {
-      public:
-        static constexpr uint8_t DATA_LENGTH = 3;
-
-        static constexpr uint32_t CAN_ID = 0x162;
-
-        void encode(bool enable,
-                    bool ignore_overrides,
-                    bool clear_override,
-                    float dial_cmd);
-    };
-
-    class WorklightsCmdMsg : public Pacmod3RxMsg
-    {
-      public:
-        static constexpr uint8_t DATA_LENGTH = 2;
-
-        static constexpr uint32_t CAN_ID = 0x15E;
-
-        void encode(bool enable,
-                    bool ignore_overrides,
-                    bool clear_override,
-                    bool worklight_fh,
-                    bool worklight_rh,
-                    bool worklight_fl,
-                    bool worklight_rl,
-                    bool worklight_beacon);
-    };
-
-// Extra Report Messages
-    class HydraulicsRptMsg : public  SystemRptFloatMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x252;
-    };
-    
-    class HydraulicsAuxRptMsg : public  Pacmod3TxMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x352;
-
-        uint8_t hydraulics_implement_id;
-        double hydraulics_rear_hitch_height;
-        
-        void parse(const uint8_t * in);
-    };
-
-    class RPMDialRptMsg : public Pacmod3TxMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x262;
-
-        bool enabled;
-        bool override_active;
-        bool command_output_fault;
-        bool input_output_fault;
-        bool output_reported_fault;
-        bool pacmod_fault;
-        bool vehicle_fault;
-        bool command_timeout;
-
-        double manual_input;
-        double command;
-        double output;
-
-        void parse(const uint8_t * in);
-
-    };
-
-    class WorklightsRptMsg : public  Pacmod3TxMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x25E;
-
-        bool enabled;
-        bool command_timeout;
-        bool command_output_fault;
-        uint8_t beacon;
-        uint8_t worklight_fh;
-        uint8_t worklight_rh;
-        uint8_t worklight_fl;
-        uint8_t worklight_rl;
-        
-        void parse(const uint8_t * in);
-    };
-
-// Optional Debug Messages
-    class FaultDebugRptMsg : public  Pacmod3TxMsg
-    {
-      public:
-        bool power_12V_fault;
-        bool power_5V_fault;
-        bool power_3V3_fault;
-        bool fd_can0_timeout;
-        bool fd_can1_timeout;
-        bool fd_can2_timeout;
-        bool fd_can3_timeout;
-        bool fd_can4_timeout;
-        bool fd_systems_cmd_timeout;
-        bool fd_system_fault;
-        bool fd_systems_override;
-
-        void parse(const uint8_t * in);
-    };
-
-    class FaultDebugRptMsg00 : public FaultDebugRptMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x510;
-    };
-
-    class FaultDebugRptMsg01 : public FaultDebugRptMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x511;
-    };
-
-    class JoystickRptMsg : public  Pacmod3TxMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x25A;
-        
-        bool joystick_interlock_en_manual;
-        uint8_t joystick_sens_manual;
-        uint8_t joystick_pos_manual;        
-        uint8_t joystick_manual_state_machine;
-        bool joystick_interlock_en_out;      
-        uint16_t joystick_sens_out;     
-        uint16_t joystick_pos_out;    
-
-        void parse(const uint8_t * in);
-    };
-
-    class MFAButtonsRptMsg : public  Pacmod3TxMsg
-    {
-      public:
-        static constexpr uint32_t CAN_ID = 0x256;
-        
-        bool mfa_sys_joystick_enabled;       
-        bool mfa_sys_steer_enabled;          
-        bool mfa_sys_auto_steer_enabled;     
-        bool mfa_sys_hydraulics_enabled;     
-        bool commmand_output_fault;           
-        bool input_output_fault;     
-
-        bool mfa_joystick_enable_in;         
-        bool mfa_steer_can_in;               
-        bool mfa_steer_auto_in;              
-        bool mfa_hydraulics_unlock_in;       
-        bool mfa_tms_in;                     
-
-        bool mfa_joystick_enable_cmd;        
-        bool mfa_steer_can_cmd;              
-        bool mfa_steer_auto_cmd;             
-        bool mfa_hydraulics_unlock_cmd;      
-        bool mfa_tms_cmd;                    
-        
-        bool mfa_joystick_enable_out;        
-        bool mfa_steer_can_out;              
-        bool mfa_steer_auto_out;             
-        bool mfa_hydraulics_unlock_out;      
-        bool mfa_tms_out;                    
-
         void parse(const uint8_t * in);
     };
 

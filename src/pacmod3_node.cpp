@@ -216,20 +216,6 @@ void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg)
   lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
-// Extra Commands
-void callback_hydraulics_set_cmd(const pacmod_msgs::HydraulicsCmd::ConstPtr& msg)
-{
-  lookup_and_encode(HydraulicsCmdMsg::CAN_ID, msg);
-}
-void callback_rpm_dial_set_cmd(const pacmod_msgs::RPMDialCmd::ConstPtr& msg)
-{
-  lookup_and_encode(RPMDialCmdMsg::CAN_ID, msg);
-}
-void callback_worklights_set_cmd(const pacmod_msgs::WorklightsCmd::ConstPtr& msg)
-{
-  lookup_and_encode(WorklightsCmdMsg::CAN_ID, msg);
-}
-
 
 void can_write()
 {
@@ -356,11 +342,7 @@ int main(int argc, char *argv[])
       
       safety_func_cmd_sub,
       supervisory_ctrl_cmd_sub,
-      safety_brake_cmd_sub,
-
-      hydraulics_cmd_sub,
-      rpm_dial_cmd_sub,
-      worklights_cmd_sub;
+      safety_brake_cmd_sub;
 
 
   // Wait for time to be valid
@@ -500,35 +482,34 @@ int main(int argc, char *argv[])
     ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
     ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
     ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
-
+    
     ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
     ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
     ros::Publisher rear_pass_door_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
-
+    
     pub_tx_list.emplace(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub));
 
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
     pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
     pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
-    pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
+    pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));  
 
     pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
     pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
     pub_tx_list.emplace(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub));
 
-  // Commands
-    turn_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
-    rear_pass_door_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd));
+    // Commands
+      turn_cmd_sub =
+        std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
+      rear_pass_door_cmd_sub =
+        std::make_shared<ros::Subscriber>(n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd));
 
-    rx_list.emplace(
-      TurnSignalCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      RearPassDoorCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
-
+      rx_list.emplace(
+        TurnSignalCmdMsg::CAN_ID,
+        std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
+      rx_list.emplace(
+        RearPassDoorCmdMsg::CAN_ID,
+        std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
   }
 
   if (veh_type == VehicleType::HEXAGON_TRACTOR ||
@@ -753,103 +734,6 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
     pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
     pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
-  }
-
-  if (veh_type == VehicleType::HEXAGON_TRACTOR)
-  {
-  // Reports
-    ros::Publisher engine_rpt_pub = n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
-
-    ros::Publisher hazard_lights_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
-    ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
-    ros::Publisher horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_rpt", 20);
-    ros::Publisher sprayer_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
-    ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
-
-    // Extra Messages
-    ros::Publisher hydraulics_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/hydraulics_rpt", 20);
-    ros::Publisher hydraulics_aux_rpt_pub = n.advertise<pacmod_msgs::HydraulicsAuxRpt>("parsed_tx/hydraulics_aux_rpt", 20);
-    ros::Publisher rpm_dial_rpt_pub = n.advertise<pacmod_msgs::RPMDialRpt>("parsed_tx/rpm_dial_rpt", 20);
-    ros::Publisher worklights_rpt_pub = n.advertise<pacmod_msgs::WorklightsRpt>("parsed_tx/worklights_rpt", 20);
-
-    // Optional Debug Messages
-    ros::Publisher fault_debug0_rpt_pub = n.advertise<pacmod_msgs::FaultDebugRpt>("parsed_tx/fault_debug0_rpt", 20);
-    ros::Publisher fault_debug1_rpt_pub = n.advertise<pacmod_msgs::FaultDebugRpt>("parsed_tx/fault_debug1_rpt", 20);
-    ros::Publisher joystick_rpt_pub = n.advertise<pacmod_msgs::JoystickRpt>("parsed_tx/joystick_rpt", 20);
-    ros::Publisher mfa_buttons_rpt_pub = n.advertise<pacmod_msgs::MFAButtonsRpt>("parsed_tx/mfa_buttons_rpt", 20);
-
-    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
-
-    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
-    pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
-    pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
-    pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
-    pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
-    pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
-
-    pub_tx_list.emplace(HydraulicsRptMsg::CAN_ID, std::move(hydraulics_rpt_pub));
-    pub_tx_list.emplace(HydraulicsAuxRptMsg::CAN_ID, std::move(hydraulics_aux_rpt_pub));
-    pub_tx_list.emplace(RPMDialRptMsg::CAN_ID, std::move(rpm_dial_rpt_pub));
-    pub_tx_list.emplace(WorklightsRptMsg::CAN_ID, std::move(worklights_rpt_pub));
-
-    pub_tx_list.emplace(FaultDebugRptMsg00::CAN_ID, std::move(fault_debug0_rpt_pub));
-    pub_tx_list.emplace(FaultDebugRptMsg01::CAN_ID, std::move(fault_debug1_rpt_pub));
-    pub_tx_list.emplace(JoystickRptMsg::CAN_ID, std::move(joystick_rpt_pub));
-    pub_tx_list.emplace(MFAButtonsRptMsg::CAN_ID, std::move(mfa_buttons_rpt_pub));
-
-  // Commands
-    hazard_lights_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
-    headlight_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
-    horn_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
-    parking_brake_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd));
-    sprayer_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
-    wiper_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
-  
-    // Extra Commands
-    hydraulics_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hydraulics_cmd", 20, callback_hydraulics_set_cmd));
-    rpm_dial_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/rpm_dial_cmd", 20, callback_rpm_dial_set_cmd));
-    worklights_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/worklights_cmd", 20, callback_worklights_set_cmd));
-
-    rx_list.emplace(
-      HazardLightCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      HeadlightCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      HornCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      ParkingBrakeCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(ParkingBrakeCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      SprayerCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      WiperCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
-
-    // Extra Commands
-    rx_list.emplace(
-      HydraulicsCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HydraulicsCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      RPMDialCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(RPMDialCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      WorklightsCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(WorklightsCmdMsg::DATA_LENGTH)));
-
   }
 
   if (veh_type == VehicleType::VEHICLE_R8F)

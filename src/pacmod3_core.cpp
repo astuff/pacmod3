@@ -87,6 +87,7 @@ constexpr uint32_t MarkerLampRptMsg::CAN_ID;
 constexpr uint32_t ParkingBrakeRptMsg::CAN_ID;
 constexpr uint32_t RearPassDoorRptMsg::CAN_ID;
 constexpr uint32_t SafetyBrakeRptMsg::CAN_ID;
+constexpr uint32_t SafetyFuncCriticalStopRptMsg::CAN_ID;
 constexpr uint32_t SafetyFuncRptMsg::CAN_ID;
 constexpr uint32_t ShiftRptMsg::CAN_ID;
 constexpr uint32_t SprayerRptMsg::CAN_ID;
@@ -110,12 +111,15 @@ constexpr uint32_t ComponentRptMsg00::CAN_ID;
 constexpr uint32_t ComponentRptMsg01::CAN_ID;
 constexpr uint32_t ComponentRptMsg02::CAN_ID;
 constexpr uint32_t ComponentRptMsg03::CAN_ID;
+constexpr uint32_t ComponentRptMsg04::CAN_ID;
 constexpr uint32_t SoftwareVerRptMsg00::CAN_ID;
 constexpr uint32_t SoftwareVerRptMsg01::CAN_ID;
 constexpr uint32_t SoftwareVerRptMsg02::CAN_ID;
 constexpr uint32_t SoftwareVerRptMsg03::CAN_ID;
+constexpr uint32_t SoftwareVerRptMsg04::CAN_ID;
 constexpr uint32_t EStopRptMsg::CAN_ID;
 constexpr uint32_t WatchdogRptMsg::CAN_ID;
+constexpr uint32_t WatchdogRpt2Msg::CAN_ID;
 
 // Misc. Reports
 constexpr uint32_t AngVelRptMsg::CAN_ID;
@@ -144,26 +148,6 @@ constexpr uint32_t YawRateRptMsg::CAN_ID;
 constexpr uint32_t AccelCmdLimitRptMsg::CAN_ID;
 constexpr uint32_t BrakeCmdLimitRptMsg::CAN_ID;
 constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
-
-// Extra Messages
-constexpr uint32_t HydraulicsCmdMsg::CAN_ID;
-constexpr uint32_t RPMDialCmdMsg::CAN_ID;
-constexpr uint32_t WorklightsCmdMsg::CAN_ID;
-
-constexpr uint8_t HydraulicsCmdMsg::DATA_LENGTH;
-constexpr uint8_t RPMDialCmdMsg::DATA_LENGTH;
-constexpr uint8_t WorklightsCmdMsg::DATA_LENGTH;
-
-constexpr uint32_t HydraulicsRptMsg::CAN_ID;
-constexpr uint32_t HydraulicsAuxRptMsg::CAN_ID;
-constexpr uint32_t RPMDialRptMsg::CAN_ID;
-constexpr uint32_t WorklightsRptMsg::CAN_ID;
-
-// Optional Debug Messages
-constexpr uint32_t FaultDebugRptMsg00::CAN_ID;
-constexpr uint32_t FaultDebugRptMsg01::CAN_ID;
-constexpr uint32_t JoystickRptMsg::CAN_ID;
-constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
 
 /*** TX Messages   ***/
 
@@ -221,6 +205,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
         break;
       case SafetyBrakeRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SafetyBrakeRptMsg);
+        break;
+      case SafetyFuncCriticalStopRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new SafetyFuncCriticalStopRptMsg);
         break;
       case SafetyFuncRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SafetyFuncRptMsg);
@@ -299,6 +286,9 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       case WatchdogRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new WatchdogRptMsg);
         break;
+      case WatchdogRpt2Msg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new WatchdogRpt2Msg);
+        break;
 
     // Misc Reports
       case AngVelRptMsg::CAN_ID:
@@ -375,32 +365,6 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
         break;
       case SteerCmdLimitRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SteerCmdLimitRptMsg);
-        break;
-    // Extra Messages
-      case HydraulicsRptMsg::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new HydraulicsRptMsg);
-        break;
-      case HydraulicsAuxRptMsg::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new HydraulicsAuxRptMsg);
-        break;
-      case RPMDialRptMsg::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new RPMDialRptMsg);
-        break;
-      case WorklightsRptMsg::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new WorklightsRptMsg);
-        break;
-    // Optional Debug Messages
-      case FaultDebugRptMsg00::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new FaultDebugRptMsg);
-        break;
-      case FaultDebugRptMsg01::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new FaultDebugRptMsg);
-        break;
-      case JoystickRptMsg::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new JoystickRptMsg);
-        break;
-      case MFAButtonsRptMsg::CAN_ID:
-        return std::shared_ptr<Pacmod3TxMsg>(new MFAButtonsRptMsg);
         break;
       default:
         return nullptr;
@@ -710,6 +674,54 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       global_internal_power_supply_fault = ((in[7] & 0x80) > 0);
     }
 
+    void WatchdogRpt2Msg::parse(const uint8_t * in)
+    {
+      accel_rpt_timeout = ((in[0] & 0x01) > 0);
+      brake_rpt_timeout = ((in[0] & 0x02) > 0);
+      brake_deccel_rpt_timeout = ((in[0] & 0x04) > 0);
+      cabin_climate_rpt_timeout = ((in[0] & 0x08) > 0);
+      cabin_fan_speed_rpt_timeout = ((in[0] & 0x10) > 0);
+      cabin_temp_rpt_timeout = ((in[0] & 0x20) > 0);
+      cruise_control_rpt_timeout = ((in[0] & 0x40) > 0);
+      dash_left_rpt_timeout = ((in[0] & 0x80) > 0);
+
+      dash_right_rpt_timeout = ((in[1] & 0x01) > 0);
+      engine_brake_rpt_timeout =  ((in[1] & 0x02) > 0);
+      hazard_lights_rpt_timeout = ((in[1] & 0x04) > 0);
+      headlight_rpt_timeout = ((in[1] & 0x08) > 0);
+      horn_rpt_timeout = ((in[1] & 0x10) > 0);
+      marker_lamp_rpt_timeout = ((in[1] & 0x20) > 0);
+      media_controls_rpt_timeout = ((in[1] & 0x40) > 0);
+      parking_brake_rpt_timeout = ((in[1] & 0x80) > 0); 
+      
+      rear_pass_door_rpt_timeout = ((in[2] & 0x01) > 0);
+      shift_rpt_timeout = ((in[2] & 0x02) > 0);
+      sprayer_rpt_timeout = ((in[2] & 0x04) > 0);
+      steering_rpt_timeout = ((in[2] & 0x08) > 0);
+      turn_rpt_timeout = ((in[2] & 0x10) > 0);
+      wiper_rpt_timeout = ((in[2] & 0x20) > 0);
+      mod1_sanity_fault = ((in[2] & 0x40) > 0);
+      mod2_sanity_fault =((in[2] & 0x80) > 0);
+
+      mod3_sanity_fault = ((in[3] & 0x01) > 0);
+      mini1_sanity_fault = ((in[3] & 0x02) > 0);
+      mini2_sanity_fault = ((in[3] & 0x04) > 0);
+      mini3_sanity_fault = ((in[3] & 0x08) > 0);
+      mod1_component_rpt_timeout = ((in[3] & 0x10) > 0);
+      mod2_component_rpt_timeout = ((in[3] & 0x20) > 0);
+      mod3_component_rpt_timeout = ((in[3] & 0x40) > 0);
+      mini1_component_rpt_timeout = ((in[3] & 0x80) > 0);
+      
+      mini2_component_rpt_timeout = ((in[4] & 0x01) > 0);
+      mini3_component_rpt_timeout = ((in[4] & 0x02) > 0);
+      mod1_system_present_fault = ((in[4] & 0x04) > 0);
+      mod2_system_present_fault = ((in[4] & 0x08) > 0);
+      mod3_system_present_fault = ((in[4] & 0x10) > 0);
+      mini1_system_present_fault = ((in[4] & 0x20) > 0);
+      mini2_system_present_fault = ((in[4] & 0x40) > 0);
+      mini3_system_present_fault = ((in[4] & 0x80) > 0);
+    }
+
   // Global Report
     void GlobalRptMsg::parse(const uint8_t * in)
     {
@@ -777,6 +789,34 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       cmd_permitted = (in[0] & 0x20) > 0;
     }
 
+    void SafetyFuncCriticalStopRptMsg::parse(const uint8_t * in)
+    {
+        automaual_opctrl_fault = (in[0] & 0x01) > 0;
+        remote_stop_fault = (in[0] & 0x02) > 0;
+        safety_brake_opctrl_off = (in[0] & 0x04) > 0;
+        safety_brake_cmd_timeout = (in[0] & 0x08) > 0;
+        safety_func_cmd_timeout = (in[0] & 0x10) > 0;
+        safety_func_critical_stop_1_cmd = (in[0] & 0x20) > 0;
+        safety_func_critical_stop_2_cmd = (in[0] & 0x40) > 0;
+        safety_func_none_cmd = (in[0] & 0x80) > 0;
+
+        pacmod_system_timeout = (in[1] & 0x01) > 0;
+        pacmod_system_fault = (in[1] & 0x02) > 0;
+        pacmod_system_not_active = (in[1] & 0x04) > 0;
+        vehicle_report_timeout = (in[1] & 0x08) > 0;
+        vehicle_report_fault = (in[1] & 0x10) > 0;
+        low_engine_rpm = (in[1] & 0x20) > 0;
+        pri_safety_brake_signal_1_fault = (in[1] & 0x40) > 0;
+        pri_safety_brake_signal_2_fault = (in[1] & 0x80) > 0;
+
+        sec_safety_brake_signal_1_fault = (in[2] & 0x01) > 0;
+        sec_safety_brake_signal_2_fault = (in[2] & 0x01) > 0;
+        primary_processor_fault = (in[2] & 0x04) > 0;
+        secondary_processor_fault = (in[2] & 0x08) > 0;
+        remote_stop_cmd = (in[2] & 0x10) > 0;
+        pri_safety_brake_pressure_fault = (in[2] & 0x20) > 0;
+    }
+
     void SafetyFuncRptMsg::parse(const uint8_t * in)
     {
       commanded_val = static_cast<SafetyFunctionCommand>(in[0] & 0x0F);
@@ -790,7 +830,6 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
 
       user_pc_fault = static_cast<SafetyFuncFaults>(in[2] & 0x03);
       pacmod_system_fault = static_cast<SafetyFuncFaults>(in[2] & 0x0C);
-      vehicle_fault = static_cast<SafetyFuncFaults>(in[2] & 0x30);
 
       manual_state_obtainable = (in[3] & 0x01) > 0;
       auto_ready_state_obtainable = (in[3] & 0x02) > 0;
@@ -804,7 +843,10 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
     void AccelAuxRptMsg::parse(const uint8_t * in)
     {
       operator_interaction = (in[4] & 0x01) > 0;
-      operator_interaction_avail = (in[5] & 0x04) > 0;
+      accel_limiting_active = (in[4] & 0x02) > 0;
+
+      operator_interaction = (in[5] & 0x04) > 0;
+      accel_limiting_active_avail = (in[5] & 0x08) > 0;
     }
 
     void BrakeAuxRptMsg::parse(const uint8_t * in)
@@ -816,9 +858,12 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
 
       operator_interaction = (in[6] & 0x01) > 0;
       brake_on_off = (in[6] & 0x02) > 0;
+      brake_limiting_function = (in[6] & 0x04) > 0;
+
       brake_pressure_avail = (in[7] & 0x04) > 0;
       operator_interaction_avail = (in[7] & 0x08) > 0;
       brake_on_off_avail = (in[7] & 0x10) > 0;
+      brake_limiting_function_avail = (in[7] & 0x20) > 0;
     }
 
     void BrakeDeccelAuxRptMsg::parse(const uint8_t * in)
@@ -884,12 +929,14 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       operator_interaction = (in[6] & 0x01) > 0;
       rotation_rate_sign = (in[6] & 0x02) > 0;
       vehicle_angle_calib_status = (in[6] & 0x04) > 0;
+      steering_limiting_active = (in[6] & 0x08) > 0;
 
       steering_torque_avail = (in[7] & 0x02) > 0;
       rotation_rate_avail = (in[7] & 0x04) > 0;
       operator_interaction_avail = (in[7] & 0x08) > 0;
       rotation_rate_sign_avail = (in[7] & 0x10) > 0;
       vehicle_angle_calib_status_avail = (in[7] & 0x20) > 0;
+      steering_limiting_active_avail = (in[7] & 0x40) > 0;
     }
 
     void TurnAuxRptMsg::parse(const uint8_t * in)
@@ -1097,6 +1144,11 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       rear_right_tire_pressure = (in[3] / 4);
     }
 
+    void VehDynamicsRptMsg::parse(const uint8_t * in)
+    {
+      veh_g_forces = static_cast<double>((in[0]) / 100.0);
+    }
+
     void VehicleSpeedRptMsg::parse(const uint8_t * in)
     {
       int16_t temp;
@@ -1244,110 +1296,6 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
 
       temp = (static_cast<int16_t>(in[6]) << 8) | in[7];
       limited_rotation_rate_cmd = static_cast<double>(temp / 1000.0);
-    }
-
-  // Extra Messages
-    void HydraulicsAuxRptMsg::parse(const uint8_t * in)
-    {
-      hydraulics_implement_id = in[0];
-
-      int16_t temp;
-
-      temp = static_cast<int16_t>(in[1]);
-      hydraulics_rear_hitch_height = static_cast<double>(temp / 100.0);
-    }
-
-    void RPMDialRptMsg::parse(const uint8_t * in)
-    {
-      enabled = ((in[0] & 0x01) > 0);
-      override_active = ((in[0] & 0x02) > 0);
-      command_output_fault = ((in[0] & 0x04) > 0);
-      input_output_fault = ((in[0] & 0x08) > 0);
-      output_reported_fault = ((in[0] & 0x10) > 0);
-      pacmod_fault = ((in[0] & 0x20) > 0);
-      vehicle_fault = ((in[0] & 0x40) > 0);
-      command_timeout = ((in[0] & 0x80) > 0);
-
-      int16_t temp;
-
-      temp = (static_cast<int16_t>(in[1]) << 8) | in[2];
-      manual_input = static_cast<double>(temp / 1000.0);
-
-      temp = (static_cast<int16_t>(in[3]) << 8) | in[4];
-      command = static_cast<double>(temp / 1000.0);
-
-      temp = (static_cast<int16_t>(in[5]) << 8) | in[6];
-      output = static_cast<double>(temp / 1000.0);
-    }
-
-    void WorklightsRptMsg::parse(const uint8_t * in)
-    {
-      enabled = ((in[0] & 0x01) > 0);
-      command_timeout = ((in[0] & 0x02) > 0);
-      command_output_fault = ((in[0] & 0x04) > 0);
-
-      beacon = ((in[0] & 0xC0) >> 6);
-      worklight_fh = (in[1] & 0x03);
-      worklight_rh = ((in[1] & 0x0C) >> 2);
-      worklight_fl = ((in[1] & 0x30) >> 4);
-      worklight_rl = ((in[1] & 0xC0) >> 6);
-    }
-
-    void FaultDebugRptMsg::parse(const uint8_t * in)
-    {
-      power_12V_fault = ((in[0] & 0x01) > 0);
-      power_5V_fault = ((in[0] & 0x02) > 0);
-      power_3V3_fault = ((in[0] & 0x04) > 0);
-      fd_can0_timeout = ((in[0] & 0x08) > 0);
-      fd_can1_timeout = ((in[0] & 0x10) > 0);
-      fd_can2_timeout = ((in[0] & 0x20) > 0);
-      fd_can3_timeout = ((in[0] & 0x40) > 0);
-      fd_can4_timeout = ((in[0] & 0x80) > 0);
-
-      fd_systems_cmd_timeout = ((in[1] & 0x01) > 0);
-      fd_system_fault = ((in[1] & 0x02) > 0);
-      fd_systems_override = ((in[1] & 0x04) > 0);
-    }
-
-    void JoystickRptMsg::parse(const uint8_t * in)
-    {
-      joystick_interlock_en_manual = ((in[0] & 0x01) > 0);
-      joystick_sens_manual = ((in[0] & 0x06) >> 1);
-      joystick_pos_manual = ((in[0] & 0x70) >> 4);
-
-      joystick_manual_state_machine = in[1];
-      
-      joystick_interlock_en_out = ((in[2] & 0x01) > 0);
-      joystick_sens_out = ((in[2] & 0x06) >> 1);
-      joystick_pos_out = ((in[2] & 0x70) >> 4);
-    }
-
-    void MFAButtonsRptMsg::parse(const uint8_t * in)
-    {
-      mfa_sys_joystick_enabled = ((in[0] & 0x01) > 0);
-      mfa_sys_steer_enabled = ((in[0] & 0x02) > 0);
-      mfa_sys_auto_steer_enabled = ((in[0] & 0x04) > 0);
-      mfa_sys_hydraulics_enabled = ((in[0] & 0x08) > 0);
-      commmand_output_fault = ((in[0] & 0x10) > 0);
-      input_output_fault = ((in[0] & 0x20) > 0);
-
-      mfa_joystick_enable_in = ((in[1] & 0x01) > 0);
-      mfa_steer_can_in = ((in[1] & 0x02) > 0);
-      mfa_steer_auto_in = ((in[1] & 0x04) > 0);
-      mfa_hydraulics_unlock_in = ((in[1] & 0x08) > 0);
-      mfa_tms_in = ((in[1] & 0x10) > 0);
-
-      mfa_joystick_enable_cmd = ((in[2] & 0x01) > 0);
-      mfa_steer_can_cmd = ((in[2] & 0x02) > 0);
-      mfa_steer_auto_cmd = ((in[2] & 0x04) > 0);
-      mfa_hydraulics_unlock_cmd = ((in[2] & 0x08) > 0);
-      mfa_tms_cmd = ((in[2] & 0x10) > 0);
-
-      mfa_joystick_enable_out = ((in[3] & 0x01) > 0);
-      mfa_steer_can_out = ((in[3] & 0x02) > 0);
-      mfa_steer_auto_out = ((in[3] & 0x04) > 0);
-      mfa_hydraulics_unlock_out = ((in[3] & 0x08) > 0);
-      mfa_tms_out = ((in[3] & 0x10) > 0);
     }
 
 /*** RX Messages   ***/
@@ -1500,65 +1448,6 @@ constexpr uint32_t MFAButtonsRptMsg::CAN_ID;
       data.assign(DATA_LENGTH, 0);
       data[0] = buzzer_mute ? 0x01 : 0x00;
       data[0] |= underdash_lights_white ? 0x02 : 0x00;
-    }
-
-    void HydraulicsCmdMsg::encode(bool enable,
-                                  bool ignore_overrides,
-                                  bool clear_override,
-                                  float hydraulics_cmd,
-                                  uint8_t hydraulics_implement_id)
-    {
-      data.assign(DATA_LENGTH, 0);
-      data[0] = enable ? 0x01 : 0x00;
-      data[0] |= ignore_overrides ? 0x02 : 0x00;
-      data[0] |= clear_override ? 0x04 : 0x00;
-
-      int16_t raw_cmd = static_cast<int16_t>(1000.0 * hydraulics_cmd);
-      data[1] = (raw_cmd & 0xFF00) >> 8;
-      data[2] = raw_cmd & 0x00FF;
-
-      if (hydraulics_implement_id >= 0x8)
-        hydraulics_implement_id = 0x0;
-
-      data[3] = hydraulics_implement_id;
-    }
-
-    void RPMDialCmdMsg::encode(bool enable,
-                                bool ignore_overrides,
-                                bool clear_override,
-                                float dial_cmd)
-  {
-      data.assign(DATA_LENGTH, 0);
-
-      data[0] = enable ? 0x01 : 0x00;
-      data[0] |= ignore_overrides ? 0x02 : 0x00;
-      data[0] |= clear_override ? 0x04 : 0x00;
-
-      uint16_t cmd_float = static_cast<uint16_t>(dial_cmd * 1000.0);
-      data[1] = (cmd_float & 0xFF00) >> 8;
-      data[2] = cmd_float & 0x00FF;
-    }
-
-    void WorklightsCmdMsg::encode(bool enable,
-                                bool ignore_overrides,
-                                bool clear_override,
-                                bool worklight_fh,
-                                bool worklight_rh,
-                                bool worklight_fl,
-                                bool worklight_rl,
-                                bool worklight_beacon)
-  {
-      data.assign(DATA_LENGTH, 0);
-
-      data[0] = enable ? 0x01 : 0x00;
-      data[0] |= ignore_overrides ? 0x02 : 0x00;
-      data[0] |= clear_override ? 0x04 : 0x00;
-
-      data[1] = worklight_fh ? 0x01 : 0x00;
-      data[1] |= worklight_rh ? 0x02 : 0x00;
-      data[1] != worklight_fl ? 0x04 : 0x00;
-      data[1] |= worklight_rl ? 0x08 : 0x00;
-      data[1] |= worklight_beacon ? 0x10 : 0x00;
     }
 
 }  // namespace PACMod3

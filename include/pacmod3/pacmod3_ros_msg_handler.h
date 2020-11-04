@@ -97,6 +97,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::SafetyBrakeRpt * new_msg,
       const std::string& frame_id);
+  void fillSafetyFuncCriticalStopRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::SafetyFuncCriticalStopRpt * new_msg,
+      const std::string& frame_id);
   void fillSafetyFuncRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::SafetyFuncRpt * new_msg,
@@ -108,6 +112,10 @@ private:
   void fillWatchdogRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::WatchdogRpt * new_msg,
+      const std::string& frame_id);
+  void fillWatchdogRpt2(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::WatchdogRpt2 * new_msg,
       const std::string& frame_id);
 
 // Global
@@ -207,6 +215,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::TirePressureRpt * new_msg,
       const std::string& frame_id);
+  void fillVehDynamicsRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod_msgs::VehDynamicsRpt * new_msg,
+      const std::string& frame_id);
   void fillVehicleSpeedRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::VehicleSpeedRpt * new_msg,
@@ -233,33 +245,6 @@ private:
       pacmod_msgs::SteerCmdLimitRpt * new_msg,
       const std::string& frame_id);
 
-// Extra Messages
-  void fillHydraulicsAuxRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::HydraulicsAuxRpt * new_msg,
-      const std::string& frame_id);
-  void fillRPMDialRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::RPMDialRpt * new_msg,
-      const std::string& frame_id);
-  void fillWorklightsRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::WorklightsRpt * new_msg,
-      const std::string& frame_id);
-// Optional Debug Messages
-  void fillFaultDebugRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::FaultDebugRpt * new_msg,
-      const std::string& frame_id);
-  void fillJoystickRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::JoystickRpt * new_msg,
-      const std::string& frame_id);
-  void fillMFAButtonsRpt(
-      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod_msgs::MFAButtonsRpt * new_msg,
-      const std::string& frame_id);
-
 };
 
 class Pacmod3RxRosMsgHandler
@@ -276,10 +261,6 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyFuncCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
-
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::HydraulicsCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::RPMDialCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::WorklightsCmd::ConstPtr& msg);
 
 };
 }  // namespace PACMod3

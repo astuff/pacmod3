@@ -59,6 +59,7 @@
 #include <pacmod_msgs/SafetyBrakeCmd.h>
 #include <pacmod_msgs/SafetyBrakeRpt.h>
 #include <pacmod_msgs/SafetyFuncCmd.h>
+#include <pacmod_msgs/SafetyFuncCriticalStopRpt.h>
 #include <pacmod_msgs/SafetyFuncRpt.h>
 #include <pacmod_msgs/ShiftAuxRpt.h>
 #include <pacmod_msgs/SoftwareVersionRpt.h>
@@ -75,21 +76,13 @@
 #include <pacmod_msgs/SystemRptInt.h>
 #include <pacmod_msgs/TirePressureRpt.h>
 #include <pacmod_msgs/TurnAuxRpt.h>
+#include <pacmod_msgs/VehDynamicsRpt.h>
 #include <pacmod_msgs/VehicleSpeedRpt.h>
 #include <pacmod_msgs/VinRpt.h>
 #include <pacmod_msgs/WatchdogRpt.h>
+#include <pacmod_msgs/WatchdogRpt2.h>
 #include <pacmod_msgs/WheelSpeedRpt.h>
 #include <pacmod_msgs/WiperAuxRpt.h>
 #include <pacmod_msgs/YawRateRpt.h>
-
-#include <pacmod_msgs/FaultDebugRpt.h>
-#include <pacmod_msgs/HydraulicsAuxRpt.h>
-#include <pacmod_msgs/HydraulicsCmd.h>
-#include <pacmod_msgs/JoystickRpt.h>
-#include <pacmod_msgs/MFAButtonsRpt.h>
-#include <pacmod_msgs/RPMDialCmd.h>
-#include <pacmod_msgs/RPMDialRpt.h>
-#include <pacmod_msgs/WorklightsRpt.h>
-#include <pacmod_msgs/WorklightsCmd.h>
 
 #endif  // PACMOD3_PACMOD3_COMMON_H
