@@ -14,4 +14,8 @@ For access to the DBC file which defines the CAN interface for the PACMod, see t
 - International Prostar+ 122
 - Lexus RX-450h MY 2016+
 - Freightliner Cascadia DD13 DayCab/Sleeper/Extended-Sleeper
+- Ford Ranger 2019+
+- Toyota Minivan 2019+
+- Tractor 2017+
+- Kenworth T680 Semi 2017+
 - More coming soon...

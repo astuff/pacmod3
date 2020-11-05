@@ -373,8 +373,8 @@ int main(int argc, char *argv[])
       veh_type = JUPITER_SPIRIT;
     else if (veh_type_string == "HEXAGON_TRACTOR")
       veh_type = HEXAGON_TRACTOR;
-    else if (veh_type_string == "VEHICLE_R8F")
-      veh_type = VEHICLE_R8F;
+    else if (veh_type_string == "FORD_RANGER")
+      veh_type = FORD_RANGER;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
@@ -481,17 +481,17 @@ int main(int argc, char *argv[])
     ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
     ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
     ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-    ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
         
     pub_tx_list.emplace(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub));
 
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
     pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
     pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
-    pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));  
     
     if (veh_type != VehicleType::POLARIS_RANGER)
     {
+      ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+  
       ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
       ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
       ros::Publisher rear_pass_door_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
@@ -499,6 +499,7 @@ int main(int argc, char *argv[])
       pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
       pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
       pub_tx_list.emplace(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub));
+      pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));  
     }
     // Commands
       turn_cmd_sub =
@@ -519,12 +520,10 @@ int main(int argc, char *argv[])
     ros::Publisher component_rpt0_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
     ros::Publisher component_rpt1_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
     ros::Publisher component_rpt2_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
-    ros::Publisher component_rpt3_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt3", 20);
     ros::Publisher watchdog_rpt_pub = n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
     ros::Publisher software_ver_rpt0_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
     ros::Publisher software_ver_rpt1_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
     ros::Publisher software_ver_rpt2_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
-    ros::Publisher software_ver_rpt3_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt3", 20);
 
     ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
     ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
@@ -533,11 +532,9 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
     pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
     pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
-    pub_tx_list.emplace(SoftwareVerRptMsg03::CAN_ID, std::move(software_ver_rpt3_pub));
     pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
     pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
     pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
-    pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
 
     pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
@@ -559,7 +556,7 @@ int main(int argc, char *argv[])
   }
 
   if (veh_type == VehicleType::HEXAGON_TRACTOR ||
-      veh_type == VehicleType::VEHICLE_R8F)
+      veh_type == VehicleType::FORD_RANGER)
   {
     ros::Publisher global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
     ros::Publisher component_rpt0_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
@@ -782,7 +779,7 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
   }
 
-  if (veh_type == VehicleType::VEHICLE_R8F)
+  if (veh_type == VehicleType::FORD_RANGER)
   {
   // Reports
     ros::Publisher door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);

@@ -123,10 +123,10 @@ namespace PACMod3
     POLARIS_GEM,
     POLARIS_RANGER,
     HEXAGON_TRACTOR,
+    FORD_RANGER,
     VEHICLE_4,
     VEHICLE_5,
-    VEHICLE_6,
-    VEHICLE_R8F
+    VEHICLE_6
   };
 
   enum XBR_EBI_Mode

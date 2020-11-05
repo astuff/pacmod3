@@ -316,6 +316,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillTirePressureRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == VehDynamicsRptMsg::CAN_ID)
+  {
+    pacmod_msgs::VehDynamicsRpt new_msg;
+    fillVehDynamicsRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == VehicleSpeedRptMsg::CAN_ID)
   {
     pacmod_msgs::VehicleSpeedRpt new_msg;
@@ -1266,6 +1272,19 @@ void Pacmod3TxRosMsgHandler::fillTirePressureRpt(
   new_msg->front_right_tire_pressure = dc_parser->front_right_tire_pressure;
   new_msg->rear_left_tire_pressure = dc_parser->rear_left_tire_pressure;
   new_msg->rear_right_tire_pressure = dc_parser->rear_right_tire_pressure;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillVehDynamicsRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod_msgs::VehDynamicsRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<VehDynamicsRptMsg>(parser_class);
+
+  new_msg->veh_g_forces = dc_parser->veh_g_forces;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();

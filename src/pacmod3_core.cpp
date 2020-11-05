@@ -140,6 +140,7 @@ constexpr uint32_t SteerMotorRpt1Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt2Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt3Msg::CAN_ID;
 constexpr uint32_t TirePressureRptMsg::CAN_ID;
+constexpr uint32_t VehDynamicsRptMsg::CAN_ID;
 constexpr uint32_t VehicleSpeedRptMsg::CAN_ID;
 constexpr uint32_t VinRptMsg::CAN_ID;
 constexpr uint32_t WheelSpeedRptMsg::CAN_ID;
