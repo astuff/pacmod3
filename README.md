@@ -6,12 +6,16 @@ This ROS node is designed to allow the user to control a vehicle (see SUPPORTED 
 
 For access to the DBC file which defines the CAN interface for the PACMod, see the [pacmod_dbc](https://github.com/astuff/pacmod_dbc) repo.
 
-## Supported Vehicles ##
-
-- Polaris GEM Series (e2/e4/e6) MY 2016+
-- Polaris eLXD MY 2016+
-- Polaris Ranger X900
-- International Prostar+ 122
-- Lexus RX-450h MY 2016+
-- Freightliner Cascadia DD13 DayCab/Sleeper/Extended-Sleeper
-- More coming soon...
+Supported Vehicles | ROS Version Available | PACMod Version | ROS Driver Branch |
+- | - | - | - |
+Polaris GEM Series (e2/e4/e6) MY 2016+ | ROS | PACMod2 | [PACMod2 Driver](https://github.com/astuff/pacmod/tree/release) |
+Polaris eLXD MY 2016+ | ROS | PACMod2 | [PACMod2 Driver](https://github.com/astuff/pacmod/tree/release) |
+International Prostar+ 122 | ROS | PACMod2 | [PACMod2 Driver](https://github.com/astuff/pacmod/tree/release) |
+Lexus RX-450h MY 2016+ | ROS and ROS2 | PACMod3 | [PACMod3 Driver](https://github.com/astuff/pacmod3) and [ROS2 Driver (DBC 3.4)](https://github.com/astuff/pacmod3/tree/dashing-devel)|
+Kenworth T680 Semi 2017+ |ROS | PACMod3 | [PACMod3 Driver](https://github.com/astuff/pacmod3)|
+Freightliner Cascadia DD13 DayCab/Sleeper/Extended-Sleeper | ROS | PACMod3 | [PACMod3 Driver](https://github.com/astuff/pacmod3)|
+Tractor 2017+ | ROS | PACMod3 | [PACMod3 Driver (DBC 9)](https://github.com/astuff/pacmod3/tree/devel/dbc_extra) |
+Ford Ranger 2019+ | ROS | PACMod3 | [PACMod3 Driver (DBC 11)](https://github.com/astuff/pacmod3/tree/devel/dbc_11) |
+Polaris Ranger X900 | ROS | PACMod3 | [PACMod3 Driver (DBC 11)](https://github.com/astuff/pacmod3/tree/devel/dbc_11) |
+Toyota Minivan 2019+ | ROS | PACMod3 | [PACMod3 Driver (DBC 11)](https://github.com/astuff/pacmod3/tree/devel/dbc_11) |
+# More coming soon... #
