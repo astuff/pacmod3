@@ -520,14 +520,17 @@ int main(int argc, char *argv[])
     ros::Publisher component_rpt0_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
     ros::Publisher component_rpt1_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
     ros::Publisher component_rpt2_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
-    ros::Publisher watchdog_rpt_pub = n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
     ros::Publisher software_ver_rpt0_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
     ros::Publisher software_ver_rpt1_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
     ros::Publisher software_ver_rpt2_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
 
+    ros::Publisher watchdog_rpt_pub = n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
+    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
+
     ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
     ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
     ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+
 
     pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
     pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
@@ -537,6 +540,8 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
 
     pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
+    pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
+
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
     pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
     pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
