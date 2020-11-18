@@ -528,6 +528,8 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       internal_supply_voltage_fault = ((in[5] & 0x04) > 0);
       supervisory_timeout = ((in[5] & 0x08) > 0);
       supervisory_sanity_fault = ((in[5] & 0x10) > 0);
+      watchdog_sanity_fault = ((in[5] & 0x20) > 0);
+      watchdog_system_present_fault = ((in[5] & 0x40) > 0);
 
     }
 
