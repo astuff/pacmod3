@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2020 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -328,7 +328,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     pub.publish(new_msg);
   }
   else if (can_id == AccelCmdLimitRptMsg::CAN_ID ||
-           can_id == BrakeCmdLimitRptMsg::CAN_ID)          
+           can_id == BrakeCmdLimitRptMsg::CAN_ID)
   {
     pacmod_msgs::SystemCmdLimitRpt new_msg;
     fillSystemCmdLimitRpt(parser_class, &new_msg, frame_id);
@@ -379,7 +379,6 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillMFAButtonsRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
-
 }
 
 // General Reports
@@ -591,7 +590,6 @@ void Pacmod3TxRosMsgHandler::fillCabinClimateRpt(
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
-
 }
 
 void Pacmod3TxRosMsgHandler::fillSafetyBrakeRpt(
@@ -610,7 +608,6 @@ void Pacmod3TxRosMsgHandler::fillSafetyBrakeRpt(
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
-
 }
 
 void Pacmod3TxRosMsgHandler::fillSafetyFuncRpt(
@@ -636,7 +633,7 @@ void Pacmod3TxRosMsgHandler::fillSafetyFuncRpt(
   new_msg->manual_ready_state_obtainable = dc_parser->manual_ready_state_obtainable;
   new_msg->critical_stop1_state_obtainable = dc_parser->critical_stop1_state_obtainable;
   new_msg->critical_stop2_state_obtainable = dc_parser->critical_stop2_state_obtainable;
-  
+
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
 }
@@ -653,7 +650,6 @@ void Pacmod3TxRosMsgHandler::fillEStopRpt(
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
-
 }
 
 void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
@@ -689,7 +685,7 @@ void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
   new_msg->brake_pacmod_fault = dc_parser->brake_pacmod_fault;
   new_msg->brake_vehicle_fault = dc_parser->brake_vehicle_fault;
   new_msg->brake_timeout = dc_parser->brake_timeout;
-  
+
   new_msg->shift_enabled = dc_parser->shift_enabled;
   new_msg->shift_override_active = dc_parser->shift_override_active;
   new_msg->shift_command_output_fault = dc_parser->shift_command_output_fault;
@@ -698,7 +694,7 @@ void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
   new_msg->shift_pacmod_fault = dc_parser->shift_pacmod_fault;
   new_msg->shift_vehicle_fault = dc_parser->shift_vehicle_fault;
   new_msg->shift_timeout = dc_parser->shift_timeout;
-  
+
   new_msg->steer_enabled = dc_parser->steer_enabled;
   new_msg->steer_override_active = dc_parser->steer_override_active;
   new_msg->steer_command_output_fault = dc_parser->steer_command_output_fault;
@@ -707,7 +703,7 @@ void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
   new_msg->steer_pacmod_fault = dc_parser->steer_pacmod_fault;
   new_msg->steer_vehicle_fault = dc_parser->steer_vehicle_fault;
   new_msg->steer_timeout = dc_parser->steer_timeout;
-  
+
   new_msg->mod1_config_fault = dc_parser->mod1_config_fault;
   new_msg->mod1_can_timeout = dc_parser->mod1_can_timeout;
   new_msg->mod1_counter_fault = dc_parser->mod1_counter_fault;
@@ -716,7 +712,7 @@ void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
   new_msg->mod2_counter_fault = dc_parser->mod2_counter_fault;
   new_msg->mod3_config_fault = dc_parser->mod3_config_fault;
   new_msg->mod3_can_timeout = dc_parser->mod3_can_timeout;
-  
+
   new_msg->mod3_counter_fault = dc_parser->mod3_counter_fault;
   new_msg->mini1_rpt_timeout = dc_parser->mini1_rpt_timeout;
   new_msg->mini1_config_fault = dc_parser->mini1_config_fault;
@@ -725,7 +721,7 @@ void Pacmod3TxRosMsgHandler::fillWatchdogRpt(
   new_msg->mini2_rpt_timeout = dc_parser->mini2_rpt_timeout;
   new_msg->mini2_config_fault = dc_parser->mini2_config_fault;
   new_msg->mini2_can_timeout = dc_parser->mini2_can_timeout;
-  
+
   new_msg->mini2_counter_fault = dc_parser->mini2_counter_fault;
   new_msg->mini3_rpt_timeout = dc_parser->mini3_rpt_timeout;
   new_msg->mini3_config_fault = dc_parser->mini3_config_fault;
@@ -755,7 +751,7 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(
   new_msg->subsystem_can_timeout = dc_parser->subsystem_can_timeout;
   new_msg->vehicle_can_timeout = dc_parser->vehicle_can_timeout;
   new_msg->pacmod_sys_fault_active = dc_parser->pacmod_sys_fault_active;
-  new_msg->supervisory_enable_required = dc_parser->supervisory_enable_required;  
+  new_msg->supervisory_enable_required = dc_parser->supervisory_enable_required;
   new_msg->config_fault_active = dc_parser->config_fault_active;
   new_msg->user_can_read_errors = dc_parser->user_can_read_errors;
 
@@ -804,7 +800,7 @@ void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
   new_msg->brake_pressure = dc_parser->brake_pressure;
   new_msg->operator_interaction = dc_parser->operator_interaction;
   new_msg->brake_on_off = dc_parser->brake_on_off;
-  
+
   new_msg->brake_pressure_avail = dc_parser->brake_pressure_avail;
   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
   new_msg->brake_on_off_avail = dc_parser->brake_on_off_avail;
@@ -831,7 +827,6 @@ void Pacmod3TxRosMsgHandler::fillBrakeDeccelAuxRpt(
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
-
 }
 
 void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
@@ -845,7 +840,7 @@ void Pacmod3TxRosMsgHandler::fillHeadlightAuxRpt(
   new_msg->headlights_on_bright = dc_parser->headlights_on_bright;
   new_msg->fog_lights_on = dc_parser->fog_lights_on;
   new_msg->headlights_mode = dc_parser->headlights_mode;
-  
+
   new_msg->headlights_on_avail = dc_parser->headlights_on_avail;
   new_msg->headlights_on_bright_avail = dc_parser->headlights_on_bright_avail;
   new_msg->fog_lights_on_avail = dc_parser->fog_lights_on_avail;
@@ -881,7 +876,7 @@ void Pacmod3TxRosMsgHandler::fillShiftAuxRpt(
   new_msg->brake_interlock_active = dc_parser->brake_interlock_active;
   new_msg->speed_interlock_active = dc_parser->speed_interlock_active;
   new_msg->write_to_config = dc_parser->write_to_config;
-  
+
   new_msg->between_gears_avail = dc_parser->between_gears_avail;
   new_msg->stay_in_neutral_mode_avail = dc_parser->stay_in_neutral_mode_avail;
   new_msg->brake_interlock_active_avail = dc_parser->brake_interlock_active_avail;
@@ -926,7 +921,7 @@ void Pacmod3TxRosMsgHandler::fillTurnAuxRpt(
 
   new_msg->driver_blinker_bulb_on = dc_parser->driver_blinker_bulb_on;
   new_msg->passenger_blinker_bulb_on = dc_parser->passenger_blinker_bulb_on;
-  
+
   new_msg->driver_blinker_bulb_on_avail = dc_parser->driver_blinker_bulb_on_avail;
   new_msg->passenger_blinker_bulb_on_avail = dc_parser->passenger_blinker_bulb_on_avail;
 
@@ -947,7 +942,7 @@ void Pacmod3TxRosMsgHandler::fillWiperAuxRpt(
   new_msg->rear_spraying = dc_parser->rear_spraying;
   new_msg->spray_near_empty = dc_parser->spray_near_empty;
   new_msg->spray_empty = dc_parser->spray_empty;
-  
+
   new_msg->front_wiping_avail = dc_parser->front_wiping_avail;
   new_msg->front_spraying_avail = dc_parser->front_spraying_avail;
   new_msg->rear_wiping_avail = dc_parser->rear_wiping_avail;
@@ -1027,7 +1022,7 @@ void Pacmod3TxRosMsgHandler::fillDoorRpt(
   new_msg->hood_open = dc_parser->hood_open;
   new_msg->trunk_open = dc_parser->trunk_open;
   new_msg->fuel_door_open = dc_parser->fuel_door_open;
-  
+
   new_msg->driver_door_open_avail = dc_parser->driver_door_open_avail;
   new_msg->passenger_door_open_avail = dc_parser->passenger_door_open_avail;
   new_msg->rear_driver_door_open_avail = dc_parser->rear_driver_door_open_avail;
@@ -1068,7 +1063,7 @@ void Pacmod3TxRosMsgHandler::fillEngineRpt(
   new_msg->engine_speed = dc_parser->engine_speed;
   new_msg->engine_torque = dc_parser->engine_torque;
   new_msg->engine_coolant_temp = dc_parser->engine_coolant_temp;
-  
+
   new_msg->engine_speed_avail = dc_parser->engine_speed_avail;
   new_msg->engine_torque_avail = dc_parser->engine_torque_avail;
   new_msg->engine_coolant_temp_avail = dc_parser->engine_coolant_temp_avail;
@@ -1091,7 +1086,7 @@ void Pacmod3TxRosMsgHandler::fillInteriorLightsRpt(
   new_msg->mood_lights_on = dc_parser->mood_lights_on;
   new_msg->ambient_light_sensor = dc_parser->ambient_light_sensor;
   new_msg->dim_level = dc_parser->dim_level;
-  
+
   new_msg->front_dome_lights_on_avail = dc_parser->front_dome_lights_on_avail;
   new_msg->rear_dome_lights_on_avail = dc_parser->rear_dome_lights_on_avail;
   new_msg->mood_lights_on_avail = dc_parser->mood_lights_on_avail;
@@ -1135,7 +1130,7 @@ void Pacmod3TxRosMsgHandler::fillLinearAccelRpt(
   new_msg->lateral_valid = dc_parser->longitudinal_valid;
   new_msg->longitudinal_valid = dc_parser->longitudinal_valid;
   new_msg->vertical_valid = dc_parser->vertical_valid;
-  
+
   new_msg->lateral_accel = dc_parser->lateral_accel;
   new_msg->longitudinal_accel = dc_parser->longitudinal_accel;
   new_msg->vertical_accel = dc_parser->vertical_accel;
@@ -1159,7 +1154,7 @@ void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
   new_msg->driver_rear_seatbelt_buckled = dc_parser->driver_rear_seatbelt_buckled;
   new_msg->pass_rear_seatbelt_buckled = dc_parser->pass_rear_seatbelt_buckled;
   new_msg->center_rear_seatbelt_buckled = dc_parser->center_rear_seatbelt_buckled;
-  
+
   new_msg->driver_seat_occupied_avail = dc_parser->driver_seat_occupied_avail;
   new_msg->passenger_seat_occupied_avail = dc_parser->passenger_seat_occupied_avail;
   new_msg->rear_seat_occupied_avail = dc_parser->rear_seat_occupied_avail;
@@ -1393,11 +1388,11 @@ void Pacmod3TxRosMsgHandler::fillJoystickRpt(
   new_msg->joystick_pos_manual = dc_parser->joystick_pos_manual;
 
   new_msg->joystick_manual_state_machine = dc_parser->joystick_manual_state_machine;
-  
+
   new_msg->joystick_interlock_en_out = dc_parser->joystick_interlock_en_out;
   new_msg->joystick_sens_out = dc_parser->joystick_sens_out;
   new_msg->joystick_pos_out = dc_parser->joystick_pos_out;
-  
+
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
 }

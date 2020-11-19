@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2020 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,6 @@ public:
                       const std::shared_ptr<Pacmod3TxMsg>& parser_class);
 
 private:
-
 // General Reports
   void fillSystemRptBool(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -259,7 +258,6 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::MFAButtonsRpt * new_msg,
       const std::string& frame_id);
-
 };
 
 class Pacmod3RxRosMsgHandler
@@ -271,16 +269,18 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::GlobalCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::BrakeDeccelCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::CabinClimateCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t& can_id, const pacmod_msgs::CabinClimateCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyBrakeCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyFuncCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+    const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
 
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::HydraulicsCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::RPMDialCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::WorklightsCmd::ConstPtr& msg);
-
 };
 }  // namespace PACMod3
 }  // namespace Drivers
