@@ -263,6 +263,129 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
 
 };
+
+typedef union
+{
+    uint8_t u8Arr[9];
+    struct __attribute__((packed))
+    {
+        uint8_t GLOBAL            : 1;
+        uint8_t GLOBAL_2          : 1;
+        uint8_t ESTOP             : 1;
+        uint8_t WATCHDOG          : 1;
+        uint8_t WATCHDOG_2        : 1;
+
+        uint8_t ACCEL             : 1;
+        uint8_t BRAKE             : 1;
+        uint8_t SHIFT             : 1;
+        uint8_t STEER             : 1;
+
+        uint8_t ACCEL_AUX         : 1;
+        uint8_t BRAKE_AUX         : 1;
+        uint8_t SHIFT_AUX         : 1;
+        uint8_t STEER_AUX         : 1;
+
+        uint8_t COMP_0            : 1;
+        uint8_t COMP_1            : 1;
+        uint8_t COMP_2            : 1;
+        uint8_t COMP_3            : 1;
+        uint8_t COMP_4            : 1;
+        uint8_t SOFTW_0           : 1;
+        uint8_t SOFTW_1           : 1;
+        uint8_t SOFTW_2           : 1;
+        uint8_t SOFTW_3           : 1;
+        uint8_t SOFTW_4           : 1;
+
+        uint8_t ACCEL_CMD_LIMIT   : 1;
+        uint8_t BRAKE_CMD_LIMIT   : 1;
+        uint8_t STEER_CMD_LIMIT   : 1;
+
+        uint8_t BRAKE_MOTOR_1     : 1;
+        uint8_t BRAKE_MOTOR_2     : 1;
+        uint8_t BRAKE_MOTOR_3     : 1;
+        uint8_t STEER_MOTOR_1     : 1;
+        uint8_t STEER_MOTOR_2     : 1;
+        uint8_t STEER_MOTOR_3     : 1;
+
+        uint8_t BRAKE_DECCEL      : 1;
+        uint8_t BRAKE_DECCEL_AUX  : 1;
+        uint8_t CABIN_CLIMATE     : 1;
+        uint8_t CABIN_FAN_SPEED   : 1;
+        uint8_t CABIN_TEMP        : 1;
+        uint8_t CRUISE_CONTROL    : 1;
+        uint8_t DASH_LEFT         : 1;
+        uint8_t DASH_RIGHT        : 1;
+        uint8_t ENGINE_BRAKE      : 1;
+        uint8_t HAZARDS           : 1;
+        uint8_t HEADLIGHTS        : 1;
+        uint8_t HEADLIGHTS_AUX    : 1;
+        uint8_t HORN              : 1;
+        uint8_t MARKER_LAMP       : 1;
+        uint8_t MEDIA_CONTROLS    : 1;
+        uint8_t PARKING_BRAKE     : 1;
+        uint8_t PARKING_BRAKE_AUX : 1;
+        uint8_t REAR_PASS_DOOR    : 1;
+        uint8_t SPRAY             : 1;
+        uint8_t TURN              : 1;
+        uint8_t TURN_AUX          : 1;
+        uint8_t WIPER             : 1;
+        uint8_t WIPER_AUX         : 1;
+
+        uint8_t ANG_VEL           : 1;
+        uint8_t DATE_TIME         : 1;
+        uint8_t DETECTED_OBJECT   : 1;
+        uint8_t DOOR              : 1;
+        uint8_t DRIVETRAIN_FT     : 1;
+        uint8_t ENGINE            : 1;
+        uint8_t INTERIOR_LIGHTS   : 1;
+        uint8_t LAT_LON_HEADING   : 1;
+        uint8_t LINEAR_ACCEL      : 1;
+        uint8_t OCCUPANCY         : 1;
+        uint8_t REAR_LIGHTS       : 1;
+        uint8_t TIRE_PRESSURE     : 1;
+        uint8_t VEHICLE_DYNAMICS  : 1;
+        uint8_t WHEEL_SPEED       : 1;
+        uint8_t YAW_RATE          : 1;
+
+        uint8_t VEHICLE_SPEED     : 1;
+        uint8_t VIN               : 1;
+    };
+} ReportPresent;
+
+typedef union
+{
+    uint8_t u8Arr[3];
+    struct __attribute__((packed))
+    {
+        uint8_t GLOBAL            : 1;
+        uint8_t USER_NOTIFICATION : 1;
+
+        uint8_t ACCEL             : 1;
+        uint8_t BRAKE             : 1;
+        uint8_t SHIFT             : 1;
+        uint8_t STEER             : 1;
+
+        uint8_t BRAKE_DECCEL      : 1;
+        uint8_t CABIN_CLIMATE     : 1;
+        uint8_t CABIN_FAN_SPEED   : 1;
+        uint8_t CABIN_TEMP        : 1;
+        uint8_t CRUISE_CONTROL    : 1;
+        uint8_t DASH_LEFT         : 1;
+        uint8_t DASH_RIGHT        : 1;
+        uint8_t ENGINE_BRAKE      : 1;
+        uint8_t HAZARDS           : 1;
+        uint8_t HEADLIGHTS        : 1;
+        uint8_t HORN              : 1;
+        uint8_t MARKER_LAMP       : 1;
+        uint8_t MEDIA_CONTROLS    : 1;
+        uint8_t PARKING_BRAKE     : 1;
+        uint8_t REAR_PASS_DOOR    : 1;
+        uint8_t SPRAY             : 1;
+        uint8_t TURN              : 1;
+        uint8_t WIPER             : 1;
+    };
+} CommandPresent;
+
 }  // namespace PACMod3
 }  // namespace Drivers
 }  // namespace AS

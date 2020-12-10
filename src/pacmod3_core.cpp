@@ -269,6 +269,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       case ComponentRptMsg03::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new ComponentRptMsg03);
         break;
+      case ComponentRptMsg04::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new ComponentRptMsg04);
+        break;
       case SoftwareVerRptMsg00::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SoftwareVerRptMsg00);
         break;
@@ -280,6 +283,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
         break;
       case SoftwareVerRptMsg03::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SoftwareVerRptMsg03);
+        break;
+      case SoftwareVerRptMsg04::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new SoftwareVerRptMsg04);
         break;
       case EStopRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new EStopRptMsg);

@@ -318,12 +318,18 @@ int main(int argc, char *argv[])
   std::string veh_type_string = "POLARIS_GEM";
   bool safety_ecu_flag = false;
   VehicleType veh_type = VehicleType::POLARIS_GEM;
+  ReportPresent reports_present{0,0,0,0,0,0,0,0,0};
+  CommandPresent commands_present{0,0,0};
 
   // Vehicle-Specific Subscribers
   std::shared_ptr<ros::Subscriber>
       global_cmd_sub,
       user_notification_cmd_sub,
 
+      accel_cmd_sub,
+      brake_cmd_sub,
+      shift_cmd_sub,
+      steer_cmd_sub,
       cabin_climate_set_cmd_sub, 
       cruise_control_buttons_set_cmd_sub,
       dash_controls_left_set_cmd_sub,
@@ -375,6 +381,10 @@ int main(int argc, char *argv[])
       veh_type = HEXAGON_TRACTOR;
     else if (veh_type_string == "FORD_RANGER")
       veh_type = FORD_RANGER;
+    else if (veh_type_string == "VEHICLE_FTT")
+      veh_type = VEHICLE_FTT;
+    else if (veh_type_string == "VEHICLE_HCV")
+      veh_type = VEHICLE_HCV;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
@@ -390,54 +400,531 @@ int main(int argc, char *argv[])
       ROS_INFO("PACMod3 - Safety ECU is NOT present in this system");    
   }
 
+  // Set vehicle based messages
+  switch (veh_type)
+  {
+    case VehicleType::FREIGHTLINER_CASCADIA:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.BRAKE_MOTOR_1 = 1;
+      reports_present.BRAKE_MOTOR_2 = 1;
+      reports_present.BRAKE_MOTOR_3 = 1;
+      reports_present.STEER_MOTOR_1 = 1;
+      reports_present.STEER_MOTOR_2 = 1;
+      reports_present.STEER_MOTOR_3 = 1;
+      reports_present.CRUISE_CONTROL = 1;
+      reports_present.ENGINE_BRAKE = 1;
+      reports_present.HAZARDS = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.MARKER_LAMP = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.SPRAY = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.WIPER = 1;
+      reports_present.WIPER_AUX = 1;
+      reports_present.DATE_TIME = 1;
+      reports_present.ENGINE = 1;
+      reports_present.LAT_LON_HEADING = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.YAW_RATE = 1;
+
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.CRUISE_CONTROL = 1;
+      commands_present.ENGINE_BRAKE = 1;
+      commands_present.HAZARDS = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.MARKER_LAMP = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      commands_present.SPRAY = 1;
+      commands_present.TURN = 1;
+      commands_present.WIPER = 1;
+      break;
+
+    case VehicleType::INTERNATIONAL_PROSTAR_122:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.BRAKE_MOTOR_1 = 1;
+      reports_present.BRAKE_MOTOR_2 = 1;
+      reports_present.BRAKE_MOTOR_3 = 1;
+      reports_present.STEER_MOTOR_1 = 1;
+      reports_present.STEER_MOTOR_2 = 1;
+      reports_present.STEER_MOTOR_3 = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.WIPER = 1;
+      reports_present.WIPER_AUX = 1;
+
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      commands_present.WIPER = 1;
+      break;
+
+    case VehicleType::JUPITER_SPIRIT:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.DATE_TIME = 1;
+      reports_present.LAT_LON_HEADING = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.YAW_RATE = 1;
+
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      break;
+
+    case VehicleType::LEXUS_RX_450H:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.DATE_TIME = 1;
+      reports_present.LAT_LON_HEADING = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.YAW_RATE = 1;
+      reports_present.VEHICLE_SPEED = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      break;
+
+    case VehicleType::POLARIS_GEM:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.BRAKE_MOTOR_1 = 1;
+      reports_present.BRAKE_MOTOR_2 = 1;
+      reports_present.BRAKE_MOTOR_3 = 1;
+      reports_present.STEER_MOTOR_1 = 1;
+      reports_present.STEER_MOTOR_2 = 1;
+      reports_present.STEER_MOTOR_3 = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      break;
+
+    case VehicleType::POLARIS_RANGER:
+      reports_present.GLOBAL = 1;
+      reports_present.ESTOP = 1;
+      reports_present.WATCHDOG = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.COMP_0 = 1;
+      reports_present.COMP_1 = 1;
+      reports_present.COMP_2 = 1;
+      reports_present.SOFTW_0 = 1;
+      reports_present.SOFTW_1 = 1;
+      reports_present.SOFTW_2 = 1;
+      reports_present.BRAKE_MOTOR_1 = 1;
+      reports_present.BRAKE_MOTOR_2 = 1;
+      reports_present.BRAKE_MOTOR_3 = 1;
+      reports_present.STEER_MOTOR_1 = 1;
+      reports_present.STEER_MOTOR_2 = 1;
+      reports_present.STEER_MOTOR_3 = 1;
+      reports_present.VEHICLE_SPEED = 1;
+
+      commands_present.GLOBAL = 1;
+      commands_present.USER_NOTIFICATION = 1;
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      break;
+
+    case VehicleType::HEXAGON_TRACTOR:
+      reports_present.GLOBAL_2 = 1;
+      reports_present.ESTOP = 1;
+      reports_present.WATCHDOG = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.COMP_0 = 1;
+      reports_present.COMP_1 = 1;
+      reports_present.COMP_2 = 1;
+      reports_present.COMP_3 = 1;
+      reports_present.HAZARDS = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HORN = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.SPRAY = 1;
+      reports_present.TURN = 1;
+      reports_present.WIPER = 1;
+      reports_present.ENGINE = 1;
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+      
+      commands_present.GLOBAL = 1;
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.HAZARDS = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.PARKING_BRAKE = 1;
+      commands_present.SPRAY = 1;
+      commands_present.TURN = 1;
+      commands_present.WIPER = 1;
+      break;
+
+    case VehicleType::FORD_RANGER:
+      reports_present.GLOBAL_2 = 1;
+      reports_present.ESTOP = 1;
+      reports_present.WATCHDOG = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.COMP_0 = 1;
+      reports_present.COMP_1 = 1;
+      reports_present.COMP_2 = 1;
+      reports_present.COMP_3 = 1;
+      reports_present.SOFTW_0 = 1;
+      reports_present.SOFTW_1 = 1;
+      reports_present.SOFTW_2 = 1;
+      reports_present.SOFTW_3 = 1;
+      reports_present.BRAKE_MOTOR_1 = 1;
+      reports_present.BRAKE_MOTOR_2 = 1;
+      reports_present.BRAKE_MOTOR_3 = 1;
+      reports_present.STEER_MOTOR_1 = 1;
+      reports_present.STEER_MOTOR_2 = 1;
+      reports_present.STEER_MOTOR_3 = 1;
+      reports_present.CABIN_CLIMATE = 1;
+      reports_present.HAZARDS = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.PARKING_BRAKE_AUX = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.WIPER = 1;
+      reports_present.WIPER_AUX = 1;
+
+      reports_present.DOOR = 1;
+      reports_present.ENGINE = 1;
+      reports_present.INTERIOR_LIGHTS = 1;
+      reports_present.OCCUPANCY = 1;
+      reports_present.TIRE_PRESSURE = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.VEHICLE_SPEED = 1;
+
+      commands_present.GLOBAL = 1;
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.CABIN_CLIMATE = 1;
+      commands_present.HAZARDS = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.PARKING_BRAKE = 1;
+      commands_present.TURN = 1;
+      commands_present.WIPER = 1;
+      break;
+
+    case VehicleType::VEHICLE_FTT:
+      reports_present.GLOBAL_2 = 1;
+      reports_present.ESTOP = 1;
+      reports_present.WATCHDOG_2 = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.COMP_0 = 1;
+      reports_present.COMP_1 = 1;
+      reports_present.COMP_2 = 1;
+      reports_present.COMP_3 = 1;
+      reports_present.SOFTW_0 = 1;
+      reports_present.SOFTW_1 = 1;
+      reports_present.SOFTW_2 = 1;
+      reports_present.SOFTW_3 = 1;
+      reports_present.ACCEL_CMD_LIMIT = 1;
+      reports_present.BRAKE_CMD_LIMIT = 1;
+      reports_present.STEER_CMD_LIMIT = 1;
+      reports_present.CRUISE_CONTROL = 1;
+      reports_present.DASH_RIGHT = 1;
+      reports_present.HAZARDS = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.MEDIA_CONTROLS = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+
+      reports_present.ANG_VEL = 1;
+      reports_present.DOOR = 1;
+      reports_present.ENGINE = 1;
+      reports_present.INTERIOR_LIGHTS = 1;
+      reports_present.OCCUPANCY = 1;
+      reports_present.WHEEL_SPEED = 1;
+
+      reports_present.VEHICLE_SPEED = 1;
+
+      commands_present.GLOBAL = 1;
+      commands_present.USER_NOTIFICATION = 1;
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.HAZARDS = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.MEDIA_CONTROLS = 1;
+      commands_present.TURN = 1;
+      break;
+
+    case VehicleType::VEHICLE_HCV:
+      reports_present.GLOBAL_2 = 1;
+      reports_present.ESTOP = 1;
+      reports_present.WATCHDOG_2 = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.COMP_0 = 1;
+      reports_present.COMP_1 = 1;
+      reports_present.COMP_2 = 1;
+      reports_present.SOFTW_0 = 1;
+      reports_present.SOFTW_1 = 1;
+      reports_present.SOFTW_2 = 1;
+      reports_present.STEER_CMD_LIMIT = 1;
+      reports_present.HAZARDS = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.TURN = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.VEHICLE_SPEED = 1;
+
+      commands_present.GLOBAL = 1;
+      commands_present.USER_NOTIFICATION = 1;
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.HAZARDS = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.TURN = 1;
+      break;
+
+    case VehicleType::VEHICLE_4:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.DETECTED_OBJECT = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      break;
+
+    case VehicleType::VEHICLE_5:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.DOOR = 1;
+      reports_present.INTERIOR_LIGHTS = 1;
+      reports_present.OCCUPANCY = 1;
+      reports_present.REAR_LIGHTS = 1;
+      reports_present.DATE_TIME = 1;
+      reports_present.LAT_LON_HEADING = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.YAW_RATE = 1;
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      break;
+
+    case VehicleType::VEHICLE_6:
+      reports_present.GLOBAL = 1;
+      reports_present.ACCEL = 1;
+      reports_present.BRAKE = 1;
+      reports_present.SHIFT = 1;
+      reports_present.STEER = 1;
+      reports_present.ACCEL_AUX = 1;
+      reports_present.BRAKE_AUX = 1;
+      reports_present.SHIFT_AUX = 1;
+      reports_present.STEER_AUX = 1;
+      reports_present.HEADLIGHTS = 1;
+      reports_present.HEADLIGHTS_AUX = 1;
+      reports_present.HORN = 1;
+      reports_present.PARKING_BRAKE = 1;
+      reports_present.REAR_PASS_DOOR = 1;
+      reports_present.TURN = 1;
+      reports_present.TURN_AUX = 1;
+      reports_present.DATE_TIME = 1;
+      reports_present.LAT_LON_HEADING = 1;
+      reports_present.WHEEL_SPEED = 1;
+      reports_present.YAW_RATE = 1;
+      reports_present.VEHICLE_SPEED = 1;
+      reports_present.VIN = 1;
+
+      commands_present.ACCEL = 1;
+      commands_present.BRAKE = 1;
+      commands_present.SHIFT = 1;
+      commands_present.STEER = 1;
+      commands_present.HEADLIGHTS = 1;
+      commands_present.HORN = 1;
+      commands_present.TURN = 1;
+      commands_present.REAR_PASS_DOOR = 1;
+      break;
+
+    default:
+      break;
+  }
+
   // Advertise published messages
   can_rx_pub = n.advertise<can_msgs::Frame>("can_rx", 20);
 
-  ros::Publisher accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
-  ros::Publisher brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
-  ros::Publisher shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
-  ros::Publisher steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
-
-  ros::Publisher vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
-  ros::Publisher vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
-
   enabled_pub = n.advertise<std_msgs::Bool>("as_tx/enabled", 20, true);
-  vehicle_speed_ms_pub = n.advertise<std_msgs::Float64>("as_tx/vehicle_speed", 20);
   all_system_statuses_pub = n.advertise<pacmod_msgs::AllSystemStatuses>("as_tx/all_system_statuses", 20);
-
   std::string frame_id = "pacmod";
 
-  // Populate handler list
-  pub_tx_list.emplace(AccelRptMsg::CAN_ID, std::move(accel_rpt_pub));
-  pub_tx_list.emplace(BrakeRptMsg::CAN_ID, std::move(brake_rpt_pub));
-  pub_tx_list.emplace(ShiftRptMsg::CAN_ID, std::move(shift_rpt_pub));
-  pub_tx_list.emplace(SteerRptMsg::CAN_ID, std::move(steer_rpt_pub));
-
-  pub_tx_list.emplace(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub));
-  pub_tx_list.emplace(VinRptMsg::CAN_ID, std::move(vin_rpt_pub));
-
-  // Subscribe to messages
   ros::Subscriber can_tx_sub = n.subscribe("can_tx", 20, can_read);
-
-  ros::Subscriber accel_cmd_sub = n.subscribe("as_rx/accel_cmd", 20, callback_accel_cmd_sub);
-  ros::Subscriber brake_cmd_sub = n.subscribe("as_rx/brake_cmd", 20, callback_brake_cmd_sub);
-  ros::Subscriber shift_cmd_sub = n.subscribe("as_rx/shift_cmd", 20, callback_shift_set_cmd);
-  ros::Subscriber steer_cmd_sub = n.subscribe("as_rx/steer_cmd", 20, callback_steer_cmd_sub);
-
-  // Populate rx list
-  rx_list.emplace(
-    AccelCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(AccelCmdMsg::DATA_LENGTH)));
-  rx_list.emplace(
-    BrakeCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(BrakeCmdMsg::DATA_LENGTH)));
-  rx_list.emplace(
-    ShiftCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(ShiftCmdMsg::DATA_LENGTH)));
-  rx_list.emplace(
-    SteerCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(SteerCmdMsg::DATA_LENGTH)));
   
+  // For platforms using Safety ECU System  
   if (safety_ecu_flag)
   {
     ros::Publisher safety_func_rpt_pub = n.advertise<pacmod_msgs::SafetyFuncRpt>("parsed_tx/safety_func_rpt", 20);
@@ -464,401 +951,627 @@ int main(int argc, char *argv[])
       std::shared_ptr<LockedData>(new LockedData(SafetyBrakeCmdMsg::DATA_LENGTH)));
   }
 
-  // Vehicle Specific Reports
-  // Global
-  if (veh_type == VehicleType::FREIGHTLINER_CASCADIA ||
-      veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
-      veh_type == VehicleType::JUPITER_SPIRIT ||
-      veh_type == VehicleType::LEXUS_RX_450H ||
-      veh_type == VehicleType::POLARIS_GEM ||
-      veh_type == VehicleType::POLARIS_RANGER ||
-      veh_type == VehicleType::VEHICLE_4 ||
-      veh_type == VehicleType::VEHICLE_5 ||
-      veh_type == VehicleType::VEHICLE_6)
+  // Publish messages
+  if (reports_present.GLOBAL)
   {
     ros::Publisher global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
-
-    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-    ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
-    ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-        
     pub_tx_list.emplace(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub));
-
-    pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
-    pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
-    pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
-    
-    if (veh_type != VehicleType::POLARIS_RANGER)
-    {
-      ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
-  
-      ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
-      ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
-      ros::Publisher rear_pass_door_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
-      
-      pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
-      pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
-      pub_tx_list.emplace(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub));
-      pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));  
-    }
-    // Commands
-      turn_cmd_sub =
-        std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
-      rear_pass_door_cmd_sub =
-        std::make_shared<ros::Subscriber>(n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd));
-
-      rx_list.emplace(
-        TurnSignalCmdMsg::CAN_ID,
-        std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
-      rx_list.emplace(
-        RearPassDoorCmdMsg::CAN_ID,
-        std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
   }
 
-  if (veh_type == VehicleType::POLARIS_RANGER)
-  {
-    ros::Publisher component_rpt0_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
-    ros::Publisher component_rpt1_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
-    ros::Publisher component_rpt2_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
-    ros::Publisher software_ver_rpt0_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
-    ros::Publisher software_ver_rpt1_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
-    ros::Publisher software_ver_rpt2_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
-
-    ros::Publisher watchdog_rpt_pub = n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
-    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
-
-    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-    ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
-    ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-
-
-    pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
-    pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
-    pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
-    pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
-    pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
-    pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
-
-    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
-    pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
-
-    pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
-    pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
-    pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
-
-    // Commands
-      global_cmd_sub =
-        std::make_shared<ros::Subscriber>(n.subscribe("as_rx/global_cmd", 20, callback_global_cmd_sub));
-      user_notification_cmd_sub =
-        std::make_shared<ros::Subscriber>(n.subscribe("as_rx/user_notification_cmd", 20, callback_user_notification_set_cmd));
-
-      rx_list.emplace(
-        GlobalCmdMsg::CAN_ID,
-        std::shared_ptr<LockedData>(new LockedData(GlobalCmdMsg::DATA_LENGTH)));
-      rx_list.emplace(
-        UserNotificationCmdMsg::CAN_ID,
-        std::shared_ptr<LockedData>(new LockedData(UserNotificationCmdMsg::DATA_LENGTH)));
-  }
-
-  if (veh_type == VehicleType::HEXAGON_TRACTOR ||
-      veh_type == VehicleType::FORD_RANGER)
+  if (reports_present.GLOBAL_2)
   {
     ros::Publisher global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
-    ros::Publisher component_rpt0_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
-    ros::Publisher component_rpt1_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
-    ros::Publisher component_rpt2_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
-    ros::Publisher component_rpt3_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt3", 20);
-    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
-    ros::Publisher watchdog_rpt_pub = n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
-
-    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-    ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
-    ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
-
     pub_tx_list.emplace(GlobalRpt2Msg::CAN_ID, std::move(global_rpt2_pub));
-    pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
-    pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
-    pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
-    pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
-    pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
-    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
-
-    pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
-    pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
-    pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
-
-    if (veh_type != VehicleType::HEXAGON_TRACTOR)
-    {
-      ros::Publisher software_ver_rpt0_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
-      ros::Publisher software_ver_rpt1_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
-      ros::Publisher software_ver_rpt2_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
-      ros::Publisher software_ver_rpt3_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt3", 20);
-
-      ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-      ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
-      ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
-
-      pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
-      pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
-      pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
-      pub_tx_list.emplace(SoftwareVerRptMsg03::CAN_ID, std::move(software_ver_rpt3_pub));
-
-      pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
-      pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
-      pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
-    }
-
-  // Commands
-    global_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/global_cmd", 20, callback_global_cmd_sub));
-    user_notification_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/user_notification_cmd", 20, callback_user_notification_set_cmd));
-
-    turn_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
-
-    rx_list.emplace(
-      GlobalCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(GlobalCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      UserNotificationCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(UserNotificationCmdMsg::DATA_LENGTH)));
-
-    rx_list.emplace(
-      TurnSignalCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
   }
 
-  if (veh_type == VehicleType::POLARIS_GEM ||
-      veh_type == VehicleType::POLARIS_RANGER ||
-      veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 ||
-      veh_type == VehicleType::FREIGHTLINER_CASCADIA)
+  if (reports_present.ESTOP)
   {
-    ros::Publisher brake_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
-    ros::Publisher brake_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
-    ros::Publisher brake_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
-    ros::Publisher steering_rpt_detail_1_pub = n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
-    ros::Publisher steering_rpt_detail_2_pub = n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
-    ros::Publisher steering_rpt_detail_3_pub = n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
+    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
+    pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
+  }
 
+  if (reports_present.WATCHDOG)
+  {
+    ros::Publisher watchdog_rpt_pub = 
+      n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
+    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
+  }
+
+  if (reports_present.WATCHDOG_2)
+  {
+    ros::Publisher watchdog_rpt2_pub = 
+      n.advertise<pacmod_msgs::WatchdogRpt2>("parsed_tx/watchdog_rpt2", 20);
+    pub_tx_list.emplace(WatchdogRpt2Msg::CAN_ID, std::move(watchdog_rpt2_pub));
+  }
+
+  if (reports_present.ACCEL)
+  {
+    ros::Publisher accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
+    pub_tx_list.emplace(AccelRptMsg::CAN_ID, std::move(accel_rpt_pub));
+  }
+
+  if (reports_present.BRAKE)
+  {
+    ros::Publisher brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
+    pub_tx_list.emplace(BrakeRptMsg::CAN_ID, std::move(brake_rpt_pub));
+  }
+
+  if (reports_present.SHIFT)
+  {
+    ros::Publisher shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
+    pub_tx_list.emplace(ShiftRptMsg::CAN_ID, std::move(shift_rpt_pub));
+  }
+
+  if (reports_present.STEER)
+  {
+    ros::Publisher steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
+    pub_tx_list.emplace(SteerRptMsg::CAN_ID, std::move(steer_rpt_pub));
+  }
+
+  if (reports_present.ACCEL_AUX)
+  {
+    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+    pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
+  }
+
+  if (reports_present.BRAKE_AUX)
+  {
+    ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+    pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
+  }
+
+  if (reports_present.SHIFT_AUX)
+  {
+    ros::Publisher shift_aux_rpt_pub =
+      n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+    pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
+  }
+
+  if (reports_present.STEER_AUX)
+  {
+    ros::Publisher steer_aux_rpt_pub =
+      n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+    pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));  
+  }
+
+  if (reports_present.COMP_0)
+  {
+    ros::Publisher component_rpt0_pub = 
+      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
+    pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
+  }
+
+  if (reports_present.COMP_1)
+  {
+    ros::Publisher component_rpt1_pub = 
+      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
+    pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
+  }
+
+  if (reports_present.COMP_2)
+  {
+    ros::Publisher component_rpt2_pub = 
+      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
+    pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
+  }
+
+  if (reports_present.COMP_3)
+  {
+    ros::Publisher component_rpt3_pub = 
+      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt3", 20);
+    pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
+  }
+
+  if (reports_present.COMP_4)
+  {
+    ros::Publisher component_rpt4_pub = 
+      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt4", 20);
+    pub_tx_list.emplace(ComponentRptMsg04::CAN_ID, std::move(component_rpt4_pub));
+  }
+
+  if (reports_present.SOFTW_0)
+  {
+    ros::Publisher software_ver_rpt0_pub = 
+      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
+    pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
+  }
+
+  if (reports_present.SOFTW_1)
+  {
+    ros::Publisher software_ver_rpt1_pub = 
+      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
+    pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
+  }
+
+  if (reports_present.SOFTW_2)
+  {
+    ros::Publisher software_ver_rpt2_pub = 
+      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
+    pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
+  }
+
+  if (reports_present.SOFTW_3)
+  {
+    ros::Publisher software_ver_rpt3_pub = 
+      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt3", 20);
+    pub_tx_list.emplace(SoftwareVerRptMsg03::CAN_ID, std::move(software_ver_rpt3_pub));
+  }
+
+  if (reports_present.SOFTW_4)
+  {
+    ros::Publisher software_ver_rpt4_pub = 
+      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt4", 20);
+    pub_tx_list.emplace(SoftwareVerRptMsg04::CAN_ID, std::move(software_ver_rpt4_pub));
+  }
+
+  if (reports_present.ACCEL_CMD_LIMIT)
+  {
+    ros::Publisher accel_cmd_limit_rpt_pub = 
+      n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/accel_cmd_limit_rpt", 20);
+    pub_tx_list.emplace(AccelCmdLimitRptMsg::CAN_ID, std::move(accel_cmd_limit_rpt_pub));
+  }
+
+  if (reports_present.BRAKE_CMD_LIMIT)
+  {
+    ros::Publisher brake_cmd_limit_rpt_pub = 
+      n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
+    pub_tx_list.emplace(BrakeCmdLimitRptMsg::CAN_ID, std::move(brake_cmd_limit_rpt_pub));
+  }
+
+  if (reports_present.STEER_CMD_LIMIT)
+  {
+    ros::Publisher steer_cmd_limit_rpt_pub = 
+      n.advertise<pacmod_msgs::SteerCmdLimitRpt>("parsed_tx/steer_cmd_limit_rpt", 20);
+    pub_tx_list.emplace(SteerCmdLimitRptMsg::CAN_ID, std::move(steer_cmd_limit_rpt_pub));
+  }
+
+  if (reports_present.BRAKE_MOTOR_1)
+  {
+    ros::Publisher brake_rpt_detail_1_pub =
+      n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
     pub_tx_list.emplace(BrakeMotorRpt1Msg::CAN_ID, std::move(brake_rpt_detail_1_pub));
+  }
+
+  if (reports_present.BRAKE_MOTOR_2)
+  {
+    ros::Publisher brake_rpt_detail_2_pub =
+      n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
     pub_tx_list.emplace(BrakeMotorRpt2Msg::CAN_ID, std::move(brake_rpt_detail_2_pub));
+  }
+
+  if (reports_present.BRAKE_MOTOR_3)
+  {
+    ros::Publisher brake_rpt_detail_3_pub =
+      n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
     pub_tx_list.emplace(BrakeMotorRpt3Msg::CAN_ID, std::move(brake_rpt_detail_3_pub));
+  }
+
+  if (reports_present.STEER_MOTOR_1)
+  {
+    ros::Publisher steering_rpt_detail_1_pub =
+      n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
     pub_tx_list.emplace(SteerMotorRpt1Msg::CAN_ID, std::move(steering_rpt_detail_1_pub));
+  }
+
+  if (reports_present.STEER_MOTOR_2)
+  {
+    ros::Publisher steering_rpt_detail_2_pub =
+      n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
     pub_tx_list.emplace(SteerMotorRpt2Msg::CAN_ID, std::move(steering_rpt_detail_2_pub));
+  }
+
+  if (reports_present.STEER_MOTOR_3)
+  {
+    ros::Publisher steering_rpt_detail_3_pub = 
+      n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
     pub_tx_list.emplace(SteerMotorRpt3Msg::CAN_ID, std::move(steering_rpt_detail_3_pub));
   }
 
-  if (veh_type == VehicleType::INTERNATIONAL_PROSTAR_122 || veh_type == VehicleType::FREIGHTLINER_CASCADIA)
+  if (reports_present.CABIN_CLIMATE)
   {
-    ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
-    ros::Publisher wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
-
-    pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
-    pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
-
-    wiper_set_cmd_sub = std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
-
-    rx_list.emplace(
-      WiperCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
+    ros::Publisher cabin_climate_rpt_pub =
+      n.advertise<pacmod_msgs::CabinClimateRpt>("parsed_tx/cabin_climate_rpt", 20);
+    pub_tx_list.emplace(CabinClimateRptMsg::CAN_ID, std::move(cabin_climate_rpt_pub));
   }
 
-  if (veh_type == VehicleType::LEXUS_RX_450H ||
-      veh_type == VehicleType::FREIGHTLINER_CASCADIA ||
-      veh_type == VehicleType::JUPITER_SPIRIT ||
-      veh_type == VehicleType::VEHICLE_5 ||
-      veh_type == VehicleType::VEHICLE_6)
-  {
-    ros::Publisher date_time_rpt_pub =
-      n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
-    ros::Publisher headlight_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
-    ros::Publisher horn_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    ros::Publisher lat_lon_heading_rpt_pub =
-      n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
-    ros::Publisher parking_brake_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_status_rpt", 20);
-    ros::Publisher wheel_speed_rpt_pub =
-      n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
-    ros::Publisher yaw_rate_rpt_pub =
-      n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
-    ros::Publisher headlight_aux_rpt_pub =
-      n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
-
-    pub_tx_list.emplace(DateTimeRptMsg::CAN_ID, std::move(date_time_rpt_pub));
-    pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
-    pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
-    pub_tx_list.emplace(LatLonHeadingRptMsg::CAN_ID, std::move(lat_lon_heading_rpt_pub));
-    pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
-    pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
-    pub_tx_list.emplace(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub));
-    pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
-
-    headlight_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
-    horn_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
-
-    rx_list.emplace(
-      HeadlightCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      HornCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
-  }
-
-  if (veh_type == VehicleType::FREIGHTLINER_CASCADIA)
+  if (reports_present.CRUISE_CONTROL)
   {
     ros::Publisher cruise_control_buttons_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
-    ros::Publisher engine_brake_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
-    ros::Publisher engine_rpt_pub =
-      n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
-    ros::Publisher marker_lamp_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
-    ros::Publisher sprayer_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
-    ros::Publisher hazard_lights_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
-
     pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
-    pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
-    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
-    pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
-    pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
-    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
-
-    cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
-      n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd));
-    engine_brake_set_cmd_sub = std::make_shared<ros::Subscriber>(
-      n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd));
-    marker_lamp_set_cmd_sub = std::make_shared<ros::Subscriber>(
-      n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd));
-    sprayer_set_cmd_sub = std::make_shared<ros::Subscriber>(
-      n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
-    hazard_lights_set_cmd_sub = std::make_shared<ros::Subscriber>(
-      n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
-
-    rx_list.emplace(
-      CruiseControlButtonsCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      EngineBrakeCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      MarkerLampCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      SprayerCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
-    rx_list.emplace(
-      HazardLightCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
   }
 
-  if (veh_type == VehicleType::VEHICLE_4)
+  if (reports_present.DASH_RIGHT)
+  {
+    ros::Publisher dash_control_right_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_control_right_rpt", 20);
+    pub_tx_list.emplace(DashControlsRightRptMsg::CAN_ID, std::move(dash_control_right_rpt_pub));
+  }
+
+  if (reports_present.ENGINE_BRAKE)
+  {
+    ros::Publisher engine_brake_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
+    pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
+  }
+
+  if (reports_present.HAZARDS)
+  {
+    ros::Publisher hazard_lights_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
+    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
+  }
+
+  if (reports_present.HEADLIGHTS)
+  {
+    ros::Publisher headlight_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
+    pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
+  }
+
+  if (reports_present.HEADLIGHTS_AUX)
+  {
+    ros::Publisher headlight_aux_rpt_pub =
+      n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
+    pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
+  }
+
+  if (reports_present.HORN)
+  {
+    ros::Publisher horn_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
+    pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
+  }
+
+  if (reports_present.MARKER_LAMP)
+  {
+    ros::Publisher marker_lamp_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
+    pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
+  }
+
+  if (reports_present.MEDIA_CONTROLS)
+  {
+    ros::Publisher media_control_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_control_rpt", 20);
+    pub_tx_list.emplace(MediaControlsRptMsg::CAN_ID, std::move(media_control_rpt_pub));
+  }
+
+  if (reports_present.PARKING_BRAKE)
+  {
+    ros::Publisher parking_brake_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_rpt", 20);
+    pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
+  }
+
+  if (reports_present.PARKING_BRAKE_AUX)
+  {
+    ros::Publisher parking_brake_aux_rpt_pub =
+      n.advertise<pacmod_msgs::ParkingBrakeAuxRpt>("parsed_tx/parkin_brake_aux_rpt", 20);
+    pub_tx_list.emplace(ParkingBrakeAuxRptMsg::CAN_ID, std::move(parking_brake_aux_rpt_pub));
+  }
+
+  if (reports_present.REAR_PASS_DOOR)
+  {
+    ros::Publisher rear_pass_door_rpt_pub = 
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
+    pub_tx_list.emplace(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub));
+  }
+
+  if (reports_present.SPRAY)
+  {
+    ros::Publisher sprayer_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
+    pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
+  }
+
+  if (reports_present.TURN)
+  {
+    ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
+    pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
+  }
+
+  if (reports_present.TURN_AUX)
+  {
+    ros::Publisher turn_aux_rpt_pub =
+      n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
+    pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
+  }
+
+  if (reports_present.WIPER)
+  {
+    ros::Publisher wiper_rpt_pub =
+      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
+    pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
+  }
+
+  if (reports_present.WIPER_AUX)
+  {
+    ros::Publisher wiper_aux_rpt_pub =
+      n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
+    pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
+  }
+
+  if (reports_present.ANG_VEL)
+  {
+    ros::Publisher ang_vel_rpt_pub =
+      n.advertise<pacmod_msgs::AngVelRpt>("parsed_tx/ang_vel_rpt", 20);
+    pub_tx_list.emplace(AngVelRptMsg::CAN_ID, std::move(ang_vel_rpt_pub));
+  }
+
+  if (reports_present.DATE_TIME)
+  {
+    ros::Publisher date_time_rpt_pub =
+      n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
+    pub_tx_list.emplace(DateTimeRptMsg::CAN_ID, std::move(date_time_rpt_pub));
+  }
+
+  if (reports_present.DETECTED_OBJECT)
   {
     ros::Publisher detected_object_rpt_pub =
       n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
-
     pub_tx_list.emplace(DetectedObjectRptMsg::CAN_ID, std::move(detected_object_rpt_pub));
   }
 
-  if (veh_type == VehicleType::VEHICLE_5)
+  if (reports_present.DOOR)
+  {
+    ros::Publisher door_rpt_pub =
+      n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
+    pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
+  }
+
+  if (reports_present.ENGINE)
+  {
+    ros::Publisher engine_rpt_pub =
+      n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
+    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
+  }
+  
+  if (reports_present.INTERIOR_LIGHTS)
+  {
+    ros::Publisher interior_lights_rpt_pub =
+      n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
+    pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
+  }
+
+  if (reports_present.LAT_LON_HEADING)
+  {
+    ros::Publisher lat_lon_heading_rpt_pub =
+      n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
+    pub_tx_list.emplace(LatLonHeadingRptMsg::CAN_ID, std::move(lat_lon_heading_rpt_pub));
+  }
+
+  if (reports_present.OCCUPANCY)
   {
     ros::Publisher occupancy_rpt_pub =
       n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
-    ros::Publisher interior_lights_rpt_pub =
-      n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
-    ros::Publisher door_rpt_pub =
-      n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
+    pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
+  }
+  
+  if (reports_present.REAR_LIGHTS)
+  {
     ros::Publisher rear_lights_rpt_pub =
       n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
-
-    pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
-    pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
-    pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
     pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
   }
-
-  if (veh_type == VehicleType::FORD_RANGER)
+  
+  if (reports_present.TIRE_PRESSURE)
   {
-  // Reports
-    ros::Publisher door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
-    ros::Publisher engine_rpt_pub = n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
-    ros::Publisher interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
-    ros::Publisher occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
     ros::Publisher tire_pressure_rpt_pub = n.advertise<pacmod_msgs::TirePressureRpt>("parsed_tx/tire_pressure_rpt", 20);
-    ros::Publisher wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
-
-    ros::Publisher cabin_climate_rpt_pub = n.advertise<pacmod_msgs::CabinClimateRpt>("parsed_tx/cabin_climate_rpt", 20);
-    ros::Publisher hazard_lights_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
-    ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
-    ros::Publisher headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
-    ros::Publisher horn_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
-    ros::Publisher parking_brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_rpt", 20);
-    ros::Publisher parking_brake_aux_rpt_pub = n.advertise<pacmod_msgs::ParkingBrakeAuxRpt>("parsed_tx/parkin_brake_aux_rpt", 20);
-    ros::Publisher wiper_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
-    ros::Publisher wiper_aux_rpt_pub = n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
-
-    pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
-    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
-    pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
-    pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
     pub_tx_list.emplace(TirePressureRptMsg::CAN_ID, std::move(tire_pressure_rpt_pub));
+  }
+  
+  if (reports_present.WHEEL_SPEED)
+  {
+    ros::Publisher wheel_speed_rpt_pub =
+      n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
     pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
+  }
 
-    pub_tx_list.emplace(CabinClimateRptMsg::CAN_ID, std::move(cabin_climate_rpt_pub));
-    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
-    pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
-    pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
-    pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
-    pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
-    pub_tx_list.emplace(ParkingBrakeAuxRptMsg::CAN_ID, std::move(parking_brake_aux_rpt_pub));
-    pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
-    pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
+  if (reports_present.YAW_RATE)
+  {
+    ros::Publisher yaw_rate_rpt_pub =
+      n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
+    pub_tx_list.emplace(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub));
+  }
 
-  // Commands
-    cabin_climate_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/cabin_climate_cmd", 20, callback_cabin_climate_set_cmd));
-    hazard_lights_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
-    headlight_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
-    horn_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
-    parking_brake_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd));
-    wiper_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
+  if (reports_present.VEHICLE_SPEED)
+  {
+    ros::Publisher vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
+    pub_tx_list.emplace(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub));
+  }
+  
+  if (reports_present.VIN)
+  {
+    ros::Publisher vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
+    pub_tx_list.emplace(VinRptMsg::CAN_ID, std::move(vin_rpt_pub));
+  }
 
+  // Subscribe to messages
+  if (commands_present.GLOBAL)
+  {
+    global_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/global_cmd", 20, callback_global_cmd_sub));
+    rx_list.emplace(
+      GlobalCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(GlobalCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.USER_NOTIFICATION)
+  {
+    user_notification_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/user_notification_cmd", 20, callback_user_notification_set_cmd));
+    rx_list.emplace(
+      UserNotificationCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(UserNotificationCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.ACCEL)
+  {
+    accel_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/accel_cmd", 20, callback_accel_cmd_sub));
+    rx_list.emplace(
+      AccelCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(AccelCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.BRAKE)
+  {
+    brake_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/brake_cmd", 20, callback_brake_cmd_sub));
+    rx_list.emplace(
+      BrakeCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(BrakeCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.SHIFT)
+  {
+    shift_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/shift_cmd", 20, callback_shift_set_cmd));
+    rx_list.emplace(
+      ShiftCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(ShiftCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.STEER)
+  {
+    steer_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/steer_cmd", 20, callback_steer_cmd_sub));
+    rx_list.emplace(
+      SteerCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(SteerCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.CABIN_CLIMATE)
+  {
+    cabin_climate_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/cabin_climate_cmd", 20, callback_cabin_climate_set_cmd));
     rx_list.emplace(
       CabinClimateCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(CabinClimateCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.CRUISE_CONTROL)
+  {
+    cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/cruise_control_buttons_cmd", 20, callback_cruise_control_buttons_set_cmd));
+    rx_list.emplace(
+      CruiseControlButtonsCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.DASH_RIGHT)
+  {
+    dash_controls_right_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/dash_controls_right_cmd", 20, callback_dash_controls_right_set_cmd));
+    rx_list.emplace(
+      DashControlsRightCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(DashControlsRightCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.ENGINE_BRAKE)
+  {
+    engine_brake_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/engine_brake_cmd", 20, callback_engine_brake_set_cmd));
+    rx_list.emplace(
+      EngineBrakeCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.HAZARDS)
+  {
+    hazard_lights_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
     rx_list.emplace(
       HazardLightCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.HEADLIGHTS)
+  {
+    headlight_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
     rx_list.emplace(
       HeadlightCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.HORN)
+  {
+    horn_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
     rx_list.emplace(
       HornCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.MARKER_LAMP)
+  {
+    marker_lamp_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/marker_lamp_cmd", 20, callback_marker_lamp_set_cmd));
+    rx_list.emplace(
+      MarkerLampCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.MEDIA_CONTROLS)
+  {
+    media_controls_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/media_controls_cmd", 20, callback_media_controls_set_cmd));
+    rx_list.emplace(
+      MediaControlsCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(MediaControlsCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.PARKING_BRAKE)
+  {
+    parking_brake_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd));
     rx_list.emplace(
       ParkingBrakeCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(ParkingBrakeCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.REAR_PASS_DOOR)
+  {
+    rear_pass_door_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/rear_pass_door_cmd", 20, callback_rear_pass_door_set_cmd));
+    rx_list.emplace(
+      RearPassDoorCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.SPRAY)
+  {
+    sprayer_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/sprayer_cmd", 20, callback_sprayer_set_cmd));
+    rx_list.emplace(
+      SprayerCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
+  }
+
+  if (commands_present.TURN)
+  {
+    turn_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
+    rx_list.emplace(
+      TurnSignalCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
+    
+    // Initialize Turn Signal with non-0 value
+    TurnSignalCmdMsg turn_encoder;
+    turn_encoder.encode(false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
+    rx_list[TurnSignalCmdMsg::CAN_ID]->setData(std::move(turn_encoder.data));
+  }
+
+  if (commands_present.WIPER)
+  {
+    wiper_set_cmd_sub = std::make_shared<ros::Subscriber>(
+      n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
     rx_list.emplace(
       WiperCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
   }
-
-  // Initialize Turn Signal with non-0 value
-  TurnSignalCmdMsg turn_encoder;
-  turn_encoder.encode(false, false, false, pacmod_msgs::SystemCmdInt::TURN_NONE);
-  rx_list[TurnSignalCmdMsg::CAN_ID]->setData(std::move(turn_encoder.data));
 
   // Set initial state
   set_enable(false);
