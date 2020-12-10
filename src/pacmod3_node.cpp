@@ -883,7 +883,7 @@ int main(int argc, char *argv[])
 
     pub_tx_list.emplace(GlobalRpt2Msg::CAN_ID, std::move(global_rpt2_pub));
     pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
-    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
+    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt2_pub));
 
     pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
     pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
