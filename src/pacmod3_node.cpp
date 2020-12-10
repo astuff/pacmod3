@@ -375,6 +375,10 @@ int main(int argc, char *argv[])
       veh_type = HEXAGON_TRACTOR;
     else if (veh_type_string == "FORD_RANGER")
       veh_type = FORD_RANGER;
+    else if (veh_type_string == "VEHICLE_FTT")
+      veh_type = VEHICLE_FTT;
+    else if (veh_type_string == "VEHICLE_HCV")
+      veh_type = VEHICLE_HCV;
     else
     {
       veh_type = VehicleType::POLARIS_GEM;
@@ -853,6 +857,69 @@ int main(int argc, char *argv[])
     rx_list.emplace(
       WiperCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
+  }
+
+  if (veh_type == VehicleType::VEHICLE_FTT)
+  {
+    ros::Publisher global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
+    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
+    ros::Publisher watchdog_rpt2_pub = n.advertise<pacmod_msgs::WatchdogRpt2>("parsed_tx/watchdog_rpt2", 20);
+
+    ros::Publisher component_rpt0_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
+    ros::Publisher component_rpt1_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
+    ros::Publisher component_rpt2_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
+    ros::Publisher component_rpt3_pub = n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt3", 20);
+    ros::Publisher software_ver_rpt0_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
+    ros::Publisher software_ver_rpt1_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
+    ros::Publisher software_ver_rpt2_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
+    ros::Publisher software_ver_rpt3_pub = n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt3", 20);
+
+    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+    ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+    ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+    ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+    ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
+    ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
+
+    pub_tx_list.emplace(GlobalRpt2Msg::CAN_ID, std::move(global_rpt2_pub));
+    pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
+    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
+
+    pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
+    pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
+    pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
+    pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
+    pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
+    pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
+    pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
+    pub_tx_list.emplace(SoftwareVerRptMsg03::CAN_ID, std::move(software_ver_rpt3_pub));
+
+    pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
+    pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
+    pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
+    pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
+    pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
+    pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
+
+  // Commands
+    global_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/global_cmd", 20, callback_global_cmd_sub));
+    user_notification_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/user_notification_cmd", 20, callback_user_notification_set_cmd));
+
+    turn_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
+
+    rx_list.emplace(
+      GlobalCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(GlobalCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      UserNotificationCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(UserNotificationCmdMsg::DATA_LENGTH)));
+
+    rx_list.emplace(
+      TurnSignalCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
   }
 
   // Initialize Turn Signal with non-0 value
