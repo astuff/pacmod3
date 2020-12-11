@@ -878,12 +878,28 @@ int main(int argc, char *argv[])
     ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
     ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
     ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+    ros::Publisher cruise_control_buttons_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
+    ros::Publisher dash_control_right_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_control_right_rpt", 20);
+    ros::Publisher hazard_lights_rpt_pub = n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
+    ros::Publisher headlight_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
+    ros::Publisher headlight_aux_rpt_pub = n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
+    ros::Publisher media_control_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_control_rpt", 20);
     ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
     ros::Publisher turn_aux_rpt_pub = n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
 
+    ros::Publisher ang_vel_rpt_pub = n.advertise<pacmod_msgs::AngVelRpt>("parsed_tx/ang_vel_rpt", 20);
+    ros::Publisher door_rpt_pub = n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
+    ros::Publisher engine_rpt_pub = n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
+    ros::Publisher interior_lights_rpt_pub = n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
+    ros::Publisher occupancy_rpt_pub = n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
+    ros::Publisher wheel_speed_rpt_pub = n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
+    ros::Publisher accel_cmd_limit_rpt_pub = n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/accel_cmd_limit_rpt", 20);
+    ros::Publisher brake_cmd_limit_rpt_pub = n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
+    ros::Publisher steer_cmd_limit_rpt_pub = n.advertise<pacmod_msgs::SteerCmdLimitRpt>("parsed_tx/steer_cmd_limit_rpt", 20);
+    
     pub_tx_list.emplace(GlobalRpt2Msg::CAN_ID, std::move(global_rpt2_pub));
     pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
-    pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt2_pub));
+    pub_tx_list.emplace(WatchdogRpt2Msg::CAN_ID, std::move(watchdog_rpt2_pub));
 
     pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
     pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
@@ -898,15 +914,39 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
     pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
     pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
+    pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
+    pub_tx_list.emplace(DashControlsRightRptMsg::CAN_ID, std::move(dash_control_right_rpt_pub));
+    pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
+    pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));    
+    pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
+    pub_tx_list.emplace(MediaControlsRptMsg::CAN_ID, std::move(media_control_rpt_pub));
     pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
     pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
-
+    
+    pub_tx_list.emplace(AngVelRptMsg::CAN_ID, std::move(ang_vel_rpt_pub));
+    pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
+    pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
+    pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
+    pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
+    pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
+    pub_tx_list.emplace(AccelCmdLimitRptMsg::CAN_ID, std::move(accel_cmd_limit_rpt_pub));
+    pub_tx_list.emplace(BrakeCmdLimitRptMsg::CAN_ID, std::move(brake_cmd_limit_rpt_pub));
+    pub_tx_list.emplace(SteerCmdLimitRptMsg::CAN_ID, std::move(steer_cmd_limit_rpt_pub));
+    
   // Commands
     global_cmd_sub =
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/global_cmd", 20, callback_global_cmd_sub));
     user_notification_cmd_sub =
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/user_notification_cmd", 20, callback_user_notification_set_cmd));
 
+    hazard_lights_set_cmd_sub = 
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/hazard_lights_cmd", 20, callback_hazard_lights_set_cmd));
+    headlight_set_cmd_sub = 
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/headlight_cmd", 20, callback_headlight_set_cmd));
+    horn_set_cmd_sub = 
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
+    media_controls_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/media_controls_cmd", 20, callback_media_controls_set_cmd));
     turn_cmd_sub =
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
 
@@ -917,6 +957,18 @@ int main(int argc, char *argv[])
       UserNotificationCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(UserNotificationCmdMsg::DATA_LENGTH)));
 
+    rx_list.emplace(
+      HazardLightCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      HeadlightCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      HornCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      MediaControlsCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(MediaControlsCmdMsg::DATA_LENGTH)));
     rx_list.emplace(
       TurnSignalCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
