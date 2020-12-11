@@ -252,11 +252,15 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
+  //auto pub = pub_tx_list.at(msg->id);
+
   // Only parse messages for which we have a parser and a publisher.
-  if (parser_class != NULL && pub != pub_tx_list.end())
+  if (parser_class != NULL && pub->second != NULL && pub != pub_tx_list.end())
+  //if (parser_class != NULL && pub != NULL)
   {
     parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
     handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
+    //handler.fillAndPublish(msg->id, "pacmod", pub, parser_class);
 
     if (parser_class->isSystem())
     {
