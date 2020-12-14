@@ -956,438 +956,502 @@ int main(int argc, char *argv[])
   }
 
   // Publish messages
+  ros::Publisher global_rpt_pub,
+                 global_rpt2_pub,
+                 estop_rpt_pub,
+                 watchdog_rpt_pub,
+                 watchdog_rpt2_pub,
+                 accel_rpt_pub,
+                 brake_rpt_pub,
+                 shift_rpt_pub,
+                 steer_rpt_pub,
+                 accel_aux_rpt_pub,
+                 brake_aux_rpt_pub,
+                 shift_aux_rpt_pub,
+                 steer_aux_rpt_pub,
+                 component_rpt0_pub,
+                 component_rpt1_pub,
+                 component_rpt2_pub,
+                 component_rpt3_pub,
+                 component_rpt4_pub,
+                 software_ver_rpt0_pub,
+                 software_ver_rpt1_pub,
+                 software_ver_rpt2_pub,
+                 software_ver_rpt3_pub,
+                 software_ver_rpt4_pub,
+                 accel_cmd_limit_rpt_pub,
+                 brake_cmd_limit_rpt_pub,
+                 steer_cmd_limit_rpt_pub,
+                 brake_rpt_detail_1_pub,
+                 brake_rpt_detail_2_pub,
+                 brake_rpt_detail_3_pub,
+                 steering_rpt_detail_1_pub,
+                 steering_rpt_detail_2_pub,
+                 steering_rpt_detail_3_pub,
+                 cabin_climate_rpt_pub,
+                 cruise_control_buttons_rpt_pub,
+                 dash_control_right_rpt_pub,
+                 engine_brake_rpt_pub,
+                 hazard_lights_rpt_pub,
+                 headlight_rpt_pub,
+                 headlight_aux_rpt_pub,
+                 horn_rpt_pub,
+                 marker_lamp_rpt_pub,
+                 media_control_rpt_pub,
+                 parking_brake_rpt_pub,
+                 parking_brake_aux_rpt_pub,
+                 rear_pass_door_rpt_pub,
+                 sprayer_rpt_pub,
+                 turn_rpt_pub,
+                 turn_aux_rpt_pub,
+                 wiper_rpt_pub,
+                 wiper_aux_rpt_pub,
+                 ang_vel_rpt_pub,
+                 date_time_rpt_pub,
+                 detected_object_rpt_pub,
+                 door_rpt_pub,
+                 engine_rpt_pub,
+                 interior_lights_rpt_pub,
+                 lat_lon_heading_rpt_pub,
+                 occupancy_rpt_pub,
+                 rear_lights_rpt_pub,
+                 tire_pressure_rpt_pub,
+                 wheel_speed_rpt_pub,
+                 yaw_rate_rpt_pub,
+                 vehicle_speed_pub,
+                 vin_rpt_pub;
+
   if (reports_present.GLOBAL)
   {
-    ros::Publisher global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
+    global_rpt_pub = n.advertise<pacmod_msgs::GlobalRpt>("parsed_tx/global_rpt", 20);
     pub_tx_list.emplace(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub));
   }
 
   if (reports_present.GLOBAL_2)
   {
-    ros::Publisher global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
+    global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
     pub_tx_list.emplace(GlobalRpt2Msg::CAN_ID, std::move(global_rpt2_pub));
   }
 
   if (reports_present.ESTOP)
   {
-    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
+    estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
     pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
   }
 
   if (reports_present.WATCHDOG)
   {
-    ros::Publisher watchdog_rpt_pub = 
-      n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
+    watchdog_rpt_pub = n.advertise<pacmod_msgs::WatchdogRpt>("parsed_tx/watchdog_rpt", 20);
     pub_tx_list.emplace(WatchdogRptMsg::CAN_ID, std::move(watchdog_rpt_pub));
   }
 
   if (reports_present.WATCHDOG_2)
   {
-    ros::Publisher watchdog_rpt2_pub = 
+    watchdog_rpt2_pub =
       n.advertise<pacmod_msgs::WatchdogRpt2>("parsed_tx/watchdog_rpt2", 20);
     pub_tx_list.emplace(WatchdogRpt2Msg::CAN_ID, std::move(watchdog_rpt2_pub));
   }
 
   if (reports_present.ACCEL)
   {
-    ros::Publisher accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
+    accel_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/accel_rpt", 20);
     pub_tx_list.emplace(AccelRptMsg::CAN_ID, std::move(accel_rpt_pub));
   }
 
   if (reports_present.BRAKE)
   {
-    ros::Publisher brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
+    brake_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/brake_rpt", 20);
     pub_tx_list.emplace(BrakeRptMsg::CAN_ID, std::move(brake_rpt_pub));
   }
 
   if (reports_present.SHIFT)
   {
-    ros::Publisher shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
+    shift_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/shift_rpt", 20);
     pub_tx_list.emplace(ShiftRptMsg::CAN_ID, std::move(shift_rpt_pub));
   }
 
   if (reports_present.STEER)
   {
-    ros::Publisher steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
+    steer_rpt_pub = n.advertise<pacmod_msgs::SystemRptFloat>("parsed_tx/steer_rpt", 20);
     pub_tx_list.emplace(SteerRptMsg::CAN_ID, std::move(steer_rpt_pub));
   }
 
   if (reports_present.ACCEL_AUX)
   {
-    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+    accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
   }
 
   if (reports_present.BRAKE_AUX)
   {
-    ros::Publisher brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
+    brake_aux_rpt_pub = n.advertise<pacmod_msgs::BrakeAuxRpt>("parsed_tx/brake_aux_rpt", 20);
     pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
   }
 
   if (reports_present.SHIFT_AUX)
   {
-    ros::Publisher shift_aux_rpt_pub =
+    shift_aux_rpt_pub =
       n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
     pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
   }
 
   if (reports_present.STEER_AUX)
   {
-    ros::Publisher steer_aux_rpt_pub =
+    steer_aux_rpt_pub =
       n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
     pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));  
   }
 
   if (reports_present.COMP_0)
   {
-    ros::Publisher component_rpt0_pub = 
+    component_rpt0_pub = 
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
     pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
   }
 
   if (reports_present.COMP_1)
   {
-    ros::Publisher component_rpt1_pub = 
+    component_rpt1_pub = 
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
     pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
   }
 
   if (reports_present.COMP_2)
   {
-    ros::Publisher component_rpt2_pub = 
+    component_rpt2_pub = 
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
     pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
   }
 
   if (reports_present.COMP_3)
   {
-    ros::Publisher component_rpt3_pub = 
+    component_rpt3_pub = 
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt3", 20);
     pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
   }
 
   if (reports_present.COMP_4)
   {
-    ros::Publisher component_rpt4_pub = 
+    component_rpt4_pub = 
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt4", 20);
     pub_tx_list.emplace(ComponentRptMsg04::CAN_ID, std::move(component_rpt4_pub));
   }
 
   if (reports_present.SOFTW_0)
   {
-    ros::Publisher software_ver_rpt0_pub = 
+    software_ver_rpt0_pub = 
       n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
     pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
   }
 
   if (reports_present.SOFTW_1)
   {
-    ros::Publisher software_ver_rpt1_pub = 
+    software_ver_rpt1_pub = 
       n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
     pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
   }
 
   if (reports_present.SOFTW_2)
   {
-    ros::Publisher software_ver_rpt2_pub = 
+    software_ver_rpt2_pub = 
       n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
     pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
   }
 
   if (reports_present.SOFTW_3)
   {
-    ros::Publisher software_ver_rpt3_pub = 
+    software_ver_rpt3_pub = 
       n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt3", 20);
     pub_tx_list.emplace(SoftwareVerRptMsg03::CAN_ID, std::move(software_ver_rpt3_pub));
   }
 
   if (reports_present.SOFTW_4)
   {
-    ros::Publisher software_ver_rpt4_pub = 
+    software_ver_rpt4_pub = 
       n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt4", 20);
     pub_tx_list.emplace(SoftwareVerRptMsg04::CAN_ID, std::move(software_ver_rpt4_pub));
   }
 
   if (reports_present.ACCEL_CMD_LIMIT)
   {
-    ros::Publisher accel_cmd_limit_rpt_pub = 
+    accel_cmd_limit_rpt_pub = 
       n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/accel_cmd_limit_rpt", 20);
     pub_tx_list.emplace(AccelCmdLimitRptMsg::CAN_ID, std::move(accel_cmd_limit_rpt_pub));
   }
 
   if (reports_present.BRAKE_CMD_LIMIT)
   {
-    ros::Publisher brake_cmd_limit_rpt_pub = 
+    brake_cmd_limit_rpt_pub = 
       n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
     pub_tx_list.emplace(BrakeCmdLimitRptMsg::CAN_ID, std::move(brake_cmd_limit_rpt_pub));
   }
 
   if (reports_present.STEER_CMD_LIMIT)
   {
-    ros::Publisher steer_cmd_limit_rpt_pub = 
+    steer_cmd_limit_rpt_pub = 
       n.advertise<pacmod_msgs::SteerCmdLimitRpt>("parsed_tx/steer_cmd_limit_rpt", 20);
     pub_tx_list.emplace(SteerCmdLimitRptMsg::CAN_ID, std::move(steer_cmd_limit_rpt_pub));
   }
 
   if (reports_present.BRAKE_MOTOR_1)
   {
-    ros::Publisher brake_rpt_detail_1_pub =
+    brake_rpt_detail_1_pub =
       n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
     pub_tx_list.emplace(BrakeMotorRpt1Msg::CAN_ID, std::move(brake_rpt_detail_1_pub));
   }
 
   if (reports_present.BRAKE_MOTOR_2)
   {
-    ros::Publisher brake_rpt_detail_2_pub =
+    brake_rpt_detail_2_pub =
       n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
     pub_tx_list.emplace(BrakeMotorRpt2Msg::CAN_ID, std::move(brake_rpt_detail_2_pub));
   }
 
   if (reports_present.BRAKE_MOTOR_3)
   {
-    ros::Publisher brake_rpt_detail_3_pub =
+    brake_rpt_detail_3_pub =
       n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
     pub_tx_list.emplace(BrakeMotorRpt3Msg::CAN_ID, std::move(brake_rpt_detail_3_pub));
   }
 
   if (reports_present.STEER_MOTOR_1)
   {
-    ros::Publisher steering_rpt_detail_1_pub =
+    steering_rpt_detail_1_pub = 
       n.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
     pub_tx_list.emplace(SteerMotorRpt1Msg::CAN_ID, std::move(steering_rpt_detail_1_pub));
   }
 
   if (reports_present.STEER_MOTOR_2)
   {
-    ros::Publisher steering_rpt_detail_2_pub =
+    steering_rpt_detail_2_pub =
       n.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
     pub_tx_list.emplace(SteerMotorRpt2Msg::CAN_ID, std::move(steering_rpt_detail_2_pub));
   }
 
   if (reports_present.STEER_MOTOR_3)
   {
-    ros::Publisher steering_rpt_detail_3_pub = 
+    steering_rpt_detail_3_pub = 
       n.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
     pub_tx_list.emplace(SteerMotorRpt3Msg::CAN_ID, std::move(steering_rpt_detail_3_pub));
   }
 
   if (reports_present.CABIN_CLIMATE)
   {
-    ros::Publisher cabin_climate_rpt_pub =
+    cabin_climate_rpt_pub =
       n.advertise<pacmod_msgs::CabinClimateRpt>("parsed_tx/cabin_climate_rpt", 20);
     pub_tx_list.emplace(CabinClimateRptMsg::CAN_ID, std::move(cabin_climate_rpt_pub));
   }
 
   if (reports_present.CRUISE_CONTROL)
   {
-    ros::Publisher cruise_control_buttons_rpt_pub =
+    cruise_control_buttons_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/cruise_control_buttons_rpt", 20);
     pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
   }
 
   if (reports_present.DASH_RIGHT)
   {
-    ros::Publisher dash_control_right_rpt_pub =
+    dash_control_right_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/dash_control_right_rpt", 20);
     pub_tx_list.emplace(DashControlsRightRptMsg::CAN_ID, std::move(dash_control_right_rpt_pub));
   }
 
   if (reports_present.ENGINE_BRAKE)
   {
-    ros::Publisher engine_brake_rpt_pub =
+    engine_brake_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/engine_brake_rpt", 20);
     pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
   }
 
   if (reports_present.HAZARDS)
   {
-    ros::Publisher hazard_lights_rpt_pub =
+    hazard_lights_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
     pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
   }
 
   if (reports_present.HEADLIGHTS)
   {
-    ros::Publisher headlight_rpt_pub =
+    headlight_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
     pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
   }
 
   if (reports_present.HEADLIGHTS_AUX)
   {
-    ros::Publisher headlight_aux_rpt_pub =
+    headlight_aux_rpt_pub =
       n.advertise<pacmod_msgs::HeadlightAuxRpt>("parsed_tx/headlight_aux_rpt", 20);
     pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
   }
 
   if (reports_present.HORN)
   {
-    ros::Publisher horn_rpt_pub =
+    horn_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
     pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
   }
 
   if (reports_present.MARKER_LAMP)
   {
-    ros::Publisher marker_lamp_rpt_pub =
+    marker_lamp_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/marker_lamp_rpt", 20);
     pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
   }
 
   if (reports_present.MEDIA_CONTROLS)
   {
-    ros::Publisher media_control_rpt_pub =
+    media_control_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/media_control_rpt", 20);
     pub_tx_list.emplace(MediaControlsRptMsg::CAN_ID, std::move(media_control_rpt_pub));
   }
 
   if (reports_present.PARKING_BRAKE)
   {
-    ros::Publisher parking_brake_rpt_pub =
+    parking_brake_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/parking_brake_rpt", 20);
     pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
   }
 
   if (reports_present.PARKING_BRAKE_AUX)
   {
-    ros::Publisher parking_brake_aux_rpt_pub =
+    parking_brake_aux_rpt_pub =
       n.advertise<pacmod_msgs::ParkingBrakeAuxRpt>("parsed_tx/parkin_brake_aux_rpt", 20);
     pub_tx_list.emplace(ParkingBrakeAuxRptMsg::CAN_ID, std::move(parking_brake_aux_rpt_pub));
   }
 
   if (reports_present.REAR_PASS_DOOR)
   {
-    ros::Publisher rear_pass_door_rpt_pub = 
+    rear_pass_door_rpt_pub = 
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/rear_pass_door_rpt", 20);
     pub_tx_list.emplace(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub));
   }
 
   if (reports_present.SPRAY)
   {
-    ros::Publisher sprayer_rpt_pub =
+    sprayer_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/sprayer_rpt", 20);
     pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
   }
 
   if (reports_present.TURN)
   {
-    ros::Publisher turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
+    turn_rpt_pub = n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
     pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
   }
 
   if (reports_present.TURN_AUX)
   {
-    ros::Publisher turn_aux_rpt_pub =
+    turn_aux_rpt_pub =
       n.advertise<pacmod_msgs::TurnAuxRpt>("parsed_tx/turn_aux_rpt", 20);
     pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
   }
 
   if (reports_present.WIPER)
   {
-    ros::Publisher wiper_rpt_pub =
+    wiper_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
   }
 
   if (reports_present.WIPER_AUX)
   {
-    ros::Publisher wiper_aux_rpt_pub =
+    wiper_aux_rpt_pub =
       n.advertise<pacmod_msgs::WiperAuxRpt>("parsed_tx/wiper_aux_rpt", 20);
     pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
   }
 
   if (reports_present.ANG_VEL)
   {
-    ros::Publisher ang_vel_rpt_pub =
+    ang_vel_rpt_pub =
       n.advertise<pacmod_msgs::AngVelRpt>("parsed_tx/ang_vel_rpt", 20);
     pub_tx_list.emplace(AngVelRptMsg::CAN_ID, std::move(ang_vel_rpt_pub));
   }
 
   if (reports_present.DATE_TIME)
   {
-    ros::Publisher date_time_rpt_pub =
+    date_time_rpt_pub =
       n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
     pub_tx_list.emplace(DateTimeRptMsg::CAN_ID, std::move(date_time_rpt_pub));
   }
 
   if (reports_present.DETECTED_OBJECT)
   {
-    ros::Publisher detected_object_rpt_pub =
+    detected_object_rpt_pub =
       n.advertise<pacmod_msgs::DetectedObjectRpt>("parsed_tx/detected_object_rpt", 20);
     pub_tx_list.emplace(DetectedObjectRptMsg::CAN_ID, std::move(detected_object_rpt_pub));
   }
 
   if (reports_present.DOOR)
   {
-    ros::Publisher door_rpt_pub =
+    door_rpt_pub =
       n.advertise<pacmod_msgs::DoorRpt>("parsed_tx/door_rpt", 20);
     pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
   }
 
   if (reports_present.ENGINE)
   {
-    ros::Publisher engine_rpt_pub =
+    engine_rpt_pub =
       n.advertise<pacmod_msgs::EngineRpt>("parsed_tx/engine_rpt", 20);
     pub_tx_list.emplace(EngineRptMsg::CAN_ID, std::move(engine_rpt_pub));
   }
   
   if (reports_present.INTERIOR_LIGHTS)
   {
-    ros::Publisher interior_lights_rpt_pub =
+    interior_lights_rpt_pub =
       n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
     pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
   }
 
   if (reports_present.LAT_LON_HEADING)
   {
-    ros::Publisher lat_lon_heading_rpt_pub =
+    lat_lon_heading_rpt_pub =
       n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
     pub_tx_list.emplace(LatLonHeadingRptMsg::CAN_ID, std::move(lat_lon_heading_rpt_pub));
   }
 
   if (reports_present.OCCUPANCY)
   {
-    ros::Publisher occupancy_rpt_pub =
+    occupancy_rpt_pub =
       n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
     pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
   }
   
   if (reports_present.REAR_LIGHTS)
   {
-    ros::Publisher rear_lights_rpt_pub =
+    rear_lights_rpt_pub =
       n.advertise<pacmod_msgs::RearLightsRpt>("parsed_tx/rear_lights_rpt", 20);
     pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
   }
   
   if (reports_present.TIRE_PRESSURE)
   {
-    ros::Publisher tire_pressure_rpt_pub = n.advertise<pacmod_msgs::TirePressureRpt>("parsed_tx/tire_pressure_rpt", 20);
+    tire_pressure_rpt_pub = n.advertise<pacmod_msgs::TirePressureRpt>("parsed_tx/tire_pressure_rpt", 20);
     pub_tx_list.emplace(TirePressureRptMsg::CAN_ID, std::move(tire_pressure_rpt_pub));
   }
   
   if (reports_present.WHEEL_SPEED)
   {
-    ros::Publisher wheel_speed_rpt_pub =
+    wheel_speed_rpt_pub =
       n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
     pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
   }
 
   if (reports_present.YAW_RATE)
   {
-    ros::Publisher yaw_rate_rpt_pub =
+    yaw_rate_rpt_pub =
       n.advertise<pacmod_msgs::YawRateRpt>("parsed_tx/yaw_rate_rpt", 20);
     pub_tx_list.emplace(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub));
   }
 
   if (reports_present.VEHICLE_SPEED)
   {
-    ros::Publisher vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
+    vehicle_speed_pub = n.advertise<pacmod_msgs::VehicleSpeedRpt>("parsed_tx/vehicle_speed_rpt", 20);
     pub_tx_list.emplace(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub));
   }
   
   if (reports_present.VIN)
   {
-    ros::Publisher vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
+    vin_rpt_pub = n.advertise<pacmod_msgs::VinRpt>("parsed_tx/vin_rpt", 5);
     pub_tx_list.emplace(VinRptMsg::CAN_ID, std::move(vin_rpt_pub));
   }
 
