@@ -888,8 +888,10 @@ namespace PACMod3
 
         bool operator_interaction;
         bool accel_limiting_active;
+        bool park_brake_interlock_active;
         bool operator_interaction_avail;
         bool accel_limiting_active_avail;
+        bool park_brake_interlock_active_avail;
 
         void parse(const uint8_t * in);
     };
@@ -902,11 +904,13 @@ namespace PACMod3
         float brake_pressure;
         bool operator_interaction;
         bool brake_on_off;
-        bool brake_limiting_function;
+        bool brake_limiting_active;
+        bool brake_reduced_assist;
         bool brake_pressure_avail;
         bool operator_interaction_avail;
         bool brake_on_off_avail;
-        bool brake_limiting_function_avail;
+        bool brake_limiting_active_avail;
+        bool brake_reduced_assist_avail;
 
         void parse(const uint8_t * in);
     };

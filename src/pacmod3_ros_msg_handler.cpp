@@ -859,7 +859,12 @@ void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(
   auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
 
   new_msg->operator_interaction = dc_parser->operator_interaction;
+  new_msg->accel_limiting_active = dc_parser->accel_limiting_active;
+  new_msg->park_brake_interlock_active = dc_parser->park_brake_interlock_active;
+
   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
+  new_msg->accel_limiting_active_avail = dc_parser->accel_limiting_active_avail;
+  new_msg->park_brake_interlock_active_avail = dc_parser->park_brake_interlock_active_avail;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
@@ -875,10 +880,14 @@ void Pacmod3TxRosMsgHandler::fillBrakeAuxRpt(
   new_msg->brake_pressure = dc_parser->brake_pressure;
   new_msg->operator_interaction = dc_parser->operator_interaction;
   new_msg->brake_on_off = dc_parser->brake_on_off;
-  
+  new_msg->brake_limiting_active = dc_parser->brake_limiting_active;
+  new_msg->brake_reduced_assist = dc_parser->brake_reduced_assist;
+
   new_msg->brake_pressure_avail = dc_parser->brake_pressure_avail;
   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
   new_msg->brake_on_off_avail = dc_parser->brake_on_off_avail;
+  new_msg->brake_limiting_active_avail = dc_parser->brake_limiting_active_avail;
+  new_msg->brake_reduced_assist_avail = dc_parser->brake_reduced_assist_avail;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
@@ -977,12 +986,14 @@ void Pacmod3TxRosMsgHandler::fillSteerAuxRpt(
   new_msg->operator_interaction = dc_parser->operator_interaction;
   new_msg->rotation_rate_sign = dc_parser->rotation_rate_sign;
   new_msg->vehicle_angle_calib_status = dc_parser->vehicle_angle_calib_status;
+  new_msg->steering_limiting_active = dc_parser->steering_limiting_active;
 
   new_msg->steering_torque_avail = dc_parser->steering_torque_avail;
   new_msg->rotation_rate_avail = dc_parser->rotation_rate_avail;
   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
   new_msg->rotation_rate_sign_avail = dc_parser->rotation_rate_sign_avail;
   new_msg->vehicle_angle_calib_status_avail = dc_parser->vehicle_angle_calib_status_avail;
+  new_msg->steering_limiting_active_avail = dc_parser->steering_limiting_active_avail;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
