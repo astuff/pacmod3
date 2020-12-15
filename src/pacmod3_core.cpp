@@ -269,6 +269,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       case ComponentRptMsg03::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new ComponentRptMsg03);
         break;
+      case ComponentRptMsg04::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new ComponentRptMsg04);
+        break;
       case SoftwareVerRptMsg00::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SoftwareVerRptMsg00);
         break;
@@ -280,6 +283,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
         break;
       case SoftwareVerRptMsg03::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new SoftwareVerRptMsg03);
+        break;
+      case SoftwareVerRptMsg04::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new SoftwareVerRptMsg04);
         break;
       case EStopRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new EStopRptMsg);
@@ -1068,7 +1074,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       front_dome_lights_on = ((in[0] & 0x01) > 0);
       rear_dome_lights_on = ((in[0] & 0x02) > 0);
       mood_lights_on = ((in[0] & 0x04) > 0);
-      ambient_light_sensor = ((in[0] & 0x04) > 0);
+      ambient_light_sensor = ((in[0] & 0x08) > 0);
       dim_level = static_cast<DimLevel>(in[1]);
 
       front_dome_lights_on_avail = ((in[2] & 0x01) > 0);
