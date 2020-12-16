@@ -923,7 +923,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       speed_interlock_active_avail = (in[1] & 0x08) > 0;
       write_to_config_is_valid = (in[1] & 0x10) > 0;
       gear_number_avail = (in[1] & 0x20) > 0;
-      gear_number = (static_cast<int8_t>(in[2] & 0x3F)) >> 2;
+      gear_number = static_cast<int8_t>(in[2] & 0x3F);
     }
 
     void SteerAuxRptMsg::parse(const uint8_t * in)
@@ -931,7 +931,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       int16_t temp;
 
       temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-      steering_torque = temp / 1000.0;
+      steering_torque = temp / 10000.0;
 
       uint16_t temp2;
 
