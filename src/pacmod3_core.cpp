@@ -106,7 +106,7 @@ constexpr uint32_t SteerAuxRptMsg::CAN_ID;
 constexpr uint32_t TurnAuxRptMsg::CAN_ID;
 constexpr uint32_t WiperAuxRptMsg::CAN_ID;
 
-// Module Reports 
+// Module Reports
 constexpr uint32_t ComponentRptMsg00::CAN_ID;
 constexpr uint32_t ComponentRptMsg01::CAN_ID;
 constexpr uint32_t ComponentRptMsg02::CAN_ID;
@@ -154,7 +154,8 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
   std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id)
   {
-    switch (can_id) {
+    switch (can_id)
+    {
     // System Reports
       case AccelRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new AccelRptMsg);
@@ -437,7 +438,6 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
       temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
       limited_sys_cmd = static_cast<double>(temp / 1000.0);
-
     }
 
     void SystemRptBoolMsg::parse(const uint8_t * in)
@@ -536,7 +536,6 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       supervisory_sanity_fault = ((in[5] & 0x10) > 0);
       watchdog_sanity_fault = ((in[5] & 0x20) > 0);
       watchdog_system_present_fault = ((in[5] & 0x40) > 0);
-
     }
 
     void SoftwareVersionRptMsg::parse(const uint8_t * in)
@@ -627,7 +626,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       accel_pacmod_fault = ((in[1] & 0x20) > 0);
       accel_vehicle_fault = ((in[1] & 0x40) > 0);
       accel_timeout = ((in[1] & 0x80) > 0); 
-      
+
       brake_enabled = ((in[2] & 0x01) > 0);
       brake_override_active = ((in[2] & 0x02) > 0);
       brake_command_output_fault = ((in[2] & 0x04) > 0);
@@ -924,7 +923,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       speed_interlock_active_avail = (in[1] & 0x08) > 0;
       write_to_config_is_valid = (in[1] & 0x10) > 0;
       gear_number_avail = (in[1] & 0x20) > 0;
-      gear_number = static_cast<int8_t>(in[2] & 0x3F);
+      gear_number = (static_cast<int8_t>(in[2] & 0x3F)) >> 2;
     }
 
     void SteerAuxRptMsg::parse(const uint8_t * in)
@@ -932,7 +931,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       int16_t temp;
 
       temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
-      steering_torque = temp / 10.0;
+      steering_torque = temp / 1000.0;
 
       uint16_t temp2;
 
