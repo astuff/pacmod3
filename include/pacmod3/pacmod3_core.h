@@ -73,7 +73,7 @@ namespace PACMod3
     DIM_LEVEL_23 = 24
   };
 
-  enum class Gears : int8_t
+  enum Gears : int8_t
   {
     R_TENTH = -10,
     R_NINTH = -9,
