@@ -853,10 +853,12 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       operator_interaction = (in[4] & 0x01) > 0;
       accel_limiting_active = (in[4] & 0x02) > 0;
       park_brake_interlock_active = (in[4] & 0x04) > 0;
+      brake_interlock_active = (in[4] & 0x08) > 0;
 
       operator_interaction_avail = (in[5] & 0x04) > 0;
       accel_limiting_active_avail = (in[5] & 0x08) > 0;
       park_brake_interlock_active_avail = (in[5] & 0x10) > 0;
+      brake_interlock_active_avail = (in[5] & 0x20) > 0;
     }
 
     void BrakeAuxRptMsg::parse(const uint8_t * in)

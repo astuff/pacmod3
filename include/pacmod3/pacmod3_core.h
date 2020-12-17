@@ -73,7 +73,7 @@ namespace PACMod3
     DIM_LEVEL_23 = 24
   };
 
-  enum Gears
+  enum class Gears : int8_t
   {
     R_TENTH = -10,
     R_NINTH = -9,
@@ -887,9 +887,11 @@ class AccelAuxRptMsg : public Pacmod3TxMsg
     bool operator_interaction;
     bool accel_limiting_active;
     bool park_brake_interlock_active;
+    bool brake_interlock_active;
     bool operator_interaction_avail;
     bool accel_limiting_active_avail;
     bool park_brake_interlock_active_avail;
+    bool brake_interlock_active_avail;
 
     void parse(const uint8_t * in);
 };

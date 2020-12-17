@@ -860,10 +860,12 @@ void Pacmod3TxRosMsgHandler::fillAccelAuxRpt(
   new_msg->operator_interaction = dc_parser->operator_interaction;
   new_msg->accel_limiting_active = dc_parser->accel_limiting_active;
   new_msg->park_brake_interlock_active = dc_parser->park_brake_interlock_active;
+  new_msg->brake_interlock_active = dc_parser->brake_interlock_active;
 
   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
   new_msg->accel_limiting_active_avail = dc_parser->accel_limiting_active_avail;
   new_msg->park_brake_interlock_active_avail = dc_parser->park_brake_interlock_active_avail;
+  new_msg->brake_interlock_active_avail = dc_parser->brake_interlock_active_avail;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
