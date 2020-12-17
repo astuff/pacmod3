@@ -54,7 +54,6 @@ public:
                       const std::shared_ptr<Pacmod3TxMsg>& parser_class);
 
 private:
-
 // General Reports
   void fillSystemRptBool(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -244,24 +243,33 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod_msgs::SteerCmdLimitRpt * new_msg,
       const std::string& frame_id);
-
 };
 
 class Pacmod3RxRosMsgHandler
 {
 public:
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::GlobalCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::BrakeDeccelCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::CabinClimateCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyBrakeCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SafetyFuncCmd::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
-
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SystemCmdBool::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SystemCmdFloat::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::GlobalCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::BrakeDeccelCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::CabinClimateCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SafetyBrakeCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SafetyFuncCmd::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::SupervisoryCtrl::ConstPtr& msg);
+  static std::vector<uint8_t> unpackAndEncode(
+      const uint32_t& can_id, const pacmod_msgs::NotificationCmd::ConstPtr& msg);
 };
 }  // namespace PACMod3
 }  // namespace Drivers

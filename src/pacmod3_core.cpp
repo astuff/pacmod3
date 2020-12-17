@@ -528,7 +528,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
       counter = in[4] & 0x0F;
       complement = ((in[4] & 0xF0) >> 4);
-      
+
       config_fault = ((in[5] & 0x01) > 0);
       can_timeout_fault = ((in[5] & 0x02) > 0);
       internal_supply_voltage_fault = ((in[5] & 0x04) > 0);
@@ -606,7 +606,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       estop_status = ((in[0] & 0x01) > 0);
       estop_fault = ((in[0] & 0x02) > 0);
     }
-    
+
     void WatchdogRptMsg::parse(const uint8_t * in)
     {
       global_enabled_flag = ((in[0] & 0x01) > 0);
@@ -625,7 +625,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       accel_output_reported_fault = ((in[1] & 0x10) > 0);
       accel_pacmod_fault = ((in[1] & 0x20) > 0);
       accel_vehicle_fault = ((in[1] & 0x40) > 0);
-      accel_timeout = ((in[1] & 0x80) > 0); 
+      accel_timeout = ((in[1] & 0x80) > 0);
 
       brake_enabled = ((in[2] & 0x01) > 0);
       brake_override_active = ((in[2] & 0x02) > 0);
@@ -644,7 +644,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       shift_pacmod_fault = ((in[3] & 0x20) > 0);
       shift_vehicle_fault = ((in[3] & 0x40) > 0);
       shift_timeout = ((in[3] & 0x80) > 0);
-      
+
       steer_enabled = ((in[4] & 0x01) > 0);
       steer_override_active = ((in[4] & 0x02) > 0);
       steer_command_output_fault = ((in[4] & 0x04) > 0);
@@ -653,7 +653,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       steer_pacmod_fault = ((in[4] & 0x20) > 0);
       steer_vehicle_fault = ((in[4] & 0x40) > 0);
       steer_timeout = ((in[4] & 0x80) > 0);
-      
+
       mod1_config_fault = ((in[5] & 0x01) > 0);
       mod1_can_timeout = ((in[5] & 0x02) > 0);
       mod1_counter_fault = ((in[5] & 0x04) > 0);
@@ -671,7 +671,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       mini2_rpt_timeout = ((in[6] & 0x20) > 0);
       mini2_config_fault = ((in[6] & 0x40) > 0);
       mini2_can_timeout = ((in[6] & 0x80) > 0);
-      
+
       mini2_counter_fault = ((in[7] & 0x01) > 0);
       mini3_rpt_timeout = ((in[7] & 0x02) > 0);
       mini3_config_fault = ((in[7] & 0x04) > 0);
@@ -700,8 +700,8 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       horn_rpt_timeout = ((in[1] & 0x10) > 0);
       marker_lamp_rpt_timeout = ((in[1] & 0x20) > 0);
       media_controls_rpt_timeout = ((in[1] & 0x40) > 0);
-      parking_brake_rpt_timeout = ((in[1] & 0x80) > 0); 
-      
+      parking_brake_rpt_timeout = ((in[1] & 0x80) > 0);
+
       rear_pass_door_rpt_timeout = ((in[2] & 0x01) > 0);
       shift_rpt_timeout = ((in[2] & 0x02) > 0);
       sprayer_rpt_timeout = ((in[2] & 0x04) > 0);
@@ -719,7 +719,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       mod2_component_rpt_timeout = ((in[3] & 0x20) > 0);
       mod3_component_rpt_timeout = ((in[3] & 0x40) > 0);
       mini1_component_rpt_timeout = ((in[3] & 0x80) > 0);
-      
+
       mini2_component_rpt_timeout = ((in[4] & 0x01) > 0);
       mini3_component_rpt_timeout = ((in[4] & 0x02) > 0);
       mod1_system_present_fault = ((in[4] & 0x04) > 0);
@@ -829,7 +829,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
     {
       commanded_val = static_cast<SafetyFunctionCommand>(in[0] & 0x0F);
       state = static_cast<SafetyFunctionState>(in[0] & 0xF0);
-      
+
       automanual_opctrl = static_cast<AutoManualOpCtrl>(in[1] & 0x03);
       cabin_safety_brake_opctrl = static_cast<CabinSafetyBrakeState>(in[1] & 0x0C);
       remote_stop_status = static_cast<RemoteStopState>(in[1] & 0x30);
@@ -853,10 +853,10 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       operator_interaction = (in[4] & 0x01) > 0;
       accel_limiting_active = (in[4] & 0x02) > 0;
       park_brake_interlock_active = (in[4] & 0x04) > 0;
-      
+
       operator_interaction_avail = (in[5] & 0x04) > 0;
       accel_limiting_active_avail = (in[5] & 0x08) > 0;
-      park_brake_interlock_active_avail = (in[5] & 0x10) > 0; 
+      park_brake_interlock_active_avail = (in[5] & 0x10) > 0;
     }
 
     void BrakeAuxRptMsg::parse(const uint8_t * in)
@@ -923,7 +923,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       speed_interlock_active_avail = (in[1] & 0x08) > 0;
       write_to_config_is_valid = (in[1] & 0x10) > 0;
       gear_number_avail = (in[1] & 0x20) > 0;
-      gear_number = static_cast<int8_t>(in[2] & 0x3F);
+      gear_number = static_cast<Gears>(in[2] & (0x3F));
     }
 
     void SteerAuxRptMsg::parse(const uint8_t * in)
@@ -1069,7 +1069,6 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
       temp3 = ((static_cast<uint16_t>(in[6]) << 8) | in[7]);
       fuel_level = static_cast<float>(temp3 / 200.0);
-
     }
 
     void InteriorLightsRptMsg::parse(const uint8_t * in)
@@ -1177,22 +1176,23 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       oss << in[0] << in[1] << in[2];
       mfg_code = oss.str();
 
-      if (mfg_code == "52C") {
+      if (mfg_code == "52C")
         mfg = "POLARIS INDUSTRIES INC.";
-      } else if (mfg_code == "3HS") {
+      else if (mfg_code == "3HS")
         mfg = "NAVISTAR, INC.";
-      } else if (mfg_code == "2T2") {
+      else if (mfg_code == "2T2")
         mfg = "TOYOTA MOTOR MANUFACTURING CANADA";
-      } else {
+      else
         mfg = "UNKNOWN";
-      }
 
       model_year_code = in[3];
 
-      if (model_year_code >= '1' && model_year_code <= '9') {
+      if (model_year_code >= '1' && model_year_code <= '9')
         model_year = 2000 + model_year_code;
-      } else if (model_year_code >= 'A' && model_year_code < 'Z') {
-        switch (model_year_code) {
+      else if (model_year_code >= 'A' && model_year_code < 'Z')
+      {
+        switch (model_year_code)
+        {
           case 'A':
             model_year = 2010;
             break;
@@ -1259,9 +1259,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
           default:
             model_year = 9999;
         }
-      } else {
-        model_year = 9999;
       }
+      else
+        model_year = 9999;
 
       serial = (in[4] & 0x0F);
       serial = (serial << 8) | in[5];
@@ -1348,7 +1348,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       data[0] = enable ? 0x01 : 0x00;
       data[0] |= ignore_overrides ? 0x02 : 0x00;
       data[0] |= clear_override ? 0x04 : 0x00;
-      
+
       data[1] = cmd;
     }
 
