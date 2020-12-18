@@ -925,7 +925,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       speed_interlock_active_avail = (in[1] & 0x08) > 0;
       write_to_config_is_valid = (in[1] & 0x10) > 0;
       gear_number_avail = (in[1] & 0x20) > 0;
-      gear_number = static_cast<Gears>(in[2] & (0x3F));
+      gear_number = static_cast<int8_t>(in[2] & 0x3F);
     }
 
     void SteerAuxRptMsg::parse(const uint8_t * in)
