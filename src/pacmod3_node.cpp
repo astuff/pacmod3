@@ -503,8 +503,6 @@ int main(int argc, char *argv[])
       pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
     }
     // Commands
-    if (veh_type != VehicleType::POLARIS_RANGER)
-    {
       turn_cmd_sub =
         std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
       rear_pass_door_cmd_sub =
@@ -516,7 +514,6 @@ int main(int argc, char *argv[])
       rx_list.emplace(
         RearPassDoorCmdMsg::CAN_ID,
         std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
-    }
   }
 
   if (veh_type == VehicleType::POLARIS_RANGER)
