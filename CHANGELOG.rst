@@ -2,6 +2,12 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.3.1 (2021-01-07)
+------------------
+* Add brake and steer detail rpt when vehicle type is JUPITER SPIRIT (`#70 <https://github.com/astuff/pacmod3/issues/70>`_)
+* Issue `#67 <https://github.com/astuff/pacmod3/issues/67>`_ (`#68 <https://github.com/astuff/pacmod3/issues/68>`_)
+* Contributors: Daisuke Nishimatsu, bjansky
+
 1.3.0 (2020-01-23)
 ------------------
 * Merge pull request `#59 <https://github.com/astuff/pacmod3/issues/59>`_ from astuff/maint/hybrid_ros1_ros2_msgs
