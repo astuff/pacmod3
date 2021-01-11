@@ -901,7 +901,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       headlights_mode = static_cast<HeadlightSystemState>(in[1]);
       headlights_on_avail = (in[2] & 0x01) > 0;
       headlights_on_bright_avail = (in[2] & 0x02) > 0;
-      fog_lights_on = (in[2] & 0x04) > 0;
+      fog_lights_on_avail = (in[2] & 0x04) > 0;
       headlights_mode_avail = (in[2] & 0x08) > 0;
     }
 

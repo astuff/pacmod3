@@ -881,10 +881,6 @@ int main(int argc, char *argv[])
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
     ros::Publisher component_rpt2_pub =
       n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
-    ros::Publisher software_ver_rpt0_pub =
-      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
-    ros::Publisher software_ver_rpt1_pub =
-      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
     ros::Publisher software_ver_rpt2_pub =
       n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
 
@@ -915,8 +911,6 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(ComponentRptMsg00::CAN_ID, std::move(component_rpt0_pub));
     pub_tx_list.emplace(ComponentRptMsg01::CAN_ID, std::move(component_rpt1_pub));
     pub_tx_list.emplace(ComponentRptMsg02::CAN_ID, std::move(component_rpt2_pub));
-    pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
-    pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
     pub_tx_list.emplace(SoftwareVerRptMsg02::CAN_ID, std::move(software_ver_rpt2_pub));
 
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
@@ -933,6 +927,10 @@ int main(int argc, char *argv[])
     {
       ros::Publisher component_rpt3_pub =
         n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt3", 20);
+      ros::Publisher software_ver_rpt0_pub =
+        n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
+      ros::Publisher software_ver_rpt1_pub =
+        n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
       ros::Publisher software_ver_rpt3_pub =
         n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt3", 20);
       ros::Publisher cruise_control_buttons_rpt_pub =
@@ -957,6 +955,8 @@ int main(int argc, char *argv[])
         n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
 
       pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
+      pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
+      pub_tx_list.emplace(SoftwareVerRptMsg01::CAN_ID, std::move(software_ver_rpt1_pub));
       pub_tx_list.emplace(SoftwareVerRptMsg03::CAN_ID, std::move(software_ver_rpt3_pub));
       pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
       pub_tx_list.emplace(DashControlsRightRptMsg::CAN_ID, std::move(dash_control_right_rpt_pub));
