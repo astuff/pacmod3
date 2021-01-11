@@ -901,6 +901,8 @@ int main(int argc, char *argv[])
       n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
     ros::Publisher wheel_speed_rpt_pub =
       n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
+    ros::Publisher brake_cmd_limit_rpt_pub =
+      n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
     ros::Publisher steer_cmd_limit_rpt_pub =
       n.advertise<pacmod_msgs::SteerCmdLimitRpt>("parsed_tx/steer_cmd_limit_rpt", 20);
 
@@ -922,6 +924,9 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
     pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
     pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
+    pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
+    pub_tx_list.emplace(BrakeCmdLimitRptMsg::CAN_ID, std::move(brake_cmd_limit_rpt_pub));
+    pub_tx_list.emplace(SteerCmdLimitRptMsg::CAN_ID, std::move(steer_cmd_limit_rpt_pub));
 
     if (veh_type != VehicleType::VEHICLE_HCV)
     {
@@ -951,8 +956,6 @@ int main(int argc, char *argv[])
         n.advertise<pacmod_msgs::OccupancyRpt>("parsed_tx/occupancy_rpt", 20);
       ros::Publisher accel_cmd_limit_rpt_pub =
         n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/accel_cmd_limit_rpt", 20);
-      ros::Publisher brake_cmd_limit_rpt_pub =
-        n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
 
       pub_tx_list.emplace(ComponentRptMsg03::CAN_ID, std::move(component_rpt3_pub));
       pub_tx_list.emplace(SoftwareVerRptMsg00::CAN_ID, std::move(software_ver_rpt0_pub));
@@ -967,11 +970,7 @@ int main(int argc, char *argv[])
       pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
       pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
       pub_tx_list.emplace(AccelCmdLimitRptMsg::CAN_ID, std::move(accel_cmd_limit_rpt_pub));
-      pub_tx_list.emplace(BrakeCmdLimitRptMsg::CAN_ID, std::move(brake_cmd_limit_rpt_pub));
     }
-
-    pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
-    pub_tx_list.emplace(SteerCmdLimitRptMsg::CAN_ID, std::move(steer_cmd_limit_rpt_pub));
 
   // Commands
     global_cmd_sub = std::make_shared<ros::Subscriber>(
