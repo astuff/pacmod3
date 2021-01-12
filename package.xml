@@ -9,16 +9,17 @@
   <url type="repository">https://github.com/astuff/pacmod3</url>
   <url type="bugtracker">https://github.com/astuff/pacmod3/issues</url>
 
-  <maintainer email="software@autonomoustuff.com">AutonomouStuff Software Team</maintainer>
+  <maintainer email="support.as.ap@hexagon.com">AutonomouStuff Software Team</maintainer>
   <author email="jdriscoll@autonomoustuff.com">Joe Driscoll</author>
   <author email="jwhitley@autonomoustuff.com">Josh Whitley</author>
 
   <buildtool_depend>catkin</buildtool_depend>
-
+  
+  <build_depend>message_generation</build_depend>
   <build_depend>roslint</build_depend>
 
   <depend>roscpp</depend>
   <depend>std_msgs</depend>
-  <depend>pacmod_msgs</depend>
   <depend>can_msgs</depend>
+  <exec_depend>message_runtime</exec_depend>
 </package>

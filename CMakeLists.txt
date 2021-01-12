@@ -1,23 +1,86 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pacmod3)
 
-## Add support for C++11, supported in ROS Kinetic and newer
-# For PACMod, this must be enabled to use mutexes.
-add_definitions(-std=c++11)
+add_definitions(-std=c++11 -Wall -Wextra)
 
 find_package(catkin REQUIRED COMPONENTS
   roslint
   roscpp
   std_msgs
-  pacmod_msgs
   can_msgs
+  message_generation
 )
+
+add_message_files(DIRECTORY msg FILES
+  "AccelAuxRpt.msg"
+  "AllSystemStatuses.msg"
+  "AngVelRpt.msg"
+  "BrakeAuxRpt.msg"
+  "BrakeDeccelAuxRpt.msg"
+  "BrakeDeccelCmd.msg"
+  "CabinClimateCmd.msg"
+  "CabinClimateRpt.msg"
+  "ComponentRpt.msg"
+  "DateTimeRpt.msg"
+  "DetectedObjectRpt.msg"
+  "DoorRpt.msg"
+  "DriveTrainRpt.msg"
+  "EngineRpt.msg"
+  "EStopRpt.msg"
+  "GlobalCmd.msg"
+  "GlobalRpt.msg"
+  "GlobalRpt2.msg"
+  "HeadlightAuxRpt.msg"
+  "InteriorLightsRpt.msg"
+  "KeyValuePair.msg"
+  "LatLonHeadingRpt.msg"
+  "LinearAccelRpt.msg"
+  "MotorRpt1.msg"
+  "MotorRpt2.msg"
+  "MotorRpt3.msg"
+  "NotificationCmd.msg"
+  "OccupancyRpt.msg"
+  "PacmodCmd.msg"
+  "ParkingBrakeAuxRpt.msg"
+  "PositionWithSpeed.msg"
+  "RearLightsRpt.msg"
+  "SafetyBrakeCmd.msg"
+  "SafetyBrakeRpt.msg"
+  "SafetyFuncCmd.msg"
+  "SafetyFuncCriticalStopRpt.msg"
+  "SafetyFuncRpt.msg"
+  "ShiftAuxRpt.msg"
+  "SoftwareVersionRpt.msg"
+  "SteerAuxRpt.msg"
+  "SteerSystemCmd.msg"
+  "SteerCmdLimitRpt.msg"
+  "SupervisoryCtrl.msg"
+  "SystemCmdBool.msg"
+  "SystemCmdFloat.msg"
+  "SystemCmdInt.msg"
+  "SystemCmdLimitRpt.msg"
+  "SystemRptBool.msg"
+  "SystemRptFloat.msg"
+  "SystemRptInt.msg"
+  "TirePressureRpt.msg"
+  "TurnAuxRpt.msg"
+  "VehDynamicsRpt.msg"
+  "VehicleSpeedRpt.msg"
+  "VinRpt.msg"
+  "WatchdogRpt.msg"
+  "WatchdogRpt2.msg"
+  "WheelSpeedRpt.msg"
+  "WiperAuxRpt.msg"
+  "YawRateRpt.msg"
+)
+
+generate_messages(DEPENDENCIES std_msgs)
 
 catkin_package(CATKIN_DEPENDS
   roscpp
-  std_msgs 
-  pacmod_msgs
+  std_msgs
   can_msgs
+  message_runtime
 )
 
 ## Specify additional locations of header files
@@ -57,4 +120,8 @@ install(TARGETS ${PROJECT_NAME}
 
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+)
+
+install(DIRECTORY msg/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/msg
 )
