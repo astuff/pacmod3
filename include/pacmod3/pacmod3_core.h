@@ -975,7 +975,7 @@ class ShiftAuxRptMsg : public Pacmod3TxMsg
     bool speed_interlock_active_avail;
     bool write_to_config_is_valid;
     bool gear_number_avail;
-    int8_t gear_number;
+    Gears gear_number;
 
     void parse(const uint8_t * in);
 };
