@@ -304,6 +304,12 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillOccupancyRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
+  else if (can_id == OverrideCfgRptMsg::CAN_ID)
+  {
+    pacmod3::OverrideCfgRpt new_msg;
+    fillOverrideCfgRpt(parser_class, &new_msg, frame_id);
+    pub.publish(new_msg);
+  }
   else if (can_id == RearLightsRptMsg::CAN_ID)
   {
     pacmod3::RearLightsRpt new_msg;
@@ -1253,6 +1259,17 @@ void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
+}
+
+void Pacmod3TxRosMsgHandler::fillOverrideCfgRpt(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod3::OverrideCfgRpt * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<OverrideCfgRptMsg>(parser_class);
+
+  new_msg->steer_interaction_pattern = dc_parser->steer_interaction_pattern;
+  new_msg->speed_interaction_pattern = dc_parser->speed_interaction_pattern;
 }
 
 void Pacmod3TxRosMsgHandler::fillRearLightsRpt(

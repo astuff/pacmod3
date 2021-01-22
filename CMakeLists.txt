@@ -40,6 +40,7 @@ add_message_files(DIRECTORY msg FILES
   "MotorRpt3.msg"
   "NotificationCmd.msg"
   "OccupancyRpt.msg"
+  "OverrideCfgRpt.msg"
   "PacmodCmd.msg"
   "ParkingBrakeAuxRpt.msg"
   "PositionWithSpeed.msg"
@@ -112,6 +113,10 @@ target_link_libraries(${PROJECT_NAME}
 set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
 roslint_cpp()
 
+install(DIRECTORY msg/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/msg
+)
+
 install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
@@ -120,8 +125,4 @@ install(TARGETS ${PROJECT_NAME}
 
 install(DIRECTORY launch/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
-)
-
-install(DIRECTORY msg/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/msg
 )

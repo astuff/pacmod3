@@ -206,6 +206,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3::OccupancyRpt * new_msg,
       const std::string& frame_id);
+  void fillOverrideCfgRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod3::OverrideCfgRpt * new_msg,
+      const std::string& frame_id);
   void fillRearLightsRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3::RearLightsRpt * new_msg,
