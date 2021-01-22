@@ -1437,6 +1437,17 @@ class OccupancyRptMsg : public Pacmod3TxMsg
     void parse(const uint8_t * in);
 };
 
+class OverrideCfgRptMsg : public Pacmod3TxMsg
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x504;
+
+    uint8_t steer_interaction_pattern;
+    uint8_t speed_interaction_pattern;
+
+    void parse(const uint8_t * in);
+};
+
 class RearLightsRptMsg : public Pacmod3TxMsg
 {
   public:

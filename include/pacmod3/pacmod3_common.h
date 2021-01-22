@@ -54,6 +54,7 @@
 #include <pacmod_msgs/MotorRpt3.h>
 #include <pacmod_msgs/NotificationCmd.h>
 #include <pacmod_msgs/OccupancyRpt.h>
+#include <pacmod_msgs/OverrideCfgRpt.h>
 #include <pacmod_msgs/ParkingBrakeAuxRpt.h>
 #include <pacmod_msgs/RearLightsRpt.h>
 #include <pacmod_msgs/SafetyBrakeCmd.h>

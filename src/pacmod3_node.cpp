@@ -969,6 +969,13 @@ int main(int argc, char *argv[])
       pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
       pub_tx_list.emplace(AccelCmdLimitRptMsg::CAN_ID, std::move(accel_cmd_limit_rpt_pub));
     }
+    
+    if (veh_type == VehicleType::VEHICLE_HCV)
+    {
+      ros::Publisher override_cfg_rpt_pub =
+        n.advertise<pacmod_msgs::OverrideCfgRpt>("parsed_tx/override_cfg_rpt", 20);
+      pub_tx_list.emplace(OverrideCfgRptMsg::CAN_ID, std::move(override_cfg_rpt_pub));
+    }
 
   // Commands
     global_cmd_sub = std::make_shared<ros::Subscriber>(

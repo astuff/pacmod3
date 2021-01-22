@@ -135,6 +135,7 @@ constexpr uint32_t InteriorLightsRptMsg::CAN_ID;
 constexpr uint32_t LatLonHeadingRptMsg::CAN_ID;
 constexpr uint32_t LinearAccelRptMsg::CAN_ID;
 constexpr uint32_t OccupancyRptMsg::CAN_ID;
+constexpr uint32_t OverrideCfgRptMsg::CAN_ID;
 constexpr uint32_t RearLightsRptMsg::CAN_ID;
 constexpr uint32_t SteerMotorRpt1Msg::CAN_ID;
 constexpr uint32_t SteerMotorRpt2Msg::CAN_ID;
@@ -337,6 +338,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
         break;
       case OccupancyRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new OccupancyRptMsg);
+        break;
+      case OverrideCfgRptMsg::CAN_ID:
+        return std::shared_ptr<Pacmod3TxMsg>(new OverrideCfgRptMsg);
         break;
       case RearLightsRptMsg::CAN_ID:
         return std::shared_ptr<Pacmod3TxMsg>(new RearLightsRptMsg);
@@ -1142,6 +1146,12 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       driver_rear_seatbelt_buckled_avail = ((in[1] & 0x20) > 0);
       pass_rear_seatbelt_buckled_avail = ((in[1] & 0x40) > 0);
       center_rear_seatbelt_buckled_avail = ((in[1] & 0x80) > 0);
+    }
+
+    void OverrideCfgRptMsg::parse(const uint8_t * in)
+    {
+      steer_interaction_pattern = (in[0] & 0x03);
+      speed_interaction_pattern = ((in[0] & 0x04) >> 3);
     }
 
     void RearLightsRptMsg::parse(const uint8_t * in)
