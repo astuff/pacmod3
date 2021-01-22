@@ -73,6 +73,13 @@ namespace PACMod3
     DIM_LEVEL_23 = 24
   };
 
+  enum DriveMode
+  {
+    NORMAL = 0,
+    ECO = 1,
+    SPORT = 2
+  };
+
   enum Gears : int8_t
   {
     R_TENTH = -10,
@@ -1328,7 +1335,7 @@ class DriveTrainRptMsg : public Pacmod3TxMsg
     bool antilock_brake_active_avail;
     bool traction_control_active_avail;
     bool four_wheel_drive_active_avail;
-    uint8_t drive_mode;
+    DriveMode drive_mode;
     bool drive_mode_avail;
 
     void parse(const uint8_t * in);

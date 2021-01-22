@@ -1049,7 +1049,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       antilock_brake_active_avail = ((in[0] & 0x10) > 0);
       traction_control_active_avail = ((in[0] & 0x20) > 0);
       four_wheel_drive_active_avail = ((in[0] & 0x40) > 0);
-      drive_mode = ((in[1] & 0x0C) >> 2);
+      drive_mode = static_cast<DriveMode>((in[1] & 0x0C) >> 2);
       drive_mode_avail = ((in[1] & 0x10) > 0);
     }
 
