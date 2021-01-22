@@ -728,6 +728,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       mini1_system_present_fault = ((in[4] & 0x20) > 0);
       mini2_system_present_fault = ((in[4] & 0x40) > 0);
       mini3_system_present_fault = ((in[4] & 0x80) > 0);
+      drive_mode_invalid = ((in[5] & 0x01) > 0);
     }
 
   // Global Report
@@ -1048,6 +1049,8 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       antilock_brake_active_avail = ((in[0] & 0x10) > 0);
       traction_control_active_avail = ((in[0] & 0x20) > 0);
       four_wheel_drive_active_avail = ((in[0] & 0x40) > 0);
+      drive_mode = ((in[1] & 0x0C) >> 2);
+      drive_mode_avail = ((in[1] & 0x10) > 0);
     }
 
     void EngineRptMsg::parse(const uint8_t * in)

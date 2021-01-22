@@ -1036,7 +1036,8 @@ int main(int argc, char *argv[])
 
     ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
     ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-    
+    ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+
     ros::Publisher hazard_lights_rpt_pub =
       n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
     ros::Publisher headlight_rpt_pub =
@@ -1081,6 +1082,7 @@ int main(int argc, char *argv[])
 
     pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
     pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
+    pub_tx_list.emplace(SteerAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
 
     pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
     pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));

@@ -1225,6 +1225,7 @@ class WatchdogRpt2Msg : public Pacmod3TxMsg
     bool mini1_system_present_fault;
     bool mini2_system_present_fault;
     bool mini3_system_present_fault;
+    bool drive_mode_invalid;
 
     void parse(const uint8_t * in);
 };
@@ -1327,6 +1328,8 @@ class DriveTrainRptMsg : public Pacmod3TxMsg
     bool antilock_brake_active_avail;
     bool traction_control_active_avail;
     bool four_wheel_drive_active_avail;
+    uint8_t drive_mode;
+    bool drive_mode_avail;
 
     void parse(const uint8_t * in);
 };

@@ -804,6 +804,7 @@ void Pacmod3TxRosMsgHandler::fillWatchdogRpt2(
   new_msg->mini1_system_present_fault = dc_parser->mini1_system_present_fault;
   new_msg->mini2_system_present_fault = dc_parser->mini2_system_present_fault;
   new_msg->mini3_system_present_fault = dc_parser->mini3_system_present_fault;
+  new_msg->drive_mode_invalid = dc_parser->drive_mode_invalid;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
@@ -1135,6 +1136,8 @@ void Pacmod3TxRosMsgHandler::fillDriveTrainRpt(
   new_msg->antilock_brake_active_avail = dc_parser->antilock_brake_active_avail;
   new_msg->traction_control_active_avail = dc_parser->traction_control_active_avail;
   new_msg->four_wheel_drive_active_avail = dc_parser->four_wheel_drive_active_avail;
+  new_msg->drive_mode = dc_parser->drive_mode;
+  new_msg->drive_mode_avail = dc_parser->drive_mode_avail;
 
   new_msg->header.frame_id = frame_id;
   new_msg->header.stamp = ros::Time::now();
