@@ -48,6 +48,9 @@ ros::Publisher all_system_statuses_pub;
 std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;
 std::map<uint32_t, std::tuple<bool, bool, bool>> system_statuses;
 
+// Commands that have been received from ROS subscribers
+std::set<uint32_t> received_cmds;
+
 constexpr auto SEND_CMD_INTERVAL = std::chrono::milliseconds(33);
 constexpr auto INTER_MSG_PAUSE = std::chrono::milliseconds(1);
 
@@ -77,9 +80,14 @@ void lookup_and_encode(const uint32_t& can_id, const T& msg)
   auto rx_it = rx_list.find(can_id);
 
   if (rx_it != rx_list.end())
+  {
     rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
+    received_cmds.insert(can_id);
+  }
   else
+  {
     ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
+  }
 }
 
 // Listens for incoming requests to change the position of the throttle pedal
@@ -183,12 +191,12 @@ void can_write()
     auto next_time = std::chrono::steady_clock::now() + SEND_CMD_INTERVAL;
 
     // Write all the data that we have received.
-    for (const auto& element : rx_list)
+    for (const auto& can_id : received_cmds)
     {
-      auto data = element.second->getData();
+      auto data = rx_list[can_id]->getData();
 
       can_msgs::Frame frame;
-      frame.id = element.first;
+      frame.id = can_id;
       frame.is_rtr = false;
       frame.is_extended = false;
       frame.is_error = false;
