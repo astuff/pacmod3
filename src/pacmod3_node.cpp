@@ -29,6 +29,7 @@
 #include <tuple>
 #include <string>
 #include <vector>
+#include <set>
 #include <algorithm>
 
 #include <std_msgs/Bool.h>
