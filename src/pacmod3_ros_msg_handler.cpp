@@ -1273,6 +1273,9 @@ void Pacmod3TxRosMsgHandler::fillOverrideCfgRpt(
 
   new_msg->steer_interaction_pattern = dc_parser->steer_interaction_pattern;
   new_msg->speed_interaction_pattern = dc_parser->speed_interaction_pattern;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
 }
 
 void Pacmod3TxRosMsgHandler::fillRearLightsRpt(
