@@ -1147,7 +1147,7 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
 
     void OverrideCfgRptMsg::parse(const uint8_t * in)
     {
-      steer_interaction_pattern = in[0] &0x03;
+      steer_interaction_pattern = in[0] & 0x03;
       speed_interaction_pattern = (in[0] & 0x04) >> 3;
     }
 
