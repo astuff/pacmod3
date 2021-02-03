@@ -40,6 +40,7 @@ add_message_files(DIRECTORY msg FILES
   "MotorRpt3.msg"
   "NotificationCmd.msg"
   "OccupancyRpt.msg"
+  "OverrideCfgRpt.msg"
   "PacmodCmd.msg"
   "ParkingBrakeAuxRpt.msg"
   "PositionWithSpeed.msg"

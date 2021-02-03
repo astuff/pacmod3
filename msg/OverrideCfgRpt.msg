@@ -1,0 +1,18 @@
+
+## Override Settings
+
+# Steer Pattern Settings
+uint8 STEER_INTERACTION_PATTERN_ALL_OVERRIDES_LATCHED = 0
+uint8 STEER_INTERACTION_PATTERN_ALL_OVERRIDES_TEMP = 1
+uint8 STEER_INTERACTION_PATTERN_STEER_OVERRIDES_LATCHED = 2
+uint8 STEER_INTERACTION_PATTERN_STEER_OVERRIDES_TEMP = 3
+
+# Speed Pattern Settings
+# ALL_OVERRIDES_<> steer setting overwrites Speed settings
+uint8 SPEED_INTERACTION_PATTERN_SPEED_OVERRIDES_LATCHED = 0
+uint8 SPEED_INTERACTION_PATTERN_SPEED_OVERRIDES_TEMP = 1
+
+std_msgs/Header header
+
+uint8 steer_interaction_pattern
+uint8 speed_interaction_pattern

@@ -306,7 +306,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
   }
   else if (can_id == OverrideCfgRptMsg::CAN_ID)
   {
-    pacmod_msgs::OverrideCfgRpt new_msg;
+    pacmod3::OverrideCfgRpt new_msg;
     fillOverrideCfgRpt(parser_class, &new_msg, frame_id);
     pub.publish(new_msg);
   }
@@ -1266,7 +1266,7 @@ void Pacmod3TxRosMsgHandler::fillOccupancyRpt(
 
 void Pacmod3TxRosMsgHandler::fillOverrideCfgRpt(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-    pacmod_msgs::OverrideCfgRpt * new_msg,
+    pacmod3::OverrideCfgRpt * new_msg,
     const std::string& frame_id)
 {
   auto dc_parser = std::dynamic_pointer_cast<OverrideCfgRptMsg>(parser_class);

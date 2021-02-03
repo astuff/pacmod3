@@ -42,3 +42,4 @@ bool mod3_system_present_fault
 bool mini1_system_present_fault
 bool mini2_system_present_fault
 bool mini3_system_present_fault
+bool drive_mode_invalid

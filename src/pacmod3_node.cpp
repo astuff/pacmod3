@@ -969,11 +969,11 @@ int main(int argc, char *argv[])
       pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
       pub_tx_list.emplace(AccelCmdLimitRptMsg::CAN_ID, std::move(accel_cmd_limit_rpt_pub));
     }
-    
+
     if (veh_type == VehicleType::VEHICLE_HCV)
     {
       ros::Publisher override_cfg_rpt_pub =
-        n.advertise<pacmod_msgs::OverrideCfgRpt>("parsed_tx/override_cfg_rpt", 20);
+        n.advertise<pacmod3::OverrideCfgRpt>("parsed_tx/override_cfg_rpt", 20);
       pub_tx_list.emplace(OverrideCfgRptMsg::CAN_ID, std::move(override_cfg_rpt_pub));
     }
 
@@ -1024,57 +1024,57 @@ int main(int argc, char *argv[])
 
   if(veh_type == VehicleType::LEXUS_RX_450H)
   {
-    ros::Publisher global_rpt2_pub = n.advertise<pacmod_msgs::GlobalRpt2>("parsed_tx/global_rpt2", 20);
-    ros::Publisher estop_rpt_pub = n.advertise<pacmod_msgs::EStopRpt>("parsed_tx/estop_rpt", 20);
-    ros::Publisher watchdog_rpt2_pub = n.advertise<pacmod_msgs::WatchdogRpt2>("parsed_tx/watchdog_rpt2", 20);
+    ros::Publisher global_rpt2_pub = n.advertise<pacmod3::GlobalRpt2>("parsed_tx/global_rpt2", 20);
+    ros::Publisher estop_rpt_pub = n.advertise<pacmod3::EStopRpt>("parsed_tx/estop_rpt", 20);
+    ros::Publisher watchdog_rpt2_pub = n.advertise<pacmod3::WatchdogRpt2>("parsed_tx/watchdog_rpt2", 20);
 
     ros::Publisher component_rpt0_pub =
-      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt0", 20);
+      n.advertise<pacmod3::ComponentRpt>("parsed_tx/component_rpt0", 20);
     ros::Publisher component_rpt1_pub =
-      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt1", 20);
+      n.advertise<pacmod3::ComponentRpt>("parsed_tx/component_rpt1", 20);
     ros::Publisher component_rpt2_pub =
-      n.advertise<pacmod_msgs::ComponentRpt>("parsed_tx/component_rpt2", 20);
+      n.advertise<pacmod3::ComponentRpt>("parsed_tx/component_rpt2", 20);
     ros::Publisher software_ver_rpt0_pub =
-      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
+      n.advertise<pacmod3::SoftwareVersionRpt>("parsed_tx/software_ver_rpt0", 20);
     ros::Publisher software_ver_rpt1_pub =
-      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
+      n.advertise<pacmod3::SoftwareVersionRpt>("parsed_tx/software_ver_rpt1", 20);
     ros::Publisher software_ver_rpt2_pub =
-      n.advertise<pacmod_msgs::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
+      n.advertise<pacmod3::SoftwareVersionRpt>("parsed_tx/software_ver_rpt2", 20);
 
-    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod_msgs::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
-    ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod_msgs::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
-    ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod_msgs::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
+    ros::Publisher accel_aux_rpt_pub = n.advertise<pacmod3::AccelAuxRpt>("parsed_tx/accel_aux_rpt", 20);
+    ros::Publisher shift_aux_rpt_pub = n.advertise<pacmod3::ShiftAuxRpt>("parsed_tx/shift_aux_rpt", 20);
+    ros::Publisher steer_aux_rpt_pub = n.advertise<pacmod3::SteerAuxRpt>("parsed_tx/steer_aux_rpt", 20);
 
     ros::Publisher hazard_lights_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
+      n.advertise<pacmod3::SystemRptBool>("parsed_tx/hazard_lights_rpt", 20);
     ros::Publisher headlight_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/headlight_rpt", 20);
+      n.advertise<pacmod3::SystemRptInt>("parsed_tx/headlight_rpt", 20);
     ros::Publisher horn_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptBool>("parsed_tx/horn_rpt", 20);
+      n.advertise<pacmod3::SystemRptBool>("parsed_tx/horn_rpt", 20);
     ros::Publisher turn_rpt_pub =
-      n.advertise<pacmod_msgs::SystemRptInt>("parsed_tx/turn_rpt", 20);
+      n.advertise<pacmod3::SystemRptInt>("parsed_tx/turn_rpt", 20);
 
     ros::Publisher ang_vel_rpt_pub =
-      n.advertise<pacmod_msgs::AngVelRpt>("parsed_tx/ang_vel_rpt", 20);
+      n.advertise<pacmod3::AngVelRpt>("parsed_tx/ang_vel_rpt", 20);
     ros::Publisher drive_train_rpt_pub =
-      n.advertise<pacmod_msgs::DriveTrainRpt>("parsed_tx/drive_train_rpt", 20);
+      n.advertise<pacmod3::DriveTrainRpt>("parsed_tx/drive_train_rpt", 20);
     ros::Publisher date_time_rpt_pub =
-      n.advertise<pacmod_msgs::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
+      n.advertise<pacmod3::DateTimeRpt>("parsed_tx/date_time_rpt", 20);
     ros::Publisher interior_lights_rpt_pub =
-      n.advertise<pacmod_msgs::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
+      n.advertise<pacmod3::InteriorLightsRpt>("parsed_tx/interior_lights_rpt", 20);
     ros::Publisher lat_lon_heading_rpt_pub =
-      n.advertise<pacmod_msgs::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
+      n.advertise<pacmod3::LatLonHeadingRpt>("parsed_tx/lat_lon_heading_rpt", 20);
     ros::Publisher linear_accel_rpt_pub =
-      n.advertise<pacmod_msgs::LinearAccelRpt>("parsed_tx/linear_accel_rpt", 20);
+      n.advertise<pacmod3::LinearAccelRpt>("parsed_tx/linear_accel_rpt", 20);
     ros::Publisher wheel_speed_rpt_pub =
-      n.advertise<pacmod_msgs::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
-    
+      n.advertise<pacmod3::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
+
     ros::Publisher accel_cmd_limit_rpt_pub =
-        n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/accel_cmd_limit_rpt", 20);
+        n.advertise<pacmod3::SystemCmdLimitRpt>("parsed_tx/accel_cmd_limit_rpt", 20);
     ros::Publisher brake_cmd_limit_rpt_pub =
-      n.advertise<pacmod_msgs::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
+      n.advertise<pacmod3::SystemCmdLimitRpt>("parsed_tx/brake_cmd_limit_rpt", 20);
     ros::Publisher steer_cmd_limit_rpt_pub =
-      n.advertise<pacmod_msgs::SteerCmdLimitRpt>("parsed_tx/steer_cmd_limit_rpt", 20);
+      n.advertise<pacmod3::SteerCmdLimitRpt>("parsed_tx/steer_cmd_limit_rpt", 20);
 
     pub_tx_list.emplace(GlobalRpt2Msg::CAN_ID, std::move(global_rpt2_pub));
     pub_tx_list.emplace(EStopRptMsg::CAN_ID, std::move(estop_rpt_pub));
