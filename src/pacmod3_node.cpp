@@ -897,6 +897,8 @@ int main(int argc, char *argv[])
       n.advertise<pacmod3::SystemRptBool>("parsed_tx/horn_rpt", 20);
     ros::Publisher turn_rpt_pub =
       n.advertise<pacmod3::SystemRptInt>("parsed_tx/turn_rpt", 20);
+    ros::Publisher wiper_rpt_pub = 
+      n.advertise<pacmod3::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     ros::Publisher wheel_speed_rpt_pub =
       n.advertise<pacmod3::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
     ros::Publisher brake_cmd_limit_rpt_pub =
@@ -922,6 +924,7 @@ int main(int argc, char *argv[])
     pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
     pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
     pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
+    pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
     pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
     pub_tx_list.emplace(BrakeCmdLimitRptMsg::CAN_ID, std::move(brake_cmd_limit_rpt_pub));
     pub_tx_list.emplace(SteerCmdLimitRptMsg::CAN_ID, std::move(steer_cmd_limit_rpt_pub));
@@ -991,6 +994,8 @@ int main(int argc, char *argv[])
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
     turn_cmd_sub =
       std::make_shared<ros::Subscriber>(n.subscribe("as_rx/turn_cmd", 20, callback_turn_signal_set_cmd));
+    wiper_set_cmd_sub =
+      std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
 
     rx_list.emplace(
       GlobalCmdMsg::CAN_ID,
@@ -1011,6 +1016,9 @@ int main(int argc, char *argv[])
     rx_list.emplace(
       TurnSignalCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
+    rx_list.emplace(
+      WiperCmdMsg::CAN_ID,
+      std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
 
     if (veh_type != VehicleType::VEHICLE_HCV)
     {
