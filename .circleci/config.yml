@@ -37,7 +37,7 @@ jobs:
       - run:
           name: Set Up Container
           command: |
-            apt-get update -qq && apt-get install -y dh-make python-bloom ruby
+            apt-get update -qq && apt-get install fakeroot -y dh-make python-bloom ruby
             gem install --no-rdoc --no-ri deb-s3
             source `find /opt/ros -name setup.bash | sort | head -1`
             rosdep install --from-paths . --ignore-src -y
