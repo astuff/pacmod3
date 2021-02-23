@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Upload
           command: |
-            deb-s3 upload -b autonomoustuff-devel-qa -c bionic --preserve-versions $(ls *.deb) --access-key-id=$S3_ACCESS_KEY_ID --secret-access-key=$S3_SECRET_ACCESS_KEY
+            cd ../ && deb-s3 upload -b autonomoustuff-devel-qa -c bionic --preserve-versions $(ls *.deb) --access-key-id=$S3_ACCESS_KEY_ID --secret-access-key=$S3_SECRET_ACCESS_KEY
     working_directory: ~/src
 
 workflows:
