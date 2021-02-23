@@ -63,6 +63,8 @@ workflows:
           context: ubuntu-pkg-build
           filters:
             branches:
+              only:
+                - /maint/pacmod_msg_migration-test_release
               ignore:
                 - master
                 - /.*/
