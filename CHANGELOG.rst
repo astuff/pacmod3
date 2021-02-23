@@ -2,6 +2,11 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+devel-1.4.0 (2021-02-23)
+------------------------
+* Devel release of new dev, based on DBC 9.0.0+
+* Contributors: Amruta Mhaske, Sneha Ganesh
+
 1.3.0 (2020-01-23)
 ------------------
 * Merge pull request `#59 <https://github.com/astuff/pacmod3/issues/59>`_ from astuff/maint/hybrid_ros1_ros2_msgs
