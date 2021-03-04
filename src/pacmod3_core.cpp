@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <pacmod3/pacmod3_core.h>
+#include <memory>
 
 namespace AS
 {

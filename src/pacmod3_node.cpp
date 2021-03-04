@@ -31,6 +31,8 @@
 #include <vector>
 #include <set>
 #include <algorithm>
+#include <memory>
+#include <utility>
 
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
