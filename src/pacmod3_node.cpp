@@ -280,8 +280,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->enabled);
       enabled_pub.publish(bool_pub_msg);
 
-      if (dc_parser->override_active ||
-          dc_parser->pacmod_sys_fault_active)
+      // if (dc_parser->override_active ||
+      if (dc_parser->pacmod_sys_fault_active)
         set_enable(false);
     }
     else if (msg->id == GlobalRpt2Msg::CAN_ID)
@@ -292,8 +292,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->system_enabled);
       enabled_pub.publish(bool_pub_msg);
 
-      if (dc_parser->system_override_active ||
-          dc_parser->system_fault_active)
+      // if (dc_parser->system_override_active ||
+      if (dc_parser->system_fault_active)
         set_enable(false);
     }
     else if (msg->id == VehicleSpeedRptMsg::CAN_ID)
@@ -897,7 +897,7 @@ int main(int argc, char *argv[])
       n.advertise<pacmod3::SystemRptBool>("parsed_tx/horn_rpt", 20);
     ros::Publisher turn_rpt_pub =
       n.advertise<pacmod3::SystemRptInt>("parsed_tx/turn_rpt", 20);
-    ros::Publisher wiper_rpt_pub = 
+    ros::Publisher wiper_rpt_pub =
       n.advertise<pacmod3::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     ros::Publisher wheel_speed_rpt_pub =
       n.advertise<pacmod3::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
