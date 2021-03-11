@@ -1,39 +1,5 @@
 version: 2
 jobs:
-  kinetic:
-    docker:
-      - image: autonomoustuff/docker-builds:kinetic-ros-base
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            cd ..
-            catkin build
-      - run:
-          name: Lint
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin build pacmod3 --no-deps --make-args roslint
-      - run:
-          name: Run Tests
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin run_tests
-            catkin_test_results
-    working_directory: ~/src
-
   melodic:
     docker:
       - image: autonomoustuff/docker-builds:melodic-ros-base
@@ -55,11 +21,6 @@ jobs:
             cd ..
             catkin build
       - run:
-          name: Lint
-          command: |
-            cd ..
-            catkin build pacmod3 --no-deps --make-args roslint
-      - run:
           name: Run Tests
           command: |
             source `find /opt/ros -name setup.bash | sort | head -1`
@@ -68,9 +29,45 @@ jobs:
             catkin_test_results
     working_directory: ~/src
 
+  melodic_devel_release:
+    docker:
+      - image: autonomoustuff/docker-builds:melodic-ros-base
+    steps:
+      - checkout
+      - run:
+          name: Set Up Container
+          command: |
+            apt-get update -qq && apt-get install fakeroot -y dh-make python-bloom ruby
+            gem install --no-rdoc --no-ri deb-s3
+            source `find /opt/ros -name setup.bash | sort | head -1`
+            rosdep install --from-paths . --ignore-src -y
+      - run:
+          name: Build
+          command: |
+            bloom-generate rosdebian --os-name ubuntu --os-version bionic --ros-distro melodic
+            fakeroot debian/rules binary
+      - run:
+          name: Upload
+          command: |
+            cd ../ && deb-s3 upload -b autonomoustuff-devel-qa -c bionic --preserve-versions $(ls *.deb) --access-key-id=$S3_ACCESS_KEY_ID --secret-access-key=$S3_SECRET_ACCESS_KEY
+    working_directory: ~/src
+
 workflows:
   version: 2
   ros_build:
     jobs:
-      - kinetic
       - melodic
+  aws_release:
+    jobs:
+      - melodic_devel_release:
+          context: ubuntu-pkg-build
+          filters:
+            branches:
+              only:
+                - /maint/pacmod_msg_migration-test_release
+              ignore:
+                - master
+                - /.*/
+            tags:
+              only: /^devel.*/
+

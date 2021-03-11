@@ -2,6 +2,12 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+devel-1.4.0 (2021-03-11)
+------------------------
+* Devel release of new dev, based on DBC 9.0.0+ and newer CAN protocols.
+* Specific release for VEHICLE_HCV (maint/pacmod_msg_migration-vehicle_hcv)
+* Contributors: Sneha Ganesh, Amruta Mhaske
+
 1.3.0 (2020-01-23)
 ------------------
 * Merge pull request `#59 <https://github.com/astuff/pacmod3/issues/59>`_ from astuff/maint/hybrid_ros1_ros2_msgs
