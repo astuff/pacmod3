@@ -19,5 +19,5 @@ For access to the DBC file which defines the CAN interface for the PACMod, see t
 | Ford Ranger 2019+ | ROS | PACMod3 | [PACMod3 Driver (DBC 11)](https://github.com/astuff/pacmod3/tree/devel/dbc_11) |
 | Polaris Ranger X900 | ROS | PACMod3 | [PACMod3 Driver (DBC 11)](https://github.com/astuff/pacmod3/tree/devel/dbc_11) |
 | Toyota Minivan 2019+ | ROS | PACMod3 | [PACMod3 Driver (DBC 11)](https://github.com/astuff/pacmod3/tree/devel/dbc_11) |
-
+| VEHICLE_HCV | ROS | PACMod3 | [PACMod3 Driver with message migration](https://github.com/astuff/pacmod3/tree/maint/pacmod_msg_migration-vehicle_hcv) |
 More coming soon...
