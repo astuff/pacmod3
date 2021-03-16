@@ -274,6 +274,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
                                   dc_parser->command_timeout));
     }
 
+    // TODO - Update setting disable flag on commands based on firmware handling
+
     if (msg->id == GlobalRptMsg::CAN_ID)
     {
       auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
@@ -282,6 +284,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->enabled);
       enabled_pub.publish(bool_pub_msg);
 
+      // Don't need to set disable flag on commands for override, handled by firmware
       // if (dc_parser->override_active ||
       if (dc_parser->pacmod_sys_fault_active)
         set_enable(false);
@@ -294,6 +297,7 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->system_enabled);
       enabled_pub.publish(bool_pub_msg);
 
+      // Don't need to set disable flag on commands for override, handled by firmware
       // if (dc_parser->system_override_active ||
       if (dc_parser->system_fault_active)
         set_enable(false);
