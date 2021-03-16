@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <memory>
+#include <utility>
 
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
@@ -1030,7 +1032,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  if(veh_type == VehicleType::LEXUS_RX_450H)
+  if (veh_type == VehicleType::LEXUS_RX_450H)
   {
     ros::Publisher global_rpt2_pub = n.advertise<pacmod3::GlobalRpt2>("parsed_tx/global_rpt2", 20);
     ros::Publisher estop_rpt_pub = n.advertise<pacmod3::EStopRpt>("parsed_tx/estop_rpt", 20);
