@@ -30,6 +30,8 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <memory>
+#include <utility>
 
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
@@ -272,6 +274,8 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
                                   dc_parser->command_timeout));
     }
 
+    // TODO - Update setting disable flag on commands based on firmware handling
+
     if (msg->id == GlobalRptMsg::CAN_ID)
     {
       auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
@@ -280,8 +284,9 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->enabled);
       enabled_pub.publish(bool_pub_msg);
 
-      if (dc_parser->override_active ||
-          dc_parser->pacmod_sys_fault_active)
+      // Don't need to set disable flag on commands for override, handled by firmware
+      // if (dc_parser->override_active ||
+      if (dc_parser->pacmod_sys_fault_active)
         set_enable(false);
     }
     else if (msg->id == GlobalRpt2Msg::CAN_ID)
@@ -292,8 +297,9 @@ void can_read(const can_msgs::Frame::ConstPtr &msg)
       bool_pub_msg.data = (dc_parser->system_enabled);
       enabled_pub.publish(bool_pub_msg);
 
-      if (dc_parser->system_override_active ||
-          dc_parser->system_fault_active)
+      // Don't need to set disable flag on commands for override, handled by firmware
+      // if (dc_parser->system_override_active ||
+      if (dc_parser->system_fault_active)
         set_enable(false);
     }
     else if (msg->id == VehicleSpeedRptMsg::CAN_ID)
@@ -897,7 +903,7 @@ int main(int argc, char *argv[])
       n.advertise<pacmod3::SystemRptBool>("parsed_tx/horn_rpt", 20);
     ros::Publisher turn_rpt_pub =
       n.advertise<pacmod3::SystemRptInt>("parsed_tx/turn_rpt", 20);
-    ros::Publisher wiper_rpt_pub = 
+    ros::Publisher wiper_rpt_pub =
       n.advertise<pacmod3::SystemRptInt>("parsed_tx/wiper_rpt", 20);
     ros::Publisher wheel_speed_rpt_pub =
       n.advertise<pacmod3::WheelSpeedRpt>("parsed_tx/wheel_speed_rpt", 20);
@@ -1030,7 +1036,7 @@ int main(int argc, char *argv[])
     }
   }
 
-  if(veh_type == VehicleType::LEXUS_RX_450H)
+  if (veh_type == VehicleType::LEXUS_RX_450H)
   {
     ros::Publisher global_rpt2_pub = n.advertise<pacmod3::GlobalRpt2>("parsed_tx/global_rpt2", 20);
     ros::Publisher estop_rpt_pub = n.advertise<pacmod3::EStopRpt>("parsed_tx/estop_rpt", 20);
