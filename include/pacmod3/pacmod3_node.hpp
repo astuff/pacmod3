@@ -84,22 +84,28 @@ private:
 
   void callback_global_cmd(const pacmod_msgs::msg::GlobalCmd::SharedPtr msg);
   void callback_user_notification_cmd(const pacmod_msgs::msg::NotificationCmd::SharedPtr msg);
+  void callback_supervisory_ctrl_cmd(const pacmod_msgs::msg::SupervisoryCtrl::SharedPtr msg);
+  
   void callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
   void callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
-  void callback_brake_deccel_cmd(const pacmod_msgs::msg::BrakeDeccelCmd::SharedPtr msg);
+  void callback_brake_decel_cmd(const pacmod_msgs::msg::BrakeDecelCmd::SharedPtr msg);
   void callback_cabin_climate_cmd(const pacmod_msgs::msg::CabinClimateCmd::SharedPtr msg);
   void callback_cabin_fan_speed_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_cabin_temp_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
   void callback_cruise_control_buttons_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_dash_controls_left_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_dash_controls_right_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_engine_brake_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_exhaust_brake_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_hazard_lights_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_horn_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_marker_lamp_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  
   void callback_media_controls_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  
+  void callback_parking_brake_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_safety_brake_cmd(const pacmod_msgs::msg::SafetyBrakeCmd::SharedPtr msg);
+  void callback_safety_func_cmd(const pacmod_msgs::msg::SafetyFuncCmd::SharedPtr msg);
   void callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_sprayer_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
   void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);

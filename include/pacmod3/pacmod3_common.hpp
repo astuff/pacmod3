@@ -29,8 +29,8 @@
 #include <pacmod_msgs/msg/all_system_statuses.hpp>
 #include <pacmod_msgs/msg/ang_vel_rpt.hpp>
 #include <pacmod_msgs/msg/brake_aux_rpt.hpp>
-#include <pacmod_msgs/msg/brake_deccel_aux_rpt.hpp>
-#include <pacmod_msgs/msg/brake_deccel_cmd.hpp>
+#include <pacmod_msgs/msg/brake_decel_aux_rpt.hpp>
+#include <pacmod_msgs/msg/brake_decel_cmd.hpp>
 #include <pacmod_msgs/msg/cabin_climate_cmd.hpp>
 #include <pacmod_msgs/msg/cabin_climate_rpt.hpp>
 #include <pacmod_msgs/msg/component_rpt.hpp>
@@ -57,6 +57,7 @@
 #include <pacmod_msgs/msg/safety_brake_cmd.hpp>
 #include <pacmod_msgs/msg/safety_brake_rpt.hpp>
 #include <pacmod_msgs/msg/safety_func_cmd.hpp>
+#include <pacmod_msgs/msg/safety_func_critical_stop_rpt.hpp>
 #include <pacmod_msgs/msg/safety_func_rpt.hpp>
 #include <pacmod_msgs/msg/shift_aux_rpt.hpp>
 #include <pacmod_msgs/msg/software_version_rpt.hpp>
@@ -74,9 +75,12 @@
 #include <pacmod_msgs/msg/tire_pressure_rpt.hpp>
 #include <pacmod_msgs/msg/turn_aux_rpt.hpp>
 #include <pacmod_msgs/msg/vehicle_dynamics_rpt.hpp>
+#include <pacmod_msgs/msg/vehicle_fault_rpt.hpp>
 #include <pacmod_msgs/msg/vehicle_speed_rpt.hpp>
 #include <pacmod_msgs/msg/vin_rpt.hpp>
+#include <pacmod_msgs/msg/vin_rpt2.hpp>
 #include <pacmod_msgs/msg/watchdog_rpt.hpp>
+#include <pacmod_msgs/msg/watchdog_rpt2.hpp>
 #include <pacmod_msgs/msg/wheel_speed_rpt.hpp>
 #include <pacmod_msgs/msg/wiper_aux_rpt.hpp>
 #include <pacmod_msgs/msg/yaw_rate_rpt.hpp>

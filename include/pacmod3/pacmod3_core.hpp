@@ -33,6 +33,14 @@ namespace pacmod3
 
 /*** Enum Classes ***/
 
+  enum CalibrationStatus
+  {
+    INACTIVE = 0,
+    ACTIVE = 1,
+    COMPLETE = 2,
+    ERROR = 3
+  };
+
   enum class ComponentType
   {
     PACMOD = 0,
@@ -68,6 +76,13 @@ namespace pacmod3
     DIM_LEVEL_21 = 22,
     DIM_LEVEL_22 = 23,
     DIM_LEVEL_23 = 24
+  };
+
+  enum DriveMode
+  {
+    NORMAL = 0,
+    ECO = 1,
+    SPORT = 2
   };
 
   enum class Gears : int8_t
@@ -119,10 +134,13 @@ namespace pacmod3
     LEXUS_RX_450H,
     POLARIS_GEM,
     POLARIS_RANGER,
+    HEXAGON_TRACTOR,
+    FORD_RANGER,
+    VEHICLE_FTT,
+    VEHICLE_HCV,
     VEHICLE_4,
     VEHICLE_5,
-    VEHICLE_6,
-    VEHICLE_R8F
+    VEHICLE_6
   };
 
   enum class XBR_EBI_Mode
@@ -169,10 +187,10 @@ namespace pacmod3
 
   enum class HillHolderMode
   {
-    INACTIVE = 0,
-    ACTIVE = 1,
-    ACTIVE_BUT_INACTIVE_SOON = 2,
-    ERROR = 6
+    HH_INACTIVE = 0,
+    HH_ACTIVE = 1,
+    HH_ACTIVE_BUT_INACTIVE_SOON = 2,
+    HH_ERROR = 6
   };
 
   enum class SafetyFunctionCommand
@@ -182,28 +200,28 @@ namespace pacmod3
     CMD_AUTO = 2,
     CMD_MANUAL_READY = 3,
     CMD_CRITICAL_STOP1 = 4,
-    CMD_CRITICAL_STOP = 5
+    CMD_CRITICAL_STOP2 = 5
   };
 
   enum class SafetyFunctionState
   {
-    MANUAL_BRAKED_STATE = 0,
-    MANUAL_UNBRAKED_STATE = 1,
-    AUTO_READY_STATE = 2,
-    AUTO_INACTIVE_STATE = 3,
-    AUTO_ACTIVE_BRAKED_STATE = 4,
-    AUTO_ACTIVE_UNBRAKED_STATE = 5,
-    MANUAL_READY_STATE = 6,
-    CRITICAL_STOP1_STATE = 7,
-    CRITICAL_STOP2_STATE = 8,
-    STARTUP_STATE = 9
+    MANUAL_BRAKED = 0,
+    MANUAL_UNBRAKED = 1,
+    AUTOMS_READY = 2,
+    AUTOMS_INACTIVE = 3,
+    AUTOMS_ACTIVE_BRAKED = 4,
+    AUTOMS_ACTIVE_UNBRAKED = 5,
+    MANUAL_READY = 6,
+    CRITICAL_STOP1 = 7,
+    CRITICAL_STOP2 = 8,
+    STARTUP = 9
   };
 
-  enum class AutoManualOpCtrl
+  enum class AutomsManOpCtrl
   {
-    AUTO_MAN_INVALID = 0,
-    AUTO_MAN_MANUAL = 1,
-    AUTO_MAN_AUTO = 2
+    AUTOMS_MAN_INVALID = 0,
+    AUTOMS_MAN_MANUAL = 1,
+    AUTOMS_MAN_AUTOMS = 2
   };
   
   enum class CabinSafetyBrakeState
@@ -281,13 +299,13 @@ public:
 
 class SystemCmdLimitRptMsg : public  Pacmod3TxMsg
 {
-  public:
-    SystemCmdLimitRptMsg();
+public:
+  SystemCmdLimitRptMsg();
 
-    double sys_cmd_limit;
-    double limited_sys_cmd;
+  double sys_cmd_limit;
+  double limited_sys_cmd;
 
-    void parse(const uint8_t * in);
+  void parse(const std::vector<uint8_t> & in);
 };
 
 class SystemRptMsg : public Pacmod3TxMsg
@@ -364,13 +382,14 @@ class ComponentRptMsg : public Pacmod3TxMsg
     bool turn;
     bool wiper;
     bool watchdog;
-    bool brake_deccel;
+    bool brake_decel;
     bool rear_pass_door;
     bool engine_brake;
     bool marker_lamp;
     bool cabin_climate;
     bool cabin_fan_speed;
     bool cabin_temp;
+    bool exhaust_brake;
 
     uint8_t counter;
     uint8_t complement;
@@ -379,6 +398,9 @@ class ComponentRptMsg : public Pacmod3TxMsg
     bool internal_supply_voltage_fault;
     bool supervisory_timeout;           
     bool supervisory_sanity_fault;
+    bool watchdog_sanity_fault;
+    bool watchdog_system_present_fault;
+    bool component_ready;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -432,7 +454,10 @@ class GlobalCmdMsg : public Pacmod3RxMsg
     static constexpr uint8_t DATA_LENGTH = 1;
     static constexpr uint32_t CAN_ID = 0x80;
 
-    void encode(bool clear_faults);
+    void encode(bool clear_faults,
+                bool sanity_check_required,
+                uint8_t counter,
+                uint8_t complement);
 };
 
 class GlobalRptMsg : public Pacmod3TxMsg
@@ -464,6 +489,8 @@ class GlobalRpt2Msg : public Pacmod3TxMsg
     bool system_override_active;
     bool system_fault_active;
     bool supervisory_enable_required;
+    bool disable_all_systems;
+    bool system_ready;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -494,7 +521,7 @@ public:
   static constexpr uint32_t CAN_ID = 0x104;
 };
 
-class BrakeDeccelCmdMsg : public Pacmod3RxMsg
+class BrakeDecelCmdMsg : public Pacmod3RxMsg
 {
 public:
   static constexpr uint8_t DATA_LENGTH = 4;
@@ -504,7 +531,7 @@ public:
   void encode(bool enable,
               bool ignore_overrides,
               bool clear_override,
-              float brake_deccel_command,
+              float brake_decel_command,
               uint8_t xbr_ebi_mode,
               uint8_t xbr_priority,
               uint8_t xbr_control_mode);
@@ -562,6 +589,12 @@ class EngineBrakeCmdMsg : public SystemCmdInt
 {
 public:
   static constexpr uint32_t CAN_ID = 0x144;
+};
+
+class ExhaustBrakeCmdMsg : public SystemCmdInt
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x145;
 };
 
 class HazardLightCmdMsg : public SystemCmdBool
@@ -688,7 +721,7 @@ public:
   static constexpr uint32_t CAN_ID = 0x204;
 };
 
-class BrakeDeccelRptMsg : public SystemRptFloatMsg
+class BrakeDecelRptMsg : public SystemRptFloatMsg
 {
 public:
   static constexpr uint32_t CAN_ID = 0x23C;
@@ -757,6 +790,12 @@ public:
   static constexpr uint32_t CAN_ID = 0x244;
 };
 
+class ExhaustBrakeRptMsg : public SystemRptIntMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x245;
+};
+
 class HazardLightRptMsg : public SystemRptBoolMsg
 {
 public:
@@ -810,6 +849,37 @@ public:
   bool cmd_reported_fault;
   bool cmd_timeout;
   bool cmd_permitted;
+
+  void parse(const std::vector<uint8_t> & in);
+};
+
+class SafetyFuncCriticalStopRptMsg : public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x420;
+
+  bool automsman_opctrl_fault;
+  bool remote_stop_fault;
+  bool safety_brake_opctrl_off;
+  bool safety_brake_cmd_timeout;
+  bool safety_func_cmd_timeout;
+  bool safety_func_critical_stop_1_cmd;
+  bool safety_func_critical_stop_2_cmd;
+  bool safety_func_none_cmd;
+  bool pacmod_system_timeout;
+  bool pacmod_system_fault;
+  bool pacmod_system_not_active;
+  bool vehicle_report_timeout;
+  bool vehicle_report_fault;
+  bool low_engine_rpm;
+  bool pri_safety_brake_signal_1_fault;
+  bool pri_safety_brake_signal_2_fault;
+  bool sec_safety_brake_signal_1_fault;
+  bool sec_safety_brake_signal_2_fault;
+  bool primary_processor_fault;
+  bool secondary_processor_fault;
+  bool remote_stop_cmd;
+  bool pri_safety_brake_pressure_fault;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -877,8 +947,13 @@ public:
 
   bool operator_interaction;
   bool accel_limiting_active;
+  bool park_brake_interlock_active;
+  bool brake_interlock_active;
+  uint8_t calibration_status;
   bool operator_interaction_avail;
   bool accel_limiting_active_avail;
+  bool park_brake_interlock_active_avail;
+  bool brake_interlock_active_avail;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -892,15 +967,18 @@ public:
   bool operator_interaction;
   bool brake_on_off;
   bool brake_limiting_active;
+  bool brake_reduced_assist;
+  uint8_t calibration_status;
   bool brake_pressure_avail;
   bool operator_interaction_avail;
   bool brake_on_off_avail;
   bool brake_limiting_active_avail;
+  bool brake_reduced_assist_avail;
 
   void parse(const std::vector<uint8_t> & in);
 };
 
-class BrakeDeccelAuxRptMsg : public Pacmod3TxMsg
+class BrakeDecelAuxRptMsg : public Pacmod3TxMsg
 {
 public:
   static constexpr uint32_t CAN_ID = 0x338;
@@ -955,6 +1033,7 @@ public:
   bool brake_interlock_active;
   bool speed_interlock_active;
   bool write_to_config;
+  uint8_t calibration_status;
   bool between_gears_avail;
   bool stay_in_neutral_mode_avail;
   bool brake_interlock_active_avail;
@@ -976,13 +1055,14 @@ public:
   bool operator_interaction;
   bool rotation_rate_sign;
   bool vehicle_angle_calib_status;
-  bool steer_limiting_active;
+  bool steering_limiting_active;
+  uint8_t calibration_status;
   bool steering_torque_avail;
   bool rotation_rate_avail;
   bool operator_interaction_avail;
   bool rotation_rate_sign_avail;
   bool vehicle_angle_calib_status_avail;
-  bool steer_limiting_active_avail;
+  bool steering_limiting_active_avail;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -994,8 +1074,8 @@ public:
 
   bool driver_blinker_bulb_on;
   bool passenger_blinker_bulb_on;
-  bool driver_blinker_bulb_on_is_valid;
-  bool passenger_blinker_bulb_on_is_valid;
+  bool driver_blinker_bulb_on_avail;
+  bool passenger_blinker_bulb_on_avail;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -1046,6 +1126,12 @@ public:
   static constexpr uint32_t CAN_ID = 0x23;
 };
 
+class ComponentRptMsg04 : public ComponentRptMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x24;
+};
+
 class SoftwareVerRptMsg00 : public SoftwareVersionRptMsg
 {
 public:
@@ -1068,6 +1154,12 @@ class SoftwareVerRptMsg03 : public SoftwareVersionRptMsg
 {
 public:
   static constexpr uint32_t CAN_ID = 0x40B;
+};
+
+class SoftwareVerRptMsg04 : public SoftwareVersionRptMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x40C;
 };
 
 class EStopRptMsg : public Pacmod3TxMsg
@@ -1150,6 +1242,59 @@ public:
   bool mod_system_present_fault;
   bool mini_system_present_fault;
   bool global_internal_power_supply_fault;
+
+  void parse(const std::vector<uint8_t> & in);
+};
+
+class WatchdogRpt2Msg : public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x421;
+
+  bool accel_rpt_timeout;
+  bool brake_rpt_timeout;
+  bool brake_decel_rpt_timeout;
+  bool cabin_climate_rpt_timeout;
+  bool cabin_fan_speed_rpt_timeout;
+  bool cabin_temp_rpt_timeout;
+  bool cruise_control_rpt_timeout;
+  bool dash_left_rpt_timeout;
+  bool dash_right_rpt_timeout;
+  bool engine_brake_rpt_timeout;
+  bool hazard_lights_rpt_timeout;
+  bool headlight_rpt_timeout;
+  bool horn_rpt_timeout;
+  bool marker_lamp_rpt_timeout;
+  bool media_controls_rpt_timeout;
+  bool parking_brake_rpt_timeout;
+  bool rear_pass_door_rpt_timeout;
+  bool shift_rpt_timeout;
+  bool sprayer_rpt_timeout;
+  bool steering_rpt_timeout;
+  bool turn_rpt_timeout;
+  bool wiper_rpt_timeout;
+  bool pacmod1_sanity_fault;
+  bool pacmod2_sanity_fault;
+  bool pacmod3_sanity_fault;
+  bool pacmini1_sanity_fault;
+  bool pacmini2_sanity_fault;
+  bool pacmini3_sanity_fault;
+  bool pacmod1_component_rpt_timeout;
+  bool pacmod2_component_rpt_timeout;
+  bool pacmod3_component_rpt_timeout;
+  bool pacmini1_component_rpt_timeout;
+  bool pacmini2_component_rpt_timeout;
+  bool pacmini3_component_rpt_timeout;
+  bool pacmod1_system_present_fault;
+  bool pacmod2_system_present_fault;
+  bool pacmod3_system_present_fault;
+  bool pacmini1_system_present_fault;
+  bool pacmini2_system_present_fault;
+  bool pacmini3_system_present_fault;
+  bool drive_mode_invalid;
+  bool global_cmd_sanity_fault;
+  bool global_cmd_timeout;
+  bool exhaust_brake_rpt_timeout;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -1251,6 +1396,8 @@ class DriveTrainRptMsg : public Pacmod3TxMsg
     bool antilock_brake_active_avail;
     bool traction_control_active_avail;
     bool four_wheel_drive_active_avail;
+    DriveMode drive_mode;
+    bool drive_mode_avail;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -1260,14 +1407,14 @@ class EngineRptMsg : public Pacmod3TxMsg
 public:
   static constexpr uint32_t CAN_ID = 0x410;
 
-  double engine_speed;
-  double engine_torque;
-  int engine_coolant_temp;
+  float engine_speed;
+  float engine_torque;
+  int16_t engine_coolant_temp;
   bool engine_speed_avail;
   bool engine_torque_avail;
   bool engine_coolant_temp_avail;
   bool fuel_level_avail;
-  double fuel_level;
+  float fuel_level;
 
   void parse(const std::vector<uint8_t> & in);
 };
@@ -1395,6 +1542,55 @@ class TirePressureRptMsg : public Pacmod3TxMsg
   void parse(const std::vector<uint8_t> & in);
 };
 
+class VehDynamicsRptMsg : public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x413;
+
+  double veh_g_forces;
+
+  void parse(const std::vector<uint8_t> & in);
+};
+
+class VehicleFaultRptMsg : public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x42;
+
+  bool engine_check_light;
+  bool engine_check_light_avail;
+  bool trc_fault_light;
+  bool trc_fault_light_avail;
+  bool trc_off_fault_light;
+  bool trc_off_fault_light_avail;
+  bool antilock_brake_fault_light;
+  bool antilock_brake_fault_light_avail;
+  bool tire_fault_light;
+  bool tire_fault_light_avail;
+  bool air_bags_fault_light;
+  bool air_bags_fault_light_avail;
+  bool low_engine_oil_pressure;
+  bool low_engine_oil_pressure_avail;
+  bool brake_fault;
+  bool brake_fault_avail;
+  bool brake_applied_power_reduced;
+  bool brake_applied_power_reduced_avail;
+  bool steering_loss_stop_safely;
+  bool steering_loss_stop_safely_avail;
+  bool steering_fault_service_now;
+  bool steering_fault_service_now_avail;
+  bool xmsn_fault_service_now;
+  bool xmsn_fault_service_now_avail;
+  bool xmsn_over_temp_stop_safely;
+  bool xmsn_over_temp_stop_safely_avail;
+  bool low_battery_features_off;
+  bool low_battery_features_off_avail;
+  bool charging_system_fault;
+  bool charging_system_fault_avail;
+
+  void parse(const std::vector<uint8_t> & in);
+};
+
 class VehicleSpeedRptMsg : public Pacmod3TxMsg
 {
 public:
@@ -1420,6 +1616,23 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
+class VinRpt2Msg : public Pacmod3TxMsg
+{
+public:
+  static constexpr uint32_t CAN_ID = 0x422;
+
+  char vis_10;
+  char vis_11;
+  char vis_12;
+  char vis_13;
+  char vis_14;
+  char vis_15;
+  char vis_16;
+  char vis_17;
+
+  void parse(const std::vector<uint8_t> & in);
+};
+
 class WheelSpeedRptMsg : public Pacmod3TxMsg
 {
 public:
@@ -1429,17 +1642,6 @@ public:
   double front_right_wheel_speed;
   double rear_left_wheel_speed;
   double rear_right_wheel_speed;
-
-  void parse(const std::vector<uint8_t> & in);
-};
-
-class VehicleDynamicsRptMsg : public Pacmod3TxMsg
-{
-public:
-  static constexpr uint32_t CAN_ID = 0x413;
-
-  uint8_t g_forces;
-  double brake_torque;
 
   void parse(const std::vector<uint8_t> & in);
 };

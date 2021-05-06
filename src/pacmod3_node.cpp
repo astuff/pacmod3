@@ -47,21 +47,21 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
   frame_id_ = this->declare_parameter("frame_id", "pacmod");
   bool safety_ecu_flag = this->declare_parameter("use_safety_ecu", "false");
 
-  if (vehicle_type_string == "INTERNATIONAL_PROSTAR_122")
-    vehicle_type_ = VehicleType::INTERNATIONAL_PROSTAR_122;
-  
-  else if (vehicle_type_string == "JUPITER_SPIRIT") 
-    vehicle_type_ = VehicleType::JUPITER_SPIRIT;
-  
-  else if (vehicle_type_string == "LEXUS_RX_450H") 
-    vehicle_type_ = VehicleType::LEXUS_RX_450H;
-  
-  else if (vehicle_type_string == "POLARIS_GEM") 
+  if (vehicle_type_string == "POLARIS_GEM") 
     vehicle_type_ = VehicleType::POLARIS_GEM;
   
   else if (vehicle_type_string == "POLARIS_RANGER") 
     vehicle_type_ = VehicleType::POLARIS_RANGER;
+
+  if (vehicle_type_string == "INTERNATIONAL_PROSTAR_122")
+    vehicle_type_ = VehicleType::INTERNATIONAL_PROSTAR_122;
   
+  else if (vehicle_type_string == "LEXUS_RX_450H") 
+    vehicle_type_ = VehicleType::LEXUS_RX_450H;
+
+  else if (vehicle_type_string == "FREIGHTLINER_CASCADIA") 
+    vehicle_type_ = VehicleType::FREIGHTLINER_CASCADIA;
+
   else if (vehicle_type_string == "VEHICLE_4") 
     vehicle_type_ = VehicleType::VEHICLE_4;
   
@@ -70,9 +70,21 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
   
   else if (vehicle_type_string == "VEHICLE_6") 
     vehicle_type_ = VehicleType::VEHICLE_6;
+
+  else if (vehicle_type_string == "JUPITER_SPIRIT") 
+    vehicle_type_ = VehicleType::JUPITER_SPIRIT;
   
-  else if (vehicle_type_string == "VEHICLE_R8F") 
-    vehicle_type_ = VehicleType::VEHICLE_R8F;
+  else if (vehicle_type_string == "HEXAGON_TRACTOR") 
+    vehicle_type_ = VehicleType::HEXAGON_TRACTOR;
+  
+  else if (vehicle_type_string == "FORD_RANGER") 
+    vehicle_type_ = VehicleType::FORD_RANGER;
+  
+  else if (vehicle_type_string == "VEHICLE_FTT") 
+    vehicle_type_ = VehicleType::VEHICLE_FTT;
+  
+  else if (vehicle_type_string == "VEHICLE_HCV") 
+    vehicle_type_ = VehicleType::VEHICLE_HCV;
 
   else
   {
@@ -372,7 +384,7 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
       "parsed_tx/rear_lights_rpt", 20);
   }
 
-  if (vehicle_type_ == VehicleType::VEHICLE_R8F)
+  if (vehicle_type_ == VehicleType::FORD_RANGER)
   {
     can_pubs_[GlobalRpt2Msg::CAN_ID] =
       this->create_publisher<pacmod_msgs::msg::GlobalRpt2>("parsed_tx/global_rpt2", 20);
@@ -643,7 +655,8 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
         dc_parser->input_output_fault |
         dc_parser->output_reported_fault |
         dc_parser->pacmod_fault |
-        dc_parser->vehicle_fault));
+        dc_parser->vehicle_fault |
+        dc_parser->command_timeout));
     }
 
     if (msg->id == GlobalRptMsg::CAN_ID)
@@ -657,6 +670,17 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
       if (dc_parser->override_active || dc_parser->fault_active)
         set_enable(false);
     }
+    else if (msg->id == GlobalRpt2Msg::CAN_ID)
+    {
+      auto dc_parser = std::dynamic_pointer_cast<GlobalRpt2Msg>(parser_class);
+
+      auto enabled_msg = std::make_unique<std_msgs::msg::Bool>();
+      enabled_msg->data = dc_parser->system_enabled;
+      pub_enabled_->publish(std::move(enabled_msg));
+
+      if (dc_parser->system_override_active || dc_parser->system_fault_active)
+        set_enable(false);
+    }
     else if (msg->id == VehicleSpeedRptMsg::CAN_ID)
     {
       auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
@@ -666,6 +690,21 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
       pub_vehicle_speed_ms_->publish(std::move(msg));
     }
   }
+}
+
+void PACMod3Node::callback_global_cmd(const pacmod_msgs::msg::GlobalCmd::SharedPtr msg)
+{
+  lookup_and_encode(GlobalCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_supervisory_ctrl_cmd(const pacmod_msgs::msg::SupervisoryCtrl::SharedPtr msg)
+{
+  lookup_and_encode(SupervisoryCtrlMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_user_notification_cmd(const pacmod_msgs::msg::NotificationCmd::SharedPtr msg)
+{
+  lookup_and_encode(UserNotificationCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg)
@@ -678,9 +717,39 @@ void PACMod3Node::callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::Sha
   lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
+void PACMod3Node::callback_brake_decel_cmd(const pacmod_msgs::msg::BrakeDecelCmd::SharedPtr msg)
+{
+  lookup_and_encode(BrakeDecelCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_cabin_climate_cmd(const pacmod_msgs::msg::CabinClimateCmd::SharedPtr msg)
+{
+  lookup_and_encode(CabinClimateCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_cabin_fan_speed_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+{
+  lookup_and_encode(CabinFanSpeedCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_cabin_temp_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg)
+{
+  lookup_and_encode(CabinTempCmdMsg::CAN_ID, msg);
+}
+
 void PACMod3Node::callback_cruise_control_buttons_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
   lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_dash_control_left_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+{
+  lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_dash_control_right_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+{
+  lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_engine_brake_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
@@ -688,14 +757,19 @@ void PACMod3Node::callback_engine_brake_cmd(const pacmod_msgs::msg::SystemCmdInt
   lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
 }
 
-void PACMod3Node::callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+void PACMod3Node::callback_exhaust_brake_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(ExhaustBrakeCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_hazard_lights_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg)
 {
   lookup_and_encode(HazardLightCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+{
+  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_horn_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg)
@@ -708,9 +782,29 @@ void PACMod3Node::callback_marker_lamp_cmd(const pacmod_msgs::msg::SystemCmdBool
   lookup_and_encode(MarkerLampCmdMsg::CAN_ID, msg);
 }
 
+void PACMod3Node::callback_media_controls_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
+{
+  lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_parking_brake_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg)
+{
+  lookup_and_encode(ParkingBrakeCmdMsg::CAN_ID, msg);
+}
+
 void PACMod3Node::callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
   lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_safety_brake_cmd(const pacmod_msgs::msg::SafetyBrakeCmd::SharedPtr msg)
+{
+  lookup_and_encode(SafetyBrakeCmdMsg::CAN_ID, msg);
+}
+
+void PACMod3Node::callback_safety_func_cmd(const pacmod_msgs::msg::SafetyFuncCmd::SharedPtr msg)
+{
+  lookup_and_encode(SafetyFuncCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg)
@@ -777,8 +871,8 @@ void PACMod3Node::publish_all_system_statuses()
       kvp.key = "Accelerator";
     else if (system.first == BrakeRptMsg::CAN_ID) 
       kvp.key = "Brakes";
-    else if (system.first == BrakeDeccelRptMsg::CAN_ID) 
-      kvp.key = "Brake Deccel";
+    else if (system.first == BrakeDecelRptMsg::CAN_ID) 
+      kvp.key = "Brake Decel";
     else if (system.first == CabinClimateRptMsg::CAN_ID) 
       kvp.key = "Cabin Climate";
     else if (system.first == CabinFanSpeedRptMsg::CAN_ID) 
@@ -793,6 +887,8 @@ void PACMod3Node::publish_all_system_statuses()
       kvp.key = "Dash Controls Right";
     else if (system.first == EngineBrakeRptMsg::CAN_ID) 
       kvp.key = "Engine Brake";
+    else if (system.first == ExhaustBrakeRptMsg::CAN_ID) 
+      kvp.key = "Exhaust Brake";
     else if (system.first == HazardLightRptMsg::CAN_ID) 
       kvp.key = "Hazard Lights";
     else if (system.first == HeadlightRptMsg::CAN_ID) 
@@ -810,7 +906,7 @@ void PACMod3Node::publish_all_system_statuses()
     else if (system.first == SafetyBrakeRptMsg::CAN_ID) 
       kvp.key = "Safety Brake";
     else if (system.first == SafetyFuncRptMsg::CAN_ID) 
-      kvp.key = "Safety Func";
+      kvp.key = "Safety Function";
     else if (system.first == ShiftRptMsg::CAN_ID) 
       kvp.key = "Shifter";
     else if (system.first == SprayerRptMsg::CAN_ID) 
