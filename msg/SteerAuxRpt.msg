@@ -1,5 +1,10 @@
 # Auxiliary feedback data related to steering system.
 
+# Calibration status constants
+uint8 INACTIVE = 0
+uint8 ACTIVE = 1
+uint8 ERROR = 2
+
 std_msgs/Header header
 
 float64 steering_torque                # Measured torque in N-m as reported by vehicle
@@ -8,6 +13,7 @@ bool operator_interaction              # True if driver physically interacted wi
 bool rotation_rate_sign                # True if sign is negative i.e. rotation is clockwise
 bool vehicle_angle_calib_status        # True if steering angle is calibrated on Vehicle ECU
 bool steering_limiting_active          # True if limiting function is reducing an excessive command 
+uint8 calibration_status               # Values defined above
 bool steering_torque_avail             # True if this information is available on the platform.
                                        # Does not change during operation.
 bool rotation_rate_avail               # True if this information is available on the platform.

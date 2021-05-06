@@ -49,34 +49,34 @@ bool steer_pacmod_fault                  # Echo of pacmod_fault bit in STEER_RPT
 bool steer_vehicle_fault                 # Echo of vehicle_fault bit in STEER_RPT. True if fault.
 bool steer_timeout                       # True if timeout occurred on STEER_RPT
 
-bool mod1_config_fault                   # Echo of config_fault bit in COMPONENT_RPT of PACMod1. True if fault.
-bool mod1_can_timeout                    # Echo of can_timeout bit in COMPONENT_RPT of PACMod1. True if fault.
-bool mod1_counter_fault                  # True if counter fault has occurred on COMPONENT_RPT of PACMod1
+bool pacmod1_config_fault                   # Echo of config_fault bit in COMPONENT_RPT of PACMod1. True if fault.
+bool pacmod1_can_timeout                    # Echo of can_timeout bit in COMPONENT_RPT of PACMod1. True if fault.
+bool pacmod1_counter_fault                  # True if counter fault has occurred on COMPONENT_RPT of PACMod1
 
-bool mod2_config_fault                   # Echo of config_fault bit in COMPONENT_RPT of PACMod2. True if fault.
-bool mod2_can_timeout                    # Echo of can_timeout bit in COMPONENT_RPT of PACMod2. True if fault.
-bool mod2_counter_fault                  # True if counter fault has occurred on component report of PACMod2
+bool pacmod2_config_fault                   # Echo of config_fault bit in COMPONENT_RPT of PACMod2. True if fault.
+bool pacmod2_can_timeout                    # Echo of can_timeout bit in COMPONENT_RPT of PACMod2. True if fault.
+bool pacmod2_counter_fault                  # True if counter fault has occurred on component report of PACMod2
 
-bool mod3_config_fault                   # Echo of config_fault bit in COMPONENT_RPT of PACMod3. True if fault.
-bool mod3_can_timeout                    # Echo of can_timeout bit in COMPONENT_RPT of PACMod3. True if fault.
-bool mod3_counter_fault                  # True if counter fault has occurred on component report of PACMod3
+bool pacmod3_config_fault                   # Echo of config_fault bit in COMPONENT_RPT of PACMod3. True if fault.
+bool pacmod3_can_timeout                    # Echo of can_timeout bit in COMPONENT_RPT of PACMod3. True if fault.
+bool pacmod3_counter_fault                  # True if counter fault has occurred on component report of PACMod3
 
-bool mini1_rpt_timeout                   # True if timeout occurred on component report of PACMini1
-bool mini1_config_fault                  # Echo of config_fault bit in COMPONENT_RPT of PACMini1. True if fault.
-bool mini1_can_timeout                   # Echo of can_timeout bit in COMPONENT_RPT of PACMini1. True if fault.
-bool mini1_counter_fault                 # True if counter fault has occurred on component report of PACMini1
+bool pacmini1_rpt_timeout                   # True if timeout occurred on component report of PACMini1
+bool pacmini1_config_fault                  # Echo of config_fault bit in COMPONENT_RPT of PACMini1. True if fault.
+bool pacmini1_can_timeout                   # Echo of can_timeout bit in COMPONENT_RPT of PACMini1. True if fault.
+bool pacmini1_counter_fault                 # True if counter fault has occurred on component report of PACMini1
 
-bool mini2_rpt_timeout                   # True if timeout occurred on component report of PACMini2
-bool mini2_config_fault                  # Echo of config_fault bit in COMPONENT_RPT of PACMini2. True if fault.
-bool mini2_can_timeout                   # Echo of can_timeout bit in COMPONENT_RPT of PACMini2. True if fault.
-bool mini2_counter_fault                 # True if counter fault has occurred on component report of PACMini2
+bool pacmini2_rpt_timeout                   # True if timeout occurred on component report of PACMini2
+bool pacmini2_config_fault                  # Echo of config_fault bit in COMPONENT_RPT of PACMini2. True if fault.
+bool pacmini2_can_timeout                   # Echo of can_timeout bit in COMPONENT_RPT of PACMini2. True if fault.
+bool pacmini2_counter_fault                 # True if counter fault has occurred on component report of PACMini2
 
-bool mini3_rpt_timeout                   # True if timeout occurred on component report of PACMini3
-bool mini3_config_fault                  # Echo of config_fault bit in COMPONENT_RPT of PACMini3. True if fault.
-bool mini3_can_timeout                   # Echo of can_timeout bit in COMPONENT_RPT of PACMini3. True if fault.
-bool mini3_counter_fault                 # True if counter fault has occurred on component report of PACMini3
+bool pacmini3_rpt_timeout                   # True if timeout occurred on component report of PACMini3
+bool pacmini3_config_fault                  # Echo of config_fault bit in COMPONENT_RPT of PACMini3. True if fault.
+bool pacmini3_can_timeout                   # Echo of can_timeout bit in COMPONENT_RPT of PACMini3. True if fault.
+bool pacmini3_counter_fault                 # True if counter fault has occurred on component report of PACMini3
 
-bool mod_system_present_fault            # True if mismatch has occurred between platform specs and systems on PACMod
-bool mini_system_present_fault           # True if mismatch has occurred between platform specs and systems on PACMini
+bool pacmod_system_present_fault            # True if mismatch has occurred between platform specs and systems on PACMod
+bool pacmini_system_present_fault           # True if mismatch has occurred between platform specs and systems on PACMini
 
 bool global_internal_power_supply_fault  # True if any component report has an internal_supply_voltage_fault true.

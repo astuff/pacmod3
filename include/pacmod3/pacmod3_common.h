@@ -31,8 +31,8 @@
 #include <pacmod3/AllSystemStatuses.h>
 #include <pacmod3/AngVelRpt.h>
 #include <pacmod3/BrakeAuxRpt.h>
-#include <pacmod3/BrakeDeccelAuxRpt.h>
-#include <pacmod3/BrakeDeccelCmd.h>
+#include <pacmod3/BrakeDecelAuxRpt.h>
+#include <pacmod3/BrakeDecelCmd.h>
 #include <pacmod3/CabinClimateCmd.h>
 #include <pacmod3/CabinClimateRpt.h>
 #include <pacmod3/ComponentRpt.h>
@@ -78,8 +78,10 @@
 #include <pacmod3/TirePressureRpt.h>
 #include <pacmod3/TurnAuxRpt.h>
 #include <pacmod3/VehDynamicsRpt.h>
+#include <pacmod3/VehicleFaultRpt.h>
 #include <pacmod3/VehicleSpeedRpt.h>
 #include <pacmod3/VinRpt.h>
+#include <pacmod3/VinRpt2.h>
 #include <pacmod3/WatchdogRpt.h>
 #include <pacmod3/WatchdogRpt2.h>
 #include <pacmod3/WheelSpeedRpt.h>

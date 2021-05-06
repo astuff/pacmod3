@@ -137,9 +137,9 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3::BrakeAuxRpt * new_msg,
       const std::string& frame_id);
-  void fillBrakeDeccelAuxRpt(
+  void fillBrakeDecelAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-      pacmod3::BrakeDeccelAuxRpt * new_msg,
+      pacmod3::BrakeDecelAuxRpt * new_msg,
       const std::string& frame_id);
   void fillHeadlightAuxRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -223,6 +223,10 @@ private:
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3::VehDynamicsRpt * new_msg,
       const std::string& frame_id);
+  void fillVehicleFaultRpt(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod3::VehicleFaultRpt * new_msg,
+      const std::string& frame_id);
   void fillVehicleSpeedRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3::VehicleSpeedRpt * new_msg,
@@ -230,6 +234,10 @@ private:
   void fillVinRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3::VinRpt * new_msg,
+      const std::string& frame_id);
+  void fillVinRpt2(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod3::VinRpt2 * new_msg,
       const std::string& frame_id);
   void fillWheelSpeedRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -264,7 +272,7 @@ public:
   static std::vector<uint8_t> unpackAndEncode(
       const uint32_t& can_id, const pacmod3::GlobalCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(
-      const uint32_t& can_id, const pacmod3::BrakeDeccelCmd::ConstPtr& msg);
+      const uint32_t& can_id, const pacmod3::BrakeDecelCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(
       const uint32_t& can_id, const pacmod3::CabinClimateCmd::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(

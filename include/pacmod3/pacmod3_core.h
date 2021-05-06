@@ -36,6 +36,15 @@ namespace PACMod3
 {
 
 /***  Enum Classes   ***/
+
+  enum CalibrationStatus
+  {
+    INACTIVE = 0,
+    ACTIVE = 1,
+    COMPLETE = 2,
+    ERROR = 3
+  };
+
   enum ComponentType
   {
     PACMOD = 0,
@@ -43,7 +52,7 @@ namespace PACMod3
     PACMICRO = 2,
     NONE = 15
   };
-
+  
   enum DimLevel
   {
     DIM_LEVEL_MIN = 0,
@@ -182,10 +191,10 @@ namespace PACMod3
 
   enum HillHolderMode
   {
-    INACTIVE = 0,
-    ACTIVE = 1,
-    ACTIVE_BUT_INACTIVE_SOON = 2,
-    ERROR = 6
+    HH_INACTIVE = 0,
+    HH_ACTIVE = 1,
+    HH_ACTIVE_BUT_INACTIVE_SOON = 2,
+    HH_ERROR = 6
   };
 
   enum SafetyFunctionCommand
@@ -200,19 +209,19 @@ namespace PACMod3
 
   enum SafetyFunctionState
   {
-    MANUAL_BRAKED_STATE = 0,
-    MANUAL_UNBRAKED_STATE = 1,
-    AUTO_READY_STATE = 2,
-    AUTO_INACTIVE_STATE = 3,
-    AUTO_ACTIVE_BRAKED_STATE = 4,
-    AUTO_ACTIVE_UNBRAKED_STATE = 5,
-    MANUAL_READY_STATE = 6,
-    CRITICAL_STOP1_STATE = 7,
-    CRITICAL_STOP2_STATE = 8,
-    STARTUP_STATE = 9
+    MANUAL_BRAKED = 0,
+    MANUAL_UNBRAKED = 1,
+    AUTOMS_READY = 2,
+    AUTOMS_INACTIVE = 3,
+    AUTOMS_ACTIVE_BRAKED = 4,
+    AUTOMS_ACTIVE_UNBRAKED = 5,
+    MANUAL_READY = 6,
+    CRITICAL_STOP1 = 7,
+    CRITICAL_STOP2 = 8,
+    STARTUP = 9
   };
 
-  enum AutoManualOpCtrl
+  enum AutomsManOpCtrl
   {
     AUTO_MAN_INVALID = 0,
     AUTO_MAN_MANUAL = 1,
@@ -374,13 +383,14 @@ class ComponentRptMsg : public Pacmod3TxMsg
     bool turn;
     bool wiper;
     bool watchdog;
-    bool brake_deccel;
+    bool brake_decel;
     bool rear_pass_door;
     bool engine_brake;
     bool marker_lamp;
     bool cabin_climate;
     bool cabin_fan_speed;
     bool cabin_temp;
+    bool exhaust_brake;
 
     uint8_t counter;
     uint8_t complement;
@@ -391,6 +401,7 @@ class ComponentRptMsg : public Pacmod3TxMsg
     bool supervisory_sanity_fault;
     bool watchdog_sanity_fault;
     bool watchdog_system_present_fault;
+    bool component_ready;
 
     void parse(const uint8_t * in);
 };
@@ -444,7 +455,10 @@ class GlobalCmdMsg : public Pacmod3RxMsg
     static constexpr uint8_t DATA_LENGTH = 1;
     static constexpr uint32_t CAN_ID = 0x80;
 
-    void encode(bool clear_faults);
+    void encode(bool clear_faults,
+                bool sanity_check_required,
+                uint8_t counter,
+                uint8_t complement);
 };
 
 class GlobalRptMsg : public Pacmod3TxMsg
@@ -476,6 +490,8 @@ class GlobalRpt2Msg : public Pacmod3TxMsg
     bool system_override_active;
     bool system_fault_active;
     bool supervisory_enable_required;
+    bool disable_all_systems;
+    bool system_ready;
 
     void parse(const uint8_t * in);
 };
@@ -504,7 +520,7 @@ class BrakeCmdMsg : public SystemCmdFloat
     static constexpr uint32_t CAN_ID = 0x104;
 };
 
-class BrakeDeccelCmdMsg : public Pacmod3RxMsg
+class BrakeDecelCmdMsg : public Pacmod3RxMsg
 {
   public:
     static constexpr uint8_t DATA_LENGTH = 4;
@@ -514,7 +530,7 @@ class BrakeDeccelCmdMsg : public Pacmod3RxMsg
     void encode(bool enable,
                 bool ignore_overrides,
                 bool clear_override,
-                float brake_deccel_command,
+                float brake_decel_command,
                 uint8_t xbr_ebi_mode,
                 uint8_t xbr_priority,
                 uint8_t xbr_control_mode);
@@ -536,6 +552,18 @@ class CabinClimateCmdMsg : public Pacmod3RxMsg
                 uint8_t cmd_max_defrost_off_on,
                 uint8_t cmd_dir_up_off_on,
                 uint8_t cmd_dir_down_off_on);
+};
+
+class CabinFanSpeedCmdMsg : public SystemCmdInt
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x150;
+};
+
+class CabinTempCmdMsg : public SystemCmdFloat
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x14C;
 };
 
 class CruiseControlButtonsCmdMsg : public SystemCmdInt
@@ -560,6 +588,12 @@ class EngineBrakeCmdMsg : public SystemCmdInt
 {
   public:
     static constexpr uint32_t CAN_ID = 0x144;
+};
+
+class ExhaustBrakeCmdMsg : public SystemCmdInt
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x145;
 };
 
 class HazardLightCmdMsg : public SystemCmdBool
@@ -663,7 +697,7 @@ class UserNotificationCmdMsg : public Pacmod3RxMsg
     static constexpr uint32_t CAN_ID = 0x41D;
 
     void encode(bool buzzer_mute,
-                bool underdash_lights_white);
+                uint8_t underdash_lights_white);
 };
 
 class WiperCmdMsg : public SystemCmdInt
@@ -685,7 +719,7 @@ class BrakeRptMsg : public SystemRptFloatMsg
     static constexpr uint32_t CAN_ID = 0x204;
 };
 
-class BrakeDeccelRptMsg : public SystemRptFloatMsg
+class BrakeDecelRptMsg : public SystemRptFloatMsg
 {
   public:
     static constexpr uint32_t CAN_ID = 0x23C;
@@ -718,6 +752,18 @@ class CabinClimateRptMsg : public SystemRptMsg
     void parse(const uint8_t * in);
 };
 
+class CabinFanSpeedRptMsg : public SystemRptIntMsg
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x250;
+};
+
+class CabinTempRptMsg : public SystemRptFloatMsg
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x24C;
+};
+
 class CruiseControlButtonsRptMsg : public SystemRptIntMsg
 {
   public:
@@ -740,6 +786,12 @@ class EngineBrakeRptMsg : public SystemRptIntMsg
 {
   public:
     static constexpr uint32_t CAN_ID = 0x244;
+};
+
+class ExhaustBrakeRptMsg : public SystemRptIntMsg
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x245;
 };
 
 class HazardLightRptMsg : public SystemRptBoolMsg
@@ -804,7 +856,7 @@ class SafetyFuncCriticalStopRptMsg : public Pacmod3TxMsg
   public:
     static constexpr uint32_t CAN_ID = 0x420;
 
-    bool automaual_opctrl_fault;
+    bool automsman_opctrl_fault;
     bool remote_stop_fault;
     bool safety_brake_opctrl_off;
     bool safety_brake_cmd_timeout;
@@ -837,7 +889,7 @@ class SafetyFuncRptMsg : public Pacmod3TxMsg
 
     SafetyFunctionCommand commanded_val;
     SafetyFunctionState state;
-    AutoManualOpCtrl automanual_opctrl;
+    AutomsManOpCtrl automsman_opctrl;
     CabinSafetyBrakeState cabin_safety_brake_opctrl;
     RemoteStopState remote_stop_status;
     bool engine_status;
@@ -846,8 +898,8 @@ class SafetyFuncRptMsg : public Pacmod3TxMsg
     SafetyFuncFaults pacmod_system_fault;
 
     bool manual_state_obtainable;
-    bool auto_ready_state_obtainable;
-    bool auto_state_obtainable;
+    bool automs_ready_state_obtainable;
+    bool automs_state_obtainable;
     bool manual_ready_state_obtainable;
     bool critical_stop1_state_obtainable;
     bool critical_stop2_state_obtainable;
@@ -895,6 +947,7 @@ class AccelAuxRptMsg : public Pacmod3TxMsg
     bool accel_limiting_active;
     bool park_brake_interlock_active;
     bool brake_interlock_active;
+    uint8_t calibration_status;
     bool operator_interaction_avail;
     bool accel_limiting_active_avail;
     bool park_brake_interlock_active_avail;
@@ -913,6 +966,7 @@ class BrakeAuxRptMsg : public Pacmod3TxMsg
     bool brake_on_off;
     bool brake_limiting_active;
     bool brake_reduced_assist;
+    uint8_t calibration_status;
     bool brake_pressure_avail;
     bool operator_interaction_avail;
     bool brake_on_off_avail;
@@ -922,7 +976,7 @@ class BrakeAuxRptMsg : public Pacmod3TxMsg
     void parse(const uint8_t * in);
 };
 
-class BrakeDeccelAuxRptMsg : public Pacmod3TxMsg
+class BrakeDecelAuxRptMsg : public Pacmod3TxMsg
 {
   public:
     static constexpr uint32_t CAN_ID = 0x338;
@@ -976,6 +1030,7 @@ class ShiftAuxRptMsg : public Pacmod3TxMsg
     bool brake_interlock_active;
     bool speed_interlock_active;
     bool write_to_config;
+    uint8_t calibration_status;
     bool between_gears_avail;
     bool stay_in_neutral_mode_avail;
     bool brake_interlock_active_avail;
@@ -998,6 +1053,7 @@ class SteerAuxRptMsg : public Pacmod3TxMsg
     bool rotation_rate_sign;
     bool vehicle_angle_calib_status;
     bool steering_limiting_active;
+    uint8_t calibration_status;
     bool steering_torque_avail;
     bool rotation_rate_avail;
     bool operator_interaction_avail;
@@ -1159,29 +1215,29 @@ class WatchdogRptMsg : public Pacmod3TxMsg
     bool steer_pacmod_fault;
     bool steer_vehicle_fault;
     bool steer_timeout;
-    bool mod1_config_fault;
-    bool mod1_can_timeout;
-    bool mod1_counter_fault;
-    bool mod2_config_fault;
-    bool mod2_can_timeout;
-    bool mod2_counter_fault;
-    bool mod3_config_fault;
-    bool mod3_can_timeout;
-    bool mod3_counter_fault;
-    bool mini1_rpt_timeout;
-    bool mini1_config_fault;
-    bool mini1_can_timeout;
-    bool mini1_counter_fault;
-    bool mini2_rpt_timeout;
-    bool mini2_config_fault;
-    bool mini2_can_timeout;
-    bool mini2_counter_fault;
-    bool mini3_rpt_timeout;
-    bool mini3_config_fault;
-    bool mini3_can_timeout;
-    bool mini3_counter_fault;
-    bool mod_system_present_fault;
-    bool mini_system_present_fault;
+    bool pacmod1_config_fault;
+    bool pacmod1_can_timeout;
+    bool pacmod1_counter_fault;
+    bool pacmod2_config_fault;
+    bool pacmod2_can_timeout;
+    bool pacmod2_counter_fault;
+    bool pacmod3_config_fault;
+    bool pacmod3_can_timeout;
+    bool pacmod3_counter_fault;
+    bool pacmini1_rpt_timeout;
+    bool pacmini1_config_fault;
+    bool pacmini1_can_timeout;
+    bool pacmini1_counter_fault;
+    bool pacmini2_rpt_timeout;
+    bool pacmini2_config_fault;
+    bool pacmini2_can_timeout;
+    bool pacmini2_counter_fault;
+    bool pacmini3_rpt_timeout;
+    bool pacmini3_config_fault;
+    bool pacmini3_can_timeout;
+    bool pacmini3_counter_fault;
+    bool pacmod_system_present_fault;
+    bool pacmini_system_present_fault;
     bool global_internal_power_supply_fault;
 
     void parse(const uint8_t * in);
@@ -1194,7 +1250,7 @@ class WatchdogRpt2Msg : public Pacmod3TxMsg
 
     bool accel_rpt_timeout;
     bool brake_rpt_timeout;
-    bool brake_deccel_rpt_timeout;
+    bool brake_decel_rpt_timeout;
     bool cabin_climate_rpt_timeout;
     bool cabin_fan_speed_rpt_timeout;
     bool cabin_temp_rpt_timeout;
@@ -1214,25 +1270,28 @@ class WatchdogRpt2Msg : public Pacmod3TxMsg
     bool steering_rpt_timeout;
     bool turn_rpt_timeout;
     bool wiper_rpt_timeout;
-    bool mod1_sanity_fault;
-    bool mod2_sanity_fault;
-    bool mod3_sanity_fault;
-    bool mini1_sanity_fault;
-    bool mini2_sanity_fault;
-    bool mini3_sanity_fault;
-    bool mod1_component_rpt_timeout;
-    bool mod2_component_rpt_timeout;
-    bool mod3_component_rpt_timeout;
-    bool mini1_component_rpt_timeout;
-    bool mini2_component_rpt_timeout;
-    bool mini3_component_rpt_timeout;
-    bool mod1_system_present_fault;
-    bool mod2_system_present_fault;
-    bool mod3_system_present_fault;
-    bool mini1_system_present_fault;
-    bool mini2_system_present_fault;
-    bool mini3_system_present_fault;
+    bool pacmod1_sanity_fault;
+    bool pacmod2_sanity_fault;
+    bool pacmod3_sanity_fault;
+    bool pacmini1_sanity_fault;
+    bool pacmini2_sanity_fault;
+    bool pacmini3_sanity_fault;
+    bool pacmod1_component_rpt_timeout;
+    bool pacmod2_component_rpt_timeout;
+    bool pacmod3_component_rpt_timeout;
+    bool pacmini1_component_rpt_timeout;
+    bool pacmini2_component_rpt_timeout;
+    bool pacmini3_component_rpt_timeout;
+    bool pacmod1_system_present_fault;
+    bool pacmod2_system_present_fault;
+    bool pacmod3_system_present_fault;
+    bool pacmini1_system_present_fault;
+    bool pacmini2_system_present_fault;
+    bool pacmini3_system_present_fault;
     bool drive_mode_invalid;
+    bool global_cmd_sanity_fault;
+    bool global_cmd_timeout;
+    bool exhaust_brake_rpt_timeout;
 
     void parse(const uint8_t * in);
 };
@@ -1501,6 +1560,45 @@ class VehDynamicsRptMsg : public Pacmod3TxMsg
     void parse(const uint8_t * in);
 };
 
+class VehicleFaultRptMsg : public Pacmod3TxMsg
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x42;
+
+    bool engine_check_light;
+    bool engine_check_light_avail;
+    bool trc_fault_light;
+    bool trc_fault_light_avail;
+    bool trc_off_fault_light;
+    bool trc_off_fault_light_avail;
+    bool antilock_brake_fault_light;
+    bool antilock_brake_fault_light_avail;
+    bool tire_fault_light;
+    bool tire_fault_light_avail;
+    bool air_bags_fault_light;
+    bool air_bags_fault_light_avail;
+    bool low_engine_oil_pressure;
+    bool low_engine_oil_pressure_avail;
+    bool brake_fault;
+    bool brake_fault_avail;
+    bool brake_applied_power_reduced;
+    bool brake_applied_power_reduced_avail;
+    bool steering_loss_stop_safely;
+    bool steering_loss_stop_safely_avail;
+    bool steering_fault_service_now;
+    bool steering_fault_service_now_avail;
+    bool xmsn_fault_service_now;
+    bool xmsn_fault_service_now_avail;
+    bool xmsn_over_temp_stop_safely;
+    bool xmsn_over_temp_stop_safely_avail;
+    bool low_battery_features_off;
+    bool low_battery_features_off_avail;
+    bool charging_system_fault;
+    bool charging_system_fault_avail;
+
+    void parse(const uint8_t * in);
+};
+
 class VehicleSpeedRptMsg : public Pacmod3TxMsg
 {
   public:
@@ -1522,6 +1620,23 @@ class VinRptMsg : public Pacmod3TxMsg
     uint8_t model_year_code;
     uint32_t model_year;
     uint32_t serial;
+
+    void parse(const uint8_t * in);
+};
+
+class VinRpt2Msg : public Pacmod3TxMsg
+{
+  public:
+    static constexpr uint32_t CAN_ID = 0x422;
+
+    char vis_10;
+    char vis_11;
+    char vis_12;
+    char vis_13;
+    char vis_14;
+    char vis_15;
+    char vis_16;
+    char vis_17;
 
     void parse(const uint8_t * in);
 };

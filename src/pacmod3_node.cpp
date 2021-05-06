@@ -111,14 +111,24 @@ void callback_brake_cmd_sub(const pacmod3::SystemCmdFloat::ConstPtr& msg)
   lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
-void callback_brake_deccel_cmd_sub(const pacmod3::BrakeDeccelCmd::ConstPtr& msg)
+void callback_brake_decel_cmd_sub(const pacmod3::BrakeDecelCmd::ConstPtr& msg)
 {
-  lookup_and_encode(BrakeDeccelCmdMsg::CAN_ID, msg);
+  lookup_and_encode(BrakeDecelCmdMsg::CAN_ID, msg);
 }
 
 void callback_cabin_climate_set_cmd(const pacmod3::CabinClimateCmd::ConstPtr& msg)
 {
   lookup_and_encode(CabinClimateCmdMsg::CAN_ID, msg);
+}
+
+void callback_cabin_fan_speed_set_cmd(const pacmod3::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(CabinFanSpeedCmdMsg::CAN_ID, msg);
+}
+
+void callback_cabin_temp_cmd_sub(const pacmod3::SystemCmdFloat::ConstPtr& msg)
+{
+  lookup_and_encode(CabinTempCmdMsg::CAN_ID, msg);
 }
 
 void callback_cruise_control_buttons_set_cmd(const pacmod3::SystemCmdInt::ConstPtr& msg)
@@ -139,6 +149,11 @@ void callback_dash_controls_right_set_cmd(const pacmod3::SystemCmdInt::ConstPtr&
 void callback_engine_brake_set_cmd(const pacmod3::SystemCmdInt::ConstPtr& msg)
 {
   lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+}
+
+void callback_exhaust_brake_set_cmd(const pacmod3::SystemCmdInt::ConstPtr& msg)
+{
+  lookup_and_encode(ExhaustBrakeCmdMsg::CAN_ID, msg);
 }
 
 void callback_hazard_lights_set_cmd(const pacmod3::SystemCmdBool::ConstPtr& msg)
@@ -168,7 +183,7 @@ void callback_media_controls_set_cmd(const pacmod3::SystemCmdInt::ConstPtr& msg)
   lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
 }
 
-void callback_parking_brake_cmd(const pacmod3::SystemCmdBool::ConstPtr& msg)
+void callback_parking_brake_set_cmd(const pacmod3::SystemCmdBool::ConstPtr& msg)
 {
   lookup_and_encode(ParkingBrakeCmdMsg::CAN_ID, msg);
 }
@@ -849,7 +864,7 @@ int main(int argc, char *argv[])
     horn_set_cmd_sub =
     std::make_shared<ros::Subscriber>(n.subscribe("as_rx/horn_cmd", 20, callback_horn_set_cmd));
     parking_brake_set_cmd_sub =
-    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_cmd));
+    std::make_shared<ros::Subscriber>(n.subscribe("as_rx/parking_brake_cmd", 20, callback_parking_brake_set_cmd));
     wiper_set_cmd_sub =
     std::make_shared<ros::Subscriber>(n.subscribe("as_rx/wiper_cmd", 20, callback_wiper_set_cmd));
 
@@ -1183,10 +1198,14 @@ int main(int argc, char *argv[])
         kvp.key = "Accelerator";
       else if (system->first == BrakeRptMsg::CAN_ID)
         kvp.key = "Brakes";
-      else if (system->first == BrakeDeccelRptMsg::CAN_ID)
-        kvp.key = "Brake Deccel";
+      else if (system->first == BrakeDecelRptMsg::CAN_ID)
+        kvp.key = "Brake Decel";
       else if (system->first == CabinClimateRptMsg::CAN_ID)
         kvp.key = "Cabin Climate";
+      else if (system->first == CabinFanSpeedRptMsg::CAN_ID)
+        kvp.key = "Cabin Fan Speed";
+      else if (system->first == CabinTempRptMsg::CAN_ID)
+        kvp.key = "Cabin Temp";
       else if (system->first == CruiseControlButtonsRptMsg::CAN_ID)
         kvp.key = "Cruise Control Buttons";
       else if (system->first == DashControlsLeftRptMsg::CAN_ID)
@@ -1195,6 +1214,8 @@ int main(int argc, char *argv[])
         kvp.key = "Dash Controls Right";
       else if (system->first == EngineBrakeRptMsg::CAN_ID)
         kvp.key = "Engine Brake";
+      else if (system->first == ExhaustBrakeRptMsg::CAN_ID)
+        kvp.key = "Exhaust Brake";
       else if (system->first == HazardLightRptMsg::CAN_ID)
         kvp.key = "Hazard Lights";
       else if (system->first == HeadlightRptMsg::CAN_ID)
