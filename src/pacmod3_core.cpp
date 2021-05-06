@@ -584,9 +584,9 @@ constexpr uint32_t SteerCmdLimitRptMsg::CAN_ID;
       motor_temp = static_cast<double>(temp16);
 
       temp32 =
-        (static_cast<int32_t>(in[7]) << 24) |
-        (static_cast<int32_t>(in[6]) << 16) |
-        (static_cast<int32_t>(in[5]) << 8) | in[4];
+        (static_cast<int32_t>(in[4]) << 24) |
+        (static_cast<int32_t>(in[5]) << 16) |
+        (static_cast<int32_t>(in[6]) << 8) | in[7];
       angular_speed = static_cast<double>(temp32 / 10.0);
     }
 
