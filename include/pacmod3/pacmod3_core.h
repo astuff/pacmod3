@@ -204,7 +204,7 @@ namespace PACMod3
     CMD_AUTO = 2,
     CMD_MANUAL_READY = 3,
     CMD_CRITICAL_STOP1 = 4,
-    CMD_CRITICAL_STOP = 5
+    CMD_CRITICAL_STOP2 = 5
   };
 
   enum SafetyFunctionState
@@ -225,7 +225,7 @@ namespace PACMod3
   {
     AUTO_MAN_INVALID = 0,
     AUTO_MAN_MANUAL = 1,
-    AUTO_MAN_AUTO = 2
+    AUTO_MAN_AUTOMS = 2
   };
 
   enum CabinSafetyBrakeState
@@ -1017,6 +1017,7 @@ class ParkingBrakeAuxRptMsg : public Pacmod3TxMsg
 
     uint8_t parking_brake_status;
     bool parking_brake_status_avail;
+
     void parse(const uint8_t * in);
 };
 
