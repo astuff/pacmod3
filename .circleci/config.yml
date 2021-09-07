@@ -1,8 +1,7 @@
-version: 2
-jobs:
-  dashing:
-    docker:
-      - image: autonomoustuff/docker-builds:dashing-ros-base
+version: 2.1
+
+commands:
+  ros_build:
     steps:
       - checkout
       - run:
@@ -31,10 +30,16 @@ jobs:
             cd ..
             colcon test --packages-select $CIRCLE_PROJECT_REPONAME
             colcon test-result
+
+jobs:
+  foxy:
+    docker:
+      - image: autonomoustuff/docker-builds:foxy-ros-base
+    steps:
+      - ros_build
     working_directory: ~/src
 
 workflows:
-  version: 2
   ros_build:
     jobs:
-      - dashing
+      - foxy
