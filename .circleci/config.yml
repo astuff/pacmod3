@@ -14,17 +14,18 @@ commands:
       - run:
           name: Install Dependencies
           command: |
+            source opt/ros/*/setup.bash
             rosdep install --from-paths . --ignore-src -y
       - run:
           name: Build
           command: |
-            source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
+            source opt/ros/*/setup.bash
             cd ..
             colcon build
       - run:
           name: Run Tests
           command: |
-            source `find /opt/ros -maxdepth 2 -name setup.bash | sort | head -1`
+            source opt/ros/*/setup.bash
             cd ..
             colcon test --packages-select $CIRCLE_PROJECT_REPONAME
             colcon test-result
