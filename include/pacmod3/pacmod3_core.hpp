@@ -200,7 +200,7 @@ public:
 
   bool enabled;
   bool override_active;
-  bool fault_active;
+  bool system_fault_active;
   bool config_fault_active;
   bool user_can_timeout;
   bool steering_can_timeout;
@@ -364,7 +364,7 @@ public:
   static constexpr uint32_t CAN_ID = 0x138;
 };
 
-class SteerCmdMsg
+class SteeringCmdMsg
   : public SystemCmdFloat
 {
 public:
@@ -594,7 +594,7 @@ public:
   void parse(const std::vector<uint8_t> & in);
 };
 
-class SteerAuxRptMsg
+class SteeringAuxRptMsg
   : public Pacmod3TxMsg
 {
 public:
@@ -683,21 +683,21 @@ public:
   static constexpr uint32_t CAN_ID = 0x403;
 };
 
-class SteerMotorRpt1Msg
+class SteeringMotorRpt1Msg
   : public MotorRpt1Msg
 {
 public:
   static constexpr uint32_t CAN_ID = 0x404;
 };
 
-class SteerMotorRpt2Msg
+class SteeringMotorRpt2Msg
   : public MotorRpt2Msg
 {
 public:
   static constexpr uint32_t CAN_ID = 0x405;
 };
 
-class SteerMotorRpt3Msg
+class SteeringMotorRpt3Msg
   : public MotorRpt3Msg
 {
 public:
