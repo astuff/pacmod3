@@ -43,34 +43,7 @@ constexpr std::chrono::milliseconds PACMod3Node::INTER_MSG_PAUSE;
 PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
 : lc::LifecycleNode("pacmod3_driver", options)
 {
-  std::string vehicle_type_string = this->declare_parameter("vehicle_type", "POLARIS_GEM");
   frame_id_ = this->declare_parameter("frame_id", "pacmod");
-
-  if (vehicle_type_string == "INTERNATIONAL_PROSTAR_122") {
-    vehicle_type_ = VehicleType::INTERNATIONAL_PROSTAR_122;
-  } else if (vehicle_type_string == "JUPITER_SPIRIT") {
-    vehicle_type_ = VehicleType::JUPITER_SPIRIT;
-  } else if (vehicle_type_string == "LEXUS_RX_450H") {
-    vehicle_type_ = VehicleType::LEXUS_RX_450H;
-  } else if (vehicle_type_string == "POLARIS_GEM") {
-    vehicle_type_ = VehicleType::POLARIS_GEM;
-  } else if (vehicle_type_string == "POLARIS_RANGER") {
-    vehicle_type_ = VehicleType::POLARIS_RANGER;
-  } else if (vehicle_type_string == "VEHICLE_4") {
-    vehicle_type_ = VehicleType::VEHICLE_4;
-  } else if (vehicle_type_string == "VEHICLE_5") {
-    vehicle_type_ = VehicleType::VEHICLE_5;
-  } else if (vehicle_type_string == "VEHICLE_6") {
-    vehicle_type_ = VehicleType::VEHICLE_6;
-  } else {
-    vehicle_type_string = "POLARIS_GEM";
-    vehicle_type_ = VehicleType::POLARIS_GEM;
-    RCLCPP_WARN(
-      this->get_logger(),
-      "An invalid vehicle type was entered. Defaulting to POLARIS_GEM.");
-  }
-
-  RCLCPP_INFO(this->get_logger(), "Got vehicle type: %s", vehicle_type_string.c_str());
   RCLCPP_INFO(this->get_logger(), "Got frame id: %s", frame_id_.c_str());
 }
 

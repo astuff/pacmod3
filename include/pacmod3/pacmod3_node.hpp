@@ -137,7 +137,6 @@ private:
   static constexpr auto SEND_CMD_INTERVAL = std::chrono::milliseconds(33);
   static constexpr auto INTER_MSG_PAUSE = std::chrono::milliseconds(1);
 
-  VehicleType vehicle_type_;
   std::string frame_id_;
   Pacmod3TxRosMsgHandler tx_handler_;
   std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
