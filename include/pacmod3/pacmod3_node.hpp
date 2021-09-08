@@ -80,6 +80,25 @@ public:
   LNI::CallbackReturn on_error(const lc::State & state) override;
 
 private:
+  void initializeBrakeMotorRptApi();
+  void initializeSteeringMotorRptApi();
+  void initializeWiperApi();
+  void initializeHeadlightApi();
+  void initializeHornApi();
+  void initializeWheelSpeedApi();
+  void initializeParkingBrakeRptApi();
+  void initializeDoorRptApi();
+  void initializeInteriorLightsRptApi();
+  void initializeOccupancyRptApi();
+  void initializeRearLightsRptApi();
+
+  void initializeLexusSpecificApi();
+  void initializeFreightlinerSpecificApi();
+  void initializeJapanTaxiSpecificApi();
+  void initializeVehicle4SpecificApi();
+
+  void initializeApiForMsg(uint32_t msg_can_id);
+
   void callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg);
   void callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
   void callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
