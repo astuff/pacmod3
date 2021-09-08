@@ -45,6 +45,7 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
 {
   std::string vehicle_type_string = this->declare_parameter("vehicle_type", "POLARIS_GEM");
   frame_id_ = this->declare_parameter("frame_id", "pacmod");
+  dbc_major_version_ = this->declare_parameter("dbc_major_version", 3);
 
   if (vehicle_type_string == "INTERNATIONAL_PROSTAR_122") {
     vehicle_type_ = VehicleType::INTERNATIONAL_PROSTAR_122;
@@ -70,8 +71,17 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
       "An invalid vehicle type was entered. Defaulting to POLARIS_GEM.");
   }
 
-  RCLCPP_INFO(this->get_logger(), "Got vehicle type: %s", vehicle_type_string.c_str());
-  RCLCPP_INFO(this->get_logger(), "Got frame id: %s", frame_id_.c_str());
+  RCLCPP_INFO(this->get_logger(), "vehicle_type: %s", vehicle_type_string.c_str());
+  RCLCPP_INFO(this->get_logger(), "frame_id: %s", frame_id_.c_str());
+  RCLCPP_INFO(this->get_logger(), "dbc_major_version: %d", dbc_major_version_);
+
+  if (dbc_major_version_ != 3)
+  {
+    RCLCPP_ERROR(
+      this->get_logger(),
+      "This driver currently only supports PACMod DBC version 3");
+    rclcpp::shutdown();
+  }
 }
 
 PACMod3Node::~PACMod3Node()

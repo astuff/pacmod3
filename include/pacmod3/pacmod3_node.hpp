@@ -120,6 +120,7 @@ private:
 
   VehicleType vehicle_type_;
   std::string frame_id_;
+  unsigned int dbc_major_version_;
   Pacmod3TxRosMsgHandler tx_handler_;
   std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
 
