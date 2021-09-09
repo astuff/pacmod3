@@ -28,7 +28,7 @@ commands:
             source /opt/ros/*/setup.bash
             cd ..
             colcon test --packages-select $CIRCLE_PROJECT_REPONAME
-            colcon test-result
+            colcon test-result --verbose
 
 jobs:
   foxy:

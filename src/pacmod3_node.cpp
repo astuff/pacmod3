@@ -75,8 +75,7 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
   RCLCPP_INFO(this->get_logger(), "frame_id: %s", frame_id_.c_str());
   RCLCPP_INFO(this->get_logger(), "dbc_major_version: %d", dbc_major_version_);
 
-  if (dbc_major_version_ != 3)
-  {
+  if (dbc_major_version_ != 3) {
     RCLCPP_ERROR(
       this->get_logger(),
       "This driver currently only supports PACMod DBC version 3");
