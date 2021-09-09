@@ -414,7 +414,7 @@ void PACMod3Node::initializeLexusSpecificApi()
 
 void PACMod3Node::initializeFreightlinerSpecificApi()
 {
-  // TODO: Review this, I think CruiseControlButtonsRpt is now supported on more platforms
+  // TODO(name): Review this, I think CruiseControlButtonsRpt is now supported on more platforms
   can_pubs_[CruiseControlButtonsRptMsg::CAN_ID] =
     this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
     "parsed_tx/cruise_control_buttons_rpt", 20);
@@ -488,95 +488,94 @@ void PACMod3Node::initializeVehicle4SpecificApi()
 void PACMod3Node::initializeApiForMsg(uint32_t msg_can_id)
 {
   // Need to initialize pubs/subs for this message group
-  switch (msg_can_id)
-  {
+  switch (msg_can_id) {
     case BrakeMotorRpt1Msg::CAN_ID:
     case BrakeMotorRpt2Msg::CAN_ID:
     case BrakeMotorRpt3Msg::CAN_ID:
-    {
-      initializeBrakeMotorRptApi();
-      break;
-    }
+      {
+        initializeBrakeMotorRptApi();
+        break;
+      }
     case SteerMotorRpt1Msg::CAN_ID:
     case SteerMotorRpt2Msg::CAN_ID:
     case SteerMotorRpt3Msg::CAN_ID:
-    {
-      initializeSteeringMotorRptApi();
-      break;
-    }
+      {
+        initializeSteeringMotorRptApi();
+        break;
+      }
     case WiperRptMsg::CAN_ID:
     case WiperAuxRptMsg::CAN_ID:
-    {
-      initializeWiperApi();
-      break;
-    }
+      {
+        initializeWiperApi();
+        break;
+      }
     case HeadlightRptMsg::CAN_ID:
     case HeadlightAuxRptMsg::CAN_ID:
-    {
-      initializeHeadlightApi();
-      break;
-    }
+      {
+        initializeHeadlightApi();
+        break;
+      }
     case HornRptMsg::CAN_ID:
-    {
-      initializeHornApi();
-      break;
-    }
+      {
+        initializeHornApi();
+        break;
+      }
     case WheelSpeedRptMsg::CAN_ID:
-    {
-      initializeWheelSpeedApi();
-      break;
-    }
+      {
+        initializeWheelSpeedApi();
+        break;
+      }
     case ParkingBrakeRptMsg::CAN_ID:
-    {
-      initializeParkingBrakeRptApi();
-      break;
-    }
+      {
+        initializeParkingBrakeRptApi();
+        break;
+      }
     case DoorRptMsg::CAN_ID:
-    {
-      initializeDoorRptApi();
-      break;
-    }
+      {
+        initializeDoorRptApi();
+        break;
+      }
     case InteriorLightsRptMsg::CAN_ID:
-    {
-      initializeInteriorLightsRptApi();
-      break;
-    }
+      {
+        initializeInteriorLightsRptApi();
+        break;
+      }
     case OccupancyRptMsg::CAN_ID:
-    {
-      initializeOccupancyRptApi();
-      break;
-    }
+      {
+        initializeOccupancyRptApi();
+        break;
+      }
     case RearLightsRptMsg::CAN_ID:
-    {
-      initializeRearLightsRptApi();
-      break;
-    }
+      {
+        initializeRearLightsRptApi();
+        break;
+      }
     case HazardLightRptMsg::CAN_ID:
-    {
-      initializeHazardLightApi();
-      break;
-    }
+      {
+        initializeHazardLightApi();
+        break;
+      }
     case DateTimeRptMsg::CAN_ID:
     case LatLonHeadingRptMsg::CAN_ID:
     case YawRateRptMsg::CAN_ID:
-    {
-      initializeLexusSpecificApi();
-      break;
-    }
+      {
+        initializeLexusSpecificApi();
+        break;
+      }
     case CruiseControlButtonsRptMsg::CAN_ID:
     case EngineBrakeRptMsg::CAN_ID:
     case MarkerLampRptMsg::CAN_ID:
     case SprayerRptMsg::CAN_ID:
-    {
-      initializeFreightlinerSpecificApi();
-      break;
-    }
+      {
+        initializeFreightlinerSpecificApi();
+        break;
+      }
     case DetectedObjectRptMsg::CAN_ID:
     case VehicleDynamicsRptMsg::CAN_ID:
-    {
-      initializeVehicle4SpecificApi();
-      break;
-    }
+      {
+        initializeVehicle4SpecificApi();
+        break;
+      }
   }
 }
 
@@ -585,8 +584,7 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = can_pubs_.find(msg->id);
 
-  if (pub == can_pubs_.end())
-  {
+  if (pub == can_pubs_.end()) {
     initializeApiForMsg(msg->id);
   }
 
