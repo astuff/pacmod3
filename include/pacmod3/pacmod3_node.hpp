@@ -91,6 +91,7 @@ private:
   void initializeInteriorLightsRptApi();
   void initializeOccupancyRptApi();
   void initializeRearLightsRptApi();
+  void initializeHazardLightApi();
 
   void initializeLexusSpecificApi();
   void initializeFreightlinerSpecificApi();

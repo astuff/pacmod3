@@ -377,6 +377,22 @@ void PACMod3Node::initializeRearLightsRptApi()
   RCLCPP_INFO(this->get_logger(), "Initialized RearLightsRpt API");
 }
 
+void PACMod3Node::initializeHazardLightApi()
+{
+  can_pubs_[HazardLightRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+    "parsed_tx/hazard_lights_rpt", 20);
+  can_pubs_[HazardLightRptMsg::CAN_ID]->on_activate();
+
+  can_subs_[HazardLightCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
+      "as_rx/hazard_lights_cmd", 20,
+      std::bind(&PACMod3Node::callback_hazard_lights_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
+
+  RCLCPP_INFO(this->get_logger(), "Initialized HazardLight API");
+}
+
 void PACMod3Node::initializeLexusSpecificApi()
 {
   can_pubs_[DateTimeRptMsg::CAN_ID] =
@@ -419,11 +435,6 @@ void PACMod3Node::initializeFreightlinerSpecificApi()
     "parsed_tx/sprayer_rpt", 20);
   can_pubs_[SprayerRptMsg::CAN_ID]->on_activate();
 
-  can_pubs_[HazardLightRptMsg::CAN_ID] =
-    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
-    "parsed_tx/hazard_lights_rpt", 20);
-  can_pubs_[HazardLightRptMsg::CAN_ID]->on_activate();
-
   can_subs_[CruiseControlButtonsCmdMsg::CAN_ID] = std::make_pair(
     this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
       "as_rx/cruise_control_buttons_cmd", 20,
@@ -448,11 +459,6 @@ void PACMod3Node::initializeFreightlinerSpecificApi()
       std::bind(&PACMod3Node::callback_sprayer_cmd, this, std::placeholders::_1)),
     std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
 
-  can_subs_[HazardLightCmdMsg::CAN_ID] = std::make_pair(
-    this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
-      "as_rx/hazard_lights_cmd", 20,
-      std::bind(&PACMod3Node::callback_hazard_lights_cmd, this, std::placeholders::_1)),
-    std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
   RCLCPP_INFO(this->get_logger(), "Initialized Freightliner-specific API");
 }
 
@@ -545,6 +551,11 @@ void PACMod3Node::initializeApiForMsg(uint32_t msg_can_id)
       initializeRearLightsRptApi();
       break;
     }
+    case HazardLightRptMsg::CAN_ID:
+    {
+      initializeHazardLightApi();
+      break;
+    }
     case DateTimeRptMsg::CAN_ID:
     case LatLonHeadingRptMsg::CAN_ID:
     case YawRateRptMsg::CAN_ID:
@@ -556,7 +567,6 @@ void PACMod3Node::initializeApiForMsg(uint32_t msg_can_id)
     case EngineBrakeRptMsg::CAN_ID:
     case MarkerLampRptMsg::CAN_ID:
     case SprayerRptMsg::CAN_ID:
-    case HazardLightRptMsg::CAN_ID:
     {
       initializeFreightlinerSpecificApi();
       break;
