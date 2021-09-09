@@ -12,7 +12,7 @@
   <group>
     <push-ros-namespace namespace="$(var namespace)" />
 
-    <include if="$(var use_kvaser)" file="$(find-pkg-share kvaser_interface)/launch/kvaser_bridge.launch">
+    <include if="$(var use_kvaser)" file="$(find-pkg-share kvaser_interface)/launch/kvaser_bridge.launch.xml">
       <arg name="hardware_id" value="$(var kvaser_hardware_id)" />
       <arg name="circuit_id" value="$(var kvaser_circuit_id)" />
       <arg name="bit_rate" value="500000" />
