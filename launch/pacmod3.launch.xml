@@ -18,20 +18,14 @@
       <arg name="bit_rate" value="500000" />
     </include>
 
-    <group if="$(var use_socketcan)">
-      <!-- Unfortunately remaps only work within node tags, can't use include here -->
-      <node pkg="ros2_socketcan" exec="socket_can_receiver_node_exe" name="socket_can_receiver">
-        <param name="interface" value="$(var socketcan_device)" />
-        <remap from="from_can_bus" to="can_tx" />
-      </node>
-      <node pkg="ros2_socketcan" exec="socket_can_sender_node_exe" name="socket_can_sender">
-        <param name="interface" value="$(var socketcan_device)" />
-        <remap from="to_can_bus" to="can_rx" />
-      </node>
-    </group>
+    <include if="$(var use_socketcan)" file="$(find-pkg-share ros2_socketcan)/launch/socket_can_bridge.launch.xml">
+      <arg name="interface" value="$(var socketcan_device)" />
+    </include>
 
     <node pkg="pacmod3" exec="pacmod3_driver" name="pacmod" output="screen">
       <param name="vehicle_type" value="$(var pacmod_vehicle_type)" />
+      <remap if="$(var use_socketcan)" from="can_tx" to="from_can_bus" />
+      <remap if="$(var use_socketcan)" from="can_rx" to="to_can_bus" />
     </node>
   </group>
 </launch>
