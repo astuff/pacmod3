@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- See README for available vehicle types -->
+  <arg name="pacmod_vehicle_type" default="LEXUS_RX_450H" />
+  <arg name="use_kvaser" default="false" />
+  <arg name="kvaser_hardware_id" default="12345" />
+  <arg name="kvaser_circuit_id" default="0" />
+  <arg name="use_socketcan" default="false" />
+  <arg name="socketcan_device" default="can0" />
+  <arg name="namespace" default="pacmod" />
+
+  <group>
+    <push-ros-namespace namespace="$(var namespace)" />
+
+    <group if="$(var use_kvaser)">
+      <include file="$(find-pkg-share kvaser_interface)/launch/kvaser_bridge.launch.xml">
+        <arg name="hardware_id" value="$(var kvaser_hardware_id)" />
+        <arg name="circuit_id" value="$(var kvaser_circuit_id)" />
+        <arg name="bit_rate" value="500000" />
+      </include>
+
+      <node pkg="pacmod3" exec="pacmod3_driver" name="pacmod" output="screen">
+        <param name="vehicle_type" value="$(var pacmod_vehicle_type)" />
+      </node>
+    </group>
+
+    <group if="$(var use_socketcan)">
+      <include file="$(find-pkg-share ros2_socketcan)/launch/socket_can_bridge.launch.xml">
+        <arg name="interface" value="$(var socketcan_device)" />
+      </include>
+
+      <node pkg="pacmod3" exec="pacmod3_driver" name="pacmod" output="screen">
+        <param name="vehicle_type" value="$(var pacmod_vehicle_type)" />
+        <remap from="can_tx" to="from_can_bus" />
+        <remap from="can_rx" to="to_can_bus" />
+      </node>
+    </group>
+  </group>
+</launch>

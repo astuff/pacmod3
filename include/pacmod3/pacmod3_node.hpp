@@ -112,7 +112,7 @@ private:
   void callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_sprayer_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
+  void callback_steering_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
   void callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_wiper_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
 
@@ -139,6 +139,7 @@ private:
   static constexpr auto INTER_MSG_PAUSE = std::chrono::milliseconds(1);
 
   std::string frame_id_;
+  unsigned int dbc_major_version_;
   Pacmod3TxRosMsgHandler tx_handler_;
   std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
 
