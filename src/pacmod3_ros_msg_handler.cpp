@@ -82,7 +82,7 @@ void Pacmod3TxRosMsgHandler::fillAndPublish(
     fillSystemRptInt(parser_class, &new_msg, frame_id);
     dc_pub->publish(new_msg);
   } else if (can_id == AccelRptMsg::CAN_ID || can_id == BrakeRptMsg::CAN_ID ||  // NOLINT
-    can_id == SteerRptMsg::CAN_ID)
+    can_id == SteeringRptMsg::CAN_ID)
   {
     pacmod3_msgs::msg::SystemRptFloat new_msg;
     auto dc_pub =

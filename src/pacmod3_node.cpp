@@ -97,7 +97,7 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
     this->create_publisher<pacmod3_msgs::msg::SystemRptFloat>("parsed_tx/brake_rpt", 20);
   can_pubs_[ShiftRptMsg::CAN_ID] =
     this->create_publisher<pacmod3_msgs::msg::SystemRptInt>("parsed_tx/shift_rpt", 20);
-  can_pubs_[SteerRptMsg::CAN_ID] =
+  can_pubs_[SteeringRptMsg::CAN_ID] =
     this->create_publisher<pacmod3_msgs::msg::SystemRptFloat>("parsed_tx/steer_rpt", 20);
   can_pubs_[TurnSignalRptMsg::CAN_ID] =
     this->create_publisher<pacmod3_msgs::msg::SystemRptInt>("parsed_tx/turn_rpt", 20);
@@ -594,7 +594,7 @@ void PACMod3Node::publish_all_system_statuses()
       kvp.key = "Parking Brake";
     } else if (system.first == ShiftRptMsg::CAN_ID) {
       kvp.key = "Shifter";
-    } else if (system.first == SteerRptMsg::CAN_ID) {
+    } else if (system.first == SteeringRptMsg::CAN_ID) {
       kvp.key = "Steering";
     } else if (system.first == TurnSignalRptMsg::CAN_ID) {
       kvp.key = "Turn Signals";

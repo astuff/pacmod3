@@ -70,7 +70,7 @@ constexpr uint32_t ParkingBrakeRptMsg::CAN_ID;
 constexpr uint32_t RearPassDoorRptMsg::CAN_ID;
 constexpr uint32_t ShiftRptMsg::CAN_ID;
 constexpr uint32_t SprayerRptMsg::CAN_ID;
-constexpr uint32_t SteerRptMsg::CAN_ID;
+constexpr uint32_t SteeringRptMsg::CAN_ID;
 constexpr uint32_t TurnSignalRptMsg::CAN_ID;
 constexpr uint32_t WiperRptMsg::CAN_ID;
 
@@ -188,8 +188,8 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id
     case SteeringMotorRpt3Msg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new SteeringMotorRpt3Msg);
       break;
-    case SteerRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
+    case SteeringRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringRptMsg);
       break;
     case TurnSignalRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);

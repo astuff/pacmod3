@@ -500,7 +500,7 @@ public:
   static constexpr uint32_t CAN_ID = 0x238;
 };
 
-class SteerRptMsg
+class SteeringRptMsg
   : public SystemRptFloatMsg
 {
 public:
