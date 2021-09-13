@@ -53,7 +53,7 @@ class PACMod3Node final
 public:
   /// \brief Default constructor
   explicit PACMod3Node(rclcpp::NodeOptions options);
-  ~PACMod3Node();
+  virtual ~PACMod3Node();
 
   /// \brief Callback from transition to "configuring" state.
   /// \param[in] state The current state that the node is in.
