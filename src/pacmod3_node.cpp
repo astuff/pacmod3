@@ -146,8 +146,8 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
 
   can_subs_[SteerCmdMsg::CAN_ID] = std::make_pair(
     this->create_subscription<pacmod_msgs::msg::SteerSystemCmd>(
-      "steer_cmd", 20,
-      std::bind(&PACMod3Node::callback_steer_cmd, this, std::placeholders::_1)),
+      "steering_cmd", 20,
+      std::bind(&PACMod3Node::callback_steering_cmd, this, std::placeholders::_1)),
     std::shared_ptr<LockedData>(new LockedData(SteerCmdMsg::DATA_LENGTH)));
 
   can_subs_[TurnSignalCmdMsg::CAN_ID] = std::make_pair(
@@ -523,7 +523,7 @@ void PACMod3Node::callback_sprayer_cmd(const pacmod_msgs::msg::SystemCmdBool::Sh
   lookup_and_encode(SprayerCmdMsg::CAN_ID, msg);
 }
 
-void PACMod3Node::callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg)
+void PACMod3Node::callback_steering_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg)
 {
   lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
 }
