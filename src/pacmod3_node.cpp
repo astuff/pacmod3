@@ -43,35 +43,9 @@ constexpr std::chrono::milliseconds PACMod3Node::INTER_MSG_PAUSE;
 PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
 : lc::LifecycleNode("pacmod3_driver", options)
 {
-  std::string vehicle_type_string = this->declare_parameter("vehicle_type", "POLARIS_GEM");
   frame_id_ = this->declare_parameter("frame_id", "pacmod");
   dbc_major_version_ = this->declare_parameter("dbc_major_version", 3);
 
-  if (vehicle_type_string == "INTERNATIONAL_PROSTAR_122") {
-    vehicle_type_ = VehicleType::INTERNATIONAL_PROSTAR_122;
-  } else if (vehicle_type_string == "JUPITER_SPIRIT") {
-    vehicle_type_ = VehicleType::JUPITER_SPIRIT;
-  } else if (vehicle_type_string == "LEXUS_RX_450H") {
-    vehicle_type_ = VehicleType::LEXUS_RX_450H;
-  } else if (vehicle_type_string == "POLARIS_GEM") {
-    vehicle_type_ = VehicleType::POLARIS_GEM;
-  } else if (vehicle_type_string == "POLARIS_RANGER") {
-    vehicle_type_ = VehicleType::POLARIS_RANGER;
-  } else if (vehicle_type_string == "VEHICLE_4") {
-    vehicle_type_ = VehicleType::VEHICLE_4;
-  } else if (vehicle_type_string == "VEHICLE_5") {
-    vehicle_type_ = VehicleType::VEHICLE_5;
-  } else if (vehicle_type_string == "VEHICLE_6") {
-    vehicle_type_ = VehicleType::VEHICLE_6;
-  } else {
-    vehicle_type_string = "POLARIS_GEM";
-    vehicle_type_ = VehicleType::POLARIS_GEM;
-    RCLCPP_WARN(
-      this->get_logger(),
-      "An invalid vehicle type was entered. Defaulting to POLARIS_GEM.");
-  }
-
-  RCLCPP_INFO(this->get_logger(), "vehicle_type: %s", vehicle_type_string.c_str());
   RCLCPP_INFO(this->get_logger(), "frame_id: %s", frame_id_.c_str());
   RCLCPP_INFO(this->get_logger(), "dbc_major_version: %d", dbc_major_version_);
 
@@ -96,6 +70,7 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
 
   pub_can_rx_ = this->create_publisher<can_msgs::msg::Frame>("can_rx", 100);
 
+  // Reports common to all platforms
   can_pubs_[GlobalRptMsg::CAN_ID] =
     this->create_publisher<pacmod_msgs::msg::GlobalRpt>("global_rpt", 20);
   can_pubs_[ComponentRptMsg::CAN_ID] =
@@ -135,6 +110,7 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
   sub_can_tx_ = this->create_subscription<can_msgs::msg::Frame>(
     "can_tx", 100, std::bind(&PACMod3Node::callback_can_tx, this, std::placeholders::_1));
 
+  // Commands common to all platforms
   can_subs_[AccelCmdMsg::CAN_ID] = std::make_pair(
     this->create_subscription<pacmod_msgs::msg::SystemCmdFloat>(
       "accel_cmd", 20,
@@ -169,167 +145,6 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
   TurnSignalCmdMsg turn_encoder;
   turn_encoder.encode(false, false, false, false, pacmod_msgs::msg::SystemCmdInt::TURN_NONE);
   can_subs_[TurnSignalCmdMsg::CAN_ID].second->setData(std::move(turn_encoder.data));
-
-  if (
-    vehicle_type_ == VehicleType::POLARIS_GEM ||
-    vehicle_type_ == VehicleType::POLARIS_RANGER ||
-    vehicle_type_ == VehicleType::INTERNATIONAL_PROSTAR_122 ||
-    vehicle_type_ == VehicleType::FREIGHTLINER_CASCADIA)
-  {
-    can_pubs_[BrakeMotorRpt1Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::MotorRpt1>("brake_motor_rpt_1", 20);
-    can_pubs_[BrakeMotorRpt2Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::MotorRpt2>("brake_motor_rpt_2", 20);
-    can_pubs_[BrakeMotorRpt3Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::MotorRpt3>("brake_motor_rpt_3", 20);
-    can_pubs_[SteerMotorRpt1Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::MotorRpt1>("steering_motor_rpt_1", 20);
-    can_pubs_[SteerMotorRpt2Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::MotorRpt2>("steering_motor_rpt_2", 20);
-    can_pubs_[SteerMotorRpt3Msg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::MotorRpt3>("steering_motor_rpt_3", 20);
-  }
-
-  if (
-    vehicle_type_ == VehicleType::INTERNATIONAL_PROSTAR_122 ||
-    vehicle_type_ == VehicleType::FREIGHTLINER_CASCADIA)
-  {
-    can_pubs_[WiperRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptInt>("wiper_rpt", 20);
-    can_pubs_[WiperAuxRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::WiperAuxRpt>("wiper_aux_rpt", 20);
-
-    can_subs_[WiperCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-        "wiper_cmd", 20,
-        std::bind(&PACMod3Node::callback_wiper_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
-  }
-
-  if (
-    vehicle_type_ == VehicleType::LEXUS_RX_450H ||
-    vehicle_type_ == VehicleType::FREIGHTLINER_CASCADIA ||
-    vehicle_type_ == VehicleType::JUPITER_SPIRIT ||
-    vehicle_type_ == VehicleType::VEHICLE_5 ||
-    vehicle_type_ == VehicleType::VEHICLE_6)
-  {
-    can_pubs_[DateTimeRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::DateTimeRpt>(
-      "date_time_rpt", 20);
-    can_pubs_[HeadlightRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
-      "headlight_rpt", 20);
-    can_pubs_[HeadlightAuxRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::HeadlightAuxRpt>(
-      "headlight_aux_rpt", 20);
-    can_pubs_[HornRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
-      "horn_rpt", 20);
-    can_pubs_[LatLonHeadingRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::LatLonHeadingRpt>(
-      "lat_lon_heading_rpt", 20);
-    can_pubs_[ParkingBrakeRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
-      "parking_brake_rpt", 20);
-    can_pubs_[WheelSpeedRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::WheelSpeedRpt>(
-      "wheel_speed_rpt", 20);
-    can_pubs_[YawRateRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::YawRateRpt>(
-      "yaw_rate_rpt", 20);
-
-    can_subs_[HeadlightCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-        "headlight_cmd", 20,
-        std::bind(&PACMod3Node::callback_headlight_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
-
-    can_subs_[HornCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
-        "horn_cmd", 20,
-        std::bind(&PACMod3Node::callback_horn_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
-  }
-
-  if (vehicle_type_ == VehicleType::FREIGHTLINER_CASCADIA) {
-    can_pubs_[CruiseControlButtonsRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
-      "cruise_control_buttons_rpt", 20);
-    can_pubs_[EngineBrakeRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
-      "engine_brake_rpt", 20);
-    can_pubs_[MarkerLampRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
-      "marker_lamp_rpt", 20);
-    can_pubs_[SprayerRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
-      "sprayer_rpt", 20);
-    can_pubs_[HazardLightRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
-      "hazard_lights_rpt", 20);
-
-    can_subs_[CruiseControlButtonsCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-        "cruise_control_buttons_cmd", 20,
-        std::bind(&PACMod3Node::callback_cruise_control_buttons_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH)));
-
-    can_subs_[EngineBrakeCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-        "engine_brake_cmd", 20,
-        std::bind(&PACMod3Node::callback_engine_brake_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH)));
-
-    can_subs_[MarkerLampCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
-        "marker_lamp_cmd", 20,
-        std::bind(&PACMod3Node::callback_marker_lamp_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH)));
-
-    can_subs_[SprayerCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
-        "sprayer_cmd", 20,
-        std::bind(&PACMod3Node::callback_sprayer_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
-
-    can_subs_[HazardLightCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
-        "hazard_lights_cmd", 20,
-        std::bind(&PACMod3Node::callback_hazard_lights_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
-  }
-
-  if (vehicle_type_ == VehicleType::JUPITER_SPIRIT) {
-    can_subs_[RearPassDoorCmdMsg::CAN_ID] = std::make_pair(
-      this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
-        "rear_pass_door_cmd", 20,
-        std::bind(&PACMod3Node::callback_rear_pass_door_cmd, this, std::placeholders::_1)),
-      std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
-  }
-
-  if (vehicle_type_ == VehicleType::VEHICLE_4) {
-    can_pubs_[DetectedObjectRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::DetectedObjectRpt>(
-      "detected_object_rpt", 20);
-    can_pubs_[VehicleDynamicsRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::VehicleDynamicsRpt>(
-      "vehicle_dynamics_rpt", 20);
-  }
-
-  if (vehicle_type_ == VehicleType::VEHICLE_5) {
-    can_pubs_[DoorRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::DoorRpt>(
-      "door_rpt", 20);
-    can_pubs_[InteriorLightsRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::InteriorLightsRpt>(
-      "interior_lights_rpt", 20);
-    can_pubs_[OccupancyRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::OccupancyRpt>(
-      "occupancy_rpt", 20);
-    can_pubs_[RearLightsRptMsg::CAN_ID] =
-      this->create_publisher<pacmod_msgs::msg::RearLightsRpt>(
-      "rear_lights_rpt", 20);
-  }
 
   pub_thread_ = std::make_shared<std::thread>();
 
@@ -433,10 +248,355 @@ LNI::CallbackReturn PACMod3Node::on_error(const lc::State & state)
   return LNI::CallbackReturn::FAILURE;
 }
 
+void PACMod3Node::initializeBrakeMotorRptApi()
+{
+  can_pubs_[BrakeMotorRpt1Msg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::MotorRpt1>("brake_motor_rpt_1", 20);
+  can_pubs_[BrakeMotorRpt1Msg::CAN_ID]->on_activate();
+
+  can_pubs_[BrakeMotorRpt2Msg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::MotorRpt2>("brake_motor_rpt_2", 20);
+  can_pubs_[BrakeMotorRpt2Msg::CAN_ID]->on_activate();
+
+  can_pubs_[BrakeMotorRpt3Msg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::MotorRpt3>("brake_motor_rpt_3", 20);
+  can_pubs_[BrakeMotorRpt3Msg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized BrakeMotorRpt API");
+}
+
+void PACMod3Node::initializeSteeringMotorRptApi()
+{
+  can_pubs_[SteerMotorRpt1Msg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::MotorRpt1>("steering_motor_rpt_1", 20);
+  can_pubs_[SteerMotorRpt1Msg::CAN_ID]->on_activate();
+
+  can_pubs_[SteerMotorRpt2Msg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::MotorRpt2>("steering_motor_rpt_2", 20);
+  can_pubs_[SteerMotorRpt2Msg::CAN_ID]->on_activate();
+
+  can_pubs_[SteerMotorRpt3Msg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::MotorRpt3>("steering_motor_rpt_3", 20);
+  can_pubs_[SteerMotorRpt3Msg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized SteeringMotorRpt API");
+}
+
+void PACMod3Node::initializeWiperApi()
+{
+  can_pubs_[WiperRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptInt>("wiper_rpt", 20);
+  can_pubs_[WiperRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[WiperAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::WiperAuxRpt>("wiper_aux_rpt", 20);
+  can_pubs_[WiperAuxRptMsg::CAN_ID]->on_activate();
+
+  can_subs_[WiperCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "wiper_cmd", 20,
+      std::bind(&PACMod3Node::callback_wiper_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
+  RCLCPP_INFO(this->get_logger(), "Initialized Wiper API");
+}
+
+void PACMod3Node::initializeHeadlightApi()
+{
+  can_pubs_[HeadlightRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
+    "headlight_rpt", 20);
+  can_pubs_[HeadlightRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[HeadlightAuxRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::HeadlightAuxRpt>(
+    "headlight_aux_rpt", 20);
+  can_pubs_[HeadlightAuxRptMsg::CAN_ID]->on_activate();
+
+  can_subs_[HeadlightCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "headlight_cmd", 20,
+      std::bind(&PACMod3Node::callback_headlight_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+  RCLCPP_INFO(this->get_logger(), "Initialized Headlight API");
+}
+
+void PACMod3Node::initializeHornApi()
+{
+  can_pubs_[HornRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+    "horn_rpt", 20);
+  can_pubs_[HornRptMsg::CAN_ID]->on_activate();
+
+  can_subs_[HornCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
+      "horn_cmd", 20,
+      std::bind(&PACMod3Node::callback_horn_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
+  RCLCPP_INFO(this->get_logger(), "Initialized Horn API");
+}
+
+void PACMod3Node::initializeWheelSpeedApi()
+{
+  can_pubs_[WheelSpeedRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::WheelSpeedRpt>(
+    "wheel_speed_rpt", 20);
+  can_pubs_[WheelSpeedRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized WheelSpeed API");
+}
+
+void PACMod3Node::initializeParkingBrakeRptApi()
+{
+  can_pubs_[ParkingBrakeRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+    "parking_brake_rpt", 20);
+  can_pubs_[ParkingBrakeRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized ParkingBrakeRpt API");
+}
+
+void PACMod3Node::initializeDoorRptApi()
+{
+  can_pubs_[DoorRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::DoorRpt>(
+    "door_rpt", 20);
+  can_pubs_[DoorRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized DoorRpt API");
+}
+
+void PACMod3Node::initializeInteriorLightsRptApi()
+{
+  can_pubs_[InteriorLightsRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::InteriorLightsRpt>(
+    "interior_lights_rpt", 20);
+  can_pubs_[InteriorLightsRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized InteriorLights API");
+}
+
+void PACMod3Node::initializeOccupancyRptApi()
+{
+  can_pubs_[OccupancyRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::OccupancyRpt>(
+    "occupancy_rpt", 20);
+  can_pubs_[OccupancyRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized OccupancyRpt API");
+}
+
+void PACMod3Node::initializeRearLightsRptApi()
+{
+  can_pubs_[RearLightsRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::RearLightsRpt>(
+    "rear_lights_rpt", 20);
+  can_pubs_[RearLightsRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized RearLightsRpt API");
+}
+
+void PACMod3Node::initializeHazardLightApi()
+{
+  can_pubs_[HazardLightRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+    "hazard_lights_rpt", 20);
+  can_pubs_[HazardLightRptMsg::CAN_ID]->on_activate();
+
+  can_subs_[HazardLightCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
+      "hazard_lights_cmd", 20,
+      std::bind(&PACMod3Node::callback_hazard_lights_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
+
+  RCLCPP_INFO(this->get_logger(), "Initialized HazardLight API");
+}
+
+void PACMod3Node::initializeLexusSpecificApi()
+{
+  can_pubs_[DateTimeRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::DateTimeRpt>(
+    "date_time_rpt", 20);
+  can_pubs_[DateTimeRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[LatLonHeadingRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::LatLonHeadingRpt>(
+    "lat_lon_heading_rpt", 20);
+  can_pubs_[LatLonHeadingRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[YawRateRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::YawRateRpt>(
+    "yaw_rate_rpt", 20);
+  can_pubs_[YawRateRptMsg::CAN_ID]->on_activate();
+  RCLCPP_INFO(this->get_logger(), "Initialized Lexus-specific API");
+}
+
+void PACMod3Node::initializeFreightlinerSpecificApi()
+{
+  // TODO(name): Review this, I think CruiseControlButtonsRpt is now supported on more platforms
+  can_pubs_[CruiseControlButtonsRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
+    "cruise_control_buttons_rpt", 20);
+  can_pubs_[CruiseControlButtonsRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[EngineBrakeRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptInt>(
+    "engine_brake_rpt", 20);
+  can_pubs_[EngineBrakeRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[MarkerLampRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+    "marker_lamp_rpt", 20);
+  can_pubs_[MarkerLampRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[SprayerRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::SystemRptBool>(
+    "sprayer_rpt", 20);
+  can_pubs_[SprayerRptMsg::CAN_ID]->on_activate();
+
+  can_subs_[CruiseControlButtonsCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "cruise_control_buttons_cmd", 20,
+      std::bind(&PACMod3Node::callback_cruise_control_buttons_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH)));
+
+  can_subs_[EngineBrakeCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "engine_brake_cmd", 20,
+      std::bind(&PACMod3Node::callback_engine_brake_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH)));
+
+  can_subs_[MarkerLampCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
+      "marker_lamp_cmd", 20,
+      std::bind(&PACMod3Node::callback_marker_lamp_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH)));
+
+  can_subs_[SprayerCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdBool>(
+      "sprayer_cmd", 20,
+      std::bind(&PACMod3Node::callback_sprayer_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
+
+  RCLCPP_INFO(this->get_logger(), "Initialized Freightliner-specific API");
+}
+
+void PACMod3Node::initializeJapanTaxiSpecificApi()
+{
+  can_subs_[RearPassDoorCmdMsg::CAN_ID] = std::make_pair(
+    this->create_subscription<pacmod_msgs::msg::SystemCmdInt>(
+      "rear_pass_door_cmd", 20,
+      std::bind(&PACMod3Node::callback_rear_pass_door_cmd, this, std::placeholders::_1)),
+    std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
+  RCLCPP_INFO(this->get_logger(), "Initialized Japan Taxi-specific API");
+}
+
+void PACMod3Node::initializeVehicle4SpecificApi()
+{
+  can_pubs_[DetectedObjectRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::DetectedObjectRpt>(
+    "detected_object_rpt", 20);
+  can_pubs_[DetectedObjectRptMsg::CAN_ID]->on_activate();
+
+  can_pubs_[VehicleDynamicsRptMsg::CAN_ID] =
+    this->create_publisher<pacmod_msgs::msg::VehicleDynamicsRpt>(
+    "vehicle_dynamics_rpt", 20);
+  RCLCPP_INFO(this->get_logger(), "Initialized Vehicle4-specific API");
+}
+
+void PACMod3Node::initializeApiForMsg(uint32_t msg_can_id)
+{
+  // Need to initialize pubs/subs for this message group
+  switch (msg_can_id) {
+    case BrakeMotorRpt1Msg::CAN_ID:
+    case BrakeMotorRpt2Msg::CAN_ID:
+    case BrakeMotorRpt3Msg::CAN_ID:
+      {
+        initializeBrakeMotorRptApi();
+        break;
+      }
+    case SteerMotorRpt1Msg::CAN_ID:
+    case SteerMotorRpt2Msg::CAN_ID:
+    case SteerMotorRpt3Msg::CAN_ID:
+      {
+        initializeSteeringMotorRptApi();
+        break;
+      }
+    case WiperRptMsg::CAN_ID:
+    case WiperAuxRptMsg::CAN_ID:
+      {
+        initializeWiperApi();
+        break;
+      }
+    case HeadlightRptMsg::CAN_ID:
+    case HeadlightAuxRptMsg::CAN_ID:
+      {
+        initializeHeadlightApi();
+        break;
+      }
+    case HornRptMsg::CAN_ID:
+      {
+        initializeHornApi();
+        break;
+      }
+    case WheelSpeedRptMsg::CAN_ID:
+      {
+        initializeWheelSpeedApi();
+        break;
+      }
+    case ParkingBrakeRptMsg::CAN_ID:
+      {
+        initializeParkingBrakeRptApi();
+        break;
+      }
+    case DoorRptMsg::CAN_ID:
+      {
+        initializeDoorRptApi();
+        break;
+      }
+    case InteriorLightsRptMsg::CAN_ID:
+      {
+        initializeInteriorLightsRptApi();
+        break;
+      }
+    case OccupancyRptMsg::CAN_ID:
+      {
+        initializeOccupancyRptApi();
+        break;
+      }
+    case RearLightsRptMsg::CAN_ID:
+      {
+        initializeRearLightsRptApi();
+        break;
+      }
+    case HazardLightRptMsg::CAN_ID:
+      {
+        initializeHazardLightApi();
+        break;
+      }
+    case DateTimeRptMsg::CAN_ID:
+    case LatLonHeadingRptMsg::CAN_ID:
+    case YawRateRptMsg::CAN_ID:
+      {
+        initializeLexusSpecificApi();
+        break;
+      }
+    case CruiseControlButtonsRptMsg::CAN_ID:
+    case EngineBrakeRptMsg::CAN_ID:
+    case MarkerLampRptMsg::CAN_ID:
+    case SprayerRptMsg::CAN_ID:
+      {
+        initializeFreightlinerSpecificApi();
+        break;
+      }
+    case DetectedObjectRptMsg::CAN_ID:
+    case VehicleDynamicsRptMsg::CAN_ID:
+      {
+        initializeVehicle4SpecificApi();
+        break;
+      }
+  }
+}
+
 void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
 {
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = can_pubs_.find(msg->id);
+
+  if (pub == can_pubs_.end()) {
+    initializeApiForMsg(msg->id);
+  }
 
   if (parser_class != nullptr && pub != can_pubs_.end()) {
     const std::vector<uint8_t> data_copy(msg->data.begin(), msg->data.end());

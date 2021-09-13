@@ -53,7 +53,7 @@ class PACMod3Node final
 public:
   /// \brief Default constructor
   explicit PACMod3Node(rclcpp::NodeOptions options);
-  ~PACMod3Node();
+  virtual ~PACMod3Node();
 
   /// \brief Callback from transition to "configuring" state.
   /// \param[in] state The current state that the node is in.
@@ -80,6 +80,26 @@ public:
   LNI::CallbackReturn on_error(const lc::State & state) override;
 
 private:
+  void initializeBrakeMotorRptApi();
+  void initializeSteeringMotorRptApi();
+  void initializeWiperApi();
+  void initializeHeadlightApi();
+  void initializeHornApi();
+  void initializeWheelSpeedApi();
+  void initializeParkingBrakeRptApi();
+  void initializeDoorRptApi();
+  void initializeInteriorLightsRptApi();
+  void initializeOccupancyRptApi();
+  void initializeRearLightsRptApi();
+  void initializeHazardLightApi();
+
+  void initializeLexusSpecificApi();
+  void initializeFreightlinerSpecificApi();
+  void initializeJapanTaxiSpecificApi();
+  void initializeVehicle4SpecificApi();
+
+  void initializeApiForMsg(uint32_t msg_can_id);
+
   void callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg);
   void callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
   void callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
@@ -118,7 +138,6 @@ private:
   static constexpr auto SEND_CMD_INTERVAL = std::chrono::milliseconds(33);
   static constexpr auto INTER_MSG_PAUSE = std::chrono::milliseconds(1);
 
-  VehicleType vehicle_type_;
   std::string frame_id_;
   unsigned int dbc_major_version_;
   Pacmod3TxRosMsgHandler tx_handler_;
