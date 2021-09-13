@@ -92,7 +92,7 @@ private:
   void callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_sprayer_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  void callback_steer_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
+  void callback_steering_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
   void callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_wiper_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
 
