@@ -386,7 +386,8 @@ void Pacmod3TxRosMsgHandler::fillComponentRpt(
   auto dc_parser = std::dynamic_pointer_cast<ComponentRptMsg>(parser_class);
 
   new_msg->component_type = static_cast<unsigned char>(dc_parser->component_type);
-  // TODO: build converter from old CAN message to new ROS message format (which matches new CAN format)
+  // TODO(icolwell-as): build converter from old CAN message to new ROS message format
+  // (which matches new CAN format)
   // new_msg->component_func = static_cast<unsigned char>(dc_parser->component_func);
   new_msg->counter = dc_parser->counter;
   new_msg->complement = dc_parser->complement;
@@ -802,7 +803,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   // Note: The clear_faults field has been removed in later DBC versions.
   // It is omitted here.
 
-  // TODO: should clear_faults be added back in here from global_cmd?
+  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
   if (can_id == HornCmdMsg::CAN_ID) {
     HornCmdMsg encoder;
@@ -845,7 +846,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   // Note: The clear_faults field has been removed in later DBC versions.
   // It is omitted here.
 
-  // TODO: should clear_faults be added back in here from global_cmd?
+  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
   if (can_id == AccelCmdMsg::CAN_ID) {
     AccelCmdMsg encoder;
@@ -879,7 +880,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   // Note: The clear_faults field has been removed in later DBC versions.
   // It is omitted here.
 
-  // TODO: should clear_faults be added back in here from global_cmd?
+  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
   if (can_id == CruiseControlButtonsCmdMsg::CAN_ID) {
     CruiseControlButtonsCmdMsg encoder;
@@ -976,7 +977,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   // Note: The clear_faults field has been removed in later DBC versions.
   // It is omitted here.
 
-  // TODO: should clear_faults be added back in here from global_cmd?
+  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
   if (can_id == SteeringCmdMsg::CAN_ID) {
     SteeringCmdMsg encoder;
