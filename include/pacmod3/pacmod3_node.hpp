@@ -101,20 +101,20 @@ private:
   void initializeApiForMsg(uint32_t msg_can_id);
 
   void callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg);
-  void callback_accel_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
-  void callback_brake_cmd(const pacmod_msgs::msg::SystemCmdFloat::SharedPtr msg);
-  void callback_cruise_control_buttons_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
-  void callback_engine_brake_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
-  void callback_hazard_lights_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  void callback_headlight_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
-  void callback_horn_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  void callback_marker_lamp_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  void callback_rear_pass_door_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
-  void callback_shift_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
-  void callback_sprayer_cmd(const pacmod_msgs::msg::SystemCmdBool::SharedPtr msg);
-  void callback_steering_cmd(const pacmod_msgs::msg::SteerSystemCmd::SharedPtr msg);
-  void callback_turn_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
-  void callback_wiper_cmd(const pacmod_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_accel_cmd(const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr msg);
+  void callback_brake_cmd(const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr msg);
+  void callback_cruise_control_buttons_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_engine_brake_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_hazard_lights_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg);
+  void callback_headlight_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_horn_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg);
+  void callback_marker_lamp_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg);
+  void callback_rear_pass_door_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_shift_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_sprayer_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg);
+  void callback_steering_cmd(const pacmod3_msgs::msg::SteeringCmd::SharedPtr msg);
+  void callback_turn_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
+  void callback_wiper_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
 
   template<class T>
   void lookup_and_encode(const unsigned int & can_id, const T & msg)
@@ -149,7 +149,7 @@ private:
   std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Bool>> pub_enabled_;
   std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Float64>> pub_vehicle_speed_ms_;
   std::shared_ptr<lc::LifecyclePublisher<
-      pacmod_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
+      pacmod3_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
 
   std::shared_ptr<rclcpp::Subscription<can_msgs::msg::Frame>> sub_can_tx_;
   std::unordered_map<unsigned int,

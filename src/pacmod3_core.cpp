@@ -45,14 +45,14 @@ constexpr uint32_t ParkingBrakeCmdMsg::CAN_ID;
 constexpr uint32_t RearPassDoorCmdMsg::CAN_ID;
 constexpr uint32_t ShiftCmdMsg::CAN_ID;
 constexpr uint32_t SprayerCmdMsg::CAN_ID;
-constexpr uint32_t SteerCmdMsg::CAN_ID;
+constexpr uint32_t SteeringCmdMsg::CAN_ID;
 constexpr uint32_t TurnSignalCmdMsg::CAN_ID;
 constexpr uint32_t WiperCmdMsg::CAN_ID;
 
 constexpr uint8_t SystemCmdBool::DATA_LENGTH;
 constexpr uint8_t SystemCmdInt::DATA_LENGTH;
 constexpr uint8_t SystemCmdFloat::DATA_LENGTH;
-constexpr uint8_t SteerCmdMsg::DATA_LENGTH;
+constexpr uint8_t SteeringCmdMsg::DATA_LENGTH;
 
 // System Reports
 constexpr uint32_t AccelRptMsg::CAN_ID;
@@ -70,7 +70,7 @@ constexpr uint32_t ParkingBrakeRptMsg::CAN_ID;
 constexpr uint32_t RearPassDoorRptMsg::CAN_ID;
 constexpr uint32_t ShiftRptMsg::CAN_ID;
 constexpr uint32_t SprayerRptMsg::CAN_ID;
-constexpr uint32_t SteerRptMsg::CAN_ID;
+constexpr uint32_t SteeringRptMsg::CAN_ID;
 constexpr uint32_t TurnSignalRptMsg::CAN_ID;
 constexpr uint32_t WiperRptMsg::CAN_ID;
 
@@ -79,7 +79,7 @@ constexpr uint32_t AccelAuxRptMsg::CAN_ID;
 constexpr uint32_t BrakeAuxRptMsg::CAN_ID;
 constexpr uint32_t HeadlightAuxRptMsg::CAN_ID;
 constexpr uint32_t ShiftAuxRptMsg::CAN_ID;
-constexpr uint32_t SteerAuxRptMsg::CAN_ID;
+constexpr uint32_t SteeringAuxRptMsg::CAN_ID;
 constexpr uint32_t TurnAuxRptMsg::CAN_ID;
 constexpr uint32_t WiperAuxRptMsg::CAN_ID;
 
@@ -88,9 +88,9 @@ constexpr uint32_t VehicleSpeedRptMsg::CAN_ID;
 constexpr uint32_t BrakeMotorRpt1Msg::CAN_ID;
 constexpr uint32_t BrakeMotorRpt2Msg::CAN_ID;
 constexpr uint32_t BrakeMotorRpt3Msg::CAN_ID;
-constexpr uint32_t SteerMotorRpt1Msg::CAN_ID;
-constexpr uint32_t SteerMotorRpt2Msg::CAN_ID;
-constexpr uint32_t SteerMotorRpt3Msg::CAN_ID;
+constexpr uint32_t SteeringMotorRpt1Msg::CAN_ID;
+constexpr uint32_t SteeringMotorRpt2Msg::CAN_ID;
+constexpr uint32_t SteeringMotorRpt3Msg::CAN_ID;
 constexpr uint32_t WheelSpeedRptMsg::CAN_ID;
 constexpr uint32_t YawRateRptMsg::CAN_ID;
 constexpr uint32_t LatLonHeadingRptMsg::CAN_ID;
@@ -179,17 +179,17 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id
     case ShiftRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ShiftRptMsg);
       break;
-    case SteerMotorRpt1Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt1Msg);
+    case SteeringMotorRpt1Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringMotorRpt1Msg);
       break;
-    case SteerMotorRpt2Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt2Msg);
+    case SteeringMotorRpt2Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringMotorRpt2Msg);
       break;
-    case SteerMotorRpt3Msg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerMotorRpt3Msg);
+    case SteeringMotorRpt3Msg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringMotorRpt3Msg);
       break;
-    case SteerRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerRptMsg);
+    case SteeringRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringRptMsg);
       break;
     case TurnSignalRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new TurnSignalRptMsg);
@@ -227,8 +227,8 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t & can_id
     case ShiftAuxRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new ShiftAuxRptMsg);
       break;
-    case SteerAuxRptMsg::CAN_ID:
-      return std::shared_ptr<Pacmod3TxMsg>(new SteerAuxRptMsg);
+    case SteeringAuxRptMsg::CAN_ID:
+      return std::shared_ptr<Pacmod3TxMsg>(new SteeringAuxRptMsg);
       break;
     case TurnAuxRptMsg::CAN_ID:
       return std::shared_ptr<Pacmod3TxMsg>(new TurnAuxRptMsg);
@@ -288,8 +288,8 @@ void GlobalRptMsg::parse(const std::vector<uint8_t> & in)
 {
   enabled = in[0] & 0x01;
   override_active = ((in[0] & 0x02) > 0);
-  fault_active = ((in[0] & 0x80) > 0);
-  config_fault_active = ((in[1] & 0x01) > 0);
+  system_fault_active = ((in[0] & 0x80) > 0);
+  config_fault_active = ((in[1] & 0x80) > 0);
   user_can_timeout = ((in[0] & 0x04) > 0);
   steering_can_timeout = ((in[0] & 0x08) > 0);
   brake_can_timeout = ((in[0] & 0x10) > 0);
@@ -559,7 +559,7 @@ void ShiftAuxRptMsg::parse(const std::vector<uint8_t> & in)
   speed_interlock_active_is_valid = (in[1] & 0x08) > 0;
 }
 
-void SteerAuxRptMsg::parse(const std::vector<uint8_t> & in)
+void SteeringAuxRptMsg::parse(const std::vector<uint8_t> & in)
 {
   int16_t temp;
 
@@ -807,7 +807,7 @@ void SystemCmdInt::encode(
   data[1] = cmd;
 }
 
-void SteerCmdMsg::encode(
+void SteeringCmdMsg::encode(
   bool enable,
   bool ignore_overrides,
   bool clear_override,

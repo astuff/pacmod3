@@ -14,7 +14,7 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(can_msgs REQUIRED)
-find_package(pacmod_msgs REQUIRED)
+find_package(pacmod3_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
 include_directories(
@@ -37,7 +37,7 @@ ament_target_dependencies(
   "rclcpp_components"
   "rclcpp_lifecycle"
   "can_msgs"
-  "pacmod_msgs"
+  "pacmod3_msgs"
   "std_msgs"
 )
 rclcpp_components_register_nodes(
