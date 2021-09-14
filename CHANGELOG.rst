@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2002.0.0 (2021-09-14)
+---------------------
 * Update to pacmod3_msgs (`#90 <https://github.com/astuff/pacmod3/issues/90>`_)
 * Remove need to specify vehicle type param (`#88 <https://github.com/astuff/pacmod3/issues/88>`_)
 * Simplify topic names (`#93 <https://github.com/astuff/pacmod3/issues/93>`_)
