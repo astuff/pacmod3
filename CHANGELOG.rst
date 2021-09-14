@@ -2,6 +2,16 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2002.0.0 (2021-09-14)
+---------------------
+* Update to pacmod3_msgs (`#90 <https://github.com/astuff/pacmod3/issues/90>`_)
+* Remove need to specify vehicle type param (`#88 <https://github.com/astuff/pacmod3/issues/88>`_)
+* Simplify topic names (`#93 <https://github.com/astuff/pacmod3/issues/93>`_)
+* Add parameter for PACMod DBC version (`#87 <https://github.com/astuff/pacmod3/issues/87>`_)
+* Update launch files (`#86 <https://github.com/astuff/pacmod3/issues/86>`_)
+* Update ROS2 CI (`#81 <https://github.com/astuff/pacmod3/issues/81>`_)
+* CI: Update PPA address.
+
 1.3.1 (2020-01-31)
 ------------------
 * Added missing dependency to package.xml.
