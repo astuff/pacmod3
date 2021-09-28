@@ -96,6 +96,7 @@ Topics subscribed on all platforms:
 - `steering_cmd` ([pacmod3_msgs/SystemCmdFloat](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdFloat.msg))
 - `shift_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
 - `turn_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
+- `can_tx` ([can_msgs/Frame](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))
 
 Topics subscribed on supported platforms only:
 
