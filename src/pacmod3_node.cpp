@@ -324,7 +324,8 @@ int main(int argc, char *argv[])
   }
 
   priv.param<int>("dbc_major_version", dbc_major_version_, 3);
-  if (dbc_major_version_ != 3) {
+  if (dbc_major_version_ != 3)
+  {
     ROS_ERROR("This driver currently only supports PACMod DBC version 3");
     ros::shutdown();
   }
