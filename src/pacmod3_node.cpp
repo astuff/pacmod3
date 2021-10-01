@@ -47,6 +47,7 @@ ros::Publisher vehicle_speed_ms_pub;
 ros::Publisher enabled_pub;
 ros::Publisher can_rx_pub;
 ros::Publisher all_system_statuses_pub;
+int dbc_major_version_;
 
 std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;
 std::map<uint32_t, std::tuple<bool, bool, bool>> system_statuses;
@@ -320,6 +321,12 @@ int main(int argc, char *argv[])
       veh_type = VehicleType::POLARIS_GEM;
       ROS_WARN("PACMod3 - An invalid vehicle type was entered. Assuming POLARIS_GEM.");
     }
+  }
+
+  priv.param<int>("dbc_major_version", dbc_major_version_, 3);
+  if (dbc_major_version_ != 3) {
+    ROS_ERROR("This driver currently only supports PACMod DBC version 3");
+    ros::shutdown();
   }
 
   // Advertise published messages
