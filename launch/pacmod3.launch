@@ -11,6 +11,7 @@
   <arg name="kvaser_circuit_id" default="0" />
   <arg name="use_socketcan" default="false" />
   <arg name="socketcan_device" default="can0" />
+  <arg name="dbc_major_version" default="3" />
 
   <include file="$(find kvaser_interface)/launch/kvaser_can_bridge.launch" if="$(arg use_kvaser)">
     <arg name="can_hardware_id" value="$(arg kvaser_hardware_id)" />
@@ -26,5 +27,6 @@
 
   <node pkg="pacmod3" type="pacmod3" name="pacmod">
     <param name="vehicle_type" value="$(arg pacmod_vehicle_type)" />
-  </node>  
+    <param name="dbc_major_version" value="$(arg dbc_major_version)" />
+  </node>
 </launch>
