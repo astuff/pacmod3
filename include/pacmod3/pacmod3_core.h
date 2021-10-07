@@ -28,11 +28,7 @@
 #include <vector>
 #include <string>
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 enum VehicleType
 {
@@ -909,8 +905,6 @@ public:
   static constexpr uint32_t CAN_ID = 0x134;
 };
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
 
 #endif  // PACMOD3_PACMOD3_CORE_H

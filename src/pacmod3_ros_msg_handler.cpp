@@ -24,11 +24,8 @@
 #include <string>
 #include <memory>
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+
+namespace pacmod3
 {
 
 LockedData::LockedData(unsigned char data_length) :
@@ -1017,6 +1014,5 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   }
 }
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
+
