@@ -165,11 +165,13 @@ private:
 
   int dbc_major_version_;
 
-  std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;
-  std::map<uint32_t, std::tuple<bool, bool, bool>> system_statuses;
-
   // Commands that have been received from ROS subscribers
   std::set<uint32_t> received_cmds;
+
+  // Data shared across threads
+  std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;
+  std::map<uint32_t, std::tuple<bool, bool, bool>> system_statuses;
+  std::mutex sys_status_mutex_;
 };
 
 }

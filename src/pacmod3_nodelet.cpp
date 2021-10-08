@@ -409,6 +409,7 @@ void Pacmod3Nl::SystemStatusUpdate(const ros::TimerEvent& event)
 {
   pacmod_msgs::AllSystemStatuses ss_msg;
 
+  std::unique_lock<std::mutex> lock(sys_status_mutex_);
   for (auto system = system_statuses.begin(); system != system_statuses.end(); ++system)
   {
     pacmod_msgs::KeyValuePair kvp;
@@ -497,6 +498,7 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
     {
       auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
 
+      std::unique_lock<std::mutex> lock(sys_status_mutex_);
       system_statuses[msg->id] = std::make_tuple(dc_parser->enabled,
                                  dc_parser->override_active,
                                  (dc_parser->command_output_fault |
