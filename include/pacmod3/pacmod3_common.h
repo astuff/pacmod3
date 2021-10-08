@@ -22,7 +22,6 @@
 #define PACMOD3_PACMOD3_COMMON_H
 
 #include <memory>
-#include <mutex>
 
 #include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>

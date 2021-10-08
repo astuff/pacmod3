@@ -20,6 +20,8 @@
 
 #include "pacmod3/pacmod3_nodelet.h"
 
+#include <string>
+
 #include <ros/ros.h>
 #include <nodelet/loader.h>
 

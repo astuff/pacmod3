@@ -18,15 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef PACMOD3_PACMOD3NL_H
-#define PACMOD3_PACMOD3NL_H
+#ifndef PACMOD3_PACMOD3_NODELET_H
+#define PACMOD3_PACMOD3_NODELET_H
 
-#include <thread>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <tuple>
 #include <unordered_map>
 
 #include <ros/ros.h>
 #include <nodelet/nodelet.h>
-// #include <pluginlib/class_list_macros.h>
 
 #include <can_msgs/Frame.h>
 #include <pacmod_msgs/SystemCmdBool.h>
@@ -72,6 +75,7 @@ namespace pacmod3
 
   const uint32_t SEND_CMD_INTERVAL = 33;
   const uint32_t INTER_MSG_PAUSE = 1;
+  const float PACMOD_UPDATE_FREQ = 30.0;
 
 class Pacmod3Nl : public nodelet::Nodelet
 {
@@ -174,7 +178,7 @@ private:
   std::mutex sys_status_mutex_;
 };
 
-}
+}  // namespace pacmod3
 
 
-#endif // PACMOD3_PACMOD3NL_H
+#endif  // PACMOD3_PACMOD3_NODELET_H

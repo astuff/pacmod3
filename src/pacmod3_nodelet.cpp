@@ -20,6 +20,11 @@
 
 #include "pacmod3/pacmod3_nodelet.h"
 
+#include <memory>
+#include <thread>
+#include <utility>
+#include <vector>
+
 #include <pluginlib/class_list_macros.h>
 
 #include <std_msgs/Bool.h>
@@ -86,7 +91,8 @@ void Pacmod3Nl::onInit()
   shift_cmd_sub = nh_.subscribe("as_rx/shift_cmd", 20, &Pacmod3Nl::callback_shift_set_cmd, this);
   steer_cmd_sub = nh_.subscribe("as_rx/steer_cmd", 20, &Pacmod3Nl::callback_steer_cmd_sub, this);
   turn_cmd_sub = nh_.subscribe("as_rx/turn_cmd", 20, &Pacmod3Nl::callback_turn_signal_set_cmd, this);
-  rear_pass_door_cmd_sub = nh_.subscribe("as_rx/rear_pass_door_cmd", 20, &Pacmod3Nl::callback_rear_pass_door_set_cmd, this);
+  rear_pass_door_cmd_sub = nh_.subscribe(
+    "as_rx/rear_pass_door_cmd", 20, &Pacmod3Nl::callback_rear_pass_door_set_cmd, this);
 
   rx_list.emplace(
     AccelCmdMsg::CAN_ID,
@@ -116,9 +122,12 @@ void Pacmod3Nl::onInit()
     ros::Publisher brake_rpt_detail_1_pub = nh_.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/brake_rpt_detail_1", 20);
     ros::Publisher brake_rpt_detail_2_pub = nh_.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/brake_rpt_detail_2", 20);
     ros::Publisher brake_rpt_detail_3_pub = nh_.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/brake_rpt_detail_3", 20);
-    ros::Publisher steering_rpt_detail_1_pub = nh_.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
-    ros::Publisher steering_rpt_detail_2_pub = nh_.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
-    ros::Publisher steering_rpt_detail_3_pub = nh_.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
+    ros::Publisher steering_rpt_detail_1_pub =
+      nh_.advertise<pacmod_msgs::MotorRpt1>("parsed_tx/steer_rpt_detail_1", 20);
+    ros::Publisher steering_rpt_detail_2_pub =
+      nh_.advertise<pacmod_msgs::MotorRpt2>("parsed_tx/steer_rpt_detail_2", 20);
+    ros::Publisher steering_rpt_detail_3_pub =
+      nh_.advertise<pacmod_msgs::MotorRpt3>("parsed_tx/steer_rpt_detail_3", 20);
 
     pub_tx_list.emplace(BrakeMotorRpt1Msg::CAN_ID, std::move(brake_rpt_detail_1_pub));
     pub_tx_list.emplace(BrakeMotorRpt2Msg::CAN_ID, std::move(brake_rpt_detail_2_pub));
@@ -136,7 +145,8 @@ void Pacmod3Nl::onInit()
     pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
     pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
 
-    wiper_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe("as_rx/wiper_cmd", 20, &Pacmod3Nl::callback_wiper_set_cmd, this));
+    wiper_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe(
+      "as_rx/wiper_cmd", 20, &Pacmod3Nl::callback_wiper_set_cmd, this));
 
     rx_list.emplace(
       WiperCmdMsg::CAN_ID,
@@ -175,10 +185,10 @@ void Pacmod3Nl::onInit()
     pub_tx_list.emplace(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub));
     pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
 
-    headlight_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(nh_.subscribe("as_rx/headlight_cmd", 20, &Pacmod3Nl::callback_headlight_set_cmd, this));
-    horn_set_cmd_sub =
-      std::make_shared<ros::Subscriber>(nh_.subscribe("as_rx/horn_cmd", 20, &Pacmod3Nl::callback_horn_set_cmd, this));
+    headlight_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe(
+      "as_rx/headlight_cmd", 20, &Pacmod3Nl::callback_headlight_set_cmd, this));
+    horn_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe(
+      "as_rx/horn_cmd", 20, &Pacmod3Nl::callback_horn_set_cmd, this));
 
     rx_list.emplace(
       HeadlightCmdMsg::CAN_ID,
@@ -275,9 +285,8 @@ void Pacmod3Nl::onInit()
   set_enable(false);
 
   // Start timers for repeating tasks
-  // TODO: change this time duration to some parameter or constant
-  can_send_timer_ = nh_.createTimer(ros::Duration(1/30.0), &Pacmod3Nl::can_write, this);
-  status_update_timer_ = nh_.createTimer(ros::Duration(1/30.0), &Pacmod3Nl::SystemStatusUpdate, this);
+  can_send_timer_ = nh_.createTimer(ros::Duration(1/PACMOD_UPDATE_FREQ), &Pacmod3Nl::can_write, this);
+  status_update_timer_ = nh_.createTimer(ros::Duration(1/PACMOD_UPDATE_FREQ), &Pacmod3Nl::SystemStatusUpdate, this);
 }
 
 void Pacmod3Nl::loadParams()

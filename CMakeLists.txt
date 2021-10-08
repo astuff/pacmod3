@@ -48,7 +48,7 @@ target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
 
-set(ROSLINT_CPP_OPTS "--filter=-build/c++14")
+set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
 roslint_cpp()
 
 install(TARGETS
