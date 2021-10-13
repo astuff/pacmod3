@@ -33,12 +33,6 @@
 namespace pacmod3
 {
 
-Pacmod3Nl::Pacmod3Nl()
-{}
-
-Pacmod3Nl::~Pacmod3Nl()
-{}
-
 void Pacmod3Nl::onInit()
 {
   nh_ = getMTNodeHandle();

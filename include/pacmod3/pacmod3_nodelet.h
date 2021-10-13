@@ -79,12 +79,8 @@ namespace pacmod3
 
 class Pacmod3Nl : public nodelet::Nodelet
 {
-public:
-  Pacmod3Nl();
-  ~Pacmod3Nl();
-
 private:
-  void onInit();
+  void onInit() override;
   void loadParams();
 
   // ROS Callbacks
@@ -150,7 +146,7 @@ private:
 
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
-  std::string veh_type_string = "POLARIS_GEM";
+  std::string veh_type_string = "";
   VehicleType veh_type = VehicleType::POLARIS_GEM;
 
   // Vehicle-Specific Subscribers
