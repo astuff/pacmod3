@@ -147,7 +147,6 @@ private:
   std::shared_ptr<lc::LifecyclePublisher<can_msgs::msg::Frame>> pub_can_rx_;
   std::unordered_map<unsigned int, std::shared_ptr<lc::LifecyclePublisherInterface>> can_pubs_;
   std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Bool>> pub_enabled_;
-  std::shared_ptr<lc::LifecyclePublisher<std_msgs::msg::Float64>> pub_vehicle_speed_ms_;
   std::shared_ptr<lc::LifecyclePublisher<
       pacmod3_msgs::msg::AllSystemStatuses>> pub_all_system_statuses_;
 
