@@ -102,8 +102,6 @@ LNI::CallbackReturn PACMod3Node::on_configure(const lc::State & state)
 
   pub_enabled_ = this->create_publisher<std_msgs::msg::Bool>(
     "enabled", rclcpp::QoS(1).transient_local());
-  pub_vehicle_speed_ms_ = this->create_publisher<std_msgs::msg::Float64>(
-    "vehicle_speed", 20);
   pub_all_system_statuses_ = this->create_publisher<pacmod3_msgs::msg::AllSystemStatuses>(
     "all_system_statuses", 20);
 
@@ -165,7 +163,6 @@ LNI::CallbackReturn PACMod3Node::on_activate(const lc::State & state)
   }
 
   pub_enabled_->on_activate();
-  pub_vehicle_speed_ms_->on_activate();
   pub_all_system_statuses_->on_activate();
 
   pub_thread_ = std::make_shared<std::thread>(std::bind(&PACMod3Node::publish_cmds, this));
@@ -186,7 +183,6 @@ LNI::CallbackReturn PACMod3Node::on_deactivate(const lc::State & state)
   }
 
   pub_enabled_->on_deactivate();
-  pub_vehicle_speed_ms_->on_deactivate();
   pub_all_system_statuses_->on_deactivate();
 
   // Reset all data in commands to 0
@@ -216,7 +212,6 @@ LNI::CallbackReturn PACMod3Node::on_cleanup(const lc::State & state)
   pub_can_rx_.reset();
   can_pubs_.clear();
   pub_enabled_.reset();
-  pub_vehicle_speed_ms_.reset();
   pub_all_system_statuses_.reset();
 
   return LNI::CallbackReturn::SUCCESS;
@@ -626,12 +621,6 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
       if (dc_parser->override_active || dc_parser->system_fault_active) {
         set_enable(false);
       }
-    } else if (msg->id == VehicleSpeedRptMsg::CAN_ID) {
-      auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
-
-      auto msg = std::make_unique<std_msgs::msg::Float64>();
-      msg->data = dc_parser->vehicle_speed;
-      pub_vehicle_speed_ms_->publish(std::move(msg));
     }
   }
 }
