@@ -21,11 +21,7 @@
 #include <pacmod3/pacmod3_core.h>
 #include <memory>
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 
 constexpr uint32_t GlobalRptMsg::CAN_ID;
@@ -870,6 +866,4 @@ void SteerCmdMsg::encode(bool enable,
   data[4] = raw_spd & 0x00FF;
 }
 
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3

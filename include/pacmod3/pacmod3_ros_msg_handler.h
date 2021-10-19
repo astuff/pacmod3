@@ -27,11 +27,7 @@
 #include <vector>
 #include <memory>
 
-namespace AS
-{
-namespace Drivers
-{
-namespace PACMod3
+namespace pacmod3
 {
 class LockedData
 {
@@ -181,8 +177,6 @@ public:
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
   static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
 };
-}  // namespace PACMod3
-}  // namespace Drivers
-}  // namespace AS
+}  // namespace pacmod3
 
 #endif  // PACMOD3_PACMOD3_ROS_MSG_HANDLER_H

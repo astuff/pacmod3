@@ -1,0 +1,9 @@
+<library path="lib/libpacmod3_nodelet">
+  <class name="pacmod3/pacmod3_nodelet"
+         type="pacmod3::Pacmod3Nl"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      Pacmod3 ROS Driver
+    </description>
+  </class>
+</library>

@@ -1,60 +1,68 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(pacmod3)
 
-## Add support for C++11, supported in ROS Kinetic and newer
-# For PACMod, this must be enabled to use mutexes.
-add_definitions(-std=c++11)
+add_definitions(-std=c++14)
 
-find_package(catkin REQUIRED COMPONENTS
-  roslint
+set(catkin_deps
+  nodelet
   roscpp
   std_msgs
   pacmod_msgs
   can_msgs
 )
 
-catkin_package(CATKIN_DEPENDS
-  roscpp
-  std_msgs 
-  pacmod_msgs
-  can_msgs
+find_package(catkin REQUIRED ${catkin_deps} roslint)
+
+catkin_package(
+  INCLUDE_DIRS include
+  CATKIN_DEPENDS ${catkin_deps}
+  LIBRARIES ${PROJECT_NAME}_nodelet
 )
 
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
+###########
+## Build ##
+###########
+
 include_directories(
-  include/
+  include
   ${catkin_INCLUDE_DIRS}
 )
 
-## Declare a C++ executable
-add_executable(${PROJECT_NAME}
-  src/pacmod3_ros_msg_handler.cpp
-  src/pacmod3_node.cpp
+# nodelets
+add_library(${PROJECT_NAME}_nodelet
+  src/pacmod3_nodelet.cpp
   src/pacmod3_core.cpp
+  src/pacmod3_ros_msg_handler.cpp
 )
 
-## Add cmake target dependencies of the executable
-## same as for the library above
-add_dependencies(${PROJECT_NAME}
-  ${${PROJECT_NAME}_EXPORTED_TARGETS}
-  ${catkin_EXPORTED_TARGETS}
+target_link_libraries(${PROJECT_NAME}_nodelet
+  ${catkin_LIBRARIES}
 )
 
-## Specify libraries to link a library or executable target against
-target_link_libraries(${PROJECT_NAME}
+# nodes
+add_executable(${PROJECT_NAME}_node
+  src/pacmod3_node.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
 
 set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
 roslint_cpp()
 
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS
+  ${PROJECT_NAME}_node
+  ${PROJECT_NAME}_nodelet
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
-install(DIRECTORY launch/
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
+install(DIRECTORY launch
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+)
+
+install(FILES nodelets.xml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
