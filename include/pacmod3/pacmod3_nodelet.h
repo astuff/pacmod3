@@ -110,7 +110,6 @@ private:
   std::unordered_map<uint32_t, ros::Publisher> pub_tx_list;
   Pacmod3TxRosMsgHandler handler;
 
-  ros::Publisher vehicle_speed_ms_pub;
   ros::Publisher enabled_pub;
   ros::Publisher can_rx_pub;
   ros::Publisher all_system_statuses_pub;
