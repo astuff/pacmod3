@@ -7,7 +7,7 @@ set(catkin_deps
   nodelet
   roscpp
   std_msgs
-  pacmod_msgs
+  pacmod3_msgs
   can_msgs
 )
 

@@ -32,40 +32,39 @@
 #include <nodelet/nodelet.h>
 
 #include <can_msgs/Frame.h>
-#include <pacmod_msgs/SystemCmdBool.h>
-#include <pacmod_msgs/SystemCmdFloat.h>
-#include <pacmod_msgs/SystemCmdInt.h>
-#include <pacmod_msgs/GlobalRpt.h>
-#include <pacmod_msgs/AccelAuxRpt.h>
-#include <pacmod_msgs/AllSystemStatuses.h>
-#include <pacmod_msgs/BrakeAuxRpt.h>
-#include <pacmod_msgs/ComponentRpt.h>
-#include <pacmod_msgs/DateTimeRpt.h>
-#include <pacmod_msgs/DetectedObjectRpt.h>
-#include <pacmod_msgs/DoorRpt.h>
-#include <pacmod_msgs/EngineRpt.h>
-#include <pacmod_msgs/HeadlightAuxRpt.h>
-#include <pacmod_msgs/InteriorLightsRpt.h>
-#include <pacmod_msgs/LatLonHeadingRpt.h>
-#include <pacmod_msgs/MotorRpt1.h>
-#include <pacmod_msgs/MotorRpt2.h>
-#include <pacmod_msgs/MotorRpt3.h>
-#include <pacmod_msgs/OccupancyRpt.h>
-#include <pacmod_msgs/RearLightsRpt.h>
-#include <pacmod_msgs/ShiftAuxRpt.h>
-#include <pacmod_msgs/SteerAuxRpt.h>
-#include <pacmod_msgs/SteerSystemCmd.h>
-#include <pacmod_msgs/SystemRptBool.h>
-#include <pacmod_msgs/SystemRptFloat.h>
-#include <pacmod_msgs/SystemRptInt.h>
-#include <pacmod_msgs/TurnAuxRpt.h>
-#include <pacmod_msgs/VehicleDynamicsRpt.h>
-#include <pacmod_msgs/VehicleSpecificRpt1.h>
-#include <pacmod_msgs/VehicleSpeedRpt.h>
-#include <pacmod_msgs/VinRpt.h>
-#include <pacmod_msgs/WheelSpeedRpt.h>
-#include <pacmod_msgs/WiperAuxRpt.h>
-#include <pacmod_msgs/YawRateRpt.h>
+#include <pacmod3_msgs/SystemCmdBool.h>
+#include <pacmod3_msgs/SystemCmdFloat.h>
+#include <pacmod3_msgs/SystemCmdInt.h>
+#include <pacmod3_msgs/GlobalRpt.h>
+#include <pacmod3_msgs/AccelAuxRpt.h>
+#include <pacmod3_msgs/AllSystemStatuses.h>
+#include <pacmod3_msgs/BrakeAuxRpt.h>
+#include <pacmod3_msgs/ComponentRpt.h>
+#include <pacmod3_msgs/DateTimeRpt.h>
+#include <pacmod3_msgs/DetectedObjectRpt.h>
+#include <pacmod3_msgs/DoorRpt.h>
+#include <pacmod3_msgs/EngineRpt.h>
+#include <pacmod3_msgs/HeadlightAuxRpt.h>
+#include <pacmod3_msgs/InteriorLightsRpt.h>
+#include <pacmod3_msgs/LatLonHeadingRpt.h>
+#include <pacmod3_msgs/MotorRpt1.h>
+#include <pacmod3_msgs/MotorRpt2.h>
+#include <pacmod3_msgs/MotorRpt3.h>
+#include <pacmod3_msgs/OccupancyRpt.h>
+#include <pacmod3_msgs/RearLightsRpt.h>
+#include <pacmod3_msgs/ShiftAuxRpt.h>
+#include <pacmod3_msgs/SteeringAuxRpt.h>
+#include <pacmod3_msgs/SteeringCmd.h>
+#include <pacmod3_msgs/SystemRptBool.h>
+#include <pacmod3_msgs/SystemRptFloat.h>
+#include <pacmod3_msgs/SystemRptInt.h>
+#include <pacmod3_msgs/TurnAuxRpt.h>
+#include <pacmod3_msgs/VehicleDynamicsRpt.h>
+#include <pacmod3_msgs/VehicleSpeedRpt.h>
+#include <pacmod3_msgs/VinRpt.h>
+#include <pacmod3_msgs/WheelSpeedRpt.h>
+#include <pacmod3_msgs/WiperAuxRpt.h>
+#include <pacmod3_msgs/YawRateRpt.h>
 
 #include "pacmod3/pacmod3_core.h"
 #include "pacmod3/pacmod3_ros_msg_handler.h"
@@ -84,23 +83,23 @@ private:
   void loadParams();
 
   // ROS Callbacks
-  void callback_accel_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg);
-  void callback_brake_cmd_sub(const pacmod_msgs::SystemCmdFloat::ConstPtr& msg);
-  void callback_cruise_control_buttons_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_dash_controls_left_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_dash_controls_right_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_headlight_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_horn_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg);
-  void callback_media_controls_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_shift_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_steer_cmd_sub(const pacmod_msgs::SteerSystemCmd::ConstPtr& msg);
-  void callback_turn_signal_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_rear_pass_door_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_wiper_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_engine_brake_set_cmd(const pacmod_msgs::SystemCmdInt::ConstPtr& msg);
-  void callback_marker_lamp_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg);
-  void callback_sprayer_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg);
-  void callback_hazard_lights_set_cmd(const pacmod_msgs::SystemCmdBool::ConstPtr& msg);
+  void callback_accel_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
+  void callback_brake_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
+  void callback_cruise_control_buttons_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_dash_controls_left_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_dash_controls_right_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_headlight_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_horn_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
+  void callback_media_controls_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_shift_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_steer_cmd_sub(const pacmod3_msgs::SteeringCmd::ConstPtr& msg);
+  void callback_turn_signal_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_rear_pass_door_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_wiper_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_engine_brake_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  void callback_marker_lamp_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
+  void callback_sprayer_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
+  void callback_hazard_lights_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
   void SystemStatusUpdate(const ros::TimerEvent& event);
 
   void can_write(const ros::TimerEvent& event);
