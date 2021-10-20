@@ -77,7 +77,7 @@ constexpr uint32_t AccelAuxRptMsg::CAN_ID;
 constexpr uint32_t BrakeAuxRptMsg::CAN_ID;
 constexpr uint32_t HeadlightAuxRptMsg::CAN_ID;
 constexpr uint32_t ShiftAuxRptMsg::CAN_ID;
-constexpr uint32_t SteerAuxRptMsg::CAN_ID;
+constexpr uint32_t SteeringAuxRptMsg::CAN_ID;
 constexpr uint32_t TurnAuxRptMsg::CAN_ID;
 constexpr uint32_t WiperAuxRptMsg::CAN_ID;
 
@@ -94,7 +94,6 @@ constexpr uint32_t YawRateRptMsg::CAN_ID;
 constexpr uint32_t LatLonHeadingRptMsg::CAN_ID;
 constexpr uint32_t DateTimeRptMsg::CAN_ID;
 constexpr uint32_t DetectedObjectRptMsg::CAN_ID;
-constexpr uint32_t VehicleSpecificRpt1Msg::CAN_ID;
 constexpr uint32_t VehicleDynamicsRptMsg::CAN_ID;
 constexpr uint32_t VinRptMsg::CAN_ID;
 constexpr uint32_t OccupancyRptMsg::CAN_ID;
@@ -206,9 +205,6 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
   case RearPassDoorRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new RearPassDoorRptMsg);
     break;
-  case VehicleSpecificRpt1Msg::CAN_ID:
-    return std::shared_ptr<Pacmod3TxMsg>(new VehicleSpecificRpt1Msg);
-    break;
   case VehicleDynamicsRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new VehicleDynamicsRptMsg);
     break;
@@ -239,8 +235,8 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
   case ShiftAuxRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new ShiftAuxRptMsg);
     break;
-  case SteerAuxRptMsg::CAN_ID:
-    return std::shared_ptr<Pacmod3TxMsg>(new SteerAuxRptMsg);
+  case SteeringAuxRptMsg::CAN_ID:
+    return std::shared_ptr<Pacmod3TxMsg>(new SteeringAuxRptMsg);
     break;
   case TurnAuxRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new TurnAuxRptMsg);
@@ -381,10 +377,10 @@ void AccelAuxRptMsg::parse(const uint8_t *in)
   temp = (static_cast<int16_t>(in[2]) << 8) | in[3];
   raw_pedal_force = static_cast<float>(temp / 1000.0);
 
-  user_interaction = (in[4] & 0x01) > 0;
-  raw_pedal_pos_is_valid = (in[5] & 0x01) > 0;
-  raw_pedal_force_is_valid = (in[5] & 0x02) > 0;
-  user_interaction_is_valid = (in[5] & 0x04) > 0;
+  operator_interaction = (in[4] & 0x01) > 0;
+  raw_pedal_pos_avail = (in[5] & 0x01) > 0;
+  raw_pedal_force_avail = (in[5] & 0x02) > 0;
+  operator_interaction_avail = (in[5] & 0x04) > 0;
 }
 
 void BrakeAuxRptMsg::parse(const uint8_t *in)
@@ -400,13 +396,13 @@ void BrakeAuxRptMsg::parse(const uint8_t *in)
   temp = (static_cast<int16_t>(in[4]) << 8) | in[5];
   raw_brake_pressure = static_cast<float>(temp / 1000.0);
 
-  user_interaction = (in[6] & 0x01) > 0;
+  operator_interaction = (in[6] & 0x01) > 0;
   brake_on_off = (in[6] & 0x02) > 0;
-  raw_pedal_pos_is_valid = (in[7] & 0x01) > 0;
-  raw_pedal_force_is_valid = (in[7] & 0x02) > 0;
-  raw_brake_pressure_is_valid = (in[7] & 0x04) > 0;
-  user_interaction_is_valid = (in[7] & 0x08) > 0;
-  brake_on_off_is_valid = (in[7] & 0x10) > 0;
+  raw_pedal_pos_avail = (in[7] & 0x01) > 0;
+  raw_pedal_force_avail = (in[7] & 0x02) > 0;
+  raw_brake_pressure_avail = (in[7] & 0x04) > 0;
+  operator_interaction_avail = (in[7] & 0x08) > 0;
+  brake_on_off_avail = (in[7] & 0x10) > 0;
 }
 
 void DateTimeRptMsg::parse(const uint8_t *in)
@@ -433,19 +429,19 @@ void DetectedObjectRptMsg::parse(const uint8_t *in)
 void DoorRptMsg::parse(const uint8_t *in)
 {
   driver_door_open = ((in[0] & 0x01) > 0);
-  driver_door_open_is_valid = ((in[1] & 0x01) > 0);
+  driver_door_open_avail = ((in[1] & 0x01) > 0);
   passenger_door_open = ((in[0] & 0x02) > 0);
-  passenger_door_open_is_valid = ((in[1] & 0x02) > 0);
+  passenger_door_open_avail = ((in[1] & 0x02) > 0);
   rear_driver_door_open = ((in[0] & 0x04) > 0);
-  rear_driver_door_open_is_valid = ((in[1] & 0x04) > 0);
+  rear_driver_door_open_avail = ((in[1] & 0x04) > 0);
   rear_passenger_door_open = ((in[0] & 0x08) > 0);
-  rear_passenger_door_open_is_valid = ((in[1] & 0x08) > 0);
+  rear_passenger_door_open_avail = ((in[1] & 0x08) > 0);
   hood_open = ((in[0] & 0x10) > 0);
-  hood_open_is_valid = ((in[1] & 0x10) > 0);
+  hood_open_avail = ((in[1] & 0x10) > 0);
   trunk_open = ((in[0] & 0x20) > 0);
-  trunk_open_is_valid = ((in[1] & 0x20) > 0);
+  trunk_open_avail = ((in[1] & 0x20) > 0);
   fuel_door_open = ((in[0] & 0x40) > 0);
-  fuel_door_open_is_valid = ((in[1] & 0x40) > 0);
+  fuel_door_open_avail = ((in[1] & 0x40) > 0);
 }
 
 void EngineRptMsg::parse(const uint8_t *in)
@@ -473,22 +469,22 @@ void HeadlightAuxRptMsg::parse(const uint8_t *in)
   headlights_on_bright = (in[0] & 0x02) > 0;
   fog_lights_on = (in[0] & 0x04) > 0;
   headlights_mode = in[1];
-  headlights_on_is_valid = (in[2] & 0x01) > 0;
-  headlights_on_bright_is_valid = (in[2] & 0x02) > 0;
+  headlights_on_avail = (in[2] & 0x01) > 0;
+  headlights_on_bright_avail = (in[2] & 0x02) > 0;
   fog_lights_on = (in[2] & 0x04) > 0;
-  headlights_mode_is_valid = (in[2] & 0x08) > 0;
+  headlights_mode_avail = (in[2] & 0x08) > 0;
 }
 
 void InteriorLightsRptMsg::parse(const uint8_t *in)
 {
   front_dome_lights_on = ((in[0] & 0x01) > 0);
-  front_dome_lights_on_is_valid = ((in[2] & 0x01) > 0);
+  front_dome_lights_on_avail = ((in[2] & 0x01) > 0);
   rear_dome_lights_on = ((in[0] & 0x02) > 0);
-  rear_dome_lights_on_is_valid = ((in[2] & 0x02) > 0);
+  rear_dome_lights_on_avail = ((in[2] & 0x02) > 0);
   mood_lights_on = ((in[0] & 0x04) > 0);
-  mood_lights_on_is_valid = ((in[2] & 0x04) > 0);
+  mood_lights_on_avail = ((in[2] & 0x04) > 0);
   dim_level = (DimLevel)in[1];
-  dim_level_is_valid = ((in[2] & 0x08) > 0);
+  dim_level_avail = ((in[2] & 0x08) > 0);
 }
 
 void LatLonHeadingRptMsg::parse(const uint8_t *in)
@@ -557,25 +553,25 @@ void MotorRpt3Msg::parse(const uint8_t *in)
 void OccupancyRptMsg::parse(const uint8_t *in)
 {
   driver_seat_occupied = ((in[0] & 0x01) > 0);
-  driver_seat_occupied_is_valid = ((in[1] & 0x01) > 0);
+  driver_seat_occupied_avail = ((in[1] & 0x01) > 0);
   passenger_seat_occupied = ((in[0] & 0x02) > 0);
-  passenger_seat_occupied_is_valid = ((in[1] & 0x02) > 0);
+  passenger_seat_occupied_avail = ((in[1] & 0x02) > 0);
   rear_seat_occupied = ((in[0] & 0x04) > 0);
-  rear_seat_occupied_is_valid = ((in[1] & 0x04) > 0);
+  rear_seat_occupied_avail = ((in[1] & 0x04) > 0);
   driver_seatbelt_buckled = ((in[0] & 0x08) > 0);
-  driver_seatbelt_buckled_is_valid = ((in[1] & 0x08) > 0);
+  driver_seatbelt_buckled_avail = ((in[1] & 0x08) > 0);
   passenger_seatbelt_buckled = ((in[0] & 0x10) > 0);
-  passenger_seatbelt_buckled_is_valid = ((in[1] & 0x10) > 0);
+  passenger_seatbelt_buckled_avail = ((in[1] & 0x10) > 0);
   rear_seatbelt_buckled = ((in[0] & 0x20) > 0);
-  rear_seatbelt_buckled_is_valid = ((in[1] & 0x20) > 0);
+  rear_seatbelt_buckled_avail = ((in[1] & 0x20) > 0);
 }
 
 void RearLightsRptMsg::parse(const uint8_t *in)
 {
   brake_lights_on = ((in[0] & 0x01) > 0);
-  brake_lights_on_is_valid = ((in[1] & 0x01) > 0);
+  brake_lights_on_avail = ((in[1] & 0x01) > 0);
   reverse_lights_on = ((in[0] & 0x02) > 0);
-  reverse_lights_on_is_valid = ((in[1] & 0x02) > 0);
+  reverse_lights_on_avail = ((in[1] & 0x02) > 0);
 }
 
 void ShiftAuxRptMsg::parse(const uint8_t *in)
@@ -584,16 +580,16 @@ void ShiftAuxRptMsg::parse(const uint8_t *in)
   stay_in_neutral_mode = (in[0] & 0x02) > 0;
   brake_interlock_active = (in[0] & 0x04) > 0;
   speed_interlock_active = (in[0] & 0x08) > 0;
-  between_gears_is_valid = (in[1] & 0x01) > 0;
-  stay_in_neutral_mode_is_valid = (in[1] & 0x02) > 0;
-  brake_interlock_active_is_valid = (in[1] & 0x04) > 0;
-  speed_interlock_active_is_valid = (in[1] & 0x08) > 0;
+  between_gears_avail = (in[1] & 0x01) > 0;
+  stay_in_neutral_mode_avail = (in[1] & 0x02) > 0;
+  brake_interlock_active_avail = (in[1] & 0x04) > 0;
+  speed_interlock_active_avail = (in[1] & 0x08) > 0;
   gear_number_avail = (in[1] & 0x20) > 0;
 
   gear_number = static_cast<int8_t>(in[2] & 0x3F);
 }
 
-void SteerAuxRptMsg::parse(const uint8_t *in)
+void SteeringAuxRptMsg::parse(const uint8_t *in)
 {
   int16_t temp;
 
@@ -608,25 +604,19 @@ void SteerAuxRptMsg::parse(const uint8_t *in)
   temp2 = (static_cast<uint16_t>(in[4]) << 8) | in[5];
   rotation_rate = temp2 / 100.0;
 
-  user_interaction = (in[6] & 0x01) > 0;
-  raw_position_is_valid = (in[7] & 0x01) > 0;
-  raw_torque_is_valid = (in[7] & 0x02) > 0;
-  rotation_rate_is_valid = (in[7] & 0x04) > 0;
-  user_interaction_is_valid = (in[7] & 0x08) > 0;
+  operator_interaction = (in[6] & 0x01) > 0;
+  raw_position_avail = (in[7] & 0x01) > 0;
+  raw_torque_avail = (in[7] & 0x02) > 0;
+  rotation_rate_avail = (in[7] & 0x04) > 0;
+  operator_interaction_avail = (in[7] & 0x08) > 0;
 }
 
 void TurnAuxRptMsg::parse(const uint8_t *in)
 {
   driver_blinker_bulb_on = (in[0] & 0x01) > 0;
   passenger_blinker_bulb_on = (in[0] & 0x02) > 0;
-  driver_blinker_bulb_on_is_valid = (in[1] & 0x01) > 0;
-  passenger_blinker_bulb_on_is_valid = (in[1] & 0x02) > 0;
-}
-
-void VehicleSpecificRpt1Msg::parse(const uint8_t *in)
-{
-  shift_pos_1 = in[0];
-  shift_pos_2 = in[1];
+  driver_blinker_bulb_on_avail = (in[1] & 0x01) > 0;
+  passenger_blinker_bulb_on_avail = (in[1] & 0x02) > 0;
 }
 
 void VehicleDynamicsRptMsg::parse(const uint8_t *in)
@@ -778,12 +768,12 @@ void WiperAuxRptMsg::parse(const uint8_t *in)
   rear_spraying = (in[0] & 0x08) > 0;
   spray_near_empty = (in[0] & 0x10) > 0;
   spray_empty = (in[0] & 0x20) > 0;
-  front_wiping_is_valid = (in[1] & 0x01) > 0;
-  front_spraying_is_valid = (in[1] & 0x02) > 0;
-  rear_wiping_is_valid = (in[1] & 0x04) > 0;
-  rear_spraying_is_valid = (in[1] & 0x08) > 0;
-  spray_near_empty_is_valid = (in[1] & 0x10) > 0;
-  spray_empty_is_valid = (in[1] & 0x20) > 0;
+  front_wiping_avail = (in[1] & 0x01) > 0;
+  front_spraying_avail = (in[1] & 0x02) > 0;
+  rear_wiping_avail = (in[1] & 0x04) > 0;
+  rear_spraying_avail = (in[1] & 0x08) > 0;
+  spray_near_empty_avail = (in[1] & 0x10) > 0;
+  spray_empty_avail = (in[1] & 0x20) > 0;
 }
 
 void YawRateRptMsg::parse(const uint8_t *in)
@@ -798,7 +788,6 @@ void YawRateRptMsg::parse(const uint8_t *in)
 void SystemCmdBool::encode(bool enable,
                            bool ignore_overrides,
                            bool clear_override,
-                           bool clear_faults,
                            bool cmd)
 {
   data.assign(DATA_LENGTH, 0);
@@ -806,14 +795,12 @@ void SystemCmdBool::encode(bool enable,
   data[0] = (enable ? 0x01 : 0x00);
   data[0] |= (ignore_overrides ? 0x02 : 0x00);
   data[0] |= clear_override ? 0x04 : 0x00;
-  data[0] |= clear_faults ? 0x08 : 0x00;
   data[1] = (cmd ? 0x01 : 0x00);
 }
 
 void SystemCmdFloat::encode(bool enable,
                             bool ignore_overrides,
                             bool clear_override,
-                            bool clear_faults,
                             float cmd)
 {
   data.assign(DATA_LENGTH, 0);
@@ -821,7 +808,6 @@ void SystemCmdFloat::encode(bool enable,
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
   data[0] |= clear_override ? 0x04 : 0x00;
-  data[0] |= clear_faults ? 0x08 : 0x00;
 
   uint16_t cmd_float = static_cast<uint16_t>(cmd * 1000.0);
   data[1] = (cmd_float & 0xFF00) >> 8;
@@ -831,7 +817,6 @@ void SystemCmdFloat::encode(bool enable,
 void SystemCmdInt::encode(bool enable,
                           bool ignore_overrides,
                           bool clear_override,
-                          bool clear_faults,
                           uint8_t cmd)
 {
   data.assign(DATA_LENGTH, 0);
@@ -839,14 +824,12 @@ void SystemCmdInt::encode(bool enable,
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
   data[0] |= clear_override ? 0x04 : 0x00;
-  data[0] |= clear_faults ? 0x08 : 0x00;
   data[1] = cmd;
 }
 
 void SteerCmdMsg::encode(bool enable,
                          bool ignore_overrides,
                          bool clear_override,
-                         bool clear_faults,
                          float steer_pos,
                          float steer_spd)
 {
@@ -855,7 +838,6 @@ void SteerCmdMsg::encode(bool enable,
   data[0] = enable ? 0x01 : 0x00;
   data[0] |= ignore_overrides ? 0x02 : 0x00;
   data[0] |= clear_override ? 0x04 : 0x00;
-  data[0] |= clear_faults ? 0x08 : 0x00;
 
   int16_t raw_pos = static_cast<int16_t>(1000.0 * steer_pos);
   uint16_t raw_spd = static_cast<uint16_t>(1000.0 * steer_spd);

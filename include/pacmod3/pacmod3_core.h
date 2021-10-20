@@ -314,10 +314,10 @@ public:
 
   float raw_pedal_pos;
   float raw_pedal_force;
-  bool user_interaction;
-  bool raw_pedal_pos_is_valid;
-  bool raw_pedal_force_is_valid;
-  bool user_interaction_is_valid;
+  bool operator_interaction;
+  bool raw_pedal_pos_avail;
+  bool raw_pedal_force_avail;
+  bool operator_interaction_avail;
 
   void parse(const uint8_t *in);
 };
@@ -331,13 +331,13 @@ public:
   float raw_pedal_pos;
   float raw_pedal_force;
   float raw_brake_pressure;
-  bool user_interaction;
+  bool operator_interaction;
   bool brake_on_off;
-  bool raw_pedal_pos_is_valid;
-  bool raw_pedal_force_is_valid;
-  bool raw_brake_pressure_is_valid;
-  bool user_interaction_is_valid;
-  bool brake_on_off_is_valid;
+  bool raw_pedal_pos_avail;
+  bool raw_pedal_force_avail;
+  bool raw_brake_pressure_avail;
+  bool operator_interaction_avail;
+  bool brake_on_off_avail;
 
   void parse(const uint8_t *in);
 };
@@ -352,10 +352,10 @@ public:
   bool headlights_on_bright;
   bool fog_lights_on;
   uint8_t headlights_mode;
-  bool headlights_on_is_valid;
-  bool headlights_on_bright_is_valid;
-  bool fog_lights_on_is_valid;
-  bool headlights_mode_is_valid;
+  bool headlights_on_avail;
+  bool headlights_on_bright_avail;
+  bool fog_lights_on_avail;
+  bool headlights_mode_avail;
 
   void parse(const uint8_t *in);
 };
@@ -370,17 +370,17 @@ public:
   bool stay_in_neutral_mode;
   bool brake_interlock_active;
   bool speed_interlock_active;
-  bool between_gears_is_valid;
-  bool stay_in_neutral_mode_is_valid;
-  bool brake_interlock_active_is_valid;
-  bool speed_interlock_active_is_valid;
+  bool between_gears_avail;
+  bool stay_in_neutral_mode_avail;
+  bool brake_interlock_active_avail;
+  bool speed_interlock_active_avail;
   bool gear_number_avail;
   int8_t gear_number;
 
   void parse(const uint8_t *in);
 };
 
-class SteerAuxRptMsg :
+class SteeringAuxRptMsg :
   public Pacmod3TxMsg
 {
 public:
@@ -389,11 +389,11 @@ public:
   float raw_position;
   float raw_torque;
   float rotation_rate;
-  bool user_interaction;
-  bool raw_position_is_valid;
-  bool raw_torque_is_valid;
-  bool rotation_rate_is_valid;
-  bool user_interaction_is_valid;
+  bool operator_interaction;
+  bool raw_position_avail;
+  bool raw_torque_avail;
+  bool rotation_rate_avail;
+  bool operator_interaction_avail;
 
   void parse(const uint8_t *in);
 };
@@ -406,8 +406,8 @@ public:
 
   bool driver_blinker_bulb_on;
   bool passenger_blinker_bulb_on;
-  bool driver_blinker_bulb_on_is_valid;
-  bool passenger_blinker_bulb_on_is_valid;
+  bool driver_blinker_bulb_on_avail;
+  bool passenger_blinker_bulb_on_avail;
 
   void parse(const uint8_t *in);
 };
@@ -424,12 +424,12 @@ public:
   bool rear_spraying;
   bool spray_near_empty;
   bool spray_empty;
-  bool front_wiping_is_valid;
-  bool front_spraying_is_valid;
-  bool rear_wiping_is_valid;
-  bool rear_spraying_is_valid;
-  bool spray_near_empty_is_valid;
-  bool spray_empty_is_valid;
+  bool front_wiping_avail;
+  bool front_spraying_avail;
+  bool rear_wiping_avail;
+  bool rear_spraying_avail;
+  bool spray_near_empty_avail;
+  bool spray_empty_avail;
 
   void parse(const uint8_t *in);
 };
@@ -442,9 +442,9 @@ public:
   static constexpr uint32_t CAN_ID = 0x418;
 
   bool brake_lights_on;
-  bool brake_lights_on_is_valid;
+  bool brake_lights_on_avail;
   bool reverse_lights_on;
-  bool reverse_lights_on_is_valid;
+  bool reverse_lights_on_avail;
 
   void parse(const uint8_t *in);
 };
@@ -456,13 +456,13 @@ public:
   static constexpr uint32_t CAN_ID = 0x416;
 
   bool front_dome_lights_on;
-  bool front_dome_lights_on_is_valid;
+  bool front_dome_lights_on_avail;
   bool rear_dome_lights_on;
-  bool rear_dome_lights_on_is_valid;
+  bool rear_dome_lights_on_avail;
   bool mood_lights_on;
-  bool mood_lights_on_is_valid;
+  bool mood_lights_on_avail;
   DimLevel dim_level;
-  bool dim_level_is_valid;
+  bool dim_level_avail;
 
   void parse(const uint8_t *in);
 };
@@ -474,17 +474,17 @@ public:
   static constexpr uint32_t CAN_ID = 0x415;
 
   bool driver_seat_occupied;
-  bool driver_seat_occupied_is_valid;
+  bool driver_seat_occupied_avail;
   bool passenger_seat_occupied;
-  bool passenger_seat_occupied_is_valid;
+  bool passenger_seat_occupied_avail;
   bool rear_seat_occupied;
-  bool rear_seat_occupied_is_valid;
+  bool rear_seat_occupied_avail;
   bool driver_seatbelt_buckled;
-  bool driver_seatbelt_buckled_is_valid;
+  bool driver_seatbelt_buckled_avail;
   bool passenger_seatbelt_buckled;
-  bool passenger_seatbelt_buckled_is_valid;
+  bool passenger_seatbelt_buckled_avail;
   bool rear_seatbelt_buckled;
-  bool rear_seatbelt_buckled_is_valid;
+  bool rear_seatbelt_buckled_avail;
 
   void parse(const uint8_t *in);
 };
@@ -564,19 +564,19 @@ public:
   static constexpr uint32_t CAN_ID = 0x417;
 
   bool driver_door_open;
-  bool driver_door_open_is_valid;
+  bool driver_door_open_avail;
   bool passenger_door_open;
-  bool passenger_door_open_is_valid;
+  bool passenger_door_open_avail;
   bool rear_driver_door_open;
-  bool rear_driver_door_open_is_valid;
+  bool rear_driver_door_open_avail;
   bool rear_passenger_door_open;
-  bool rear_passenger_door_open_is_valid;
+  bool rear_passenger_door_open_avail;
   bool hood_open;
-  bool hood_open_is_valid;
+  bool hood_open_avail;
   bool trunk_open;
-  bool trunk_open_is_valid;
+  bool trunk_open_avail;
   bool fuel_door_open;
-  bool fuel_door_open_is_valid;
+  bool fuel_door_open_avail;
 
   void parse(const uint8_t *in);
 };
@@ -700,18 +700,6 @@ public:
   void parse(const uint8_t *in);
 };
 
-class VehicleSpecificRpt1Msg :
-  public Pacmod3TxMsg
-{
-public:
-  static constexpr uint32_t CAN_ID = 0x412;
-
-  uint8_t shift_pos_1;
-  uint8_t shift_pos_2;
-
-  void parse(const uint8_t *in);
-};
-
 class VehicleDynamicsRptMsg :
   public Pacmod3TxMsg
 {
@@ -740,7 +728,6 @@ public:
   void encode(bool enable,
               bool ignore_overrides,
               bool clear_override,
-              bool clear_faults,
               bool cmd);
 };
 
@@ -753,7 +740,6 @@ public:
   void encode(bool enable,
               bool ignore_overrides,
               bool clear_override,
-              bool clear_faults,
               float cmd);
 };
 
@@ -766,7 +752,6 @@ public:
   void encode(bool enable,
               bool ignore_overrides,
               bool clear_override,
-              bool clear_faults,
               uint8_t cmd);
 };
 
@@ -879,7 +864,6 @@ public:
   void encode(bool enabled,
               bool ignore_overrides,
               bool clear_override,
-              bool clear_faults,
               float steer_pos,
               float steer_spd);
 };

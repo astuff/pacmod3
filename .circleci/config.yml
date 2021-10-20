@@ -1,114 +1,47 @@
-version: 2
+version: 2.1
+
+commands:
+  ros_build:
+    steps:
+      - checkout
+      - run:
+          name: Set Up Container
+          command: |
+            apt-get update -qq
+            source /opt/ros/*/setup.bash
+            mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
+            rosdep update && rosdep install --from-paths . --ignore-src -y
+            cd ..
+            catkin init
+            catkin config --extend /opt/ros/$ROS_DISTRO
+      - run:
+          name: Build
+          command: |
+            source /opt/ros/*/setup.bash
+            cd ..
+            catkin build
+      - run:
+          name: Lint
+          command: |
+            cd ..
+            catkin build pacmod3 --no-deps --make-args roslint
+      - run:
+          name: Run Tests
+          command: |
+            source /opt/ros/*/setup.bash
+            cd ..
+            catkin run_tests --no-deps pacmod3
+            catkin_test_results
+
 jobs:
-  kinetic:
-    docker:
-      - image: autonomoustuff/docker-builds:kinetic-ros-base
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
-            rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            cd ..
-            catkin build
-      - run:
-          name: Lint
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin build pacmod3 --no-deps --make-args roslint
-      - run:
-          name: Run Tests
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin run_tests --no-deps pacmod3
-            catkin_test_results
-    working_directory: ~/src
-
-  melodic:
-    docker:
-      - image: autonomoustuff/docker-builds:melodic-ros-base
-    steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
-            rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin build
-      - run:
-          name: Lint
-          command: |
-            cd ..
-            catkin build pacmod3 --no-deps --make-args roslint
-      - run:
-          name: Run Tests
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin run_tests --no-deps pacmod3
-            catkin_test_results
-    working_directory: ~/src
-
   noetic:
     docker:
       - image: autonomoustuff/docker-builds:noetic-ros-base
     steps:
-      - checkout
-      - run:
-          name: Set Up Container
-          command: |
-            apt-get update -qq
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
-            rosdep install --from-paths . --ignore-src -y
-            cd ..
-            catkin init
-            catkin config --extend /opt/ros/$ROS_DISTRO
-      - run:
-          name: Build
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin build
-      - run:
-          name: Lint
-          command: |
-            cd ..
-            catkin build pacmod3 --no-deps --make-args roslint
-      - run:
-          name: Run Tests
-          command: |
-            source `find /opt/ros -name setup.bash | sort | head -1`
-            cd ..
-            catkin run_tests --no-deps pacmod3
-            catkin_test_results
+      - ros_build
     working_directory: ~/src
 
 workflows:
-  version: 2
   ros_build:
     jobs:
-      - kinetic
-      - melodic
       - noetic
