@@ -17,7 +17,7 @@ commands:
       - run:
           name: Build
           command: |
-            /opt/ros/*/setup.bash
+            source /opt/ros/*/setup.bash
             cd ..
             catkin build
       - run:
@@ -28,7 +28,7 @@ commands:
       - run:
           name: Run Tests
           command: |
-            /opt/ros/*/setup.bash
+            source /opt/ros/*/setup.bash
             cd ..
             catkin run_tests --no-deps pacmod3
             catkin_test_results
