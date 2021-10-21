@@ -22,9 +22,7 @@
 #define PACMOD3_PACMOD3_NODELET_H
 
 #include "pacmod3/pacmod3_core.h"
-// #include "pacmod3/pacmod3_ros_msg_handler.h"
-#include "pacmod3/pacmod3dbc12_ros_msg_handler.h"
-// #include "pacmod3/autogen/wrapper.h"
+#include "pacmod3/pacmod3_ros_msg_handler.h"
 
 #include <map>
 #include <memory>

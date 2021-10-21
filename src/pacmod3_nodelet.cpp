@@ -504,7 +504,7 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
   {
     parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
     // handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
-    handler.fillAndPub2(msg->id, "pacmod", pub->second, parser_class);
+    handler.ParseAndPublish(msg->id, "pacmod", pub->second, parser_class);
 
 
     if (parser_class->isSystem())
