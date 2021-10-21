@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <pacmod3/pacmod3_ros_msg_handler.h>
+#include <pacmod3/pacmod3dbc12_ros_msg_handler.h>
 
 #include <vector>
 #include <string>

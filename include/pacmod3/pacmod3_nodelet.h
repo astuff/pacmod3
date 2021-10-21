@@ -21,6 +21,11 @@
 #ifndef PACMOD3_PACMOD3_NODELET_H
 #define PACMOD3_PACMOD3_NODELET_H
 
+#include "pacmod3/pacmod3_core.h"
+// #include "pacmod3/pacmod3_ros_msg_handler.h"
+#include "pacmod3/pacmod3dbc12_ros_msg_handler.h"
+// #include "pacmod3/autogen/wrapper.h"
+
 #include <map>
 #include <memory>
 #include <set>
@@ -65,9 +70,6 @@
 #include <pacmod3_msgs/WheelSpeedRpt.h>
 #include <pacmod3_msgs/WiperAuxRpt.h>
 #include <pacmod3_msgs/YawRateRpt.h>
-
-#include "pacmod3/pacmod3_core.h"
-#include "pacmod3/pacmod3_ros_msg_handler.h"
 
 namespace pacmod3
 {
