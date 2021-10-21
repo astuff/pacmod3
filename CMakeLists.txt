@@ -19,11 +19,13 @@ find_package(std_msgs REQUIRED)
 
 include_directories(
   include/
+  pacmod3_common/
 )
 
 add_library(
   ${PROJECT_NAME}_node SHARED
   src/pacmod3_ros_msg_handler.cpp
+  pacmod3_common/pacmod3_dbc12_ros_api.cpp
   src/pacmod3_core.cpp
   src/pacmod3_node.cpp
 )

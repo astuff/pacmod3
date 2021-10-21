@@ -596,7 +596,7 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
   if (parser_class != nullptr && pub != can_pubs_.end()) {
     const std::vector<uint8_t> data_copy(msg->data.begin(), msg->data.end());
     parser_class->parse(data_copy);
-    tx_handler_.fillAndPublish(msg->id, frame_id_, pub->second, parser_class);
+    tx_handler_.ParseAndPublish(msg->id, frame_id_, pub->second, parser_class);
 
     if (parser_class->isSystem()) {
       auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
@@ -627,28 +627,28 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
 
 void PACMod3Node::callback_accel_cmd(const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr msg)
 {
-  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_brake_cmd(const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr msg)
 {
-  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_cruise_control_buttons_cmd(
   const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_engine_brake_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_headlight_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_hazard_lights_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg)
@@ -668,12 +668,12 @@ void PACMod3Node::callback_marker_lamp_cmd(const pacmod3_msgs::msg::SystemCmdBoo
 
 void PACMod3Node::callback_rear_pass_door_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_shift_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_sprayer_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg)
@@ -683,17 +683,17 @@ void PACMod3Node::callback_sprayer_cmd(const pacmod3_msgs::msg::SystemCmdBool::S
 
 void PACMod3Node::callback_steering_cmd(const pacmod3_msgs::msg::SteeringCmd::SharedPtr msg)
 {
-  lookup_and_encode(SteeringCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(SteeringCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_turn_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_wiper_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::publish_cmds()

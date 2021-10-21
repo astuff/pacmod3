@@ -122,7 +122,8 @@ private:
     auto cmd = can_subs_.find(can_id);
 
     if (cmd != can_subs_.end()) {
-      cmd->second.second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
+      // cmd->second.second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode2(can_id, msg));
+      cmd->second.second->setData(tx_handler_.Encode(can_id, msg));
     } else {
       RCLCPP_WARN(
         this->get_logger(),
