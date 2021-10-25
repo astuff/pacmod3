@@ -1,9 +1,9 @@
-#include "pacmod3/autogen/pacmod12.h"
+#include "pacmod12.h"
 
 
 #ifdef PACMOD12_USE_DIAG_MONITORS
 // Function prototypes to be called each time CAN frame is unpacked
-// FMon function may detect RC, CRC or DLC violation
+// FMon function may detect RC, CRC or DLC violation 
 #include "pacmod12-fmon.h"
 
 #endif // PACMOD12_USE_DIAG_MONITORS

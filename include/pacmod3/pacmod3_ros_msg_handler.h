@@ -32,6 +32,7 @@
 #include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>
 
+#include <can_msgs/Frame.h>
 #include <pacmod3_msgs/SystemCmdBool.h>
 #include <pacmod3_msgs/SystemCmdFloat.h>
 #include <pacmod3_msgs/SystemCmdInt.h>
@@ -86,33 +87,19 @@ class Pacmod3TxRosMsgHandler
 public:
   Pacmod3TxRosMsgHandler();
 
-  void fillAndPublish(const uint32_t& can_id,
-                      const std::string& frame_id,
-                      const ros::Publisher& pub,
-                      const std::shared_ptr<Pacmod3TxMsg>& parser_class);
-
-
   template <class RosMsgType>
-  void ParseAndPublishType(const uint32_t& can_id,
-                    const std::string& frame_id,
-                    const ros::Publisher& pub,
-                    const std::shared_ptr<Pacmod3TxMsg>& parser_class);
+  void ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
 
-  void ParseAndPublish(const uint32_t& can_id,
-                    const std::string& frame_id,
-                    const ros::Publisher& pub,
-                    const std::shared_ptr<Pacmod3TxMsg>& parser_class);
-
+  void ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
 
 private:
   Dbc12Api msg_api_;
 
   // List of functions for parsing CAN frames into ROS msgs
-  std::map<uint32_t, std::function<std::shared_ptr<void>(const std::shared_ptr<Pacmod3TxMsg>&)>> parse_functions;
+  std::map<uint32_t, std::function<std::shared_ptr<void>(const can_msgs::Frame&)>> parse_functions;
 
   // List of function for matching publishers with the type of message they are publishing
-  std::map<uint32_t, std::function<void(const uint32_t&,
-  const std::string& ,const ros::Publisher& ,const std::shared_ptr<Pacmod3TxMsg>&)>> pub_functions;
+  std::map<uint32_t, std::function<void(const can_msgs::Frame&, const ros::Publisher&)>> pub_functions;
 
 };
 

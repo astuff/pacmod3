@@ -29,16 +29,21 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+# Common Library
+add_library(pacmod3_common
+  pacmod3_common/pacmod3_dbc12_ros_api.cpp
+  pacmod3_common/autogen/pacmod12.c
+)
+
 # nodelets
 add_library(${PROJECT_NAME}_nodelet
   src/pacmod3_nodelet.cpp
   src/pacmod3_core.cpp
   src/pacmod3_ros_msg_handler.cpp
-  # src/pacmod3dbc12_ros_msg_handler.cpp
-  pacmod3_common/pacmod3_dbc12_ros_api.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_nodelet
+  pacmod3_common
   ${catkin_LIBRARIES}
 )
 

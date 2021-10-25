@@ -487,15 +487,6 @@ void Pacmod3Nl::can_write(const ros::TimerEvent& event)
 
 void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
 {
-  // Parse CAN data into some can struct
-
-
-  // Get data into a ROS msg
-  // publish ros msg using correct publisher
-
-
-  // return;
-
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
@@ -503,9 +494,7 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
   if (parser_class != NULL && pub != pub_tx_list.end())
   {
     parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
-    // handler.fillAndPublish(msg->id, "pacmod", pub->second, parser_class);
-    handler.ParseAndPublish(msg->id, "pacmod", pub->second, parser_class);
-
+    handler.ParseAndPublish(*msg, pub->second);
 
     if (parser_class->isSystem())
     {

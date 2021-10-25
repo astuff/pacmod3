@@ -51,47 +51,31 @@ Pacmod3TxRosMsgHandler::Pacmod3TxRosMsgHandler()
 {
   parse_functions[HornRptMsg::CAN_ID] = std::bind(&Dbc12Api::ParseSystemRptBool, msg_api_, std::placeholders::_1);
 
-  pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+  pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 template <class RosMsgType>
-void Pacmod3TxRosMsgHandler::ParseAndPublishType(
-    const uint32_t& can_id,
-    const std::string& frame_id,
-    const ros::Publisher& pub,
-    const std::shared_ptr<Pacmod3TxMsg>& parser_class)
+void Pacmod3TxRosMsgHandler::ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
 {
   // Call generic fill function from common hybrid lib, cast void pointer return
-  if (parse_functions.count(can_id))
+  if (parse_functions.count(can_msg.id))
   {
-    std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_id](parser_class));
+    std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg));
 
-    ros_msg->header.frame_id = frame_id;
+    // ros_msg->header.frame_id = frame_id;
     // ros_msg.header.stamp = 0.0;
-
-    // setup publisher
-    // auto dc_pub =
-    //   std::dynamic_pointer_cast<
-    //   lc::LifecyclePublisher<RosMsgType>>(pub);
 
     pub.publish(*ros_msg);
   }
 }
 
-void Pacmod3TxRosMsgHandler::ParseAndPublish(
-  const uint32_t & can_id,
-  const std::string& frame_id,
-  const ros::Publisher& pub,
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class)
+void Pacmod3TxRosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
 {
-  if (pub_functions.count(can_id))
+  if (pub_functions.count(can_msg.id))
   {
-    pub_functions[can_id](can_id, frame_id, pub, parser_class);
+    pub_functions[can_msg.id](can_msg, pub);
   }
 }
-
-// Report messages
-
 
 // Command messages
 std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(

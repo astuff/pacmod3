@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 
 #include <pacmod3_dbc12_ros_api.h>
+#include <autogen/pacmod12.h>
 
 #include <vector>
 #include <string>
@@ -28,30 +29,31 @@
 namespace pacmod3
 {
 
-std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3TxMsg>& parser_class)
+std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const can_msgs::Frame& can_msg)
 {
-  auto dc_parser = std::dynamic_pointer_cast<SystemRptBoolMsg>(parser_class);
+  std::shared_ptr<pm_msgs::SystemRptBool> new_msg( new pm_msgs::SystemRptBool() );
 
-  std::shared_ptr<ros_msgs::SystemRptBool> new_msg( new ros_msgs::SystemRptBool() );
+  HORN_RPT_t parsed_rpt;
+  Unpack_HORN_RPT_pacmod12(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
 
-  new_msg->enabled = dc_parser->enabled;
-  new_msg->override_active = dc_parser->override_active;
-  new_msg->command_output_fault = dc_parser->command_output_fault;
-  new_msg->input_output_fault = dc_parser->input_output_fault;
-  new_msg->output_reported_fault = dc_parser->output_reported_fault;
-  new_msg->pacmod_fault = dc_parser->pacmod_fault;
-  new_msg->vehicle_fault = dc_parser->vehicle_fault;
-
-  new_msg->manual_input = dc_parser->manual_input;
-  new_msg->command = dc_parser->command;
-  new_msg->output = dc_parser->output;
+  new_msg->enabled = parsed_rpt.ENABLED;
+  new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
+  new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
+  new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
+  new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
+  new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
+  new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
+  new_msg->command_timeout = parsed_rpt.COMMAND_TIMEOUT;
+  new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
+  new_msg->command = parsed_rpt.COMMANDED_VALUE;
+  new_msg->output = parsed_rpt.OUTPUT_VALUE;
 
   return new_msg;
 }
 
 // void Pacmod3TxMsgParser::fillSystemRptInt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::SystemRptInt * new_msg,
+//     pm_msgs::SystemRptInt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<SystemRptIntMsg>(parser_class);
@@ -74,7 +76,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillSystemRptFloat(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::SystemRptFloat * new_msg,
+//     pm_msgs::SystemRptFloat * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<SystemRptFloatMsg>(parser_class);
@@ -97,7 +99,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillGlobalRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::GlobalRpt * new_msg,
+//     pm_msgs::GlobalRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
@@ -119,7 +121,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillComponentRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::ComponentRpt * new_msg,
+//     pm_msgs::ComponentRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<ComponentRptMsg>(parser_class);
@@ -135,7 +137,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillAccelAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::AccelAuxRpt * new_msg,
+//     pm_msgs::AccelAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
@@ -149,7 +151,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillBrakeAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::BrakeAuxRpt * new_msg,
+//     pm_msgs::BrakeAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
@@ -166,7 +168,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillDateTimeRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::DateTimeRpt * new_msg,
+//     pm_msgs::DateTimeRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<DateTimeRptMsg>(parser_class);
@@ -184,7 +186,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillDetectedObjectRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::DetectedObjectRpt * new_msg,
+//     pm_msgs::DetectedObjectRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
@@ -197,7 +199,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 // }
 // void Pacmod3TxMsgParser::fillDoorRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::DoorRpt * new_msg,
+//     pm_msgs::DoorRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
@@ -223,7 +225,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillEngineRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::EngineRpt * new_msg,
+//     pm_msgs::EngineRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<EngineRptMsg>(parser_class);
@@ -241,7 +243,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillHeadlightAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::HeadlightAuxRpt * new_msg,
+//     pm_msgs::HeadlightAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
@@ -261,7 +263,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillInteriorLightsRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::InteriorLightsRpt * new_msg,
+//     pm_msgs::InteriorLightsRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
@@ -281,7 +283,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillLatLonHeadingRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::LatLonHeadingRpt * new_msg,
+//     pm_msgs::LatLonHeadingRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<LatLonHeadingRptMsg>(parser_class);
@@ -300,7 +302,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillMotorRpt1(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::MotorRpt1 * new_msg,
+//     pm_msgs::MotorRpt1 * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<MotorRpt1Msg>(parser_class);
@@ -314,7 +316,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillMotorRpt2(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::MotorRpt2 * new_msg,
+//     pm_msgs::MotorRpt2 * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<MotorRpt2Msg>(parser_class);
@@ -329,7 +331,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillMotorRpt3(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::MotorRpt3 * new_msg,
+//     pm_msgs::MotorRpt3 * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<MotorRpt3Msg>(parser_class);
@@ -343,7 +345,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillOccupancyRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::OccupancyRpt * new_msg,
+//     pm_msgs::OccupancyRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
@@ -367,7 +369,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillRearLightsRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::RearLightsRpt * new_msg,
+//     pm_msgs::RearLightsRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<RearLightsRptMsg>(parser_class);
@@ -383,7 +385,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillShiftAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::ShiftAuxRpt * new_msg,
+//     pm_msgs::ShiftAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<ShiftAuxRptMsg>(parser_class);
@@ -405,7 +407,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillSteeringAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::SteeringAuxRpt * new_msg,
+//     pm_msgs::SteeringAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<SteeringAuxRptMsg>(parser_class);
@@ -423,7 +425,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillTurnAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::TurnAuxRpt * new_msg,
+//     pm_msgs::TurnAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<TurnAuxRptMsg>(parser_class);
@@ -439,7 +441,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillVehicleDynamicsRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::VehicleDynamicsRpt * new_msg,
+//     pm_msgs::VehicleDynamicsRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<VehicleDynamicsRptMsg>(parser_class);
@@ -452,7 +454,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillVehicleSpeedRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::VehicleSpeedRpt * new_msg,
+//     pm_msgs::VehicleSpeedRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<VehicleSpeedRptMsg>(parser_class);
@@ -466,7 +468,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillVinRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::VinRpt * new_msg,
+//     pm_msgs::VinRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<VinRptMsg>(parser_class);
@@ -483,7 +485,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillWheelSpeedRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::WheelSpeedRpt * new_msg,
+//     pm_msgs::WheelSpeedRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<WheelSpeedRptMsg>(parser_class);
@@ -499,7 +501,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillWiperAuxRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::WiperAuxRpt * new_msg,
+//     pm_msgs::WiperAuxRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<WiperAuxRptMsg>(parser_class);
@@ -523,7 +525,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // void Pacmod3TxMsgParser::fillYawRateRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     ros_msgs::YawRateRpt * new_msg,
+//     pm_msgs::YawRateRpt * new_msg,
 //     const std::string& frame_id)
 // {
 //   auto dc_parser = std::dynamic_pointer_cast<YawRateRptMsg>(parser_class);
@@ -536,7 +538,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 
 // // Command messages
 // std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-//     const uint32_t& can_id, const ros_msgs::SystemCmdBool::ConstPtr& msg)
+//     const uint32_t& can_id, const pm_msgs::SystemCmdBool::ConstPtr& msg)
 // {
 //   if (can_id == HornCmdMsg::CAN_ID)
 //   {
@@ -594,7 +596,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 // }
 
 // std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-//     const uint32_t& can_id, const ros_msgs::SystemCmdFloat::ConstPtr& msg)
+//     const uint32_t& can_id, const pm_msgs::SystemCmdFloat::ConstPtr& msg)
 // {
 //   if (can_id == AccelCmdMsg::CAN_ID)
 //   {
@@ -624,7 +626,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 // }
 
 // std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-//     const uint32_t& can_id, const ros_msgs::SystemCmdInt::ConstPtr& msg)
+//     const uint32_t& can_id, const pm_msgs::SystemCmdInt::ConstPtr& msg)
 // {
 //   if (can_id == CruiseControlButtonsCmdMsg::CAN_ID)
 //   {
@@ -726,7 +728,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 // }
 
 // std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-//     const uint32_t& can_id, const ros_msgs::SteeringCmd::ConstPtr& msg)
+//     const uint32_t& can_id, const pm_msgs::SteeringCmd::ConstPtr& msg)
 // {
 //   if (can_id == SteerCmdMsg::CAN_ID)
 //   {
@@ -747,7 +749,7 @@ std::shared_ptr<void> Dbc12Api::ParseSystemRptBool(const std::shared_ptr<Pacmod3
 //   }
 // }
 
-std::vector<uint8_t> Dbc12Api::EncodeSystemCmdBool(const ros_msgs::SystemCmdBool& msg)
+std::vector<uint8_t> Dbc12Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
 {
   constexpr uint8_t DATA_LENGTH = 2;
 
