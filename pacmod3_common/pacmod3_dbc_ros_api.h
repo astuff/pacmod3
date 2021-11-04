@@ -18,16 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
-#define PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
-
-
-#include "pacmod3_dbc12_ros_api.h"
+#ifndef PACMOD3_DBC_ROS_API_H
+#define PACMOD3_DBC_ROS_API_H
 
 #include <string>
 #include <vector>
 #include <memory>
 #include <mutex>
+
+#define USE_ROS1
+
+#ifdef USE_ROS1
 
 #include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>
@@ -67,50 +68,70 @@
 #include <pacmod3_msgs/WiperAuxRpt.h>
 #include <pacmod3_msgs/YawRateRpt.h>
 
+namespace pm_msgs = pacmod3_msgs;
+namespace can_msgs = can_msgs;
+
+#endif  // USE_ROS1
+
+#ifdef USE_ROS2
+
+#include <pacmod3/pacmod3_core.hpp>
+
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_lifecycle/lifecycle_publisher.hpp>
+
+#include <pacmod3_msgs/msg/accel_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/all_system_statuses.hpp>
+#include <pacmod3_msgs/msg/brake_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/component_rpt.hpp>
+#include <pacmod3_msgs/msg/date_time_rpt.hpp>
+#include <pacmod3_msgs/msg/detected_object_rpt.hpp>
+#include <pacmod3_msgs/msg/door_rpt.hpp>
+#include <pacmod3_msgs/msg/engine_rpt.hpp>
+#include <pacmod3_msgs/msg/global_rpt.hpp>
+#include <pacmod3_msgs/msg/headlight_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/interior_lights_rpt.hpp>
+#include <pacmod3_msgs/msg/lat_lon_heading_rpt.hpp>
+#include <pacmod3_msgs/msg/motor_rpt1.hpp>
+#include <pacmod3_msgs/msg/motor_rpt2.hpp>
+#include <pacmod3_msgs/msg/motor_rpt3.hpp>
+#include <pacmod3_msgs/msg/occupancy_rpt.hpp>
+#include <pacmod3_msgs/msg/rear_lights_rpt.hpp>
+#include <pacmod3_msgs/msg/shift_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/steering_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/steering_cmd.hpp>
+#include <pacmod3_msgs/msg/system_cmd_bool.hpp>
+#include <pacmod3_msgs/msg/system_cmd_float.hpp>
+#include <pacmod3_msgs/msg/system_cmd_int.hpp>
+#include <pacmod3_msgs/msg/system_rpt_bool.hpp>
+#include <pacmod3_msgs/msg/system_rpt_float.hpp>
+#include <pacmod3_msgs/msg/system_rpt_int.hpp>
+#include <pacmod3_msgs/msg/turn_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/vehicle_dynamics_rpt.hpp>
+#include <pacmod3_msgs/msg/vehicle_speed_rpt.hpp>
+#include <pacmod3_msgs/msg/vin_rpt.hpp>
+#include <pacmod3_msgs/msg/wheel_speed_rpt.hpp>
+#include <pacmod3_msgs/msg/wiper_aux_rpt.hpp>
+#include <pacmod3_msgs/msg/yaw_rate_rpt.hpp>
+
+namespace pm_msgs = pacmod3_msgs::msg;
+namespace can_msgs = can_msgs::msg;
+
+#endif  // USE_ROS2
+
+// namespace pacmod3_common
 namespace pacmod3
 {
-class LockedData
+
+class DbcApi
 {
 public:
-  explicit LockedData(unsigned char data_length);
+  virtual std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg);
+  virtual std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg);
 
-  std::vector<unsigned char> getData() const;
-  void setData(std::vector<unsigned char> new_data);
 
-private:
-  std::vector<unsigned char> _data;
-  mutable std::mutex _data_mut;
+  virtual can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg);
 };
-
-class Pacmod3RosMsgHandler
-{
-public:
-  Pacmod3RosMsgHandler();
-
-  // Functions for parsing raw CAN messages
-  template <class RosMsgType>
-  void ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
-
-  void ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
-
-  // Functions for packing/encoding data into CAN messages
-  can_msgs::Frame
-    unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
-  std::vector<uint8_t>
-    unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
-  std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
-  std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SteeringCmd::ConstPtr& msg);
-
-private:
-  std::unique_ptr<DbcApi> msg_api_;
-
-  // List of functions for parsing CAN frames into ROS msgs
-  std::map<uint32_t, std::function<std::shared_ptr<void>(const can_msgs::Frame&)>> parse_functions;
-
-  // List of function for matching publishers with the type of message they are publishing
-  std::map<uint32_t, std::function<void(const can_msgs::Frame&, const ros::Publisher&)>> pub_functions;
-};
-
 }  // namespace pacmod3
 
-#endif  // PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
+#endif  // PACMOD3_DBC_ROS_API_H

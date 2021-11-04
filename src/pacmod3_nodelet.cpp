@@ -324,32 +324,32 @@ void Pacmod3Nl::loadParams()
 
 void Pacmod3Nl::callback_accel_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_brake_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_cruise_control_buttons_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_dash_controls_left_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_dash_controls_right_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_headlight_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_horn_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
@@ -359,37 +359,37 @@ void Pacmod3Nl::callback_horn_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPt
 
 void Pacmod3Nl::callback_media_controls_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_shift_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_steer_cmd_sub(const pacmod3_msgs::SteeringCmd::ConstPtr& msg)
 {
-  lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_turn_signal_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_rear_pass_door_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_wiper_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_engine_brake_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+  // lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_marker_lamp_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
@@ -551,8 +551,19 @@ template<class T> void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, cons
 
   if (rx_it != rx_list.end())
   {
-    rx_it->second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode(can_id, msg));
+    ROS_INFO("Before crash");
+    can_msgs::Frame packed_frame = handler.unpackAndEncode(can_id, msg);
+    ROS_INFO("After packing");
+
+    std::vector<unsigned char> new_data;
+    new_data.resize(8);
+    std::move(packed_frame.data.begin(), packed_frame.data.end(), new_data.begin());
+    new_data.resize(packed_frame.dlc);
+
+    rx_it->second->setData(new_data);
     received_cmds.insert(can_id);
+
+    ROS_INFO("After setting data");
   }
   else
   {

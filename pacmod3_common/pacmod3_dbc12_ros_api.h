@@ -21,6 +21,8 @@
 #ifndef PACMOD3_DBC12_ROS_API_H
 #define PACMOD3_DBC12_ROS_API_H
 
+#include "pacmod3_dbc_ros_api.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -123,12 +125,12 @@ namespace can_msgs = can_msgs::msg;
 namespace pacmod3
 {
 
-class Dbc12Api
+class Dbc12Api : public DbcApi
 {
 public:
   // std::shared_ptr<void> ParseSystemRptBool(const std::shared_ptr<Pacmod3TxMsg>& parser_class);
-  std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg);
-  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg);
+  std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
 //   void fillSystemRptFloat(
 //       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
 //       pm_msgs::SystemRptFloat * new_msg,
@@ -235,14 +237,14 @@ public:
 //       const std::string& frame_id);
 
 
-  std::vector<uint8_t> EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg);
+  can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) override;
 
-  static std::vector<uint8_t>
-    unpackAndEncode(const uint32_t& can_id, const pm_msgs::SystemCmdBool::ConstPtr& msg);
-  static std::vector<uint8_t>
-    unpackAndEncode(const uint32_t& can_id, const pm_msgs::SystemCmdFloat::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pm_msgs::SystemCmdInt::ConstPtr& msg);
-  static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pm_msgs::SteeringCmd::ConstPtr& msg);
+  // static std::vector<uint8_t>
+  //   unpackAndEncode(const uint32_t& can_id, const pm_msgs::SystemCmdBool::ConstPtr& msg);
+  // static std::vector<uint8_t>
+  //   unpackAndEncode(const uint32_t& can_id, const pm_msgs::SystemCmdFloat::ConstPtr& msg);
+  // static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pm_msgs::SystemCmdInt::ConstPtr& msg);
+  // static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pm_msgs::SteeringCmd::ConstPtr& msg);
 };
 }  // namespace pacmod3
 

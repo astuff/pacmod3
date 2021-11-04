@@ -47,15 +47,17 @@ void LockedData::setData(std::vector<unsigned char> new_data)
   _data = new_data;
 }
 
-Pacmod3TxRosMsgHandler::Pacmod3TxRosMsgHandler()
+Pacmod3RosMsgHandler::Pacmod3RosMsgHandler()
 {
-  parse_functions[HornRptMsg::CAN_ID] = std::bind(&Dbc12Api::ParseSystemRptBool, msg_api_, std::placeholders::_1);
+  msg_api_ = std::make_unique<Dbc12Api>();
 
-  pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
+  parse_functions[HornRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, *msg_api_, std::placeholders::_1);
+
+  pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 template <class RosMsgType>
-void Pacmod3TxRosMsgHandler::ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
+void Pacmod3RosMsgHandler::ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
 {
   // Call generic fill function from common hybrid lib, cast void pointer return
   if (parse_functions.count(can_msg.id))
@@ -69,7 +71,7 @@ void Pacmod3TxRosMsgHandler::ParseAndPublishType(const can_msgs::Frame& can_msg,
   }
 }
 
-void Pacmod3TxRosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
+void Pacmod3RosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
 {
   if (pub_functions.count(can_msg.id))
   {
@@ -78,65 +80,20 @@ void Pacmod3TxRosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, con
 }
 
 // Command messages
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+can_msgs::Frame Pacmod3RosMsgHandler::unpackAndEncode(
     const uint32_t& can_id, const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  if (can_id == HornCmdMsg::CAN_ID)
-  {
-    HornCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
+  // TODO: Check for valid CAN ID. Is this check even necessary? Could possibly change based on DBC?
 
-                   msg->command);
-    return encoder.data;
-  }
-  else if (can_id == ParkingBrakeCmdMsg::CAN_ID)
-  {
-    ParkingBrakeCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
-  else if (can_id == MarkerLampCmdMsg::CAN_ID)
-  {
-    MarkerLampCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
-  else if (can_id == SprayerCmdMsg::CAN_ID)
-  {
-    SprayerCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
-  else if (can_id == HazardLightCmdMsg::CAN_ID)
-  {
-    HazardLightCmdMsg encoder;
-    encoder.encode(msg->enable,
-                   msg->ignore_overrides,
-                   msg->clear_override,
-                   msg->command);
-    return encoder.data;
-  }
-  else
-  {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    ROS_ERROR("A bool system command matching the provided CAN ID could not be found.");
-    return bad_id;
-  }
+  can_msgs::Frame new_frame;
+  new_frame = msg_api_->EncodeSystemCmdBool(*msg);
+  new_frame.id = can_id;
+
+  // return new_frame.data;
+  return new_frame;
 }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::vector<uint8_t> Pacmod3RosMsgHandler::unpackAndEncode(
     const uint32_t& can_id, const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
   if (can_id == AccelCmdMsg::CAN_ID)
@@ -166,7 +123,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   }
 }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::vector<uint8_t> Pacmod3RosMsgHandler::unpackAndEncode(
     const uint32_t& can_id, const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
   if (can_id == CruiseControlButtonsCmdMsg::CAN_ID)
@@ -268,7 +225,7 @@ std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
   }
 }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+std::vector<uint8_t> Pacmod3RosMsgHandler::unpackAndEncode(
     const uint32_t& can_id, const pacmod3_msgs::SteeringCmd::ConstPtr& msg)
 {
   if (can_id == SteerCmdMsg::CAN_ID)
