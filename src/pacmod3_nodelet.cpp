@@ -269,6 +269,12 @@ void Pacmod3Nl::onInit()
     pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
   }
 
+  // Init cmds to send, always init core subsystems with enable false
+  received_cmds.insert(AccelCmdMsg::CAN_ID);
+  received_cmds.insert(BrakeCmdMsg::CAN_ID);
+  received_cmds.insert(SteerCmdMsg::CAN_ID);
+  received_cmds.insert(ShiftCmdMsg::CAN_ID);
+
   // Initialize Turn Signal with non-0 value
   TurnSignalCmdMsg turn_encoder;
   turn_encoder.encode(false, false, false, pacmod3_msgs::SystemCmdInt::TURN_NONE);
