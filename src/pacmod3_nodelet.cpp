@@ -471,12 +471,15 @@ void Pacmod3Nl::SystemStatusUpdate(const ros::TimerEvent& event)
 
 void Pacmod3Nl::can_write(const ros::TimerEvent& event)
 {
-  for (const auto& can_id : received_cmds)
+  // for (const auto& can_id : received_cmds)
+  for (const auto& element : rx_list)
   {
-    auto data = rx_list[can_id]->getData();
+    // auto data = rx_list[can_id]->getData();
+    auto data = element.second->getData();
 
     can_msgs::Frame frame;
-    frame.id = can_id;
+    // frame.id = can_id;
+    frame.id = element.first;
     frame.is_rtr = false;
     frame.is_extended = false;
     frame.is_error = false;
