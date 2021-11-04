@@ -337,7 +337,8 @@ void Pacmod3Nl::initializeVehicle4SpecificApi()
 void Pacmod3Nl::initializeApiForMsg(uint32_t msg_can_id)
 {
   // Need to initialize pubs/subs for this message group
-  switch (msg_can_id) {
+  switch (msg_can_id)
+  {
     case BrakeMotorRpt1Msg::CAN_ID:
     case BrakeMotorRpt2Msg::CAN_ID:
     case BrakeMotorRpt3Msg::CAN_ID:
@@ -596,7 +597,8 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
   auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
-  if (pub == pub_tx_list.end()) {
+  if (pub == pub_tx_list.end())
+  {
     initializeApiForMsg(msg->id);
   }
 
