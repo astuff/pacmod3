@@ -132,6 +132,7 @@ void Pacmod3Nl::initializeBrakeMotorRptApi()
   pub_tx_list.emplace(BrakeMotorRpt1Msg::CAN_ID, std::move(brake_rpt_detail_1_pub));
   pub_tx_list.emplace(BrakeMotorRpt2Msg::CAN_ID, std::move(brake_rpt_detail_2_pub));
   pub_tx_list.emplace(BrakeMotorRpt3Msg::CAN_ID, std::move(brake_rpt_detail_3_pub));
+  NODELET_INFO("Initialized BrakeMotorRpt API");
 }
 
 void Pacmod3Nl::initializeSteeringMotorRptApi()
@@ -145,6 +146,7 @@ void Pacmod3Nl::initializeSteeringMotorRptApi()
   pub_tx_list.emplace(SteerMotorRpt1Msg::CAN_ID, std::move(steering_rpt_detail_1_pub));
   pub_tx_list.emplace(SteerMotorRpt2Msg::CAN_ID, std::move(steering_rpt_detail_2_pub));
   pub_tx_list.emplace(SteerMotorRpt3Msg::CAN_ID, std::move(steering_rpt_detail_3_pub));
+  NODELET_INFO("Initialized SteeringMotorRpt API");
 }
 
 void Pacmod3Nl::initializeWiperApi()
@@ -159,6 +161,7 @@ void Pacmod3Nl::initializeWiperApi()
   rx_list.emplace(
     WiperCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
+  NODELET_INFO("Initialized Wiper API");
 }
 
 void Pacmod3Nl::initializeHeadlightApi()
@@ -175,6 +178,7 @@ void Pacmod3Nl::initializeHeadlightApi()
   rx_list.emplace(
       HeadlightCmdMsg::CAN_ID,
       std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+  NODELET_INFO("Initialized Headlight API");
 }
 
 void Pacmod3Nl::initializeHornApi()
@@ -188,6 +192,7 @@ void Pacmod3Nl::initializeHornApi()
   rx_list.emplace(
     HornCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
+  NODELET_INFO("Initialized Horn API");
 }
 
 void Pacmod3Nl::initializeWheelSpeedApi()
@@ -195,6 +200,7 @@ void Pacmod3Nl::initializeWheelSpeedApi()
   ros::Publisher wheel_speed_rpt_pub =
     nh_.advertise<pacmod3_msgs::WheelSpeedRpt>("wheel_speed_rpt", 20);
   pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
+  NODELET_INFO("Initialized WheelSpeed API");
 }
 
 void Pacmod3Nl::initializeParkingBrakeRptApi()
@@ -202,6 +208,7 @@ void Pacmod3Nl::initializeParkingBrakeRptApi()
   ros::Publisher parking_brake_rpt_pub =
     nh_.advertise<pacmod3_msgs::SystemRptBool>("parking_brake_rpt", 20);
   pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
+  NODELET_INFO("Initialized ParkingBrakeRpt API");
 }
 
 void Pacmod3Nl::initializeDoorRptApi()
@@ -209,6 +216,7 @@ void Pacmod3Nl::initializeDoorRptApi()
   ros::Publisher door_rpt_pub =
     nh_.advertise<pacmod3_msgs::DoorRpt>("door_rpt", 20);
   pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
+  NODELET_INFO("Initialized DoorRpt API");
 }
 
 void Pacmod3Nl::initializeInteriorLightsRptApi()
@@ -216,6 +224,7 @@ void Pacmod3Nl::initializeInteriorLightsRptApi()
   ros::Publisher interior_lights_rpt_pub =
     nh_.advertise<pacmod3_msgs::InteriorLightsRpt>("interior_lights_rpt", 20);
   pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
+  NODELET_INFO("Initialized InteriorLights API");
 }
 
 void Pacmod3Nl::initializeOccupancyRptApi()
@@ -223,6 +232,7 @@ void Pacmod3Nl::initializeOccupancyRptApi()
   ros::Publisher occupancy_rpt_pub =
     nh_.advertise<pacmod3_msgs::OccupancyRpt>("occupancy_rpt", 20);
   pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
+  NODELET_INFO("Initialized OccupancyRpt API");
 }
 
 void Pacmod3Nl::initializeRearLightsRptApi()
@@ -230,6 +240,7 @@ void Pacmod3Nl::initializeRearLightsRptApi()
   ros::Publisher rear_lights_rpt_pub =
     nh_.advertise<pacmod3_msgs::RearLightsRpt>("rear_lights_rpt", 20);
   pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
+  NODELET_INFO("Initialized RearLightsRpt API");
 }
 
 void Pacmod3Nl::initializeHazardLightApi()
@@ -243,6 +254,7 @@ void Pacmod3Nl::initializeHazardLightApi()
   rx_list.emplace(
     HazardLightCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
+  NODELET_INFO("Initialized HazardLight API");
 }
 
 void Pacmod3Nl::initializeLexusSpecificApi()
@@ -256,6 +268,7 @@ void Pacmod3Nl::initializeLexusSpecificApi()
   pub_tx_list.emplace(DateTimeRptMsg::CAN_ID, std::move(date_time_rpt_pub));
   pub_tx_list.emplace(LatLonHeadingRptMsg::CAN_ID, std::move(lat_lon_heading_rpt_pub));
   pub_tx_list.emplace(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub));
+  NODELET_INFO("Initialized Lexus-specific API");
 }
 
 void Pacmod3Nl::initializeFreightlinerSpecificApi()
@@ -293,6 +306,7 @@ void Pacmod3Nl::initializeFreightlinerSpecificApi()
   rx_list.emplace(
     SprayerCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
+  NODELET_INFO("Initialized Freightliner-specific API");
 }
 
 void Pacmod3Nl::initializeJapanTaxiSpecificApi()
@@ -305,6 +319,7 @@ void Pacmod3Nl::initializeJapanTaxiSpecificApi()
   rx_list.emplace(
     RearPassDoorCmdMsg::CAN_ID,
     std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
+  NODELET_INFO("Initialized Japan Taxi-specific API");
 }
 
 void Pacmod3Nl::initializeVehicle4SpecificApi()
@@ -316,6 +331,7 @@ void Pacmod3Nl::initializeVehicle4SpecificApi()
 
   pub_tx_list.emplace(DetectedObjectRptMsg::CAN_ID, std::move(detected_object_rpt_pub));
   pub_tx_list.emplace(VehicleDynamicsRptMsg::CAN_ID, std::move(vehicle_dynamics_rpt_pub));
+  NODELET_INFO("Initialized Vehicle4-specific API");
 }
 
 void Pacmod3Nl::initializeApiForMsg(uint32_t msg_can_id)
