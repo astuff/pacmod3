@@ -71,7 +71,7 @@ void Pacmod3Nl::onInit()
   pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
   pub_tx_list.emplace(SteeringAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
   pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
-    pub_tx_list.emplace(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub));
+  pub_tx_list.emplace(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub));
   pub_tx_list.emplace(VinRptMsg::CAN_ID, std::move(vin_rpt_pub));
 
   // Subscribers
