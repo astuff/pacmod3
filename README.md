@@ -112,7 +112,8 @@ Topics subscribed on supported platforms only:
 
 ## Supported Vehicles ##
 
-At the moment, this ROS2 pacmod3 driver only supports vehicles that use DBC version 3.
-Vehicles using DBC verion 3 would be Lexus RX-450h vehicles purchased from AutonomouStuff in 2020 or earlier, as well as any PACMod-supported vehicle purchased from AutonomouStuff in 2018 or earlier.
+At the moment, this pacmod3 driver only supports vehicles that use DBC version 3.
+The majority of existing Lexus platforms use DBC version 3.
+However, recently-purchased vehicle platforms (including Lexus) use a newer DBC version.
 
 If you are unsure about which DBC version your existing PACMod supports, please reach out to our support team: https://autonomoustuff.com/support
