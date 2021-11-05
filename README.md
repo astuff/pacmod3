@@ -1,6 +1,6 @@
 # PACMod3 (Platform Actuation and Control MODule) ROS Driver #
 
-[![CircleCI](https://circleci.com/gh/astuff/pacmod3/tree/ros2_master.svg?style=svg)](https://circleci.com/gh/astuff/pacmod3/tree/ros2_master)
+[![CircleCI](https://circleci.com/gh/astuff/pacmod3/tree/ros1_master.svg?style=svg)](https://circleci.com/gh/astuff/pacmod3/tree/ros1_master)
 
 This ROS node is designed to allow the user to control a vehicle (see SUPPORTED VEHICLES below) with the PACMod drive-by-wire system, board revision 3.
 The main purpose of the driver is to provide a common ROS API to PACMod devices regardless of vehicle type or specific PACMod version in use.
@@ -112,7 +112,8 @@ Topics subscribed on supported platforms only:
 
 ## Supported Vehicles ##
 
-At the moment, this ROS2 pacmod3 driver only supports vehicles that use DBC version 3.
-Vehicles using DBC verion 3 would be Lexus RX-450h vehicles purchased from AutonomouStuff in 2020 or earlier, as well as any PACMod-supported vehicle purchased from AutonomouStuff in 2018 or earlier.
+At the moment, this pacmod3 driver only supports vehicles that use DBC version 3.
+The majority of existing Lexus platforms use DBC version 3.
+However, recently-purchased vehicle platforms (including Lexus) use a newer DBC version.
 
 If you are unsure about which DBC version your existing PACMod supports, please reach out to our support team: https://autonomoustuff.com/support
