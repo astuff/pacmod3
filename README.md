@@ -28,6 +28,7 @@ Please consult the PACMod user manual you received with your vehicle in order to
 
 ### Launch Arguments
 
+- **dbc_major_version**: This should be set to match the DBC version of your PACMod system. See the "Supported Vehicles" section at the bottom of this README for more details.
 - **use_kvaser**: Set this to true if a Kvaser CAN device is being used with Kvaser canlib drivers to connect to the PACMod. Defaults to `false`.
 - **kvaser_hardware_id**: The hardware id of the kvaser device, only applies if `use_kvaser` is true.
 - **kvaser_circuit_id**: The circuit/channel id that the PACMod is plugged into on the kvaser device, only applies if `use_kvaser` is true.
@@ -53,7 +54,6 @@ Topics published on all platforms:
 - `vin_rpt` ([pacmod3_msgs/VinRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/VinRpt.msg))
 - `global_rpt` ([pacmod3_msgs/GlobalRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/GlobalRpt.msg))
 - `component_rpt` ([pacmod3_msgs/ComponentRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/ComponentRpt.msg))
-- `vehicle_speed` ([std_msgs/Float64](http://docs.ros.org/en/noetic/api/std_msgs/html/msg/Float64.html))
 - `all_system_statuses` ([pacmod3_msgs/AllSystemStatuses](https://github.com/astuff/pacmod3_msgs/blob/master/msg/AllSystemStatuses.msg))
 - `can_rx` ([can_msgs/Frame](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))
 
