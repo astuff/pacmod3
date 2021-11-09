@@ -1,11 +1,5 @@
 <?xml version="1.0"?>
 <launch>
-  <!-- The vehicle types available for the vehicle_type parameter are:
-       POLARIS_GEM: The Polaris GEM e2, e4, e6, and eLXD.
-       POLARIS_RANGER: The Polaris Ranger series of off-road vehicles.
-       INTERNATIONAL_PROSTAR_122: The International PROSTAR+ 122 semi-tractor trailer.
-       LEXUS_RX_450H: The hybrid version of the Lexus RX-450 SUV. -->
-  <arg name="pacmod_vehicle_type" default="POLARIS_GEM" />
   <arg name="use_kvaser" default="false" />
   <arg name="kvaser_hardware_id" default="27733" />
   <arg name="kvaser_circuit_id" default="0" />
@@ -28,7 +22,6 @@
     </node>
 
     <node pkg="pacmod3" type="pacmod3_node" name="pacmod3" output="screen">
-      <param name="vehicle_type" value="$(arg pacmod_vehicle_type)" />
       <param name="dbc_major_version" value="$(arg dbc_major_version)" />
     </node>
   </group>
