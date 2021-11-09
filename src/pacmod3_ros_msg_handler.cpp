@@ -47,9 +47,22 @@ void LockedData::setData(std::vector<unsigned char> new_data)
   _data = new_data;
 }
 
-Pacmod3RosMsgHandler::Pacmod3RosMsgHandler()
+Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
 {
-  msg_api_ = std::make_unique<Dbc12Api>();
+  switch (dbc_major_version)
+  {
+    case (3):
+      // msg_api_ = std::make_unique<Dbc3Api>();
+      break;
+    case (4):
+      // msg_api_ = std::make_unique<Dbc4Api>();
+      break;
+    case (12):
+    default:
+      msg_api_ = std::make_unique<Dbc12Api>();
+      break;
+  }
+
 
   parse_functions[HornRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, *msg_api_, std::placeholders::_1);
 

@@ -128,7 +128,7 @@ private:
   template<class T> void lookup_and_encode(const uint32_t& can_id, const T& msg);
 
   std::unordered_map<uint32_t, ros::Publisher> pub_tx_list;
-  Pacmod3RosMsgHandler handler;
+  std::unique_ptr<Pacmod3RosMsgHandler> handler;
 
   ros::Publisher enabled_pub;
   ros::Publisher can_rx_pub;

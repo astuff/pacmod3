@@ -39,6 +39,8 @@ void Pacmod3Nl::onInit()
   pnh_ = getMTPrivateNodeHandle();
   loadParams();
 
+  handler = std::make_unique<Pacmod3RosMsgHandler>(dbc_major_version_);
+
   // Publishers
   can_rx_pub = nh_.advertise<can_msgs::Frame>("can_rx", 20);
   enabled_pub = nh_.advertise<std_msgs::Bool>("enabled", 20, true);
@@ -612,7 +614,7 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
   if (parser_class != NULL && pub != pub_tx_list.end())
   {
     parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
-    handler.ParseAndPublish(*msg, pub->second);
+    handler->ParseAndPublish(*msg, pub->second);
 
     if (parser_class->isSystem())
     {
@@ -670,7 +672,7 @@ template<class T> void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, cons
   if (rx_it != rx_list.end())
   {
     ROS_INFO("Before crash");
-    can_msgs::Frame packed_frame = handler.unpackAndEncode(can_id, msg);
+    can_msgs::Frame packed_frame = handler->unpackAndEncode(can_id, msg);
     ROS_INFO("After packing");
 
     std::vector<unsigned char> new_data;

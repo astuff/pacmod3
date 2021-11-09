@@ -85,7 +85,7 @@ private:
 class Pacmod3RosMsgHandler
 {
 public:
-  Pacmod3RosMsgHandler();
+  Pacmod3RosMsgHandler(uint32_t dbc_major_version);
 
   // Functions for parsing raw CAN messages
   template <class RosMsgType>
