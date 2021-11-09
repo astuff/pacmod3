@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <pacmod3_dbc_ros_api.h>
-// #include <autogen/pacmod12.h>
+#include <pacmod3_dbc3_ros_api.h>
+#include <autogen/pacmod3.h>
 
 #include <vector>
 #include <string>
@@ -29,27 +29,29 @@
 namespace pacmod3
 {
 
-// std::shared_ptr<void> DbcApi::ParseSystemRptBool(const can_msgs::Frame& can_msg)
-// {
-//   std::shared_ptr<pm_msgs::SystemRptBool> new_msg( new pm_msgs::SystemRptBool() );
+std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::SystemRptBool> new_msg( new pm_msgs::SystemRptBool() );
 
-//   HORN_RPT_t parsed_rpt;
-//   Unpack_HORN_RPT_pacmod12(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+  HORN_RPT_t parsed_rpt;
+  Unpack_HORN_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
 
-//   new_msg->enabled = parsed_rpt.ENABLED;
-//   new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
-//   new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
-//   new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
-//   new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
-//   new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
-//   new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
-//   new_msg->command_timeout = parsed_rpt.COMMAND_TIMEOUT;
-//   new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
-//   new_msg->command = parsed_rpt.COMMANDED_VALUE;
-//   new_msg->output = parsed_rpt.OUTPUT_VALUE;
+  new_msg->enabled = parsed_rpt.ENABLED;
+  new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
+  new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
+  new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
+  new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
+  new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
+  new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
 
-//   return new_msg;
-// }
+  // dbc3 has no command_timeout field
+  new_msg->command_timeout = 0;
+  new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
+  new_msg->command = parsed_rpt.COMMANDED_VALUE;
+  new_msg->output = parsed_rpt.OUTPUT_VALUE;
+
+  return new_msg;
+}
 
 // void Pacmod3TxMsgParser::fillSystemRptInt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -538,21 +540,21 @@ namespace pacmod3
 
 // Command messages
 
-// can_msgs::Frame DbcApi::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
-// {
-//   can_msgs::Frame packed_frame;
+can_msgs::Frame Dbc3Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
+{
+  can_msgs::Frame packed_frame;
 
-//   HORN_CMD_t unpacked_cmd;
-//   unpacked_cmd.ENABLE = msg.enable;
-//   unpacked_cmd.IGNORE_OVERRIDES = msg.ignore_overrides;
-//   unpacked_cmd.CLEAR_OVERRIDE = msg.clear_override;
-//   unpacked_cmd.HORN_CMD = msg.command;
+  HORN_CMD_t unpacked_cmd;
+  unpacked_cmd.ENABLE = msg.enable;
+  unpacked_cmd.IGNORE_OVERRIDES = msg.ignore_overrides;
+  unpacked_cmd.CLEAR_OVERRIDE = msg.clear_override;
+  unpacked_cmd.HORN_CMD = msg.command;
 
-//   uint8_t unused_ide;
-//   Pack_HORN_CMD_pacmod12(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
+  uint8_t unused_ide;
+  Pack_HORN_CMD_pacmod3(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
 
-//   return packed_frame;
-// }
+  return packed_frame;
+}
 
 
 }  // namespace pacmod3

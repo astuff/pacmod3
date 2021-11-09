@@ -52,7 +52,7 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   switch (dbc_major_version)
   {
     case (3):
-      // msg_api_ = std::make_unique<Dbc3Api>();
+      msg_api_ = std::make_unique<Dbc3Api>();
       break;
     case (4):
       // msg_api_ = std::make_unique<Dbc4Api>();
@@ -64,7 +64,7 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   }
 
 
-  parse_functions[HornRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, *msg_api_, std::placeholders::_1);
+  parse_functions[HornRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
 
   pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
 }

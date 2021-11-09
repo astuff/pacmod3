@@ -126,11 +126,11 @@ namespace pacmod3
 class DbcApi
 {
 public:
-  virtual std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg);
-  virtual std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg);
+  virtual std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) = 0;
+  // virtual std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg);
 
 
-  virtual can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg);
+  virtual can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) = 0;
 };
 }  // namespace pacmod3
 

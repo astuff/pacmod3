@@ -31,7 +31,12 @@ include_directories(
 
 # Common Library
 add_library(pacmod3_common
+  # pacmod3_common/pacmod3_dbc_ros_api.cpp
+  pacmod3_common/pacmod3_dbc_ros_api.h
+  pacmod3_common/pacmod3_dbc3_ros_api.cpp
   pacmod3_common/pacmod3_dbc12_ros_api.cpp
+  pacmod3_common/autogen/pacmod3.c
+  # pacmod3_common/autogen/pacmod4.c
   pacmod3_common/autogen/pacmod12.c
 )
 

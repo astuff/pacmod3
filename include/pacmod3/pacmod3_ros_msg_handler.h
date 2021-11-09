@@ -22,6 +22,9 @@
 #define PACMOD3_PACMOD3_ROS_MSG_HANDLER_H
 
 
+#include "pacmod3_dbc_ros_api.h"
+#include "pacmod3_dbc3_ros_api.h"
+// #include "pacmod3_dbc4_ros_api.h"
 #include "pacmod3_dbc12_ros_api.h"
 
 #include <string>

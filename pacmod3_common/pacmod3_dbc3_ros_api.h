@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef PACMOD3_DBC12_ROS_API_H
-#define PACMOD3_DBC12_ROS_API_H
+#ifndef PACMOD3_DBC3_ROS_API_H
+#define PACMOD3_DBC3_ROS_API_H
 
 #include "pacmod3_dbc_ros_api.h"
 
@@ -32,7 +32,7 @@
 
 #ifdef USE_ROS1
 
-#include <pacmod3/pacmod3_core.h>
+// #include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>
 
 #include <can_msgs/Frame.h>
@@ -77,7 +77,7 @@ namespace can_msgs = can_msgs;
 
 #ifdef USE_ROS2
 
-#include <pacmod3/pacmod3_core.hpp>
+// #include <pacmod3/pacmod3_core.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
@@ -125,12 +125,12 @@ namespace can_msgs = can_msgs::msg;
 namespace pacmod3
 {
 
-class Dbc12Api : public DbcApi
+class Dbc3Api : public DbcApi
 {
 public:
-  // std::shared_ptr<void> ParseSystemRptBool(const std::shared_ptr<Pacmod3TxMsg>& parser_class);
   std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
   // std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
+
 
 //   void fillSystemRptFloat(
 //       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -249,4 +249,4 @@ public:
 };
 }  // namespace pacmod3
 
-#endif  // PACMOD3_DBC12_ROS_API_H
+#endif  // PACMOD3_DBC3_ROS_API_H
