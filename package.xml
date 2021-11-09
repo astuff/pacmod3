@@ -18,7 +18,7 @@
   <depend>rclcpp_components</depend>
   <depend>rclcpp_lifecycle</depend>
   <depend>std_msgs</depend>
-  <depend>pacmod3_msgs</depend>
+  <depend version_gte="1.0.0" version_lt="1.1.0">pacmod3_msgs</depend>
   <depend>can_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
