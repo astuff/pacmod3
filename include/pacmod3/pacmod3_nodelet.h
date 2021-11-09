@@ -82,6 +82,26 @@ private:
   void onInit() override;
   void loadParams();
 
+  void initializeBrakeMotorRptApi();
+  void initializeSteeringMotorRptApi();
+  void initializeWiperApi();
+  void initializeHeadlightApi();
+  void initializeHornApi();
+  void initializeWheelSpeedApi();
+  void initializeParkingBrakeRptApi();
+  void initializeDoorRptApi();
+  void initializeInteriorLightsRptApi();
+  void initializeOccupancyRptApi();
+  void initializeRearLightsRptApi();
+  void initializeHazardLightApi();
+
+  void initializeLexusSpecificApi();
+  void initializeFreightlinerSpecificApi();
+  void initializeJapanTaxiSpecificApi();
+  void initializeVehicle4SpecificApi();
+
+  void initializeApiForMsg(uint32_t msg_can_id);
+
   // ROS Callbacks
   void callback_accel_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
   void callback_brake_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
@@ -144,8 +164,6 @@ private:
 
   ros::NodeHandle nh_;
   ros::NodeHandle pnh_;
-  std::string veh_type_string = "";
-  VehicleType veh_type = VehicleType::POLARIS_GEM;
 
   // Vehicle-Specific Subscribers
   std::shared_ptr<ros::Subscriber> wiper_set_cmd_sub,
