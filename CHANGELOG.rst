@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2021-11-17)
+------------------
 * Remove need to specify vehicle type (`#110 <https://github.com/astuff/pacmod3/issues/110>`_)
 * Update README (`#113 <https://github.com/astuff/pacmod3/issues/113>`_)
 * Improve minimal publishing changes (`#112 <https://github.com/astuff/pacmod3/issues/112>`_)
