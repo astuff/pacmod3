@@ -18,10 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef PACMOD3_DBC3_ROS_API_H
-#define PACMOD3_DBC3_ROS_API_H
+#ifndef PACMOD3_DBC12_ROS_API_H
+#define PACMOD3_DBC12_ROS_API_H
 
-#include "pacmod3_dbc_ros_api.h"
+#include "pacmod3_dbc3_ros_api.h"
 
 #include <string>
 #include <vector>
@@ -32,7 +32,7 @@
 
 #ifdef USE_ROS1
 
-// #include <pacmod3/pacmod3_core.h>
+#include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>
 
 #include <can_msgs/Frame.h>
@@ -77,7 +77,7 @@ namespace can_msgs = can_msgs;
 
 #ifdef USE_ROS2
 
-// #include <pacmod3/pacmod3_core.hpp>
+#include <pacmod3/pacmod3_core.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
@@ -125,122 +125,19 @@ namespace can_msgs = can_msgs::msg;
 namespace pacmod3
 {
 
-class Dbc3Api : public DbcApi
+// Derived from previous DBC API version
+// The only overridden functions that exist here are due to changes to those msg types relative to the previous version.
+class Dbc4Api : public Dbc3Api
 {
 public:
   std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
   std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
   std::shared_ptr<void> ParseSystemRptFloat(const can_msgs::Frame& can_msg) override;
 
-
-//   void fillGlobalRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::GlobalRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillComponentRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::ComponentRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillAccelAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::AccelAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillBrakeAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::BrakeAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillDateTimeRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::DateTimeRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillDetectedObjectRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::DetectedObjectRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillDoorRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::DoorRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillEngineRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::EngineRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillHeadlightAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::HeadlightAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillInteriorLightsRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::InteriorLightsRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillLatLonHeadingRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::LatLonHeadingRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillMotorRpt1(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::MotorRpt1 * new_msg,
-//       const std::string& frame_id);
-//   void fillMotorRpt2(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::MotorRpt2 * new_msg,
-//       const std::string& frame_id);
-//   void fillMotorRpt3(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::MotorRpt3 * new_msg,
-//       const std::string& frame_id);
-//   void fillOccupancyRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::OccupancyRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillRearLightsRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::RearLightsRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillShiftAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::ShiftAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillSteeringAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::SteeringAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillTurnAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::TurnAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillVehicleDynamicsRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::VehicleDynamicsRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillVehicleSpeedRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::VehicleSpeedRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillVinRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::VinRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillWheelSpeedRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::WheelSpeedRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillWiperAuxRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::WiperAuxRpt * new_msg,
-//       const std::string& frame_id);
-//   void fillYawRateRpt(
-//       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//       pm_msgs::YawRateRpt * new_msg,
-//       const std::string& frame_id);
-
-
   can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) override;
   can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) override;
   can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) override;
-
-  // static std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pm_msgs::SteeringCmd::ConstPtr& msg);
 };
 }  // namespace pacmod3
 
-#endif  // PACMOD3_DBC3_ROS_API_H
+#endif  // PACMOD3_DBC12_ROS_API_H

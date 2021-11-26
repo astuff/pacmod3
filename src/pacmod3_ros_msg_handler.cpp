@@ -55,18 +55,44 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
       msg_api_ = std::make_unique<Dbc3Api>();
       break;
     case (4):
-      // msg_api_ = std::make_unique<Dbc4Api>();
-      break;
-    case (12):
     default:
-      msg_api_ = std::make_unique<Dbc12Api>();
+      msg_api_ = std::make_unique<Dbc4Api>();
       break;
   }
 
+  // Bool Reports
+  parse_functions[HornRptMsg::CAN_ID] =
+  parse_functions[ParkingBrakeRptMsg::CAN_ID] =
+  parse_functions[MarkerLampRptMsg::CAN_ID] =
+  parse_functions[SprayerRptMsg::CAN_ID] =
+  parse_functions[HazardLightRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[HornRptMsg::CAN_ID] =
+  pub_functions[ParkingBrakeRptMsg::CAN_ID] =
+  pub_functions[MarkerLampRptMsg::CAN_ID] =
+  pub_functions[SprayerRptMsg::CAN_ID] =
+  pub_functions[HazardLightRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
 
-  parse_functions[HornRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
-
-  pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
+  // Int Reports
+  parse_functions[CruiseControlButtonsRptMsg::CAN_ID] =
+  parse_functions[DashControlsLeftRptMsg::CAN_ID] =
+  parse_functions[DashControlsRightRptMsg::CAN_ID] =
+  parse_functions[TurnSignalRptMsg::CAN_ID] =
+  parse_functions[RearPassDoorRptMsg::CAN_ID] =
+  parse_functions[ShiftRptMsg::CAN_ID] =
+  parse_functions[HeadlightRptMsg::CAN_ID] =
+  parse_functions[MediaControlsRptMsg::CAN_ID] =
+  parse_functions[WiperRptMsg::CAN_ID] =
+  parse_functions[EngineBrakeRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptInt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[CruiseControlButtonsRptMsg::CAN_ID] =
+  pub_functions[DashControlsLeftRptMsg::CAN_ID] =
+  pub_functions[DashControlsRightRptMsg::CAN_ID] =
+  pub_functions[TurnSignalRptMsg::CAN_ID] =
+  pub_functions[RearPassDoorRptMsg::CAN_ID] =
+  pub_functions[ShiftRptMsg::CAN_ID] =
+  pub_functions[HeadlightRptMsg::CAN_ID] =
+  pub_functions[MediaControlsRptMsg::CAN_ID] =
+  pub_functions[WiperRptMsg::CAN_ID] =
+  pub_functions[EngineBrakeRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptInt>, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 template <class RosMsgType>
@@ -77,8 +103,8 @@ void Pacmod3RosMsgHandler::ParseAndPublishType(const can_msgs::Frame& can_msg, c
   {
     std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg));
 
-    // ros_msg->header.frame_id = frame_id;
-    // ros_msg.header.stamp = 0.0;
+    ros_msg->header.frame_id = "pacmod3";
+    ros_msg->header.stamp = can_msg.header.stamp;
 
     pub.publish(*ros_msg);
   }

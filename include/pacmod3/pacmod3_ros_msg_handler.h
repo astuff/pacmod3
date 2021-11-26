@@ -24,8 +24,7 @@
 
 #include "pacmod3_dbc_ros_api.h"
 #include "pacmod3_dbc3_ros_api.h"
-// #include "pacmod3_dbc4_ros_api.h"
-#include "pacmod3_dbc12_ros_api.h"
+#include "pacmod3_dbc4_ros_api.h"
 
 #include <string>
 #include <vector>

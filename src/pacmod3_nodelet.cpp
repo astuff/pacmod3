@@ -124,9 +124,9 @@ void Pacmod3Nl::loadParams()
 {
   // Get and validate parameters
   pnh_.param<int>("dbc_major_version", dbc_major_version_, 3);
-  if (dbc_major_version_ != 3)
+  if (dbc_major_version_ < 3 || dbc_major_version_ > 4)
   {
-    NODELET_ERROR("This driver currently only supports PACMod DBC version 3");
+    NODELET_ERROR("This driver currently only supports PACMod DBC version 3 through 4");
     ros::shutdown();
   }
 }

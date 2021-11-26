@@ -43,9 +43,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const can_msgs::Frame& can_msg
   new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
   new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
   new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
-
-  // dbc3 has no command_timeout field
-  new_msg->command_timeout = 0;
+  new_msg->command_timeout = 0;  // dbc3 has no command_timeout field
   new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
   new_msg->command = parsed_rpt.COMMANDED_VALUE;
   new_msg->output = parsed_rpt.OUTPUT_VALUE;
@@ -53,51 +51,49 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const can_msgs::Frame& can_msg
   return new_msg;
 }
 
-// void Pacmod3TxMsgParser::fillSystemRptInt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::SystemRptInt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<SystemRptIntMsg>(parser_class);
+std::shared_ptr<void> Dbc3Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::SystemRptInt> new_msg( new pm_msgs::SystemRptInt() );
 
-//   new_msg->enabled = dc_parser->enabled;
-//   new_msg->override_active = dc_parser->override_active;
-//   new_msg->command_output_fault = dc_parser->command_output_fault;
-//   new_msg->input_output_fault = dc_parser->input_output_fault;
-//   new_msg->output_reported_fault = dc_parser->output_reported_fault;
-//   new_msg->pacmod_fault = dc_parser->pacmod_fault;
-//   new_msg->vehicle_fault = dc_parser->vehicle_fault;
+  SHIFT_RPT_t parsed_rpt;
+  Unpack_SHIFT_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
 
-//   new_msg->manual_input = dc_parser->manual_input;
-//   new_msg->command = dc_parser->command;
-//   new_msg->output = dc_parser->output;
+  new_msg->enabled = parsed_rpt.ENABLED;
+  new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
+  new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
+  new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
+  new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
+  new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
+  new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
+  new_msg->command_timeout = 0;  // dbc3 has no command_timeout field
+  new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
+  new_msg->command = parsed_rpt.COMMANDED_VALUE;
+  new_msg->output = parsed_rpt.OUTPUT_VALUE;
 
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
+  return new_msg;
+}
 
-// void Pacmod3TxMsgParser::fillSystemRptFloat(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::SystemRptFloat * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<SystemRptFloatMsg>(parser_class);
+std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::SystemRptFloat> new_msg( new pm_msgs::SystemRptFloat() );
 
-//   new_msg->enabled = dc_parser->enabled;
-//   new_msg->override_active = dc_parser->override_active;
-//   new_msg->command_output_fault = dc_parser->command_output_fault;
-//   new_msg->input_output_fault = dc_parser->input_output_fault;
-//   new_msg->output_reported_fault = dc_parser->output_reported_fault;
-//   new_msg->pacmod_fault = dc_parser->pacmod_fault;
-//   new_msg->vehicle_fault = dc_parser->vehicle_fault;
+  ACCEL_RPT_t parsed_rpt;
+  Unpack_ACCEL_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
 
-//   new_msg->manual_input = dc_parser->manual_input;
-//   new_msg->command = dc_parser->command;
-//   new_msg->output = dc_parser->output;
+  new_msg->enabled = parsed_rpt.ENABLED;
+  new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
+  new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
+  new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
+  new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
+  new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
+  new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
+  new_msg->command_timeout = 0;  // dbc3 has no command_timeout field
+  new_msg->manual_input = parsed_rpt.MANUAL_INPUT_phys;
+  new_msg->command = parsed_rpt.COMMANDED_VALUE_phys;
+  new_msg->output = parsed_rpt.OUTPUT_VALUE_phys;
 
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
+  return new_msg;
+}
 
 // void Pacmod3TxMsgParser::fillGlobalRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -548,6 +544,7 @@ can_msgs::Frame Dbc3Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
   unpacked_cmd.ENABLE = msg.enable;
   unpacked_cmd.IGNORE_OVERRIDES = msg.ignore_overrides;
   unpacked_cmd.CLEAR_OVERRIDE = msg.clear_override;
+  unpacked_cmd.CLEAR_FAULTS = msg.clear_override;  // CLEAR_FAULTS was removed in later DBCs and also ROS msgs
   unpacked_cmd.HORN_CMD = msg.command;
 
   uint8_t unused_ide;
@@ -556,6 +553,39 @@ can_msgs::Frame Dbc3Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
   return packed_frame;
 }
 
+can_msgs::Frame Dbc3Api::EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg)
+{
+  can_msgs::Frame packed_frame;
+
+  SHIFT_CMD_t unpacked_cmd;
+  unpacked_cmd.ENABLE = msg.enable;
+  unpacked_cmd.IGNORE_OVERRIDES = msg.ignore_overrides;
+  unpacked_cmd.CLEAR_OVERRIDE = msg.clear_override;
+  unpacked_cmd.CLEAR_FAULTS = msg.clear_override;  // CLEAR_FAULTS was removed in later DBCs and also ROS msgs
+  unpacked_cmd.SHIFT_CMD = msg.command;
+
+  uint8_t unused_ide;
+  Pack_SHIFT_CMD_pacmod3(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
+
+  return packed_frame;
+}
+
+can_msgs::Frame Dbc3Api::EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg)
+{
+  can_msgs::Frame packed_frame;
+
+  ACCEL_CMD_t unpacked_cmd;
+  unpacked_cmd.ENABLE = msg.enable;
+  unpacked_cmd.IGNORE_OVERRIDES = msg.ignore_overrides;
+  unpacked_cmd.CLEAR_OVERRIDE = msg.clear_override;
+  unpacked_cmd.CLEAR_FAULTS = msg.clear_override;  // CLEAR_FAULTS was removed in later DBCs and also ROS msgs
+  unpacked_cmd.ACCEL_CMD_phys = msg.command;
+
+  uint8_t unused_ide;
+  Pack_ACCEL_CMD_pacmod3(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
+
+  return packed_frame;
+}
 
 }  // namespace pacmod3
 

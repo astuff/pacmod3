@@ -47,7 +47,7 @@
   3. In unpack function '_phys' signal will be written by '_ro' signal.
   User have to use '_phys' signal to read physical value. */
 
-/* #define PACMOD3_USE_SIGFLOAT */
+#define PACMOD3_USE_SIGFLOAT
 
 
 /* ------------------------------------------------------------------------- *
