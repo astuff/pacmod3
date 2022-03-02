@@ -581,6 +581,11 @@ void PACMod3Node::initializeApiForMsg(uint32_t msg_can_id)
         initializeVehicle4SpecificApi();
         break;
       }
+    case RearPassDoorRptMsg::CAN_ID:
+      {
+        initializeJapanTaxiSpecificApi();
+        break;
+      }
   }
 }
 
