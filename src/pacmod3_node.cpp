@@ -469,6 +469,11 @@ void PACMod3Node::initializeFreightlinerSpecificApi()
 
 void PACMod3Node::initializeJapanTaxiSpecificApi()
 {
+  can_pubs_[RearPassDoorRptMsg::CAN_ID] =
+    this->create_publisher<pacmod3_msgs::msg::SystemRptInt>(
+    "rear_pass_door_rpt", 20);
+  can_pubs_[RearPassDoorRptMsg::CAN_ID]->on_activate();
+
   can_subs_[RearPassDoorCmdMsg::CAN_ID] = std::make_pair(
     this->create_subscription<pacmod3_msgs::msg::SystemCmdInt>(
       "rear_pass_door_cmd", 20,
