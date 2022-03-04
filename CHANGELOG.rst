@@ -2,6 +2,16 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2002.1.0 (2022-03-04)
+---------------------
+* Add rear pass door report (`#120 <https://github.com/astuff/pacmod3/issues/120>`_)
+* Fix: Add missing jpntaxi api (`#118 <https://github.com/astuff/pacmod3/issues/118>`_)
+* Add strict version dependency on pacmod3_msgs (`#116 <https://github.com/astuff/pacmod3/issues/116>`_)
+* ROS2: README Updates, Update note about dbcs (`#114 <https://github.com/astuff/pacmod3/issues/114>`_)
+* Remove redundant vehicle_speed publisher (`#107 <https://github.com/astuff/pacmod3/issues/107>`_)
+* ROS2: Update README (`#97 <https://github.com/astuff/pacmod3/issues/97>`_)
+* Contributors: Daisuke Nishimatsu, icolwell-as
+
 2002.0.0 (2021-09-14)
 ---------------------
 * Update to pacmod3_msgs (`#90 <https://github.com/astuff/pacmod3/issues/90>`_)
