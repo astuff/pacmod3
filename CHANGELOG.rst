@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2002.1.0 (2022-03-04)
+---------------------
 * Add rear pass door report (`#120 <https://github.com/astuff/pacmod3/issues/120>`_)
 * Fix: Add missing jpntaxi api (`#118 <https://github.com/astuff/pacmod3/issues/118>`_)
 * Add strict version dependency on pacmod3_msgs (`#116 <https://github.com/astuff/pacmod3/issues/116>`_)
