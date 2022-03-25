@@ -34,10 +34,7 @@
 #include <ros/ros.h>
 
 #include <can_msgs/Frame.h>
-#include <pacmod3_msgs/SystemCmdBool.h>
-#include <pacmod3_msgs/SystemCmdFloat.h>
-#include <pacmod3_msgs/SystemCmdInt.h>
-#include <pacmod3_msgs/GlobalRpt.h>
+
 #include <pacmod3_msgs/AccelAuxRpt.h>
 #include <pacmod3_msgs/AllSystemStatuses.h>
 #include <pacmod3_msgs/BrakeAuxRpt.h>
@@ -46,6 +43,8 @@
 #include <pacmod3_msgs/DetectedObjectRpt.h>
 #include <pacmod3_msgs/DoorRpt.h>
 #include <pacmod3_msgs/EngineRpt.h>
+#include <pacmod3_msgs/GlobalCmd.h>
+#include <pacmod3_msgs/GlobalRpt.h>
 #include <pacmod3_msgs/HeadlightAuxRpt.h>
 #include <pacmod3_msgs/InteriorLightsRpt.h>
 #include <pacmod3_msgs/LatLonHeadingRpt.h>
@@ -57,6 +56,9 @@
 #include <pacmod3_msgs/ShiftAuxRpt.h>
 #include <pacmod3_msgs/SteeringAuxRpt.h>
 #include <pacmod3_msgs/SteeringCmd.h>
+#include <pacmod3_msgs/SystemCmdBool.h>
+#include <pacmod3_msgs/SystemCmdFloat.h>
+#include <pacmod3_msgs/SystemCmdInt.h>
 #include <pacmod3_msgs/SystemRptBool.h>
 #include <pacmod3_msgs/SystemRptFloat.h>
 #include <pacmod3_msgs/SystemRptInt.h>
@@ -88,6 +90,7 @@ namespace can_msgs = can_msgs;
 #include <pacmod3_msgs/msg/detected_object_rpt.hpp>
 #include <pacmod3_msgs/msg/door_rpt.hpp>
 #include <pacmod3_msgs/msg/engine_rpt.hpp>
+#include <pacmod3_msgs/msg/global_cmd.hpp>
 #include <pacmod3_msgs/msg/global_rpt.hpp>
 #include <pacmod3_msgs/msg/headlight_aux_rpt.hpp>
 #include <pacmod3_msgs/msg/interior_lights_rpt.hpp>
@@ -126,13 +129,44 @@ namespace pacmod3
 class DbcApi
 {
 public:
+  // Parsing functions take in a ROS CAN msg and return a pointer to a ROS pacmod msg
+  virtual std::shared_ptr<void> ParseAccelAuxRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseAngVelRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseBrakeAuxRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseComponentRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseDateTimeRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseDetectedObjectRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseDoorRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseEngineRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseGlobalRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseHeadlightAuxRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseInteriorLightsRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseLatLonHeadingRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseLinearAccelRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseMotorRpt1(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseMotorRpt2(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseMotorRpt3(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseOccupancyRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseRearLightsRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseShiftAuxRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseSteeringAuxRpt(const can_msgs::Frame& can_msg) = 0;
   virtual std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) = 0;
-  virtual std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) = 0;
   virtual std::shared_ptr<void> ParseSystemRptFloat(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseTurnAuxRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseVehicleDynamicsRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseVehicleSpeedRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseVinRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseWheelSpeedRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseWiperAuxRpt(const can_msgs::Frame& can_msg) = 0;
+  virtual std::shared_ptr<void> ParseYawRateRpt(const can_msgs::Frame& can_msg) = 0;
 
+  // Encoding functions take in a ROS pacmod msg and return and ROS CAN msg.
+  virtual can_msgs::Frame EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg) = 0;
+  virtual can_msgs::Frame EncodeSteeringCmd(const pm_msgs::GlobalCmd& msg) = 0;
   virtual can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) = 0;
-  virtual can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) = 0;
   virtual can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) = 0;
+  virtual can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) = 0;
 };
 }  // namespace pacmod3
 

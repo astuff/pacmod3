@@ -29,6 +29,288 @@
 namespace pacmod3
 {
 
+std::shared_ptr<void> Dbc3Api::ParseAccelAuxRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::AccelAuxRpt> new_msg( new pm_msgs::AccelAuxRpt() );
+
+  ACCEL_AUX_RPT_t parsed_rpt;
+  Unpack_ACCEL_AUX_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->operator_interaction = parsed_rpt.USER_INTERACTION;
+  // Following fields not present in dbc3
+  new_msg->accel_limiting_active = 0;
+  new_msg->park_brake_interlock_active = 0;
+  new_msg->brake_interlock_active = 0;
+
+  new_msg->operator_interaction_avail = parsed_rpt.USER_INTERACTION_IS_VALID;
+  // Following fields not present in dbc3
+  new_msg->accel_limiting_active_avail = 0;
+  new_msg->park_brake_interlock_active_avail = 0;
+  new_msg->brake_interlock_active_avail = 0;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseBrakeAuxRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::BrakeAuxRpt> new_msg( new pm_msgs::BrakeAuxRpt() );
+
+  BRAKE_AUX_RPT_t parsed_rpt;
+  Unpack_BRAKE_AUX_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->brake_pressure = parsed_rpt.RAW_BRAKE_PRESSURE;
+  new_msg->operator_interaction = parsed_rpt.USER_INTERACTION;
+  new_msg->brake_on_off = parsed_rpt.BRAKE_ON_OFF;
+  // Following fields not present in dbc3
+  new_msg->brake_limiting_active = 0;
+  new_msg->brake_reduced_assist = 0;
+
+  new_msg->brake_pressure_avail = parsed_rpt.RAW_BRAKE_PRESSURE_IS_VALID;
+  new_msg->operator_interaction_avail = parsed_rpt.USER_INTERACTION_IS_VALID;
+  new_msg->brake_on_off_avail = parsed_rpt.BRAKE_ON_OFF_IS_VALID;
+  // Following fields not present in dbc3
+  new_msg->brake_limiting_active_avail = 0;
+  new_msg->brake_reduced_assist_avail = 0;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::ComponentRpt> new_msg( new pm_msgs::ComponentRpt() );
+
+  COMPONENT_RPT_t parsed_rpt;
+  Unpack_COMPONENT_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->component_type = parsed_rpt.COMPONENT_TYPE;
+
+  // Following fields not present in dbc3
+  new_msg->accel = 0;
+  new_msg->brake = 0;
+  new_msg->cruise_control_buttons = 0;
+  new_msg->dash_controls_left = 0;
+  new_msg->dash_controls_right = 0;
+  new_msg->hazard_lights = 0;
+  new_msg->headlight = 0;
+  new_msg->horn = 0;
+  new_msg->media_controls = 0;
+  new_msg->parking_brake = 0;
+  new_msg->shift = 0;
+  new_msg->sprayer = 0;
+  new_msg->steering = 0;
+  new_msg->turn = 0;
+  new_msg->wiper = 0;
+  new_msg->watchdog = 0;
+  new_msg->brake_deccel = 0;
+  new_msg->rear_pass_door = 0;
+  new_msg->engine_brake = 0;
+  new_msg->marker_lamp = 0;
+  new_msg->cabin_climate = 0;
+  new_msg->cabin_fan_speed = 0;
+  new_msg->cabin_temp = 0;
+
+  new_msg->counter = parsed_rpt.COUNTER;
+  new_msg->complement = parsed_rpt.COMPLEMENT;
+  new_msg->config_fault = parsed_rpt.CONFIG_FAULT;
+
+  // Following fields not present in dbc3
+  new_msg->can_timeout_fault = 0;
+  new_msg->internal_supply_voltage_fault = 0;
+  new_msg->supervisory_timeout = 0;
+  new_msg->supervisory_sanity_fault = 0;
+  new_msg->watchdog_sanity_fault = 0;
+  new_msg->watchdog_system_present_fault = 0;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseDateTimeRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::DateTimeRpt> new_msg( new pm_msgs::DateTimeRpt() );
+
+  DATE_TIME_RPT_t parsed_rpt;
+  Unpack_DATE_TIME_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->year = parsed_rpt.DATE_YEAR_phys;
+  new_msg->month = parsed_rpt.DATE_MONTH_phys;
+  new_msg->day = parsed_rpt.DATE_DAY_phys;
+
+  new_msg->hour = parsed_rpt.TIME_HOUR;
+  new_msg->minute = parsed_rpt.TIME_MINUTE;
+  new_msg->second = parsed_rpt.TIME_SECOND;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseDetectedObjectRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::DetectedObjectRpt> new_msg( new pm_msgs::DetectedObjectRpt() );
+
+  DETECTED_OBJECT_RPT_t parsed_rpt;
+  Unpack_DETECTED_OBJECT_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->front_object_distance_low_res = parsed_rpt.FRONT_OBJECT_DISTANCE_LOW_RES_phys;
+  new_msg->front_object_distance_high_res = parsed_rpt.FRONT_OBJECT_DISTANCE_HIGH_RES_phys;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseDoorRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::DoorRpt> new_msg( new pm_msgs::DoorRpt() );
+
+  DOOR_RPT_t parsed_rpt;
+  Unpack_DOOR_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->driver_door_open = parsed_rpt.DRIVER_DOOR_OPEN;
+  new_msg->passenger_door_open = parsed_rpt.PASS_DOOR_OPEN;
+  new_msg->rear_driver_door_open = parsed_rpt.REAR_DRIVER_DOOR_OPEN;
+  new_msg->rear_passenger_door_open = parsed_rpt.REAR_PASS_DOOR_OPEN;
+  new_msg->hood_open = parsed_rpt.HOOD_OPEN;
+  new_msg->trunk_open = parsed_rpt.TRUNK_OPEN;
+  new_msg->fuel_door_open = parsed_rpt.FUEL_DOOR_OPEN;
+  new_msg->driver_door_open_avail = parsed_rpt.DRIVER_DOOR_OPEN_IS_VALID;
+  new_msg->passenger_door_open_avail = parsed_rpt.PASS_DOOR_OPEN_IS_VALID;
+  new_msg->rear_driver_door_open_avail = parsed_rpt.REAR_DRIVER_DOOR_OPEN_IS_VALID;
+  new_msg->rear_passenger_door_open_avail = parsed_rpt.REAR_PASS_DOOR_OPEN_IS_VALID;
+  new_msg->hood_open_avail = parsed_rpt.HOOD_OPEN_IS_VALID;
+  new_msg->trunk_open_avail = parsed_rpt.TRUNK_OPEN_IS_VALID;
+  new_msg->fuel_door_open_avail = parsed_rpt.FUEL_DOOR_OPEN_IS_VALID;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseHeadlightAuxRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::HeadlightAuxRpt> new_msg( new pm_msgs::HeadlightAuxRpt() );
+
+  HEADLIGHT_AUX_RPT_t parsed_rpt;
+  Unpack_HEADLIGHT_AUX_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->headlights_on = parsed_rpt.HEADLIGHTS_ON;
+  new_msg->headlights_on_bright = parsed_rpt.HEADLIGHTS_ON_BRIGHT;
+  new_msg->fog_lights_on = parsed_rpt.FOG_LIGHTS_ON;
+  new_msg->headlights_mode = parsed_rpt.HEADLIGHTS_MODE;
+  new_msg->headlights_on_avail = parsed_rpt.HEADLIGHTS_ON_IS_VALID;
+  new_msg->headlights_on_bright_avail = parsed_rpt.HEADLIGHTS_ON_BRIGHT_IS_VALID;
+  new_msg->fog_lights_on_avail = parsed_rpt.FOG_LIGHTS_ON_IS_VALID;
+  new_msg->headlights_mode_avail = parsed_rpt.HEADLIGHTS_MODE_IS_VALID;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseInteriorLightsRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::InteriorLightsRpt> new_msg( new pm_msgs::InteriorLightsRpt() );
+
+  INTERIOR_LIGHTS_RPT_t parsed_rpt;
+  Unpack_INTERIOR_LIGHTS_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->front_dome_lights_on = parsed_rpt.FRONT_DOME_LIGHTS_ON;
+  new_msg->front_dome_lights_on_avail = parsed_rpt.FRONT_DOME_LIGHTS_ON_IS_VALID;
+  new_msg->rear_dome_lights_on = parsed_rpt.REAR_DOME_LIGHTS_ON;
+  new_msg->rear_dome_lights_on_avail = parsed_rpt.REAR_DOME_LIGHTS_ON_IS_VALID;
+  new_msg->mood_lights_on = parsed_rpt.MOOD_LIGHTS_ON;
+  new_msg->mood_lights_on_avail = parsed_rpt.MOOD_LIGHTS_ON_IS_VALID;
+  new_msg->dim_level = parsed_rpt.DIM_LEVEL;
+  new_msg->dim_level_avail = parsed_rpt.DIM_LEVEL_IS_VALID;
+
+  // Not available in dbc3
+  new_msg->ambient_light_sensor = false;
+  new_msg->ambient_light_sensor_avail = false;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseLatLonHeadingRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::LatLonHeadingRpt> new_msg( new pm_msgs::LatLonHeadingRpt() );
+
+  LAT_LON_HEADING_RPT_t parsed_rpt;
+  Unpack_LAT_LON_HEADING_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->latitude_degrees = parsed_rpt.LATITUDE_DEGREES;
+  new_msg->latitude_minutes = parsed_rpt.LATITUDE_MINUTES;
+  new_msg->latitude_seconds = parsed_rpt.LATITUDE_SECONDS;
+  new_msg->longitude_degrees = parsed_rpt.LONGITUDE_DEGREES;
+  new_msg->longitude_minutes = parsed_rpt.LONGITUDE_MINUTES;
+  new_msg->longitude_seconds = parsed_rpt.LONGITUDE_SECONDS;
+  new_msg->heading = parsed_rpt.HEADING_phys;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseMotorRpt1(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::MotorRpt1> new_msg( new pm_msgs::MotorRpt1() );
+
+  BRAKE_MOTOR_RPT_1_t parsed_rpt;
+  Unpack_BRAKE_MOTOR_RPT_1_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->current = parsed_rpt.MOTOR_CURRENT_phys;
+  new_msg->position = parsed_rpt.SHAFT_POSITION_phys;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseMotorRpt2(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::MotorRpt2> new_msg( new pm_msgs::MotorRpt2() );
+
+  BRAKE_MOTOR_RPT_2_t parsed_rpt;
+  Unpack_BRAKE_MOTOR_RPT_2_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->encoder_temp = parsed_rpt.ENCODER_TEMPERATURE;
+  new_msg->motor_temp = parsed_rpt.MOTOR_TEMPERATURE;
+  new_msg->angular_speed = parsed_rpt.ANGULAR_SPEED_phys;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseMotorRpt3(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::MotorRpt3> new_msg( new pm_msgs::MotorRpt3() );
+
+  BRAKE_MOTOR_RPT_3_t parsed_rpt;
+  Unpack_BRAKE_MOTOR_RPT_3_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->torque_output = parsed_rpt.TORQUE_OUTPUT_phys;
+  new_msg->torque_input = parsed_rpt.TORQUE_INPUT_phys;
+
+  return new_msg;
+}
+
+std::shared_ptr<void> Dbc3Api::ParseOccupancyRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::OccupancyRpt> new_msg( new pm_msgs::OccupancyRpt() );
+
+  OCCUPANCY_RPT_t parsed_rpt;
+  Unpack_OCCUPANCY_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->driver_seat_occupied = parsed_rpt.DRIVER_SEAT_OCCUPIED;
+  new_msg->driver_seat_occupied_avail = parsed_rpt.DRIVER_SEAT_OCCUPIED_IS_VALID;
+  new_msg->passenger_seat_occupied = parsed_rpt.PASS_SEAT_OCCUPIED;
+  new_msg->passenger_seat_occupied_avail = parsed_rpt.PASS_SEAT_OCCUPIED_IS_VALID;
+  new_msg->rear_seat_occupied = parsed_rpt.REAR_SEAT_OCCUPIED;
+  new_msg->rear_seat_occupied_avail = parsed_rpt.REAR_SEAT_OCCUPIED_IS_VALID;
+  new_msg->driver_seatbelt_buckled = parsed_rpt.DRIVER_SEATBELT_BUCKLED;
+  new_msg->driver_seatbelt_buckled_avail = parsed_rpt.DRIVER_SEATBELT_BUCKLED_IS_VALID;
+  new_msg->passenger_seatbelt_buckled = parsed_rpt.PASS_SEATBELT_BUCKLED;
+  new_msg->passenger_seatbelt_buckled_avail = parsed_rpt.PASS_SEATBELT_BUCKLED_IS_VALID;
+
+  // dbc3 uses the field "rear seatbelt", it has been mapped to center_rear_seatbelt
+  new_msg->center_rear_seatbelt_buckled = parsed_rpt.REAR_SEATBELT_BUCKLED;
+  new_msg->center_rear_seatbelt_buckled_avail = parsed_rpt.REAR_SEATBELT_BUCKLED_IS_VALID;
+
+  // Following fields not present in dbc3
+  new_msg->driver_rear_seatbelt_buckled = false;
+  new_msg->driver_rear_seatbelt_buckled_avail = false;
+  new_msg->pass_rear_seatbelt_buckled = false;
+  new_msg->pass_rear_seatbelt_buckled_avail = false;
+
+  return new_msg;
+}
+
 std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const can_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptBool> new_msg( new pm_msgs::SystemRptBool() );
@@ -65,7 +347,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
   new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
   new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
   new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
-  new_msg->command_timeout = 0;  // dbc3 has no command_timeout field
+  new_msg->command_timeout = 0;  // dbc3 doesn't have this field
   new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
   new_msg->command = parsed_rpt.COMMANDED_VALUE;
   new_msg->output = parsed_rpt.OUTPUT_VALUE;
@@ -87,7 +369,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const can_msgs::Frame& can_ms
   new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
   new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
   new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
-  new_msg->command_timeout = 0;  // dbc3 has no command_timeout field
+  new_msg->command_timeout = 0;  // dbc3 doesn't have this field
   new_msg->manual_input = parsed_rpt.MANUAL_INPUT_phys;
   new_msg->command = parsed_rpt.COMMANDED_VALUE_phys;
   new_msg->output = parsed_rpt.OUTPUT_VALUE_phys;
@@ -95,275 +377,32 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
-// void Pacmod3TxMsgParser::fillGlobalRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::GlobalRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
+std::shared_ptr<void> Dbc3Api::ParseGlobalRpt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::GlobalRpt> new_msg( new pm_msgs::GlobalRpt() );
 
-//   new_msg->enabled = dc_parser->enabled;
-//   new_msg->override_active = dc_parser->override_active;
-//   new_msg->pacmod_sys_fault_active = dc_parser->fault_active;
-//   new_msg->config_fault_active = dc_parser->config_fault_active;
-//   new_msg->user_can_timeout = dc_parser->user_can_timeout;
-//   new_msg->steering_can_timeout = dc_parser->steering_can_timeout;
-//   new_msg->brake_can_timeout = dc_parser->brake_can_timeout;
-//   new_msg->subsystem_can_timeout = dc_parser->subsystem_can_timeout;
-//   new_msg->vehicle_can_timeout = dc_parser->vehicle_can_timeout;
-//   new_msg->user_can_read_errors = dc_parser->user_can_read_errors;
+  GLOBAL_RPT_t parsed_rpt;
+  Unpack_GLOBAL_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
 
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
+  new_msg->enabled = parsed_rpt.PACMOD_SYSTEM_ENABLED;
+  new_msg->override_active = parsed_rpt.PACMOD_SYSTEM_OVERRIDE_ACTIVE;
+  new_msg->pacmod_sys_fault_active = parsed_rpt.PACMOD_SYSTEM_FAULT_ACTIVE;
+  new_msg->config_fault_active = parsed_rpt.CONFIG_FAULT_ACTIVE;
+  new_msg->user_can_timeout = parsed_rpt.USR_CAN_TIMEOUT;
+  new_msg->steering_can_timeout = parsed_rpt.STR_CAN_TIMEOUT;
+  new_msg->brake_can_timeout = parsed_rpt.BRK_CAN_TIMEOUT;
+  new_msg->subsystem_can_timeout = parsed_rpt.PACMOD_SUBSYSTEM_TIMEOUT;
+  new_msg->vehicle_can_timeout = parsed_rpt.VEH_CAN_TIMEOUT;
+  new_msg->user_can_read_errors = parsed_rpt.USR_CAN_READ_ERRORS;
+  new_msg->supervisory_enable_required = 0;  // dbc3 doesn't have this field
 
-// void Pacmod3TxMsgParser::fillComponentRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::ComponentRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<ComponentRptMsg>(parser_class);
+  return new_msg;
+}
 
-//   new_msg->component_type = dc_parser->component_type;
-//   new_msg->counter = dc_parser->counter;
-//   new_msg->complement = dc_parser->complement;
-//   new_msg->config_fault = dc_parser->config_fault;
 
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
+// Dbc 3 has no EngineRpt
 
-// void Pacmod3TxMsgParser::fillAccelAuxRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::AccelAuxRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<AccelAuxRptMsg>(parser_class);
 
-//   new_msg->operator_interaction = dc_parser->operator_interaction;
-//   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillBrakeAuxRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::BrakeAuxRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<BrakeAuxRptMsg>(parser_class);
-
-//   new_msg->brake_pressure = dc_parser->raw_brake_pressure;
-//   new_msg->operator_interaction = dc_parser->operator_interaction;
-//   new_msg->brake_on_off = dc_parser->brake_on_off;
-//   new_msg->operator_interaction_avail = dc_parser->operator_interaction_avail;
-//   new_msg->brake_on_off_avail = dc_parser->brake_on_off_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillDateTimeRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::DateTimeRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<DateTimeRptMsg>(parser_class);
-
-//   new_msg->year = dc_parser->year;
-//   new_msg->month = dc_parser->month;
-//   new_msg->day = dc_parser->day;
-//   new_msg->hour = dc_parser->hour;
-//   new_msg->minute = dc_parser->minute;
-//   new_msg->second = dc_parser->second;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillDetectedObjectRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::DetectedObjectRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<DetectedObjectRptMsg>(parser_class);
-
-//   new_msg->front_object_distance_low_res = dc_parser->front_object_distance_low_res;
-//   new_msg->front_object_distance_high_res = dc_parser->front_object_distance_high_res;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-// void Pacmod3TxMsgParser::fillDoorRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::DoorRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<DoorRptMsg>(parser_class);
-
-//   new_msg->driver_door_open = dc_parser->driver_door_open;
-//   new_msg->driver_door_open_avail = dc_parser->driver_door_open_avail;
-//   new_msg->passenger_door_open = dc_parser->passenger_door_open;
-//   new_msg->passenger_door_open_avail = dc_parser->passenger_door_open_avail;
-//   new_msg->rear_driver_door_open = dc_parser->rear_driver_door_open;
-//   new_msg->rear_driver_door_open_avail = dc_parser->rear_driver_door_open_avail;
-//   new_msg->rear_passenger_door_open = dc_parser->rear_passenger_door_open;
-//   new_msg->rear_passenger_door_open_avail = dc_parser->rear_passenger_door_open_avail;
-//   new_msg->hood_open = dc_parser->hood_open;
-//   new_msg->hood_open_avail = dc_parser->hood_open_avail;
-//   new_msg->trunk_open = dc_parser->trunk_open;
-//   new_msg->trunk_open_avail = dc_parser->trunk_open_avail;
-//   new_msg->fuel_door_open = dc_parser->fuel_door_open;
-//   new_msg->fuel_door_open_avail = dc_parser->fuel_door_open_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillEngineRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::EngineRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<EngineRptMsg>(parser_class);
-
-//   new_msg->engine_speed = dc_parser->engine_speed;
-//   new_msg->engine_torque = dc_parser->engine_torque;
-//   new_msg->engine_coolant_temp = dc_parser->engine_coolant_temp;
-//   new_msg->engine_speed_avail = dc_parser->engine_speed_avail;
-//   new_msg->engine_torque_avail = dc_parser->engine_torque_avail;
-//   new_msg->engine_coolant_temp_avail = dc_parser->engine_coolant_temp_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillHeadlightAuxRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::HeadlightAuxRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<HeadlightAuxRptMsg>(parser_class);
-
-//   new_msg->headlights_on = dc_parser->headlights_on;
-//   new_msg->headlights_on_bright = dc_parser->headlights_on_bright;
-//   new_msg->fog_lights_on = dc_parser->fog_lights_on;
-//   new_msg->headlights_mode = dc_parser->headlights_mode;
-//   new_msg->headlights_on_avail = dc_parser->headlights_on_avail;
-//   new_msg->headlights_on_bright_avail = dc_parser->headlights_on_bright_avail;
-//   new_msg->fog_lights_on_avail = dc_parser->fog_lights_on_avail;
-//   new_msg->headlights_mode_avail = dc_parser->headlights_mode_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillInteriorLightsRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::InteriorLightsRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<InteriorLightsRptMsg>(parser_class);
-
-//   new_msg->front_dome_lights_on = dc_parser->front_dome_lights_on;
-//   new_msg->front_dome_lights_on_avail = dc_parser->front_dome_lights_on_avail;
-//   new_msg->rear_dome_lights_on = dc_parser->rear_dome_lights_on;
-//   new_msg->rear_dome_lights_on_avail = dc_parser->rear_dome_lights_on_avail;
-//   new_msg->mood_lights_on = dc_parser->mood_lights_on;
-//   new_msg->mood_lights_on_avail = dc_parser->mood_lights_on_avail;
-//   new_msg->dim_level = dc_parser->dim_level;
-//   new_msg->dim_level_avail = dc_parser->dim_level_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillLatLonHeadingRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::LatLonHeadingRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<LatLonHeadingRptMsg>(parser_class);
-
-//   new_msg->latitude_degrees = dc_parser->latitude_degrees;
-//   new_msg->latitude_minutes = dc_parser->latitude_minutes;
-//   new_msg->latitude_seconds = dc_parser->latitude_seconds;
-//   new_msg->longitude_degrees = dc_parser->longitude_degrees;
-//   new_msg->longitude_minutes = dc_parser->longitude_minutes;
-//   new_msg->longitude_seconds = dc_parser->longitude_seconds;
-//   new_msg->heading = dc_parser->heading;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillMotorRpt1(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::MotorRpt1 * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<MotorRpt1Msg>(parser_class);
-
-//   new_msg->current = dc_parser->current;
-//   new_msg->position = dc_parser->position;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillMotorRpt2(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::MotorRpt2 * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<MotorRpt2Msg>(parser_class);
-
-//   new_msg->encoder_temp = dc_parser->encoder_temp;
-//   new_msg->motor_temp = dc_parser->motor_temp;
-//   new_msg->angular_speed = dc_parser->velocity;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillMotorRpt3(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::MotorRpt3 * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<MotorRpt3Msg>(parser_class);
-
-//   new_msg->torque_output = dc_parser->torque_output;
-//   new_msg->torque_input = dc_parser->torque_input;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
-
-// void Pacmod3TxMsgParser::fillOccupancyRpt(
-//     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
-//     pm_msgs::OccupancyRpt * new_msg,
-//     const std::string& frame_id)
-// {
-//   auto dc_parser = std::dynamic_pointer_cast<OccupancyRptMsg>(parser_class);
-
-//   new_msg->driver_seat_occupied = dc_parser->driver_seat_occupied;
-//   new_msg->driver_seat_occupied_avail = dc_parser->driver_seat_occupied_avail;
-//   new_msg->passenger_seat_occupied = dc_parser->passenger_seat_occupied;
-//   new_msg->passenger_seat_occupied_avail = dc_parser->passenger_seat_occupied_avail;
-//   new_msg->rear_seat_occupied = dc_parser->rear_seat_occupied;
-//   new_msg->rear_seat_occupied_avail = dc_parser->rear_seat_occupied_avail;
-//   new_msg->driver_seatbelt_buckled = dc_parser->driver_seatbelt_buckled;
-//   new_msg->driver_seatbelt_buckled_avail = dc_parser->driver_seatbelt_buckled_avail;
-//   new_msg->passenger_seatbelt_buckled = dc_parser->passenger_seatbelt_buckled;
-//   new_msg->passenger_seatbelt_buckled_avail = dc_parser->passenger_seatbelt_buckled_avail;
-//   new_msg->driver_rear_seatbelt_buckled = dc_parser->rear_seatbelt_buckled;
-//   new_msg->driver_rear_seatbelt_buckled_avail = dc_parser->rear_seatbelt_buckled_avail;
-
-//   new_msg->header.frame_id = frame_id;
-//   new_msg->header.stamp = ros::Time::now();
-// }
 
 // void Pacmod3TxMsgParser::fillRearLightsRpt(
 //     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
@@ -534,7 +573,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const can_msgs::Frame& can_ms
 //   new_msg->header.stamp = ros::Time::now();
 // }
 
-// Command messages
+// Message Encoding
 
 can_msgs::Frame Dbc3Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
 {

@@ -96,8 +96,10 @@ public:
   void ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
 
   // Functions for packing/encoding data into CAN messages
-  can_msgs::Frame
-    unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
+  can_msgs::Frame Encode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
+  can_msgs::Frame Encode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
+  can_msgs::Frame Encode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
+
   std::vector<uint8_t>
     unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
   std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);

@@ -671,9 +671,7 @@ template<class T> void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, cons
 
   if (rx_it != rx_list.end())
   {
-    ROS_INFO("Before crash");
-    can_msgs::Frame packed_frame = handler->unpackAndEncode(can_id, msg);
-    ROS_INFO("After packing");
+    can_msgs::Frame packed_frame = handler->Encode(can_id, msg);
 
     std::vector<unsigned char> new_data;
     new_data.resize(8);
@@ -682,8 +680,6 @@ template<class T> void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, cons
 
     rx_it->second->setData(new_data);
     received_cmds.insert(can_id);
-
-    ROS_INFO("After setting data");
   }
   else
   {
