@@ -101,6 +101,12 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   pub_functions[AccelRptMsg::CAN_ID] =
   pub_functions[BrakeRptMsg::CAN_ID] =
   pub_functions[SteerRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
+
+  // if (dbc_major_version >= 7)
+  // {
+    parse_functions[EngineRptMsg::CAN_ID] = std::bind(&DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
+    pub_functions[EngineRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  // }
 }
 
 template <class RosMsgType>

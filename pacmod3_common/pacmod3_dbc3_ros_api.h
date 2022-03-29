@@ -28,99 +28,6 @@
 #include <memory>
 #include <mutex>
 
-#define USE_ROS1
-
-#ifdef USE_ROS1
-
-// #include <pacmod3/pacmod3_core.h>
-#include <ros/ros.h>
-
-#include <can_msgs/Frame.h>
-#include <pacmod3_msgs/SystemCmdBool.h>
-#include <pacmod3_msgs/SystemCmdFloat.h>
-#include <pacmod3_msgs/SystemCmdInt.h>
-#include <pacmod3_msgs/GlobalRpt.h>
-#include <pacmod3_msgs/AccelAuxRpt.h>
-#include <pacmod3_msgs/AllSystemStatuses.h>
-#include <pacmod3_msgs/BrakeAuxRpt.h>
-#include <pacmod3_msgs/ComponentRpt.h>
-#include <pacmod3_msgs/DateTimeRpt.h>
-#include <pacmod3_msgs/DetectedObjectRpt.h>
-#include <pacmod3_msgs/DoorRpt.h>
-#include <pacmod3_msgs/EngineRpt.h>
-#include <pacmod3_msgs/HeadlightAuxRpt.h>
-#include <pacmod3_msgs/InteriorLightsRpt.h>
-#include <pacmod3_msgs/LatLonHeadingRpt.h>
-#include <pacmod3_msgs/MotorRpt1.h>
-#include <pacmod3_msgs/MotorRpt2.h>
-#include <pacmod3_msgs/MotorRpt3.h>
-#include <pacmod3_msgs/OccupancyRpt.h>
-#include <pacmod3_msgs/RearLightsRpt.h>
-#include <pacmod3_msgs/ShiftAuxRpt.h>
-#include <pacmod3_msgs/SteeringAuxRpt.h>
-#include <pacmod3_msgs/SteeringCmd.h>
-#include <pacmod3_msgs/SystemRptBool.h>
-#include <pacmod3_msgs/SystemRptFloat.h>
-#include <pacmod3_msgs/SystemRptInt.h>
-#include <pacmod3_msgs/TurnAuxRpt.h>
-#include <pacmod3_msgs/VehicleDynamicsRpt.h>
-#include <pacmod3_msgs/VehicleSpeedRpt.h>
-#include <pacmod3_msgs/VinRpt.h>
-#include <pacmod3_msgs/WheelSpeedRpt.h>
-#include <pacmod3_msgs/WiperAuxRpt.h>
-#include <pacmod3_msgs/YawRateRpt.h>
-
-namespace pm_msgs = pacmod3_msgs;
-namespace can_msgs = can_msgs;
-
-#endif  // USE_ROS1
-
-#ifdef USE_ROS2
-
-// #include <pacmod3/pacmod3_core.hpp>
-
-#include <rclcpp/rclcpp.hpp>
-#include <rclcpp_lifecycle/lifecycle_publisher.hpp>
-
-#include <pacmod3_msgs/msg/accel_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/all_system_statuses.hpp>
-#include <pacmod3_msgs/msg/brake_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/component_rpt.hpp>
-#include <pacmod3_msgs/msg/date_time_rpt.hpp>
-#include <pacmod3_msgs/msg/detected_object_rpt.hpp>
-#include <pacmod3_msgs/msg/door_rpt.hpp>
-#include <pacmod3_msgs/msg/engine_rpt.hpp>
-#include <pacmod3_msgs/msg/global_rpt.hpp>
-#include <pacmod3_msgs/msg/headlight_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/interior_lights_rpt.hpp>
-#include <pacmod3_msgs/msg/lat_lon_heading_rpt.hpp>
-#include <pacmod3_msgs/msg/motor_rpt1.hpp>
-#include <pacmod3_msgs/msg/motor_rpt2.hpp>
-#include <pacmod3_msgs/msg/motor_rpt3.hpp>
-#include <pacmod3_msgs/msg/occupancy_rpt.hpp>
-#include <pacmod3_msgs/msg/rear_lights_rpt.hpp>
-#include <pacmod3_msgs/msg/shift_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/steering_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/steering_cmd.hpp>
-#include <pacmod3_msgs/msg/system_cmd_bool.hpp>
-#include <pacmod3_msgs/msg/system_cmd_float.hpp>
-#include <pacmod3_msgs/msg/system_cmd_int.hpp>
-#include <pacmod3_msgs/msg/system_rpt_bool.hpp>
-#include <pacmod3_msgs/msg/system_rpt_float.hpp>
-#include <pacmod3_msgs/msg/system_rpt_int.hpp>
-#include <pacmod3_msgs/msg/turn_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/vehicle_dynamics_rpt.hpp>
-#include <pacmod3_msgs/msg/vehicle_speed_rpt.hpp>
-#include <pacmod3_msgs/msg/vin_rpt.hpp>
-#include <pacmod3_msgs/msg/wheel_speed_rpt.hpp>
-#include <pacmod3_msgs/msg/wiper_aux_rpt.hpp>
-#include <pacmod3_msgs/msg/yaw_rate_rpt.hpp>
-
-namespace pm_msgs = pacmod3_msgs::msg;
-namespace can_msgs = can_msgs::msg;
-
-#endif  // USE_ROS2
-
 // namespace pacmod3_common
 namespace pacmod3
 {
@@ -128,6 +35,8 @@ namespace pacmod3
 class Dbc3Api : public DbcApi
 {
 public:
+  Dbc3Api();
+
   std::shared_ptr<void> ParseAccelAuxRpt(const can_msgs::Frame& can_msg) override;
   std::shared_ptr<void> ParseAngVelRpt(const can_msgs::Frame& can_msg) override;
   std::shared_ptr<void> ParseBrakeAuxRpt(const can_msgs::Frame& can_msg) override;
@@ -160,7 +69,7 @@ public:
   std::shared_ptr<void> ParseYawRateRpt(const can_msgs::Frame& can_msg) override;
 
   can_msgs::Frame EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg) override;
-  can_msgs::Frame EncodeSteeringCmd(const pm_msgs::GlobalCmd& msg) override;
+  can_msgs::Frame EncodeSteeringCmd(const pm_msgs::SteeringCmd& msg) override;
   can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) override;
   can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) override;
   can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) override;

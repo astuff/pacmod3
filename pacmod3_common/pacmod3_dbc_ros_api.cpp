@@ -18,33 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef PACMOD3_DBC12_ROS_API_H
-#define PACMOD3_DBC12_ROS_API_H
-
-#include "pacmod3_dbc3_ros_api.h"
+#include <pacmod3_dbc_ros_api.h>
 
 #include <string>
-#include <vector>
-#include <memory>
-#include <mutex>
 
-// namespace pacmod3_common
 namespace pacmod3
 {
 
-// Derived from previous DBC API version
-// The only overridden functions that exist here are due to changes to those msg types relative to the previous version.
-class Dbc4Api : public Dbc3Api
+DbcApi::PrintParseError(const std::string& msg_type)
 {
-public:
-  std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptFloat(const can_msgs::Frame& can_msg) override;
+  std::string full_msg = "Unable to parse " + msg_type + ", it is not supported by DBC version " + str(dbc_major_version_);
 
-  can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) override;
-  can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) override;
-  can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) override;
-};
-}  // namespace pacmod3
+  #ifdef USE_ROS1
+    ROS_WARN(full_msg);
+  #endif  // USE_ROS1
 
-#endif  // PACMOD3_DBC12_ROS_API_H
+  #ifdef USE_ROS2
+
+  #endif  // USE_ROS2
+}
