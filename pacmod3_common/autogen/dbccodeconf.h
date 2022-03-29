@@ -12,3 +12,6 @@ typedef double sigfloat_t;
 // if you need to allocate rx and tx messages structs put the allocation macro here
 // #define __DEF_{your_driver_name}__
 
+
+typedef int64_t bitext_t;
+typedef uint64_t ubitext_t;
