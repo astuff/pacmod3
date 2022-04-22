@@ -96,10 +96,10 @@ typedef struct
 
 } GLOBAL_RPT_t;
 
-// def @COMPONENT_RPT_00 CAN Message (32   0x20)
-#define COMPONENT_RPT_00_IDE (0U)
-#define COMPONENT_RPT_00_DLC (8U)
-#define COMPONENT_RPT_00_CANID (0x20)
+// def @COMPONENT_RPT CAN Message (32   0x20)
+#define COMPONENT_RPT_IDE (0U)
+#define COMPONENT_RPT_DLC (4U)
+#define COMPONENT_RPT_CANID (0x20)
 
 typedef struct
 {
@@ -108,163 +108,47 @@ typedef struct
   //  0 : "PACMod"
   //  1 : "PACMini"
   //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE : 4;                //      Bits= 4
+  uint8_t COMPONENT_TYPE;                    //      Bits= 8
 
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL : 1;                         //      Bits= 1
+  //  0 : "PACMOD"
+  //  1 : "STEERING_AND_STEERING_COLUMN"
+  //  2 : "ACCELERATOR_AND_BRAKING"
+  //  3 : "BRAKING"
+  //  4 : "SHIFTING"
+  //  5 : "STEERING"
+  //  6 : "E_SHIFTER"
+  //  7 : "WATCHDOG"
+  uint8_t COMPONENT_FUNC;                    //      Bits= 8
 
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS : 1;        //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT : 1;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT : 1;           //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT : 1;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS : 1;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING : 1;                      //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER : 1;                         //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
   uint8_t COUNTER : 4;                       //      Bits= 4
 
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
   uint8_t COMPLEMENT : 4;                    //      Bits= 4
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
   uint8_t CONFIG_FAULT : 1;                  //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT : 1;             //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP : 1;                         //      Bits= 1
-
 #else
 
   //  0 : "PACMod"
   //  1 : "PACMini"
   //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE;                    //      Bits= 4
+  uint8_t COMPONENT_TYPE;                    //      Bits= 8
 
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL;                             //      Bits= 1
+  //  0 : "PACMOD"
+  //  1 : "STEERING_AND_STEERING_COLUMN"
+  //  2 : "ACCELERATOR_AND_BRAKING"
+  //  3 : "BRAKING"
+  //  4 : "SHIFTING"
+  //  5 : "STEERING"
+  //  6 : "E_SHIFTER"
+  //  7 : "WATCHDOG"
+  uint8_t COMPONENT_FUNC;                    //      Bits= 8
 
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT;               //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS;                    //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER;                             //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
   uint8_t COUNTER;                           //      Bits= 4
 
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
   uint8_t COMPLEMENT;                        //      Bits= 4
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
   uint8_t CONFIG_FAULT;                      //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT;                 //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP;                             //      Bits= 1
-
 #endif // PACMOD3_USE_BITS_SIGNAL
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -273,569 +157,7 @@ typedef struct
 
 #endif // PACMOD3_USE_DIAG_MONITORS
 
-} COMPONENT_RPT_00_t;
-
-// def @COMPONENT_RPT_01 CAN Message (33   0x21)
-#define COMPONENT_RPT_01_IDE (0U)
-#define COMPONENT_RPT_01_DLC (8U)
-#define COMPONENT_RPT_01_CANID (0x21)
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  //  0 : "PACMod"
-  //  1 : "PACMini"
-  //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE : 4;                //      Bits= 4
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS : 1;        //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT : 1;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT : 1;           //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT : 1;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS : 1;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING : 1;                      //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER : 1;                         //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
-  uint8_t COUNTER : 4;                       //      Bits= 4
-
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
-  uint8_t COMPLEMENT : 4;                    //      Bits= 4
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CONFIG_FAULT : 1;                  //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT : 1;             //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP : 1;                         //      Bits= 1
-
-#else
-
-  //  0 : "PACMod"
-  //  1 : "PACMini"
-  //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE;                    //      Bits= 4
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT;               //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS;                    //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER;                             //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
-  uint8_t COUNTER;                           //      Bits= 4
-
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
-  uint8_t COMPLEMENT;                        //      Bits= 4
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CONFIG_FAULT;                      //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT;                 //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP;                             //      Bits= 1
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} COMPONENT_RPT_01_t;
-
-// def @COMPONENT_RPT_02 CAN Message (34   0x22)
-#define COMPONENT_RPT_02_IDE (0U)
-#define COMPONENT_RPT_02_DLC (8U)
-#define COMPONENT_RPT_02_CANID (0x22)
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  //  0 : "PACMod"
-  //  1 : "PACMini"
-  //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE : 4;                //      Bits= 4
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS : 1;        //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT : 1;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT : 1;           //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT : 1;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS : 1;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING : 1;                      //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER : 1;                         //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
-  uint8_t COUNTER : 4;                       //      Bits= 4
-
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
-  uint8_t COMPLEMENT : 4;                    //      Bits= 4
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CONFIG_FAULT : 1;                  //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT : 1;             //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP : 1;                         //      Bits= 1
-
-#else
-
-  //  0 : "PACMod"
-  //  1 : "PACMini"
-  //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE;                    //      Bits= 4
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT;               //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS;                    //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER;                             //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
-  uint8_t COUNTER;                           //      Bits= 4
-
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
-  uint8_t COMPLEMENT;                        //      Bits= 4
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CONFIG_FAULT;                      //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT;                 //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP;                             //      Bits= 1
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} COMPONENT_RPT_02_t;
-
-// def @COMPONENT_RPT_03 CAN Message (35   0x23)
-#define COMPONENT_RPT_03_IDE (0U)
-#define COMPONENT_RPT_03_DLC (8U)
-#define COMPONENT_RPT_03_CANID (0x23)
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  //  0 : "PACMod"
-  //  1 : "PACMini"
-  //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE : 4;                //      Bits= 4
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS : 1;        //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT : 1;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT : 1;           //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT : 1;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS : 1;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE : 1;                 //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT : 1;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING : 1;                      //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN : 1;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER : 1;                         //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
-  uint8_t COUNTER : 4;                       //      Bits= 4
-
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
-  uint8_t COMPLEMENT : 4;                    //      Bits= 4
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CONFIG_FAULT : 1;                  //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT : 1;             //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP : 1;                         //      Bits= 1
-
-#else
-
-  //  0 : "PACMod"
-  //  1 : "PACMini"
-  //  2 : "PACMicro"
-  uint8_t COMPONENT_TYPE;                    //      Bits= 4
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t ACCEL;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t BRAKE;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t CRUISE_CONTROL_BUTTONS;            //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_LEFT;                //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t DASH_CONTROLS_RIGHT;               //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HAZARD_LIGHTS;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HEADLIGHT;                         //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t HORN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t MEDIA_CONTROLS;                    //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t PARKING_BRAKE;                     //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t SHIFT;                             //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t STEERING;                          //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t TURN;                              //      Bits= 1
-
-  //  0 : "ABSENT"
-  //  1 : "PRESENT"
-  uint8_t WIPER;                             //      Bits= 1
-
-  // Counter shall have the value of 0 with the first message transmission.  It shall increase by 1 with each subsequent message transmission up to and including the value of 0xF.  The next message transmission shall be 0, and this pattern shall repeat.
-  uint8_t COUNTER;                           //      Bits= 4
-
-  // The COMPLEMENT shall be the complement of the COUNTER.  For example, if COUNTER is 0x1011, then the COMPLEMENT is 0x0100.
-  uint8_t COMPLEMENT;                        //      Bits= 4
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CONFIG_FAULT;                      //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t CAN_TIMEOUT_FAULT;                 //      Bits= 1
-
-  //  0 : "RELEASED"
-  //  1 : "PRESSED"
-  uint8_t ESTOP;                             //      Bits= 1
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} COMPONENT_RPT_03_t;
-
-// def @GLOBAL_CMD CAN Message (128  0x80)
-#define GLOBAL_CMD_IDE (0U)
-#define GLOBAL_CMD_DLC (8U)
-#define GLOBAL_CMD_CANID (0x80)
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
-
-#else
-
-  uint8_t CLEAR_FAULTS;                      //      Bits= 1
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} GLOBAL_CMD_t;
+} COMPONENT_RPT_t;
 
 // def @ACCEL_CMD CAN Message (256  0x100)
 #define ACCEL_CMD_IDE (0U)
@@ -856,6 +178,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   uint16_t ACCEL_CMD_ro;                     //      Bits=16 Factor= 0.001000       
 
 #ifdef PACMOD3_USE_SIGFLOAT
@@ -869,6 +193,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   uint16_t ACCEL_CMD_ro;                     //      Bits=16 Factor= 0.001000       
 
@@ -905,6 +231,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   uint16_t BRAKE_CMD_ro;                     //      Bits=16 Factor= 0.001000       
 
 #ifdef PACMOD3_USE_SIGFLOAT
@@ -918,6 +246,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   uint16_t BRAKE_CMD_ro;                     //      Bits=16 Factor= 0.001000       
 
@@ -950,6 +280,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  6 : "CRUISE_CONTROL_ON_OFF"
   //  5 : "CRUISE_CONTROL_RES_INC"
   //  4 : "CRUISE_CONTROL_SET_DEC"
@@ -966,6 +298,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  6 : "CRUISE_CONTROL_ON_OFF"
   //  5 : "CRUISE_CONTROL_RES_INC"
@@ -1001,6 +335,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
   //  3 : "DASH_CONTROL_RIGHT"
@@ -1016,6 +352,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
@@ -1050,6 +388,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
   //  3 : "DASH_CONTROL_RIGHT"
@@ -1065,6 +405,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
@@ -1099,6 +441,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   uint8_t HAZARD_LIGHTS_CMD : 1;             //      Bits= 1
 
 #else
@@ -1108,6 +452,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   uint8_t HAZARD_LIGHTS_CMD;                 //      Bits= 1
 
@@ -1136,6 +482,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  2 : "High Beams"
   //  1 : "Low Beams"
   //  0 : "Headlights Off"
@@ -1148,6 +496,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  2 : "High Beams"
   //  1 : "Low Beams"
@@ -1179,6 +529,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  0 : "OFF"
   //  1 : "ON"
   uint8_t HORN_CMD : 1;                      //      Bits= 1
@@ -1190,6 +542,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  0 : "OFF"
   //  1 : "ON"
@@ -1220,6 +574,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  6 : "MEDIA_CONTROL_VOL_DOWN"
   //  5 : "MEDIA_CONTROL_VOL_UP"
   //  4 : "MEDIA_CONTROL_NEXT_TRACK_HANG_UP"
@@ -1236,6 +592,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  6 : "MEDIA_CONTROL_VOL_DOWN"
   //  5 : "MEDIA_CONTROL_VOL_UP"
@@ -1271,6 +629,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   uint8_t PARKING_BRAKE_CMD : 1;             //      Bits= 1
 
 #else
@@ -1280,6 +640,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   uint8_t PARKING_BRAKE_CMD;                 //      Bits= 1
 
@@ -1308,6 +670,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   // FORWARD is also HIGH on vehicles with LOW/HIGH, PARK and LOW only available on certain Vehicles.
   //  0 : "PARK"
   //  1 : "REVERSE"
@@ -1324,6 +688,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   // FORWARD is also HIGH on vehicles with LOW/HIGH, PARK and LOW only available on certain Vehicles.
   //  0 : "PARK"
@@ -1367,6 +733,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   int16_t POSITION_ro;                       //  [-] Bits=16 Factor= 0.001000        Unit:'rad'
 
 #ifdef PACMOD3_USE_SIGFLOAT
@@ -1386,6 +754,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   int16_t POSITION_ro;                       //  [-] Bits=16 Factor= 0.001000        Unit:'rad'
 
@@ -1424,6 +794,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  0 : "RIGHT"
   //  1 : "NONE"
   //  2 : "LEFT"
@@ -1437,6 +809,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  0 : "RIGHT"
   //  1 : "NONE"
@@ -1469,6 +843,8 @@ typedef struct
 
   uint8_t CLEAR_OVERRIDE : 1;                //      Bits= 1
 
+  uint8_t CLEAR_FAULTS : 1;                  //      Bits= 1
+
   //  7 : "High"
   //  6 : "Low"
   //  5 : "Intermittent 5"
@@ -1486,6 +862,8 @@ typedef struct
   uint8_t IGNORE_OVERRIDES;                  //      Bits= 1
 
   uint8_t CLEAR_OVERRIDE;                    //      Bits= 1
+
+  uint8_t CLEAR_FAULTS;                      //      Bits= 1
 
   //  7 : "High"
   //  6 : "Low"
@@ -1542,10 +920,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   uint16_t MANUAL_INPUT_ro;                  //      Bits=16 Factor= 0.001000       
 
 #ifdef PACMOD3_USE_SIGFLOAT
@@ -1579,10 +953,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   uint16_t MANUAL_INPUT_ro;                  //      Bits=16 Factor= 0.001000       
 
@@ -1647,10 +1017,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   uint16_t MANUAL_INPUT_ro;                  //      Bits=16 Factor= 0.001000       
 
 #ifdef PACMOD3_USE_SIGFLOAT
@@ -1684,10 +1050,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   uint16_t MANUAL_INPUT_ro;                  //      Bits=16 Factor= 0.001000       
 
@@ -1740,10 +1102,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  6 : "CRUISE_CONTROL_ON_OFF"
   //  5 : "CRUISE_CONTROL_RES_INC"
   //  4 : "CRUISE_CONTROL_SET_DEC"
@@ -1786,10 +1144,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  6 : "CRUISE_CONTROL_ON_OFF"
   //  5 : "CRUISE_CONTROL_RES_INC"
@@ -1851,10 +1205,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
   //  3 : "DASH_CONTROL_RIGHT"
@@ -1894,10 +1244,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
@@ -1956,10 +1302,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
   //  3 : "DASH_CONTROL_RIGHT"
@@ -1999,10 +1341,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  5 : "DASH_CONTROL_DOWN"
   //  4 : "DASH_CONTROL_UP"
@@ -2061,10 +1399,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   uint8_t MANUAL_INPUT : 1;                  //      Bits= 1
 
   uint8_t COMMANDED_VALUE : 1;               //      Bits= 1
@@ -2086,10 +1420,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   uint8_t MANUAL_INPUT;                      //      Bits= 1
 
@@ -2130,10 +1460,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  2 : "High Beams"
   //  1 : "Low Beams"
   //  0 : "Headlights Off"
@@ -2164,10 +1490,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  2 : "High Beams"
   //  1 : "Low Beams"
@@ -2217,10 +1539,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  0 : "OFF"
   //  1 : "ON"
   uint8_t MANUAL_INPUT;                      //      Bits= 8
@@ -2248,10 +1566,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  0 : "OFF"
   //  1 : "ON"
@@ -2298,10 +1612,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  6 : "MEDIA_CONTROL_VOL_DOWN"
   //  5 : "MEDIA_CONTROL_VOL_UP"
   //  4 : "MEDIA_CONTROL_NEXT_TRACK_HANG_UP"
@@ -2344,10 +1654,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  6 : "MEDIA_CONTROL_VOL_DOWN"
   //  5 : "MEDIA_CONTROL_VOL_UP"
@@ -2409,10 +1715,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   uint8_t MANUAL_INPUT : 1;                  //      Bits= 1
 
   uint8_t COMMANDED_VALUE : 1;               //      Bits= 1
@@ -2434,10 +1736,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   uint8_t MANUAL_INPUT;                      //      Bits= 1
 
@@ -2477,10 +1775,6 @@ typedef struct
   uint8_t PACMOD_FAULT : 1;                  //      Bits= 1
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
 
   //  0 : "PARK"
   //  1 : "REVERSE"
@@ -2525,10 +1819,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  0 : "PARK"
   //  1 : "REVERSE"
@@ -2603,10 +1893,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   int16_t MANUAL_INPUT_ro;                   //  [-] Bits=16 Factor= 0.001000        Unit:'rad'
 
 #ifdef PACMOD3_USE_SIGFLOAT
@@ -2640,10 +1926,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   int16_t MANUAL_INPUT_ro;                   //  [-] Bits=16 Factor= 0.001000        Unit:'rad'
 
@@ -2696,10 +1978,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  0 : "RIGHT"
   //  1 : "NONE"
   //  2 : "LEFT"
@@ -2733,10 +2011,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  0 : "RIGHT"
   //  1 : "NONE"
@@ -2789,10 +2063,6 @@ typedef struct
 
   uint8_t VEHICLE_FAULT : 1;                 //      Bits= 1
 
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT : 1;               //      Bits= 1
-
   //  7 : "High"
   //  6 : "Low"
   //  5 : "Intermittent 5"
@@ -2838,10 +2108,6 @@ typedef struct
   uint8_t PACMOD_FAULT;                      //      Bits= 1
 
   uint8_t VEHICLE_FAULT;                     //      Bits= 1
-
-  //  0 : "NO_FAULT"
-  //  1 : "FAULT"
-  uint8_t COMMAND_TIMEOUT;                   //      Bits= 1
 
   //  7 : "High"
   //  6 : "Low"
@@ -4347,277 +3613,6 @@ typedef struct
 
 } REAR_LIGHTS_RPT_t;
 
-// def @LINEAR_ACCEL_RPT CAN Message (1049 0x419)
-#define LINEAR_ACCEL_RPT_IDE (0U)
-#define LINEAR_ACCEL_RPT_DLC (8U)
-#define LINEAR_ACCEL_RPT_CANID (0x419)
-// signal: @LATERAL_ACCEL_ro
-#define PACMOD3_LATERAL_ACCEL_ro_CovFactor (0.010000)
-#define PACMOD3_LATERAL_ACCEL_ro_toS(x) ( (int16_t) (((x) - (0.000000)) / (0.010000)) )
-#define PACMOD3_LATERAL_ACCEL_ro_fromS(x) ( (((x) * (0.010000)) + (0.000000)) )
-// signal: @LONGITUDNAL_ACCEL_ro
-#define PACMOD3_LONGITUDNAL_ACCEL_ro_CovFactor (0.010000)
-#define PACMOD3_LONGITUDNAL_ACCEL_ro_toS(x) ( (int16_t) (((x) - (0.000000)) / (0.010000)) )
-#define PACMOD3_LONGITUDNAL_ACCEL_ro_fromS(x) ( (((x) * (0.010000)) + (0.000000)) )
-// signal: @VERTICAL_ACCEL_ro
-#define PACMOD3_VERTICAL_ACCEL_ro_CovFactor (0.010000)
-#define PACMOD3_VERTICAL_ACCEL_ro_toS(x) ( (int16_t) (((x) - (0.000000)) / (0.010000)) )
-#define PACMOD3_VERTICAL_ACCEL_ro_fromS(x) ( (((x) * (0.010000)) + (0.000000)) )
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t LATERAL_NEW_DATA_RX : 1;           //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t LONGITUDNAL_NEW_DATA_RX : 1;       //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t VERTICAL_NEW_DATA_RX : 1;          //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t LATERAL_VALID : 1;                 //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t LONGITUDNAL_VALID : 1;             //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t VERTICAL_VALID : 1;                //      Bits= 1
-
-  int16_t LATERAL_ACCEL_ro;                  //  [-] Bits=16 Factor= 0.010000        Unit:'m/s^2'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t LATERAL_ACCEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t LONGITUDNAL_ACCEL_ro;              //  [-] Bits=16 Factor= 0.010000        Unit:'m/s^2'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t LONGITUDNAL_ACCEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t VERTICAL_ACCEL_ro;                 //  [-] Bits=16 Factor= 0.010000        Unit:'m/s^2'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t VERTICAL_ACCEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-#else
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t LATERAL_NEW_DATA_RX;               //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t LONGITUDNAL_NEW_DATA_RX;           //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t VERTICAL_NEW_DATA_RX;              //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t LATERAL_VALID;                     //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t LONGITUDNAL_VALID;                 //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t VERTICAL_VALID;                    //      Bits= 1
-
-  int16_t LATERAL_ACCEL_ro;                  //  [-] Bits=16 Factor= 0.010000        Unit:'m/s^2'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t LATERAL_ACCEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t LONGITUDNAL_ACCEL_ro;              //  [-] Bits=16 Factor= 0.010000        Unit:'m/s^2'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t LONGITUDNAL_ACCEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t VERTICAL_ACCEL_ro;                 //  [-] Bits=16 Factor= 0.010000        Unit:'m/s^2'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t VERTICAL_ACCEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} LINEAR_ACCEL_RPT_t;
-
-// def @ANG_VEL_RPT CAN Message (1050 0x41a)
-#define ANG_VEL_RPT_IDE (0U)
-#define ANG_VEL_RPT_DLC (8U)
-#define ANG_VEL_RPT_CANID (0x41a)
-// signal: @PITCH_VEL_ro
-#define PACMOD3_PITCH_VEL_ro_CovFactor (0.001000)
-#define PACMOD3_PITCH_VEL_ro_toS(x) ( (int16_t) (((x) - (0.000000)) / (0.001000)) )
-#define PACMOD3_PITCH_VEL_ro_fromS(x) ( (((x) * (0.001000)) + (0.000000)) )
-// signal: @ROLL_VEL_ro
-#define PACMOD3_ROLL_VEL_ro_CovFactor (0.001000)
-#define PACMOD3_ROLL_VEL_ro_toS(x) ( (int16_t) (((x) - (0.000000)) / (0.001000)) )
-#define PACMOD3_ROLL_VEL_ro_fromS(x) ( (((x) * (0.001000)) + (0.000000)) )
-// signal: @YAW_VEL_ro
-#define PACMOD3_YAW_VEL_ro_CovFactor (0.001000)
-#define PACMOD3_YAW_VEL_ro_toS(x) ( (int16_t) (((x) - (0.000000)) / (0.001000)) )
-#define PACMOD3_YAW_VEL_ro_fromS(x) ( (((x) * (0.001000)) + (0.000000)) )
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t PITCH_NEW_DATA_RX : 1;             //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t ROLL_NEW_DATA_RX : 1;              //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t YAW_NEW_DATA_RX : 1;               //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t PITCH_VALID : 1;                   //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t ROLL_VALID : 1;                    //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t YAW_VALID : 1;                     //      Bits= 1
-
-  int16_t PITCH_VEL_ro;                      //  [-] Bits=16 Factor= 0.001000        Unit:'rad/s'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t PITCH_VEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t ROLL_VEL_ro;                       //  [-] Bits=16 Factor= 0.001000        Unit:'rad/s'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t ROLL_VEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t YAW_VEL_ro;                        //  [-] Bits=16 Factor= 0.001000        Unit:'rad/s'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t YAW_VEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-#else
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t PITCH_NEW_DATA_RX;                 //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t ROLL_NEW_DATA_RX;                  //      Bits= 1
-
-  //  0 : "NEW_DATA_NOT_RX"
-  //  1 : "NEW_DATA_RX"
-  uint8_t YAW_NEW_DATA_RX;                   //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t PITCH_VALID;                       //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t ROLL_VALID;                        //      Bits= 1
-
-  //  0 : "NOT_VALID"
-  //  1 : "VALID"
-  uint8_t YAW_VALID;                         //      Bits= 1
-
-  int16_t PITCH_VEL_ro;                      //  [-] Bits=16 Factor= 0.001000        Unit:'rad/s'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t PITCH_VEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t ROLL_VEL_ro;                       //  [-] Bits=16 Factor= 0.001000        Unit:'rad/s'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t ROLL_VEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-  int16_t YAW_VEL_ro;                        //  [-] Bits=16 Factor= 0.001000        Unit:'rad/s'
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  sigfloat_t YAW_VEL_phys;
-#endif // PACMOD3_USE_SIGFLOAT
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} ANG_VEL_RPT_t;
-
-// def @NOTIFICATION_CMD CAN Message (1051 0x41b)
-#define NOTIFICATION_CMD_IDE (0U)
-#define NOTIFICATION_CMD_DLC (8U)
-#define NOTIFICATION_CMD_CANID (0x41b)
-
-typedef struct
-{
-#ifdef PACMOD3_USE_BITS_SIGNAL
-
-  //  0 : "NOT_MUTED"
-  //  1 : "MUTED"
-  uint8_t BUZZER_MUTE : 1;                   //      Bits= 1
-
-  //  0 : "NO_ACTION"
-  //  1 : "WHITE"
-  uint8_t UNDERDASH_LIGHTS_WHITE : 1;        //      Bits= 1
-
-#else
-
-  //  0 : "NOT_MUTED"
-  //  1 : "MUTED"
-  uint8_t BUZZER_MUTE;                       //      Bits= 1
-
-  //  0 : "NO_ACTION"
-  //  1 : "WHITE"
-  uint8_t UNDERDASH_LIGHTS_WHITE;            //      Bits= 1
-
-#endif // PACMOD3_USE_BITS_SIGNAL
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-
-  FrameMonitor_t mon1;
-
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-} NOTIFICATION_CMD_t;
-
 // Function signatures
 
 uint32_t Unpack_GLOBAL_RPT_pacmod3(GLOBAL_RPT_t* _m, const uint8_t* _d, uint8_t dlc_);
@@ -4627,39 +3622,11 @@ uint32_t Pack_GLOBAL_RPT_pacmod3(GLOBAL_RPT_t* _m, __CoderDbcCanFrame_t__* cfram
 uint32_t Pack_GLOBAL_RPT_pacmod3(GLOBAL_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
 #endif // PACMOD3_USE_CANSTRUCT
 
-uint32_t Unpack_COMPONENT_RPT_00_pacmod3(COMPONENT_RPT_00_t* _m, const uint8_t* _d, uint8_t dlc_);
+uint32_t Unpack_COMPONENT_RPT_pacmod3(COMPONENT_RPT_t* _m, const uint8_t* _d, uint8_t dlc_);
 #ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_COMPONENT_RPT_00_pacmod3(COMPONENT_RPT_00_t* _m, __CoderDbcCanFrame_t__* cframe);
+uint32_t Pack_COMPONENT_RPT_pacmod3(COMPONENT_RPT_t* _m, __CoderDbcCanFrame_t__* cframe);
 #else
-uint32_t Pack_COMPONENT_RPT_00_pacmod3(COMPONENT_RPT_00_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_COMPONENT_RPT_01_pacmod3(COMPONENT_RPT_01_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_COMPONENT_RPT_01_pacmod3(COMPONENT_RPT_01_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_COMPONENT_RPT_01_pacmod3(COMPONENT_RPT_01_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_COMPONENT_RPT_02_pacmod3(COMPONENT_RPT_02_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_COMPONENT_RPT_02_pacmod3(COMPONENT_RPT_02_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_COMPONENT_RPT_02_pacmod3(COMPONENT_RPT_02_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_COMPONENT_RPT_03_pacmod3(COMPONENT_RPT_03_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_COMPONENT_RPT_03_pacmod3(COMPONENT_RPT_03_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_COMPONENT_RPT_03_pacmod3(COMPONENT_RPT_03_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_GLOBAL_CMD_pacmod3(GLOBAL_CMD_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_GLOBAL_CMD_pacmod3(GLOBAL_CMD_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_GLOBAL_CMD_pacmod3(GLOBAL_CMD_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
+uint32_t Pack_COMPONENT_RPT_pacmod3(COMPONENT_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
 #endif // PACMOD3_USE_CANSTRUCT
 
 uint32_t Unpack_ACCEL_CMD_pacmod3(ACCEL_CMD_t* _m, const uint8_t* _d, uint8_t dlc_);
@@ -5038,27 +4005,6 @@ uint32_t Unpack_REAR_LIGHTS_RPT_pacmod3(REAR_LIGHTS_RPT_t* _m, const uint8_t* _d
 uint32_t Pack_REAR_LIGHTS_RPT_pacmod3(REAR_LIGHTS_RPT_t* _m, __CoderDbcCanFrame_t__* cframe);
 #else
 uint32_t Pack_REAR_LIGHTS_RPT_pacmod3(REAR_LIGHTS_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_LINEAR_ACCEL_RPT_pacmod3(LINEAR_ACCEL_RPT_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_LINEAR_ACCEL_RPT_pacmod3(LINEAR_ACCEL_RPT_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_LINEAR_ACCEL_RPT_pacmod3(LINEAR_ACCEL_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_ANG_VEL_RPT_pacmod3(ANG_VEL_RPT_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_ANG_VEL_RPT_pacmod3(ANG_VEL_RPT_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_ANG_VEL_RPT_pacmod3(ANG_VEL_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_NOTIFICATION_CMD_pacmod3(NOTIFICATION_CMD_t* _m, const uint8_t* _d, uint8_t dlc_);
-#ifdef PACMOD3_USE_CANSTRUCT
-uint32_t Pack_NOTIFICATION_CMD_pacmod3(NOTIFICATION_CMD_t* _m, __CoderDbcCanFrame_t__* cframe);
-#else
-uint32_t Pack_NOTIFICATION_CMD_pacmod3(NOTIFICATION_CMD_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide);
 #endif // PACMOD3_USE_CANSTRUCT
 
 #ifdef __cplusplus

@@ -79,335 +79,57 @@ uint32_t Pack_GLOBAL_RPT_pacmod3(GLOBAL_RPT_t* _m, uint8_t* _d, uint8_t* _len, u
 
 #endif // PACMOD3_USE_CANSTRUCT
 
-uint32_t Unpack_COMPONENT_RPT_00_pacmod3(COMPONENT_RPT_00_t* _m, const uint8_t* _d, uint8_t dlc_)
+uint32_t Unpack_COMPONENT_RPT_pacmod3(COMPONENT_RPT_t* _m, const uint8_t* _d, uint8_t dlc_)
 {
   (void)dlc_;
-  _m->COMPONENT_TYPE = (_d[0] & (0x0FU));
-  _m->ACCEL = ((_d[0] >> 4) & (0x01U));
-  _m->BRAKE = ((_d[0] >> 5) & (0x01U));
-  _m->CRUISE_CONTROL_BUTTONS = ((_d[0] >> 6) & (0x01U));
-  _m->DASH_CONTROLS_LEFT = ((_d[0] >> 7) & (0x01U));
-  _m->DASH_CONTROLS_RIGHT = (_d[1] & (0x01U));
-  _m->HAZARD_LIGHTS = ((_d[1] >> 1) & (0x01U));
-  _m->HEADLIGHT = ((_d[1] >> 2) & (0x01U));
-  _m->HORN = ((_d[1] >> 3) & (0x01U));
-  _m->MEDIA_CONTROLS = ((_d[1] >> 4) & (0x01U));
-  _m->PARKING_BRAKE = ((_d[1] >> 5) & (0x01U));
-  _m->SHIFT = ((_d[1] >> 6) & (0x01U));
-  _m->STEERING = ((_d[1] >> 7) & (0x01U));
-  _m->TURN = (_d[2] & (0x01U));
-  _m->WIPER = ((_d[2] >> 1) & (0x01U));
-  _m->COUNTER = (_d[4] & (0x0FU));
-  _m->COMPLEMENT = ((_d[4] >> 4) & (0x0FU));
-  _m->CONFIG_FAULT = (_d[5] & (0x01U));
-  _m->CAN_TIMEOUT_FAULT = ((_d[5] >> 1) & (0x01U));
-  _m->ESTOP = ((_d[5] >> 2) & (0x01U));
+  _m->COMPONENT_TYPE = (_d[0] & (0xFFU));
+  _m->COMPONENT_FUNC = (_d[1] & (0xFFU));
+  _m->COUNTER = (_d[2] & (0x0FU));
+  _m->COMPLEMENT = ((_d[2] >> 4) & (0x0FU));
+  _m->CONFIG_FAULT = (_d[3] & (0x01U));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < COMPONENT_RPT_00_DLC);
+  _m->mon1.dlc_error = (dlc_ < COMPONENT_RPT_DLC);
   _m->mon1.last_cycle = GetSystemTick();
   _m->mon1.frame_cnt++;
 
-  FMon_COMPONENT_RPT_00_pacmod3(&_m->mon1, COMPONENT_RPT_00_CANID);
+  FMon_COMPONENT_RPT_pacmod3(&_m->mon1, COMPONENT_RPT_CANID);
 #endif // PACMOD3_USE_DIAG_MONITORS
 
-  return COMPONENT_RPT_00_CANID;
+  return COMPONENT_RPT_CANID;
 }
 
 #ifdef PACMOD3_USE_CANSTRUCT
 
-uint32_t Pack_COMPONENT_RPT_00_pacmod3(COMPONENT_RPT_00_t* _m, __CoderDbcCanFrame_t__* cframe)
+uint32_t Pack_COMPONENT_RPT_pacmod3(COMPONENT_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_00_DLC) && (i < 8); cframe->Data[i++] = 0);
+  uint8_t i; for (i = 0; (i < COMPONENT_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  cframe->Data[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  cframe->Data[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  cframe->Data[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  cframe->Data[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->COMPONENT_TYPE & (0xFFU));
+  cframe->Data[1] |= (_m->COMPONENT_FUNC & (0xFFU));
+  cframe->Data[2] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
+  cframe->Data[3] |= (_m->CONFIG_FAULT & (0x01U));
 
-  cframe->MsgId = COMPONENT_RPT_00_CANID;
-  cframe->DLC = COMPONENT_RPT_00_DLC;
-  cframe->IDE = COMPONENT_RPT_00_IDE;
-  return COMPONENT_RPT_00_CANID;
+  cframe->MsgId = COMPONENT_RPT_CANID;
+  cframe->DLC = COMPONENT_RPT_DLC;
+  cframe->IDE = COMPONENT_RPT_IDE;
+  return COMPONENT_RPT_CANID;
 }
 
 #else
 
-uint32_t Pack_COMPONENT_RPT_00_pacmod3(COMPONENT_RPT_00_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
+uint32_t Pack_COMPONENT_RPT_pacmod3(COMPONENT_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
 {
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_00_DLC) && (i < 8); _d[i++] = 0);
+  uint8_t i; for (i = 0; (i < COMPONENT_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  _d[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  _d[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  _d[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  _d[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
+  _d[0] |= (_m->COMPONENT_TYPE & (0xFFU));
+  _d[1] |= (_m->COMPONENT_FUNC & (0xFFU));
+  _d[2] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
+  _d[3] |= (_m->CONFIG_FAULT & (0x01U));
 
-  *_len = COMPONENT_RPT_00_DLC;
-  *_ide = COMPONENT_RPT_00_IDE;
-  return COMPONENT_RPT_00_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_COMPONENT_RPT_01_pacmod3(COMPONENT_RPT_01_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->COMPONENT_TYPE = (_d[0] & (0x0FU));
-  _m->ACCEL = ((_d[0] >> 4) & (0x01U));
-  _m->BRAKE = ((_d[0] >> 5) & (0x01U));
-  _m->CRUISE_CONTROL_BUTTONS = ((_d[0] >> 6) & (0x01U));
-  _m->DASH_CONTROLS_LEFT = ((_d[0] >> 7) & (0x01U));
-  _m->DASH_CONTROLS_RIGHT = (_d[1] & (0x01U));
-  _m->HAZARD_LIGHTS = ((_d[1] >> 1) & (0x01U));
-  _m->HEADLIGHT = ((_d[1] >> 2) & (0x01U));
-  _m->HORN = ((_d[1] >> 3) & (0x01U));
-  _m->MEDIA_CONTROLS = ((_d[1] >> 4) & (0x01U));
-  _m->PARKING_BRAKE = ((_d[1] >> 5) & (0x01U));
-  _m->SHIFT = ((_d[1] >> 6) & (0x01U));
-  _m->STEERING = ((_d[1] >> 7) & (0x01U));
-  _m->TURN = (_d[2] & (0x01U));
-  _m->WIPER = ((_d[2] >> 1) & (0x01U));
-  _m->COUNTER = (_d[4] & (0x0FU));
-  _m->COMPLEMENT = ((_d[4] >> 4) & (0x0FU));
-  _m->CONFIG_FAULT = (_d[5] & (0x01U));
-  _m->CAN_TIMEOUT_FAULT = ((_d[5] >> 1) & (0x01U));
-  _m->ESTOP = ((_d[5] >> 2) & (0x01U));
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < COMPONENT_RPT_01_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_COMPONENT_RPT_01_pacmod3(&_m->mon1, COMPONENT_RPT_01_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return COMPONENT_RPT_01_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_COMPONENT_RPT_01_pacmod3(COMPONENT_RPT_01_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_01_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-  cframe->Data[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  cframe->Data[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  cframe->Data[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  cframe->Data[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  cframe->Data[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
-
-  cframe->MsgId = COMPONENT_RPT_01_CANID;
-  cframe->DLC = COMPONENT_RPT_01_DLC;
-  cframe->IDE = COMPONENT_RPT_01_IDE;
-  return COMPONENT_RPT_01_CANID;
-}
-
-#else
-
-uint32_t Pack_COMPONENT_RPT_01_pacmod3(COMPONENT_RPT_01_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_01_DLC) && (i < 8); _d[i++] = 0);
-
-  _d[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  _d[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  _d[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  _d[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  _d[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
-
-  *_len = COMPONENT_RPT_01_DLC;
-  *_ide = COMPONENT_RPT_01_IDE;
-  return COMPONENT_RPT_01_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_COMPONENT_RPT_02_pacmod3(COMPONENT_RPT_02_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->COMPONENT_TYPE = (_d[0] & (0x0FU));
-  _m->ACCEL = ((_d[0] >> 4) & (0x01U));
-  _m->BRAKE = ((_d[0] >> 5) & (0x01U));
-  _m->CRUISE_CONTROL_BUTTONS = ((_d[0] >> 6) & (0x01U));
-  _m->DASH_CONTROLS_LEFT = ((_d[0] >> 7) & (0x01U));
-  _m->DASH_CONTROLS_RIGHT = (_d[1] & (0x01U));
-  _m->HAZARD_LIGHTS = ((_d[1] >> 1) & (0x01U));
-  _m->HEADLIGHT = ((_d[1] >> 2) & (0x01U));
-  _m->HORN = ((_d[1] >> 3) & (0x01U));
-  _m->MEDIA_CONTROLS = ((_d[1] >> 4) & (0x01U));
-  _m->PARKING_BRAKE = ((_d[1] >> 5) & (0x01U));
-  _m->SHIFT = ((_d[1] >> 6) & (0x01U));
-  _m->STEERING = ((_d[1] >> 7) & (0x01U));
-  _m->TURN = (_d[2] & (0x01U));
-  _m->WIPER = ((_d[2] >> 1) & (0x01U));
-  _m->COUNTER = (_d[4] & (0x0FU));
-  _m->COMPLEMENT = ((_d[4] >> 4) & (0x0FU));
-  _m->CONFIG_FAULT = (_d[5] & (0x01U));
-  _m->CAN_TIMEOUT_FAULT = ((_d[5] >> 1) & (0x01U));
-  _m->ESTOP = ((_d[5] >> 2) & (0x01U));
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < COMPONENT_RPT_02_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_COMPONENT_RPT_02_pacmod3(&_m->mon1, COMPONENT_RPT_02_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return COMPONENT_RPT_02_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_COMPONENT_RPT_02_pacmod3(COMPONENT_RPT_02_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_02_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-  cframe->Data[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  cframe->Data[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  cframe->Data[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  cframe->Data[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  cframe->Data[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
-
-  cframe->MsgId = COMPONENT_RPT_02_CANID;
-  cframe->DLC = COMPONENT_RPT_02_DLC;
-  cframe->IDE = COMPONENT_RPT_02_IDE;
-  return COMPONENT_RPT_02_CANID;
-}
-
-#else
-
-uint32_t Pack_COMPONENT_RPT_02_pacmod3(COMPONENT_RPT_02_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_02_DLC) && (i < 8); _d[i++] = 0);
-
-  _d[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  _d[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  _d[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  _d[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  _d[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
-
-  *_len = COMPONENT_RPT_02_DLC;
-  *_ide = COMPONENT_RPT_02_IDE;
-  return COMPONENT_RPT_02_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_COMPONENT_RPT_03_pacmod3(COMPONENT_RPT_03_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->COMPONENT_TYPE = (_d[0] & (0x0FU));
-  _m->ACCEL = ((_d[0] >> 4) & (0x01U));
-  _m->BRAKE = ((_d[0] >> 5) & (0x01U));
-  _m->CRUISE_CONTROL_BUTTONS = ((_d[0] >> 6) & (0x01U));
-  _m->DASH_CONTROLS_LEFT = ((_d[0] >> 7) & (0x01U));
-  _m->DASH_CONTROLS_RIGHT = (_d[1] & (0x01U));
-  _m->HAZARD_LIGHTS = ((_d[1] >> 1) & (0x01U));
-  _m->HEADLIGHT = ((_d[1] >> 2) & (0x01U));
-  _m->HORN = ((_d[1] >> 3) & (0x01U));
-  _m->MEDIA_CONTROLS = ((_d[1] >> 4) & (0x01U));
-  _m->PARKING_BRAKE = ((_d[1] >> 5) & (0x01U));
-  _m->SHIFT = ((_d[1] >> 6) & (0x01U));
-  _m->STEERING = ((_d[1] >> 7) & (0x01U));
-  _m->TURN = (_d[2] & (0x01U));
-  _m->WIPER = ((_d[2] >> 1) & (0x01U));
-  _m->COUNTER = (_d[4] & (0x0FU));
-  _m->COMPLEMENT = ((_d[4] >> 4) & (0x0FU));
-  _m->CONFIG_FAULT = (_d[5] & (0x01U));
-  _m->CAN_TIMEOUT_FAULT = ((_d[5] >> 1) & (0x01U));
-  _m->ESTOP = ((_d[5] >> 2) & (0x01U));
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < COMPONENT_RPT_03_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_COMPONENT_RPT_03_pacmod3(&_m->mon1, COMPONENT_RPT_03_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return COMPONENT_RPT_03_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_COMPONENT_RPT_03_pacmod3(COMPONENT_RPT_03_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_03_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-  cframe->Data[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  cframe->Data[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  cframe->Data[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  cframe->Data[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  cframe->Data[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
-
-  cframe->MsgId = COMPONENT_RPT_03_CANID;
-  cframe->DLC = COMPONENT_RPT_03_DLC;
-  cframe->IDE = COMPONENT_RPT_03_IDE;
-  return COMPONENT_RPT_03_CANID;
-}
-
-#else
-
-uint32_t Pack_COMPONENT_RPT_03_pacmod3(COMPONENT_RPT_03_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < COMPONENT_RPT_03_DLC) && (i < 8); _d[i++] = 0);
-
-  _d[0] |= (_m->COMPONENT_TYPE & (0x0FU)) | ((_m->ACCEL & (0x01U)) << 4) | ((_m->BRAKE & (0x01U)) << 5) | ((_m->CRUISE_CONTROL_BUTTONS & (0x01U)) << 6) | ((_m->DASH_CONTROLS_LEFT & (0x01U)) << 7);
-  _d[1] |= (_m->DASH_CONTROLS_RIGHT & (0x01U)) | ((_m->HAZARD_LIGHTS & (0x01U)) << 1) | ((_m->HEADLIGHT & (0x01U)) << 2) | ((_m->HORN & (0x01U)) << 3) | ((_m->MEDIA_CONTROLS & (0x01U)) << 4) | ((_m->PARKING_BRAKE & (0x01U)) << 5) | ((_m->SHIFT & (0x01U)) << 6) | ((_m->STEERING & (0x01U)) << 7);
-  _d[2] |= (_m->TURN & (0x01U)) | ((_m->WIPER & (0x01U)) << 1);
-  _d[4] |= (_m->COUNTER & (0x0FU)) | ((_m->COMPLEMENT & (0x0FU)) << 4);
-  _d[5] |= (_m->CONFIG_FAULT & (0x01U)) | ((_m->CAN_TIMEOUT_FAULT & (0x01U)) << 1) | ((_m->ESTOP & (0x01U)) << 2);
-
-  *_len = COMPONENT_RPT_03_DLC;
-  *_ide = COMPONENT_RPT_03_IDE;
-  return COMPONENT_RPT_03_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_GLOBAL_CMD_pacmod3(GLOBAL_CMD_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->CLEAR_FAULTS = (_d[0] & (0x01U));
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < GLOBAL_CMD_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_GLOBAL_CMD_pacmod3(&_m->mon1, GLOBAL_CMD_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return GLOBAL_CMD_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_GLOBAL_CMD_pacmod3(GLOBAL_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < GLOBAL_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-  cframe->Data[0] |= (_m->CLEAR_FAULTS & (0x01U));
-
-  cframe->MsgId = GLOBAL_CMD_CANID;
-  cframe->DLC = GLOBAL_CMD_DLC;
-  cframe->IDE = GLOBAL_CMD_IDE;
-  return GLOBAL_CMD_CANID;
-}
-
-#else
-
-uint32_t Pack_GLOBAL_CMD_pacmod3(GLOBAL_CMD_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < GLOBAL_CMD_DLC) && (i < 8); _d[i++] = 0);
-
-  _d[0] |= (_m->CLEAR_FAULTS & (0x01U));
-
-  *_len = GLOBAL_CMD_DLC;
-  *_ide = GLOBAL_CMD_IDE;
-  return GLOBAL_CMD_CANID;
+  *_len = COMPONENT_RPT_DLC;
+  *_ide = COMPONENT_RPT_IDE;
+  return COMPONENT_RPT_CANID;
 }
 
 #endif // PACMOD3_USE_CANSTRUCT
@@ -418,6 +140,7 @@ uint32_t Unpack_ACCEL_CMD_pacmod3(ACCEL_CMD_t* _m, const uint8_t* _d, uint8_t dl
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->ACCEL_CMD_ro = ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU));
 #ifdef PACMOD3_USE_SIGFLOAT
   _m->ACCEL_CMD_phys = (sigfloat_t)(PACMOD3_ACCEL_CMD_ro_fromS(_m->ACCEL_CMD_ro));
@@ -444,7 +167,7 @@ uint32_t Pack_ACCEL_CMD_pacmod3(ACCEL_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
   _m->ACCEL_CMD_ro = PACMOD3_ACCEL_CMD_ro_toS(_m->ACCEL_CMD_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= ((_m->ACCEL_CMD_ro >> 8) & (0xFFU));
   cframe->Data[2] |= (_m->ACCEL_CMD_ro & (0xFFU));
 
@@ -464,7 +187,7 @@ uint32_t Pack_ACCEL_CMD_pacmod3(ACCEL_CMD_t* _m, uint8_t* _d, uint8_t* _len, uin
   _m->ACCEL_CMD_ro = PACMOD3_ACCEL_CMD_ro_toS(_m->ACCEL_CMD_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= ((_m->ACCEL_CMD_ro >> 8) & (0xFFU));
   _d[2] |= (_m->ACCEL_CMD_ro & (0xFFU));
 
@@ -481,6 +204,7 @@ uint32_t Unpack_BRAKE_CMD_pacmod3(BRAKE_CMD_t* _m, const uint8_t* _d, uint8_t dl
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->BRAKE_CMD_ro = ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU));
 #ifdef PACMOD3_USE_SIGFLOAT
   _m->BRAKE_CMD_phys = (sigfloat_t)(PACMOD3_BRAKE_CMD_ro_fromS(_m->BRAKE_CMD_ro));
@@ -507,7 +231,7 @@ uint32_t Pack_BRAKE_CMD_pacmod3(BRAKE_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
   _m->BRAKE_CMD_ro = PACMOD3_BRAKE_CMD_ro_toS(_m->BRAKE_CMD_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= ((_m->BRAKE_CMD_ro >> 8) & (0xFFU));
   cframe->Data[2] |= (_m->BRAKE_CMD_ro & (0xFFU));
 
@@ -527,7 +251,7 @@ uint32_t Pack_BRAKE_CMD_pacmod3(BRAKE_CMD_t* _m, uint8_t* _d, uint8_t* _len, uin
   _m->BRAKE_CMD_ro = PACMOD3_BRAKE_CMD_ro_toS(_m->BRAKE_CMD_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= ((_m->BRAKE_CMD_ro >> 8) & (0xFFU));
   _d[2] |= (_m->BRAKE_CMD_ro & (0xFFU));
 
@@ -544,6 +268,7 @@ uint32_t Unpack_CRUISE_CONTROL_BUTTONS_CMD_pacmod3(CRUISE_CONTROL_BUTTONS_CMD_t*
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->CRUISE_CONTROL_BUTTON = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -563,7 +288,7 @@ uint32_t Pack_CRUISE_CONTROL_BUTTONS_CMD_pacmod3(CRUISE_CONTROL_BUTTONS_CMD_t* _
 {
   uint8_t i; for (i = 0; (i < CRUISE_CONTROL_BUTTONS_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->CRUISE_CONTROL_BUTTON & (0xFFU));
 
   cframe->MsgId = CRUISE_CONTROL_BUTTONS_CMD_CANID;
@@ -578,7 +303,7 @@ uint32_t Pack_CRUISE_CONTROL_BUTTONS_CMD_pacmod3(CRUISE_CONTROL_BUTTONS_CMD_t* _
 {
   uint8_t i; for (i = 0; (i < CRUISE_CONTROL_BUTTONS_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->CRUISE_CONTROL_BUTTON & (0xFFU));
 
   *_len = CRUISE_CONTROL_BUTTONS_CMD_DLC;
@@ -594,6 +319,7 @@ uint32_t Unpack_DASH_CONTROLS_LEFT_CMD_pacmod3(DASH_CONTROLS_LEFT_CMD_t* _m, con
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->DASH_CONTROLS_BUTTON = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -613,7 +339,7 @@ uint32_t Pack_DASH_CONTROLS_LEFT_CMD_pacmod3(DASH_CONTROLS_LEFT_CMD_t* _m, __Cod
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_LEFT_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->DASH_CONTROLS_BUTTON & (0xFFU));
 
   cframe->MsgId = DASH_CONTROLS_LEFT_CMD_CANID;
@@ -628,7 +354,7 @@ uint32_t Pack_DASH_CONTROLS_LEFT_CMD_pacmod3(DASH_CONTROLS_LEFT_CMD_t* _m, uint8
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_LEFT_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->DASH_CONTROLS_BUTTON & (0xFFU));
 
   *_len = DASH_CONTROLS_LEFT_CMD_DLC;
@@ -644,6 +370,7 @@ uint32_t Unpack_DASH_CONTROLS_RIGHT_CMD_pacmod3(DASH_CONTROLS_RIGHT_CMD_t* _m, c
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->DASH_CONTROLS_BUTTON = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -663,7 +390,7 @@ uint32_t Pack_DASH_CONTROLS_RIGHT_CMD_pacmod3(DASH_CONTROLS_RIGHT_CMD_t* _m, __C
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_RIGHT_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->DASH_CONTROLS_BUTTON & (0xFFU));
 
   cframe->MsgId = DASH_CONTROLS_RIGHT_CMD_CANID;
@@ -678,7 +405,7 @@ uint32_t Pack_DASH_CONTROLS_RIGHT_CMD_pacmod3(DASH_CONTROLS_RIGHT_CMD_t* _m, uin
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_RIGHT_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->DASH_CONTROLS_BUTTON & (0xFFU));
 
   *_len = DASH_CONTROLS_RIGHT_CMD_DLC;
@@ -694,6 +421,7 @@ uint32_t Unpack_HAZARD_LIGHTS_CMD_pacmod3(HAZARD_LIGHTS_CMD_t* _m, const uint8_t
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->HAZARD_LIGHTS_CMD = (_d[1] & (0x01U));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -713,7 +441,7 @@ uint32_t Pack_HAZARD_LIGHTS_CMD_pacmod3(HAZARD_LIGHTS_CMD_t* _m, __CoderDbcCanFr
 {
   uint8_t i; for (i = 0; (i < HAZARD_LIGHTS_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->HAZARD_LIGHTS_CMD & (0x01U));
 
   cframe->MsgId = HAZARD_LIGHTS_CMD_CANID;
@@ -728,7 +456,7 @@ uint32_t Pack_HAZARD_LIGHTS_CMD_pacmod3(HAZARD_LIGHTS_CMD_t* _m, uint8_t* _d, ui
 {
   uint8_t i; for (i = 0; (i < HAZARD_LIGHTS_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->HAZARD_LIGHTS_CMD & (0x01U));
 
   *_len = HAZARD_LIGHTS_CMD_DLC;
@@ -744,6 +472,7 @@ uint32_t Unpack_HEADLIGHT_CMD_pacmod3(HEADLIGHT_CMD_t* _m, const uint8_t* _d, ui
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->HEADLIGHT_CMD = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -763,7 +492,7 @@ uint32_t Pack_HEADLIGHT_CMD_pacmod3(HEADLIGHT_CMD_t* _m, __CoderDbcCanFrame_t__*
 {
   uint8_t i; for (i = 0; (i < HEADLIGHT_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->HEADLIGHT_CMD & (0xFFU));
 
   cframe->MsgId = HEADLIGHT_CMD_CANID;
@@ -778,7 +507,7 @@ uint32_t Pack_HEADLIGHT_CMD_pacmod3(HEADLIGHT_CMD_t* _m, uint8_t* _d, uint8_t* _
 {
   uint8_t i; for (i = 0; (i < HEADLIGHT_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->HEADLIGHT_CMD & (0xFFU));
 
   *_len = HEADLIGHT_CMD_DLC;
@@ -794,6 +523,7 @@ uint32_t Unpack_HORN_CMD_pacmod3(HORN_CMD_t* _m, const uint8_t* _d, uint8_t dlc_
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->HORN_CMD = (_d[1] & (0x01U));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -813,7 +543,7 @@ uint32_t Pack_HORN_CMD_pacmod3(HORN_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < HORN_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->HORN_CMD & (0x01U));
 
   cframe->MsgId = HORN_CMD_CANID;
@@ -828,7 +558,7 @@ uint32_t Pack_HORN_CMD_pacmod3(HORN_CMD_t* _m, uint8_t* _d, uint8_t* _len, uint8
 {
   uint8_t i; for (i = 0; (i < HORN_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->HORN_CMD & (0x01U));
 
   *_len = HORN_CMD_DLC;
@@ -844,6 +574,7 @@ uint32_t Unpack_MEDIA_CONTROLS_CMD_pacmod3(MEDIA_CONTROLS_CMD_t* _m, const uint8
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->MEDIA_CONTROLS_CMD = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -863,7 +594,7 @@ uint32_t Pack_MEDIA_CONTROLS_CMD_pacmod3(MEDIA_CONTROLS_CMD_t* _m, __CoderDbcCan
 {
   uint8_t i; for (i = 0; (i < MEDIA_CONTROLS_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->MEDIA_CONTROLS_CMD & (0xFFU));
 
   cframe->MsgId = MEDIA_CONTROLS_CMD_CANID;
@@ -878,7 +609,7 @@ uint32_t Pack_MEDIA_CONTROLS_CMD_pacmod3(MEDIA_CONTROLS_CMD_t* _m, uint8_t* _d, 
 {
   uint8_t i; for (i = 0; (i < MEDIA_CONTROLS_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->MEDIA_CONTROLS_CMD & (0xFFU));
 
   *_len = MEDIA_CONTROLS_CMD_DLC;
@@ -894,6 +625,7 @@ uint32_t Unpack_PARKING_BRAKE_CMD_pacmod3(PARKING_BRAKE_CMD_t* _m, const uint8_t
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->PARKING_BRAKE_CMD = (_d[1] & (0x01U));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -913,7 +645,7 @@ uint32_t Pack_PARKING_BRAKE_CMD_pacmod3(PARKING_BRAKE_CMD_t* _m, __CoderDbcCanFr
 {
   uint8_t i; for (i = 0; (i < PARKING_BRAKE_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->PARKING_BRAKE_CMD & (0x01U));
 
   cframe->MsgId = PARKING_BRAKE_CMD_CANID;
@@ -928,7 +660,7 @@ uint32_t Pack_PARKING_BRAKE_CMD_pacmod3(PARKING_BRAKE_CMD_t* _m, uint8_t* _d, ui
 {
   uint8_t i; for (i = 0; (i < PARKING_BRAKE_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->PARKING_BRAKE_CMD & (0x01U));
 
   *_len = PARKING_BRAKE_CMD_DLC;
@@ -944,6 +676,7 @@ uint32_t Unpack_SHIFT_CMD_pacmod3(SHIFT_CMD_t* _m, const uint8_t* _d, uint8_t dl
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->SHIFT_CMD = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -963,7 +696,7 @@ uint32_t Pack_SHIFT_CMD_pacmod3(SHIFT_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < SHIFT_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->SHIFT_CMD & (0xFFU));
 
   cframe->MsgId = SHIFT_CMD_CANID;
@@ -978,7 +711,7 @@ uint32_t Pack_SHIFT_CMD_pacmod3(SHIFT_CMD_t* _m, uint8_t* _d, uint8_t* _len, uin
 {
   uint8_t i; for (i = 0; (i < SHIFT_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->SHIFT_CMD & (0xFFU));
 
   *_len = SHIFT_CMD_DLC;
@@ -994,6 +727,7 @@ uint32_t Unpack_STEERING_CMD_pacmod3(STEERING_CMD_t* _m, const uint8_t* _d, uint
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->POSITION_ro = __ext_sig__(( ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU)) ), 16);
 #ifdef PACMOD3_USE_SIGFLOAT
   _m->POSITION_phys = (sigfloat_t)(PACMOD3_POSITION_ro_fromS(_m->POSITION_ro));
@@ -1026,7 +760,7 @@ uint32_t Pack_STEERING_CMD_pacmod3(STEERING_CMD_t* _m, __CoderDbcCanFrame_t__* c
   _m->ROTATION_RATE_ro = PACMOD3_ROTATION_RATE_ro_toS(_m->ROTATION_RATE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= ((_m->POSITION_ro >> 8) & (0xFFU));
   cframe->Data[2] |= (_m->POSITION_ro & (0xFFU));
   cframe->Data[3] |= ((_m->ROTATION_RATE_ro >> 8) & (0xFFU));
@@ -1049,7 +783,7 @@ uint32_t Pack_STEERING_CMD_pacmod3(STEERING_CMD_t* _m, uint8_t* _d, uint8_t* _le
   _m->ROTATION_RATE_ro = PACMOD3_ROTATION_RATE_ro_toS(_m->ROTATION_RATE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= ((_m->POSITION_ro >> 8) & (0xFFU));
   _d[2] |= (_m->POSITION_ro & (0xFFU));
   _d[3] |= ((_m->ROTATION_RATE_ro >> 8) & (0xFFU));
@@ -1068,6 +802,7 @@ uint32_t Unpack_TURN_CMD_pacmod3(TURN_CMD_t* _m, const uint8_t* _d, uint8_t dlc_
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->TURN_SIGNAL_CMD = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -1087,7 +822,7 @@ uint32_t Pack_TURN_CMD_pacmod3(TURN_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < TURN_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->TURN_SIGNAL_CMD & (0xFFU));
 
   cframe->MsgId = TURN_CMD_CANID;
@@ -1102,7 +837,7 @@ uint32_t Pack_TURN_CMD_pacmod3(TURN_CMD_t* _m, uint8_t* _d, uint8_t* _len, uint8
 {
   uint8_t i; for (i = 0; (i < TURN_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->TURN_SIGNAL_CMD & (0xFFU));
 
   *_len = TURN_CMD_DLC;
@@ -1118,6 +853,7 @@ uint32_t Unpack_WIPER_CMD_pacmod3(WIPER_CMD_t* _m, const uint8_t* _d, uint8_t dl
   _m->ENABLE = (_d[0] & (0x01U));
   _m->IGNORE_OVERRIDES = ((_d[0] >> 1) & (0x01U));
   _m->CLEAR_OVERRIDE = ((_d[0] >> 2) & (0x01U));
+  _m->CLEAR_FAULTS = ((_d[0] >> 3) & (0x01U));
   _m->WIPER_CMD = (_d[1] & (0xFFU));
 
 #ifdef PACMOD3_USE_DIAG_MONITORS
@@ -1137,7 +873,7 @@ uint32_t Pack_WIPER_CMD_pacmod3(WIPER_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < WIPER_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  cframe->Data[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   cframe->Data[1] |= (_m->WIPER_CMD & (0xFFU));
 
   cframe->MsgId = WIPER_CMD_CANID;
@@ -1152,7 +888,7 @@ uint32_t Pack_WIPER_CMD_pacmod3(WIPER_CMD_t* _m, uint8_t* _d, uint8_t* _len, uin
 {
   uint8_t i; for (i = 0; (i < WIPER_CMD_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2);
+  _d[0] |= (_m->ENABLE & (0x01U)) | ((_m->IGNORE_OVERRIDES & (0x01U)) << 1) | ((_m->CLEAR_OVERRIDE & (0x01U)) << 2) | ((_m->CLEAR_FAULTS & (0x01U)) << 3);
   _d[1] |= (_m->WIPER_CMD & (0xFFU));
 
   *_len = WIPER_CMD_DLC;
@@ -1172,7 +908,6 @@ uint32_t Unpack_ACCEL_RPT_pacmod3(ACCEL_RPT_t* _m, const uint8_t* _d, uint8_t dl
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT_ro = ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU));
 #ifdef PACMOD3_USE_SIGFLOAT
   _m->MANUAL_INPUT_phys = (sigfloat_t)(PACMOD3_MANUAL_INPUT_ro_fromS(_m->MANUAL_INPUT_ro));
@@ -1211,7 +946,7 @@ uint32_t Pack_ACCEL_RPT_pacmod3(ACCEL_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
   _m->OUTPUT_VALUE_ro = PACMOD3_OUTPUT_VALUE_ro_toS(_m->OUTPUT_VALUE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= ((_m->MANUAL_INPUT_ro >> 8) & (0xFFU));
   cframe->Data[2] |= (_m->MANUAL_INPUT_ro & (0xFFU));
   cframe->Data[3] |= ((_m->COMMANDED_VALUE_ro >> 8) & (0xFFU));
@@ -1237,7 +972,7 @@ uint32_t Pack_ACCEL_RPT_pacmod3(ACCEL_RPT_t* _m, uint8_t* _d, uint8_t* _len, uin
   _m->OUTPUT_VALUE_ro = PACMOD3_OUTPUT_VALUE_ro_toS(_m->OUTPUT_VALUE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= ((_m->MANUAL_INPUT_ro >> 8) & (0xFFU));
   _d[2] |= (_m->MANUAL_INPUT_ro & (0xFFU));
   _d[3] |= ((_m->COMMANDED_VALUE_ro >> 8) & (0xFFU));
@@ -1262,7 +997,6 @@ uint32_t Unpack_BRAKE_RPT_pacmod3(BRAKE_RPT_t* _m, const uint8_t* _d, uint8_t dl
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT_ro = ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU));
 #ifdef PACMOD3_USE_SIGFLOAT
   _m->MANUAL_INPUT_phys = (sigfloat_t)(PACMOD3_MANUAL_INPUT_ro_fromS(_m->MANUAL_INPUT_ro));
@@ -1301,7 +1035,7 @@ uint32_t Pack_BRAKE_RPT_pacmod3(BRAKE_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
   _m->OUTPUT_VALUE_ro = PACMOD3_OUTPUT_VALUE_ro_toS(_m->OUTPUT_VALUE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= ((_m->MANUAL_INPUT_ro >> 8) & (0xFFU));
   cframe->Data[2] |= (_m->MANUAL_INPUT_ro & (0xFFU));
   cframe->Data[3] |= ((_m->COMMANDED_VALUE_ro >> 8) & (0xFFU));
@@ -1327,7 +1061,7 @@ uint32_t Pack_BRAKE_RPT_pacmod3(BRAKE_RPT_t* _m, uint8_t* _d, uint8_t* _len, uin
   _m->OUTPUT_VALUE_ro = PACMOD3_OUTPUT_VALUE_ro_toS(_m->OUTPUT_VALUE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= ((_m->MANUAL_INPUT_ro >> 8) & (0xFFU));
   _d[2] |= (_m->MANUAL_INPUT_ro & (0xFFU));
   _d[3] |= ((_m->COMMANDED_VALUE_ro >> 8) & (0xFFU));
@@ -1352,7 +1086,6 @@ uint32_t Unpack_CRUISE_CONTROL_BUTTONS_RPT_pacmod3(CRUISE_CONTROL_BUTTONS_RPT_t*
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1374,7 +1107,7 @@ uint32_t Pack_CRUISE_CONTROL_BUTTONS_RPT_pacmod3(CRUISE_CONTROL_BUTTONS_RPT_t* _
 {
   uint8_t i; for (i = 0; (i < CRUISE_CONTROL_BUTTONS_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1391,7 +1124,7 @@ uint32_t Pack_CRUISE_CONTROL_BUTTONS_RPT_pacmod3(CRUISE_CONTROL_BUTTONS_RPT_t* _
 {
   uint8_t i; for (i = 0; (i < CRUISE_CONTROL_BUTTONS_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1413,7 +1146,6 @@ uint32_t Unpack_DASH_CONTROLS_LEFT_RPT_pacmod3(DASH_CONTROLS_LEFT_RPT_t* _m, con
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1435,7 +1167,7 @@ uint32_t Pack_DASH_CONTROLS_LEFT_RPT_pacmod3(DASH_CONTROLS_LEFT_RPT_t* _m, __Cod
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_LEFT_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1452,7 +1184,7 @@ uint32_t Pack_DASH_CONTROLS_LEFT_RPT_pacmod3(DASH_CONTROLS_LEFT_RPT_t* _m, uint8
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_LEFT_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1474,7 +1206,6 @@ uint32_t Unpack_DASH_CONTROLS_RIGHT_RPT_pacmod3(DASH_CONTROLS_RIGHT_RPT_t* _m, c
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1496,7 +1227,7 @@ uint32_t Pack_DASH_CONTROLS_RIGHT_RPT_pacmod3(DASH_CONTROLS_RIGHT_RPT_t* _m, __C
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_RIGHT_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1513,7 +1244,7 @@ uint32_t Pack_DASH_CONTROLS_RIGHT_RPT_pacmod3(DASH_CONTROLS_RIGHT_RPT_t* _m, uin
 {
   uint8_t i; for (i = 0; (i < DASH_CONTROLS_RIGHT_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1535,7 +1266,6 @@ uint32_t Unpack_HAZARD_LIGHTS_RPT_pacmod3(HAZARD_LIGHTS_RPT_t* _m, const uint8_t
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0x01U));
   _m->COMMANDED_VALUE = (_d[2] & (0x01U));
   _m->OUTPUT_VALUE = (_d[3] & (0x01U));
@@ -1557,7 +1287,7 @@ uint32_t Pack_HAZARD_LIGHTS_RPT_pacmod3(HAZARD_LIGHTS_RPT_t* _m, __CoderDbcCanFr
 {
   uint8_t i; for (i = 0; (i < HAZARD_LIGHTS_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0x01U));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0x01U));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0x01U));
@@ -1574,7 +1304,7 @@ uint32_t Pack_HAZARD_LIGHTS_RPT_pacmod3(HAZARD_LIGHTS_RPT_t* _m, uint8_t* _d, ui
 {
   uint8_t i; for (i = 0; (i < HAZARD_LIGHTS_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0x01U));
   _d[2] |= (_m->COMMANDED_VALUE & (0x01U));
   _d[3] |= (_m->OUTPUT_VALUE & (0x01U));
@@ -1596,7 +1326,6 @@ uint32_t Unpack_HEADLIGHT_RPT_pacmod3(HEADLIGHT_RPT_t* _m, const uint8_t* _d, ui
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1618,7 +1347,7 @@ uint32_t Pack_HEADLIGHT_RPT_pacmod3(HEADLIGHT_RPT_t* _m, __CoderDbcCanFrame_t__*
 {
   uint8_t i; for (i = 0; (i < HEADLIGHT_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1635,7 +1364,7 @@ uint32_t Pack_HEADLIGHT_RPT_pacmod3(HEADLIGHT_RPT_t* _m, uint8_t* _d, uint8_t* _
 {
   uint8_t i; for (i = 0; (i < HEADLIGHT_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1657,7 +1386,6 @@ uint32_t Unpack_HORN_RPT_pacmod3(HORN_RPT_t* _m, const uint8_t* _d, uint8_t dlc_
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1679,7 +1407,7 @@ uint32_t Pack_HORN_RPT_pacmod3(HORN_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < HORN_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1696,7 +1424,7 @@ uint32_t Pack_HORN_RPT_pacmod3(HORN_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8
 {
   uint8_t i; for (i = 0; (i < HORN_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1718,7 +1446,6 @@ uint32_t Unpack_MEDIA_CONTROLS_RPT_pacmod3(MEDIA_CONTROLS_RPT_t* _m, const uint8
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1740,7 +1467,7 @@ uint32_t Pack_MEDIA_CONTROLS_RPT_pacmod3(MEDIA_CONTROLS_RPT_t* _m, __CoderDbcCan
 {
   uint8_t i; for (i = 0; (i < MEDIA_CONTROLS_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1757,7 +1484,7 @@ uint32_t Pack_MEDIA_CONTROLS_RPT_pacmod3(MEDIA_CONTROLS_RPT_t* _m, uint8_t* _d, 
 {
   uint8_t i; for (i = 0; (i < MEDIA_CONTROLS_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1779,7 +1506,6 @@ uint32_t Unpack_PARKING_BRAKE_RPT_pacmod3(PARKING_BRAKE_RPT_t* _m, const uint8_t
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0x01U));
   _m->COMMANDED_VALUE = (_d[2] & (0x01U));
   _m->OUTPUT_VALUE = (_d[3] & (0x01U));
@@ -1801,7 +1527,7 @@ uint32_t Pack_PARKING_BRAKE_RPT_pacmod3(PARKING_BRAKE_RPT_t* _m, __CoderDbcCanFr
 {
   uint8_t i; for (i = 0; (i < PARKING_BRAKE_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0x01U));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0x01U));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0x01U));
@@ -1818,7 +1544,7 @@ uint32_t Pack_PARKING_BRAKE_RPT_pacmod3(PARKING_BRAKE_RPT_t* _m, uint8_t* _d, ui
 {
   uint8_t i; for (i = 0; (i < PARKING_BRAKE_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0x01U));
   _d[2] |= (_m->COMMANDED_VALUE & (0x01U));
   _d[3] |= (_m->OUTPUT_VALUE & (0x01U));
@@ -1840,7 +1566,6 @@ uint32_t Unpack_SHIFT_RPT_pacmod3(SHIFT_RPT_t* _m, const uint8_t* _d, uint8_t dl
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -1862,7 +1587,7 @@ uint32_t Pack_SHIFT_RPT_pacmod3(SHIFT_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < SHIFT_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1879,7 +1604,7 @@ uint32_t Pack_SHIFT_RPT_pacmod3(SHIFT_RPT_t* _m, uint8_t* _d, uint8_t* _len, uin
 {
   uint8_t i; for (i = 0; (i < SHIFT_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -1901,7 +1626,6 @@ uint32_t Unpack_STEERING_RPT_pacmod3(STEERING_RPT_t* _m, const uint8_t* _d, uint
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT_ro = __ext_sig__(( ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU)) ), 16);
 #ifdef PACMOD3_USE_SIGFLOAT
   _m->MANUAL_INPUT_phys = (sigfloat_t)(PACMOD3_MANUAL_INPUT_ro_fromS(_m->MANUAL_INPUT_ro));
@@ -1940,7 +1664,7 @@ uint32_t Pack_STEERING_RPT_pacmod3(STEERING_RPT_t* _m, __CoderDbcCanFrame_t__* c
   _m->OUTPUT_VALUE_ro = PACMOD3_OUTPUT_VALUE_ro_toS(_m->OUTPUT_VALUE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= ((_m->MANUAL_INPUT_ro >> 8) & (0xFFU));
   cframe->Data[2] |= (_m->MANUAL_INPUT_ro & (0xFFU));
   cframe->Data[3] |= ((_m->COMMANDED_VALUE_ro >> 8) & (0xFFU));
@@ -1966,7 +1690,7 @@ uint32_t Pack_STEERING_RPT_pacmod3(STEERING_RPT_t* _m, uint8_t* _d, uint8_t* _le
   _m->OUTPUT_VALUE_ro = PACMOD3_OUTPUT_VALUE_ro_toS(_m->OUTPUT_VALUE_phys);
 #endif // PACMOD3_USE_SIGFLOAT
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= ((_m->MANUAL_INPUT_ro >> 8) & (0xFFU));
   _d[2] |= (_m->MANUAL_INPUT_ro & (0xFFU));
   _d[3] |= ((_m->COMMANDED_VALUE_ro >> 8) & (0xFFU));
@@ -1991,7 +1715,6 @@ uint32_t Unpack_TURN_RPT_pacmod3(TURN_RPT_t* _m, const uint8_t* _d, uint8_t dlc_
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -2013,7 +1736,7 @@ uint32_t Pack_TURN_RPT_pacmod3(TURN_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < TURN_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -2030,7 +1753,7 @@ uint32_t Pack_TURN_RPT_pacmod3(TURN_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8
 {
   uint8_t i; for (i = 0; (i < TURN_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -2052,7 +1775,6 @@ uint32_t Unpack_WIPER_RPT_pacmod3(WIPER_RPT_t* _m, const uint8_t* _d, uint8_t dl
   _m->OUTPUT_REPORTED_FAULT = ((_d[0] >> 4) & (0x01U));
   _m->PACMOD_FAULT = ((_d[0] >> 5) & (0x01U));
   _m->VEHICLE_FAULT = ((_d[0] >> 6) & (0x01U));
-  _m->COMMAND_TIMEOUT = ((_d[0] >> 7) & (0x01U));
   _m->MANUAL_INPUT = (_d[1] & (0xFFU));
   _m->COMMANDED_VALUE = (_d[2] & (0xFFU));
   _m->OUTPUT_VALUE = (_d[3] & (0xFFU));
@@ -2074,7 +1796,7 @@ uint32_t Pack_WIPER_RPT_pacmod3(WIPER_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
 {
   uint8_t i; for (i = 0; (i < WIPER_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
 
-  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  cframe->Data[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   cframe->Data[1] |= (_m->MANUAL_INPUT & (0xFFU));
   cframe->Data[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   cframe->Data[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -2091,7 +1813,7 @@ uint32_t Pack_WIPER_RPT_pacmod3(WIPER_RPT_t* _m, uint8_t* _d, uint8_t* _len, uin
 {
   uint8_t i; for (i = 0; (i < WIPER_RPT_DLC) && (i < 8); _d[i++] = 0);
 
-  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6) | ((_m->COMMAND_TIMEOUT & (0x01U)) << 7);
+  _d[0] |= (_m->ENABLED & (0x01U)) | ((_m->OVERRIDE_ACTIVE & (0x01U)) << 1) | ((_m->COMMAND_OUTPUT_FAULT & (0x01U)) << 2) | ((_m->INPUT_OUTPUT_FAULT & (0x01U)) << 3) | ((_m->OUTPUT_REPORTED_FAULT & (0x01U)) << 4) | ((_m->PACMOD_FAULT & (0x01U)) << 5) | ((_m->VEHICLE_FAULT & (0x01U)) << 6);
   _d[1] |= (_m->MANUAL_INPUT & (0xFFU));
   _d[2] |= (_m->COMMANDED_VALUE & (0xFFU));
   _d[3] |= (_m->OUTPUT_VALUE & (0xFFU));
@@ -3836,228 +3558,6 @@ uint32_t Pack_REAR_LIGHTS_RPT_pacmod3(REAR_LIGHTS_RPT_t* _m, uint8_t* _d, uint8_
   *_len = REAR_LIGHTS_RPT_DLC;
   *_ide = REAR_LIGHTS_RPT_IDE;
   return REAR_LIGHTS_RPT_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_LINEAR_ACCEL_RPT_pacmod3(LINEAR_ACCEL_RPT_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->LATERAL_NEW_DATA_RX = (_d[0] & (0x01U));
-  _m->LONGITUDNAL_NEW_DATA_RX = ((_d[0] >> 1) & (0x01U));
-  _m->VERTICAL_NEW_DATA_RX = ((_d[0] >> 2) & (0x01U));
-  _m->LATERAL_VALID = ((_d[0] >> 3) & (0x01U));
-  _m->LONGITUDNAL_VALID = ((_d[0] >> 4) & (0x01U));
-  _m->VERTICAL_VALID = ((_d[0] >> 5) & (0x01U));
-  _m->LATERAL_ACCEL_ro = __ext_sig__(( ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU)) ), 16);
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->LATERAL_ACCEL_phys = (sigfloat_t)(PACMOD3_LATERAL_ACCEL_ro_fromS(_m->LATERAL_ACCEL_ro));
-#endif // PACMOD3_USE_SIGFLOAT
-
-  _m->LONGITUDNAL_ACCEL_ro = __ext_sig__(( ((_d[3] & (0xFFU)) << 8) | (_d[4] & (0xFFU)) ), 16);
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->LONGITUDNAL_ACCEL_phys = (sigfloat_t)(PACMOD3_LONGITUDNAL_ACCEL_ro_fromS(_m->LONGITUDNAL_ACCEL_ro));
-#endif // PACMOD3_USE_SIGFLOAT
-
-  _m->VERTICAL_ACCEL_ro = __ext_sig__(( ((_d[5] & (0xFFU)) << 8) | (_d[6] & (0xFFU)) ), 16);
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->VERTICAL_ACCEL_phys = (sigfloat_t)(PACMOD3_VERTICAL_ACCEL_ro_fromS(_m->VERTICAL_ACCEL_ro));
-#endif // PACMOD3_USE_SIGFLOAT
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < LINEAR_ACCEL_RPT_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_LINEAR_ACCEL_RPT_pacmod3(&_m->mon1, LINEAR_ACCEL_RPT_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return LINEAR_ACCEL_RPT_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_LINEAR_ACCEL_RPT_pacmod3(LINEAR_ACCEL_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < LINEAR_ACCEL_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->LATERAL_ACCEL_ro = PACMOD3_LATERAL_ACCEL_ro_toS(_m->LATERAL_ACCEL_phys);
-  _m->LONGITUDNAL_ACCEL_ro = PACMOD3_LONGITUDNAL_ACCEL_ro_toS(_m->LONGITUDNAL_ACCEL_phys);
-  _m->VERTICAL_ACCEL_ro = PACMOD3_VERTICAL_ACCEL_ro_toS(_m->VERTICAL_ACCEL_phys);
-#endif // PACMOD3_USE_SIGFLOAT
-
-  cframe->Data[0] |= (_m->LATERAL_NEW_DATA_RX & (0x01U)) | ((_m->LONGITUDNAL_NEW_DATA_RX & (0x01U)) << 1) | ((_m->VERTICAL_NEW_DATA_RX & (0x01U)) << 2) | ((_m->LATERAL_VALID & (0x01U)) << 3) | ((_m->LONGITUDNAL_VALID & (0x01U)) << 4) | ((_m->VERTICAL_VALID & (0x01U)) << 5);
-  cframe->Data[1] |= ((_m->LATERAL_ACCEL_ro >> 8) & (0xFFU));
-  cframe->Data[2] |= (_m->LATERAL_ACCEL_ro & (0xFFU));
-  cframe->Data[3] |= ((_m->LONGITUDNAL_ACCEL_ro >> 8) & (0xFFU));
-  cframe->Data[4] |= (_m->LONGITUDNAL_ACCEL_ro & (0xFFU));
-  cframe->Data[5] |= ((_m->VERTICAL_ACCEL_ro >> 8) & (0xFFU));
-  cframe->Data[6] |= (_m->VERTICAL_ACCEL_ro & (0xFFU));
-
-  cframe->MsgId = LINEAR_ACCEL_RPT_CANID;
-  cframe->DLC = LINEAR_ACCEL_RPT_DLC;
-  cframe->IDE = LINEAR_ACCEL_RPT_IDE;
-  return LINEAR_ACCEL_RPT_CANID;
-}
-
-#else
-
-uint32_t Pack_LINEAR_ACCEL_RPT_pacmod3(LINEAR_ACCEL_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < LINEAR_ACCEL_RPT_DLC) && (i < 8); _d[i++] = 0);
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->LATERAL_ACCEL_ro = PACMOD3_LATERAL_ACCEL_ro_toS(_m->LATERAL_ACCEL_phys);
-  _m->LONGITUDNAL_ACCEL_ro = PACMOD3_LONGITUDNAL_ACCEL_ro_toS(_m->LONGITUDNAL_ACCEL_phys);
-  _m->VERTICAL_ACCEL_ro = PACMOD3_VERTICAL_ACCEL_ro_toS(_m->VERTICAL_ACCEL_phys);
-#endif // PACMOD3_USE_SIGFLOAT
-
-  _d[0] |= (_m->LATERAL_NEW_DATA_RX & (0x01U)) | ((_m->LONGITUDNAL_NEW_DATA_RX & (0x01U)) << 1) | ((_m->VERTICAL_NEW_DATA_RX & (0x01U)) << 2) | ((_m->LATERAL_VALID & (0x01U)) << 3) | ((_m->LONGITUDNAL_VALID & (0x01U)) << 4) | ((_m->VERTICAL_VALID & (0x01U)) << 5);
-  _d[1] |= ((_m->LATERAL_ACCEL_ro >> 8) & (0xFFU));
-  _d[2] |= (_m->LATERAL_ACCEL_ro & (0xFFU));
-  _d[3] |= ((_m->LONGITUDNAL_ACCEL_ro >> 8) & (0xFFU));
-  _d[4] |= (_m->LONGITUDNAL_ACCEL_ro & (0xFFU));
-  _d[5] |= ((_m->VERTICAL_ACCEL_ro >> 8) & (0xFFU));
-  _d[6] |= (_m->VERTICAL_ACCEL_ro & (0xFFU));
-
-  *_len = LINEAR_ACCEL_RPT_DLC;
-  *_ide = LINEAR_ACCEL_RPT_IDE;
-  return LINEAR_ACCEL_RPT_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_ANG_VEL_RPT_pacmod3(ANG_VEL_RPT_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->PITCH_NEW_DATA_RX = (_d[0] & (0x01U));
-  _m->ROLL_NEW_DATA_RX = ((_d[0] >> 1) & (0x01U));
-  _m->YAW_NEW_DATA_RX = ((_d[0] >> 2) & (0x01U));
-  _m->PITCH_VALID = ((_d[0] >> 3) & (0x01U));
-  _m->ROLL_VALID = ((_d[0] >> 4) & (0x01U));
-  _m->YAW_VALID = ((_d[0] >> 5) & (0x01U));
-  _m->PITCH_VEL_ro = __ext_sig__(( ((_d[1] & (0xFFU)) << 8) | (_d[2] & (0xFFU)) ), 16);
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->PITCH_VEL_phys = (sigfloat_t)(PACMOD3_PITCH_VEL_ro_fromS(_m->PITCH_VEL_ro));
-#endif // PACMOD3_USE_SIGFLOAT
-
-  _m->ROLL_VEL_ro = __ext_sig__(( ((_d[3] & (0xFFU)) << 8) | (_d[4] & (0xFFU)) ), 16);
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->ROLL_VEL_phys = (sigfloat_t)(PACMOD3_ROLL_VEL_ro_fromS(_m->ROLL_VEL_ro));
-#endif // PACMOD3_USE_SIGFLOAT
-
-  _m->YAW_VEL_ro = __ext_sig__(( ((_d[5] & (0xFFU)) << 8) | (_d[6] & (0xFFU)) ), 16);
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->YAW_VEL_phys = (sigfloat_t)(PACMOD3_YAW_VEL_ro_fromS(_m->YAW_VEL_ro));
-#endif // PACMOD3_USE_SIGFLOAT
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < ANG_VEL_RPT_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_ANG_VEL_RPT_pacmod3(&_m->mon1, ANG_VEL_RPT_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return ANG_VEL_RPT_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_ANG_VEL_RPT_pacmod3(ANG_VEL_RPT_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < ANG_VEL_RPT_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->PITCH_VEL_ro = PACMOD3_PITCH_VEL_ro_toS(_m->PITCH_VEL_phys);
-  _m->ROLL_VEL_ro = PACMOD3_ROLL_VEL_ro_toS(_m->ROLL_VEL_phys);
-  _m->YAW_VEL_ro = PACMOD3_YAW_VEL_ro_toS(_m->YAW_VEL_phys);
-#endif // PACMOD3_USE_SIGFLOAT
-
-  cframe->Data[0] |= (_m->PITCH_NEW_DATA_RX & (0x01U)) | ((_m->ROLL_NEW_DATA_RX & (0x01U)) << 1) | ((_m->YAW_NEW_DATA_RX & (0x01U)) << 2) | ((_m->PITCH_VALID & (0x01U)) << 3) | ((_m->ROLL_VALID & (0x01U)) << 4) | ((_m->YAW_VALID & (0x01U)) << 5);
-  cframe->Data[1] |= ((_m->PITCH_VEL_ro >> 8) & (0xFFU));
-  cframe->Data[2] |= (_m->PITCH_VEL_ro & (0xFFU));
-  cframe->Data[3] |= ((_m->ROLL_VEL_ro >> 8) & (0xFFU));
-  cframe->Data[4] |= (_m->ROLL_VEL_ro & (0xFFU));
-  cframe->Data[5] |= ((_m->YAW_VEL_ro >> 8) & (0xFFU));
-  cframe->Data[6] |= (_m->YAW_VEL_ro & (0xFFU));
-
-  cframe->MsgId = ANG_VEL_RPT_CANID;
-  cframe->DLC = ANG_VEL_RPT_DLC;
-  cframe->IDE = ANG_VEL_RPT_IDE;
-  return ANG_VEL_RPT_CANID;
-}
-
-#else
-
-uint32_t Pack_ANG_VEL_RPT_pacmod3(ANG_VEL_RPT_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < ANG_VEL_RPT_DLC) && (i < 8); _d[i++] = 0);
-
-#ifdef PACMOD3_USE_SIGFLOAT
-  _m->PITCH_VEL_ro = PACMOD3_PITCH_VEL_ro_toS(_m->PITCH_VEL_phys);
-  _m->ROLL_VEL_ro = PACMOD3_ROLL_VEL_ro_toS(_m->ROLL_VEL_phys);
-  _m->YAW_VEL_ro = PACMOD3_YAW_VEL_ro_toS(_m->YAW_VEL_phys);
-#endif // PACMOD3_USE_SIGFLOAT
-
-  _d[0] |= (_m->PITCH_NEW_DATA_RX & (0x01U)) | ((_m->ROLL_NEW_DATA_RX & (0x01U)) << 1) | ((_m->YAW_NEW_DATA_RX & (0x01U)) << 2) | ((_m->PITCH_VALID & (0x01U)) << 3) | ((_m->ROLL_VALID & (0x01U)) << 4) | ((_m->YAW_VALID & (0x01U)) << 5);
-  _d[1] |= ((_m->PITCH_VEL_ro >> 8) & (0xFFU));
-  _d[2] |= (_m->PITCH_VEL_ro & (0xFFU));
-  _d[3] |= ((_m->ROLL_VEL_ro >> 8) & (0xFFU));
-  _d[4] |= (_m->ROLL_VEL_ro & (0xFFU));
-  _d[5] |= ((_m->YAW_VEL_ro >> 8) & (0xFFU));
-  _d[6] |= (_m->YAW_VEL_ro & (0xFFU));
-
-  *_len = ANG_VEL_RPT_DLC;
-  *_ide = ANG_VEL_RPT_IDE;
-  return ANG_VEL_RPT_CANID;
-}
-
-#endif // PACMOD3_USE_CANSTRUCT
-
-uint32_t Unpack_NOTIFICATION_CMD_pacmod3(NOTIFICATION_CMD_t* _m, const uint8_t* _d, uint8_t dlc_)
-{
-  (void)dlc_;
-  _m->BUZZER_MUTE = (_d[0] & (0x01U));
-  _m->UNDERDASH_LIGHTS_WHITE = ((_d[0] >> 1) & (0x01U));
-
-#ifdef PACMOD3_USE_DIAG_MONITORS
-  _m->mon1.dlc_error = (dlc_ < NOTIFICATION_CMD_DLC);
-  _m->mon1.last_cycle = GetSystemTick();
-  _m->mon1.frame_cnt++;
-
-  FMon_NOTIFICATION_CMD_pacmod3(&_m->mon1, NOTIFICATION_CMD_CANID);
-#endif // PACMOD3_USE_DIAG_MONITORS
-
-  return NOTIFICATION_CMD_CANID;
-}
-
-#ifdef PACMOD3_USE_CANSTRUCT
-
-uint32_t Pack_NOTIFICATION_CMD_pacmod3(NOTIFICATION_CMD_t* _m, __CoderDbcCanFrame_t__* cframe)
-{
-  uint8_t i; for (i = 0; (i < NOTIFICATION_CMD_DLC) && (i < 8); cframe->Data[i++] = 0);
-
-  cframe->Data[0] |= (_m->BUZZER_MUTE & (0x01U)) | ((_m->UNDERDASH_LIGHTS_WHITE & (0x01U)) << 1);
-
-  cframe->MsgId = NOTIFICATION_CMD_CANID;
-  cframe->DLC = NOTIFICATION_CMD_DLC;
-  cframe->IDE = NOTIFICATION_CMD_IDE;
-  return NOTIFICATION_CMD_CANID;
-}
-
-#else
-
-uint32_t Pack_NOTIFICATION_CMD_pacmod3(NOTIFICATION_CMD_t* _m, uint8_t* _d, uint8_t* _len, uint8_t* _ide)
-{
-  uint8_t i; for (i = 0; (i < NOTIFICATION_CMD_DLC) && (i < 8); _d[i++] = 0);
-
-  _d[0] |= (_m->BUZZER_MUTE & (0x01U)) | ((_m->UNDERDASH_LIGHTS_WHITE & (0x01U)) << 1);
-
-  *_len = NOTIFICATION_CMD_DLC;
-  *_ide = NOTIFICATION_CMD_IDE;
-  return NOTIFICATION_CMD_CANID;
 }
 
 #endif // PACMOD3_USE_CANSTRUCT

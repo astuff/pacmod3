@@ -37,3 +37,16 @@ DbcApi::PrintParseError(const std::string& msg_type)
 
   #endif  // USE_ROS2
 }
+
+DbcApi::PrintEncodeError(const std::string& msg_type)
+{
+  std::string full_msg = "Unable to encode " + msg_type + ", it is not supported by DBC version " + str(dbc_major_version_);
+
+  #ifdef USE_ROS1
+    ROS_WARN(full_msg);
+  #endif  // USE_ROS1
+
+  #ifdef USE_ROS2
+
+  #endif  // USE_ROS2
+}

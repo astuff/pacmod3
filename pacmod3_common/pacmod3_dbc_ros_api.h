@@ -173,6 +173,7 @@ public:
   virtual can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) = 0;
 
   void PrintParseError(const std::string& msg_type);
+  void PrintEncodeError(const std::string& msg_type);
 
 private:
   uint32_t dbc_major_version_ = 0;

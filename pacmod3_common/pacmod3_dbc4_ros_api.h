@@ -33,17 +33,21 @@ namespace pacmod3
 {
 
 // Derived from previous DBC API version
-// The only overridden functions that exist here are due to changes to those msg types relative to the previous version.
+// The only overridden functions that exist here are due to changes to those msg types relative to the previous DBC version.
 class Dbc4Api : public Dbc3Api
 {
 public:
+  std::shared_ptr<void> ParseAngVelRpt(const can_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseComponentRpt(const can_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseLinearAccelRpt(const can_msgs::Frame& can_msg) override;
   std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
   std::shared_ptr<void> ParseSystemRptFloat(const can_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
 
+  can_msgs::Frame EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg) override;
   can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) override;
-  can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) override;
   can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) override;
+  can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) override;
 };
 }  // namespace pacmod3
 

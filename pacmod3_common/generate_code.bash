@@ -12,15 +12,11 @@ main()
 
   TEMP_DIR="$(mktemp -d)"
 
-  # TEMP_DIR=/tmp/testing_thing
-  # mkdir -p "$TEMP_DIR"
-
   cd "$TEMP_DIR"
   mkdir -p output
 
   get_dbc
 
-  # echo "$CODER_DBC_PATH"
   echo "Auto-generating code for version $DBC_VERSION of the PacMod DBC."
   echo "Generated code will use the name $DRIVER_NAME"
   echo ""
@@ -30,7 +26,7 @@ main()
   cp "$TEMP_DIR/output/lib/$DRIVER_NAME.c" "$SCRIPT_DIR/autogen/"
   cp "$TEMP_DIR/output/lib/$DRIVER_NAME.h" "$SCRIPT_DIR/autogen/"
   cp "$TEMP_DIR/output/conf/$DRIVER_NAME-config.h" "$SCRIPT_DIR/autogen/"
-  cp "$TEMP_DIR/output/conf/dbccodeconf.h" "$SCRIPT_DIR/autogen/"
+  # cp "$TEMP_DIR/output/conf/dbccodeconf.h" "$SCRIPT_DIR/autogen/"
 
   echo ""
   echo "Done"

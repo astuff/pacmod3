@@ -58,20 +58,7 @@ std::shared_ptr<void> Dbc3Api::ParseAngVelRpt(const can_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::AngVelRpt> new_msg( new pm_msgs::AngVelRpt() );
 
-  ANG_VEL_RPT_t parsed_rpt;
-  Unpack_ANG_VEL_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
-
-  new_msg->pitch_new_data_rx = parsed_rpt.PITCH_NEW_DATA_RX;
-  new_msg->roll_new_data_rx = parsed_rpt.ROLL_NEW_DATA_RX;
-  new_msg->yaw_new_data_rx = parsed_rpt.YAW_NEW_DATA_RX;
-
-  new_msg->pitch_valid = parsed_rpt.PITCH_VALID;
-  new_msg->roll_valid = parsed_rpt.ROLL_VALID;
-  new_msg->yaw_valid = parsed_rpt.YAW_VALID;
-
-  new_msg->pitch_vel = parsed_rpt.PITCH_VEL_phys;
-  new_msg->roll_vel = parsed_rpt.ROLL_VEL_phys;
-  new_msg->yaw_vel = parsed_rpt.YAW_VEL_phys;
+  PrintParseError("AngVelRpt");
 
   return new_msg;
 }
@@ -104,27 +91,26 @@ std::shared_ptr<void> Dbc3Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::ComponentRpt> new_msg( new pm_msgs::ComponentRpt() );
 
-  COMPONENT_RPT_00_t parsed_rpt;
-  Unpack_COMPONENT_RPT_00_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+  COMPONENT_RPT_t parsed_rpt;
+  Unpack_COMPONENT_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
 
   new_msg->component_type = parsed_rpt.COMPONENT_TYPE;
 
-  new_msg->accel = parsed_rpt.ACCEL;
-  new_msg->brake = parsed_rpt.BRAKE;
-  new_msg->cruise_control_buttons = parsed_rpt.CRUISE_CONTROL_BUTTONS;
-  new_msg->dash_controls_left = parsed_rpt.DASH_CONTROLS_LEFT;
-  new_msg->dash_controls_right = parsed_rpt.DASH_CONTROLS_RIGHT;
-  new_msg->hazard_lights = parsed_rpt.HAZARD_LIGHTS;
-  new_msg->headlight = parsed_rpt.HEADLIGHT;
-  new_msg->horn = parsed_rpt.HORN;
-  new_msg->media_controls = parsed_rpt.MEDIA_CONTROLS;
-  new_msg->parking_brake = parsed_rpt.PARKING_BRAKE;
-  new_msg->shift = parsed_rpt.SHIFT;
-  new_msg->steering = parsed_rpt.STEERING;
-  new_msg->turn = parsed_rpt.TURN;
-  new_msg->wiper = parsed_rpt.WIPER;
-
   // Following fields not present in dbc3
+  new_msg->accel = 0;
+  new_msg->brake = 0;
+  new_msg->cruise_control_buttons = 0;
+  new_msg->dash_controls_left = 0;
+  new_msg->dash_controls_right = 0;
+  new_msg->hazard_lights = 0;
+  new_msg->headlight = 0;
+  new_msg->horn = 0;
+  new_msg->media_controls = 0;
+  new_msg->parking_brake = 0;
+  new_msg->shift = 0;
+  new_msg->steering = 0;
+  new_msg->turn = 0;
+  new_msg->wiper = 0;
   new_msg->brake_deccel = 0;
   new_msg->cabin_climate = 0;
   new_msg->cabin_fan_speed = 0;
@@ -138,7 +124,6 @@ std::shared_ptr<void> Dbc3Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
   new_msg->counter = parsed_rpt.COUNTER;
   new_msg->complement = parsed_rpt.COMPLEMENT;
   new_msg->config_fault = parsed_rpt.CONFIG_FAULT;
-  new_msg->can_timeout_fault = parsed_rpt.CAN_TIMEOUT_FAULT;
 
   // Following fields not present in dbc3
   new_msg->can_timeout_fault = 0;
@@ -302,21 +287,7 @@ std::shared_ptr<void> Dbc3Api::ParseLinearAccelRpt(const can_msgs::Frame& can_ms
 {
   std::shared_ptr<pm_msgs::LinearAccelRpt> new_msg( new pm_msgs::LinearAccelRpt() );
 
-  LINEAR_ACCEL_RPT_t parsed_rpt;
-  Unpack_LINEAR_ACCEL_RPT_pacmod3(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
-
-  new_msg->lateral_new_data_rx = parsed_rpt.LATERAL_NEW_DATA_RX;
-  new_msg->longitudinal_new_data_rx = parsed_rpt.LONGITUDNAL_NEW_DATA_RX;
-  new_msg->vertical_new_data_rx = parsed_rpt.VERTICAL_NEW_DATA_RX;
-
-  new_msg->lateral_valid = parsed_rpt.LATERAL_VALID;
-  new_msg->longitudinal_valid = parsed_rpt.LONGITUDNAL_VALID;
-  new_msg->vertical_valid = parsed_rpt.VERTICAL_VALID;
-
-  new_msg->lateral_accel = parsed_rpt.LATERAL_ACCEL_phys;
-  new_msg->longitudinal_accel = parsed_rpt.LONGITUDNAL_ACCEL_phys;
-  new_msg->vertical_accel = parsed_rpt.VERTICAL_ACCEL_phys;
-
+  PrintParseError("LinearAccelRpt");
 
   return new_msg;
 }
@@ -638,11 +609,7 @@ can_msgs::Frame Dbc3Api::EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg)
 {
   can_msgs::Frame packed_frame;
 
-  GLOBAL_CMD_t unpacked_cmd;
-  unpacked_cmd.CLEAR_FAULTS = msg.clear_faults;
-
-  uint8_t unused_ide;
-  Pack_GLOBAL_CMD_pacmod3(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
+  PrintEncodeError("GlobalCmd");
 
   return packed_frame;
 }
