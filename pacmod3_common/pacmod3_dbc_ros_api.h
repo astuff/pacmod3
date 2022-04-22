@@ -53,6 +53,7 @@
 #include <pacmod3_msgs/MotorRpt1.h>
 #include <pacmod3_msgs/MotorRpt2.h>
 #include <pacmod3_msgs/MotorRpt3.h>
+#include <pacmod3_msgs/NotificationCmd.h>
 #include <pacmod3_msgs/OccupancyRpt.h>
 #include <pacmod3_msgs/RearLightsRpt.h>
 #include <pacmod3_msgs/ShiftAuxRpt.h>
@@ -167,6 +168,7 @@ public:
 
   // Encoding functions take in a ROS pacmod msg and return and ROS CAN msg.
   virtual can_msgs::Frame EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg) = 0;
+  virtual can_msgs::Frame EncodeNotificationCmd(const pm_msgs::NotificationCmd& msg) = 0;
   virtual can_msgs::Frame EncodeSteeringCmd(const pm_msgs::SteeringCmd& msg) = 0;
   virtual can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) = 0;
   virtual can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) = 0;

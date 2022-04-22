@@ -614,6 +614,15 @@ can_msgs::Frame Dbc3Api::EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg)
   return packed_frame;
 }
 
+can_msgs::Frame Dbc3Api::EncodeNotificationCmd(const pm_msgs::NotificationCmd& msg)
+{
+  can_msgs::Frame packed_frame;
+
+  PrintEncodeError("Notification");
+
+  return packed_frame;
+}
+
 can_msgs::Frame Dbc3Api::EncodeSteeringCmd(const pm_msgs::SteeringCmd& msg)
 {
   can_msgs::Frame packed_frame;

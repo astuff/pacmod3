@@ -144,28 +144,6 @@ std::shared_ptr<void> Dbc4Api::ParseSystemRptBool(const can_msgs::Frame& can_msg
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc4Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
-{
-  std::shared_ptr<pm_msgs::SystemRptInt> new_msg( new pm_msgs::SystemRptInt() );
-
-  SHIFT_RPT_t parsed_rpt;
-  Unpack_SHIFT_RPT_pacmod4(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
-
-  new_msg->enabled = parsed_rpt.ENABLED;
-  new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
-  new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
-  new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
-  new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
-  new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
-  new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
-  new_msg->command_timeout = parsed_rpt.COMMAND_TIMEOUT;
-  new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
-  new_msg->command = parsed_rpt.COMMANDED_VALUE;
-  new_msg->output = parsed_rpt.OUTPUT_VALUE;
-
-  return new_msg;
-}
-
 std::shared_ptr<void> Dbc4Api::ParseSystemRptFloat(const can_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptFloat> new_msg( new pm_msgs::SystemRptFloat() );
@@ -188,6 +166,28 @@ std::shared_ptr<void> Dbc4Api::ParseSystemRptFloat(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
+std::shared_ptr<void> Dbc4Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
+{
+  std::shared_ptr<pm_msgs::SystemRptInt> new_msg( new pm_msgs::SystemRptInt() );
+
+  SHIFT_RPT_t parsed_rpt;
+  Unpack_SHIFT_RPT_pacmod4(&parsed_rpt, static_cast<const uint8_t*>(&can_msg.data[0]), static_cast<uint8_t>(can_msg.dlc));
+
+  new_msg->enabled = parsed_rpt.ENABLED;
+  new_msg->override_active = parsed_rpt.OVERRIDE_ACTIVE;
+  new_msg->command_output_fault = parsed_rpt.COMMAND_OUTPUT_FAULT;
+  new_msg->input_output_fault = parsed_rpt.INPUT_OUTPUT_FAULT;
+  new_msg->output_reported_fault = parsed_rpt.OUTPUT_REPORTED_FAULT;
+  new_msg->pacmod_fault = parsed_rpt.PACMOD_FAULT;
+  new_msg->vehicle_fault = parsed_rpt.VEHICLE_FAULT;
+  new_msg->command_timeout = parsed_rpt.COMMAND_TIMEOUT;
+  new_msg->manual_input = parsed_rpt.MANUAL_INPUT;
+  new_msg->command = parsed_rpt.COMMANDED_VALUE;
+  new_msg->output = parsed_rpt.OUTPUT_VALUE;
+
+  return new_msg;
+}
+
 // Message Encoding
 
 can_msgs::Frame Dbc4Api::EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg)
@@ -199,6 +199,20 @@ can_msgs::Frame Dbc4Api::EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg)
 
   uint8_t unused_ide;
   Pack_GLOBAL_CMD_pacmod4(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
+
+  return packed_frame;
+}
+
+can_msgs::Frame Dbc4Api::EncodeNotificationCmd(const pm_msgs::NotificationCmd& msg)
+{
+  can_msgs::Frame packed_frame;
+
+  NOTIFICATION_CMD_t unpacked_cmd;
+  unpacked_cmd.BUZZER_MUTE = msg.buzzer_mute;
+  unpacked_cmd.UNDERDASH_LIGHTS_WHITE = msg.underdash_lights_white;
+
+  uint8_t unused_ide;
+  Pack_NOTIFICATION_CMD_pacmod4(&unpacked_cmd, static_cast<uint8_t*>(&packed_frame.data[0]), static_cast<uint8_t*>(&packed_frame.dlc), &unused_ide);
 
   return packed_frame;
 }

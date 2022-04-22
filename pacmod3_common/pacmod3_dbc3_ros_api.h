@@ -69,6 +69,7 @@ public:
   std::shared_ptr<void> ParseYawRateRpt(const can_msgs::Frame& can_msg) override;
 
   can_msgs::Frame EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg) override;
+  can_msgs::Frame EncodeNotificationCmd(const pm_msgs::NotificationCmd& msg) override;
   can_msgs::Frame EncodeSteeringCmd(const pm_msgs::SteeringCmd& msg) override;
   can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) override;
   can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) override;
