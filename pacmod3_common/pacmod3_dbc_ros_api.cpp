@@ -30,6 +30,11 @@ void DbcApi::SetDbcVersion(uint32_t dbc_major_version)
   dbc_major_version_ = dbc_major_version;
 }
 
+uint32_t DbcApi::GetDbcVersion()
+{
+  return dbc_major_version_;
+}
+
 void DbcApi::PrintParseError(const std::string& msg_type)
 {
   std::string full_msg = "Unable to parse " + msg_type + ", it is not supported by DBC version " + std::to_string(dbc_major_version_);

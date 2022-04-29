@@ -59,6 +59,7 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
       msg_api_ = std::make_unique<Dbc4Api>();
       break;
   }
+  ROS_INFO("Initialized API for DBC version %d", msg_api_->GetDbcVersion());
 
   // Bool Reports
   parse_functions[HornRptMsg::CAN_ID] =

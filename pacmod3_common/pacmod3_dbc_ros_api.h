@@ -173,6 +173,7 @@ public:
   virtual can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdInt& msg) = 0;
 
   void SetDbcVersion(uint32_t dbc_major_version);
+  uint32_t GetDbcVersion();
   void PrintParseError(const std::string& msg_type);
   void PrintEncodeError(const std::string& msg_type);
 
