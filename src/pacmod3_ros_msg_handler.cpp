@@ -62,50 +62,46 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   ROS_INFO("Initialized API for DBC version %d", msg_api_->GetDbcVersion());
 
   // Bool Reports
-  parse_functions[HornRptMsg::CAN_ID] =
-  parse_functions[ParkingBrakeRptMsg::CAN_ID] =
-  parse_functions[MarkerLampRptMsg::CAN_ID] =
-  parse_functions[SprayerRptMsg::CAN_ID] =
-  parse_functions[HazardLightRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
-  pub_functions[HornRptMsg::CAN_ID] =
-  pub_functions[ParkingBrakeRptMsg::CAN_ID] =
-  pub_functions[MarkerLampRptMsg::CAN_ID] =
-  pub_functions[SprayerRptMsg::CAN_ID] =
-  pub_functions[HazardLightRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
+  parse_functions[HORN_RPT_CANID] =
+  parse_functions[PARKING_BRAKE_RPT_CANID] =
+  parse_functions[MARKER_LAMP_RPT_CANID] =
+  parse_functions[SPRAYER_RPT_CANID] =
+  parse_functions[HAZARD_LIGHTS_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[HORN_RPT_CANID] =
+  pub_functions[PARKING_BRAKE_RPT_CANID] =
+  pub_functions[MARKER_LAMP_RPT_CANID] =
+  pub_functions[SPRAYER_RPT_CANID] =
+  pub_functions[HAZARD_LIGHTS_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
 
   // Int Reports
-  parse_functions[CruiseControlButtonsRptMsg::CAN_ID] =
-  parse_functions[DashControlsLeftRptMsg::CAN_ID] =
-  parse_functions[DashControlsRightRptMsg::CAN_ID] =
-  parse_functions[TurnSignalRptMsg::CAN_ID] =
-  parse_functions[RearPassDoorRptMsg::CAN_ID] =
-  parse_functions[ShiftRptMsg::CAN_ID] =
-  parse_functions[HeadlightRptMsg::CAN_ID] =
-  parse_functions[MediaControlsRptMsg::CAN_ID] =
-  parse_functions[WiperRptMsg::CAN_ID] =
-  parse_functions[EngineBrakeRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptInt, std::ref(*msg_api_), std::placeholders::_1);
-  pub_functions[CruiseControlButtonsRptMsg::CAN_ID] =
-  pub_functions[DashControlsLeftRptMsg::CAN_ID] =
-  pub_functions[DashControlsRightRptMsg::CAN_ID] =
-  pub_functions[TurnSignalRptMsg::CAN_ID] =
-  pub_functions[RearPassDoorRptMsg::CAN_ID] =
-  pub_functions[ShiftRptMsg::CAN_ID] =
-  pub_functions[HeadlightRptMsg::CAN_ID] =
-  pub_functions[MediaControlsRptMsg::CAN_ID] =
-  pub_functions[WiperRptMsg::CAN_ID] =
-  pub_functions[EngineBrakeRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptInt>, this, std::placeholders::_1, std::placeholders::_2);
+  parse_functions[CRUISE_CONTROL_BUTTONS_RPT_CANID] =
+  parse_functions[TURN_RPT_CANID] =
+  parse_functions[REAR_PASS_DOOR_RPT_CANID] =
+  parse_functions[SHIFT_RPT_CANID] =
+  parse_functions[HEADLIGHT_RPT_CANID] =
+  parse_functions[MEDIA_CONTROLS_RPT_CANID] =
+  parse_functions[WIPER_RPT_CANID] =
+  parse_functions[ENGINE_BRAKE_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptInt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[CRUISE_CONTROL_BUTTONS_RPT_CANID] =
+  pub_functions[TURN_RPT_CANID] =
+  pub_functions[REAR_PASS_DOOR_RPT_CANID] =
+  pub_functions[SHIFT_RPT_CANID] =
+  pub_functions[HEADLIGHT_RPT_CANID] =
+  pub_functions[MEDIA_CONTROLS_RPT_CANID] =
+  pub_functions[WIPER_RPT_CANID] =
+  pub_functions[ENGINE_BRAKE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptInt>, this, std::placeholders::_1, std::placeholders::_2);
 
   // Float Reports
-  parse_functions[AccelRptMsg::CAN_ID] =
-  parse_functions[BrakeRptMsg::CAN_ID] =
-  parse_functions[SteerRptMsg::CAN_ID] = std::bind(&DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
-  pub_functions[AccelRptMsg::CAN_ID] =
-  pub_functions[BrakeRptMsg::CAN_ID] =
-  pub_functions[SteerRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
+  parse_functions[ACCEL_RPT_CANID] =
+  parse_functions[BRAKE_RPT_CANID] =
+  parse_functions[STEERING_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[ACCEL_RPT_CANID] =
+  pub_functions[BRAKE_RPT_CANID] =
+  pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
 
-
-  parse_functions[EngineRptMsg::CAN_ID] = std::bind(&DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
-  pub_functions[EngineRptMsg::CAN_ID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  // Other Reports
+  parse_functions[ENGINE_RPT_CANID] = std::bind(&DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 template <class RosMsgType>

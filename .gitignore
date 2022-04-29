@@ -1,11 +1,5 @@
-build/
-bin/
-lib/
-lib_include/
 *.log
 *.swp
-polysync-viewer.config
 *.user
-*~
 .idea/
 .vscode/

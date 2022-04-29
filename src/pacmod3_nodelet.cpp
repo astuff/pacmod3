@@ -51,7 +51,7 @@ void Pacmod3Nl::onInit()
   accel_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("accel_rpt", 20);
   brake_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("brake_rpt", 20);
   shift_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptInt>("shift_rpt", 20);
-  steer_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("steering_rpt", 20);
+  steering_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("steering_rpt", 20);
   turn_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptInt>("turn_rpt", 20);
   accel_aux_rpt_pub = nh_.advertise<pacmod3_msgs::AccelAuxRpt>("accel_aux_rpt", 20);
   brake_aux_rpt_pub = nh_.advertise<pacmod3_msgs::BrakeAuxRpt>("brake_aux_rpt", 20);
@@ -61,20 +61,20 @@ void Pacmod3Nl::onInit()
   vehicle_speed_pub = nh_.advertise<pacmod3_msgs::VehicleSpeedRpt>("vehicle_speed_rpt", 20);
   vin_rpt_pub = nh_.advertise<pacmod3_msgs::VinRpt>("vin_rpt", 5);
 
-  pub_tx_list.emplace(GlobalRptMsg::CAN_ID, std::move(global_rpt_pub));
-  pub_tx_list.emplace(ComponentRptMsg::CAN_ID, std::move(component_rpt_pub));
-  pub_tx_list.emplace(AccelRptMsg::CAN_ID, std::move(accel_rpt_pub));
-  pub_tx_list.emplace(BrakeRptMsg::CAN_ID, std::move(brake_rpt_pub));
-  pub_tx_list.emplace(ShiftRptMsg::CAN_ID, std::move(shift_rpt_pub));
-  pub_tx_list.emplace(SteerRptMsg::CAN_ID, std::move(steer_rpt_pub));
-  pub_tx_list.emplace(TurnSignalRptMsg::CAN_ID, std::move(turn_rpt_pub));
-  pub_tx_list.emplace(AccelAuxRptMsg::CAN_ID, std::move(accel_aux_rpt_pub));
-  pub_tx_list.emplace(BrakeAuxRptMsg::CAN_ID, std::move(brake_aux_rpt_pub));
-  pub_tx_list.emplace(ShiftAuxRptMsg::CAN_ID, std::move(shift_aux_rpt_pub));
-  pub_tx_list.emplace(SteeringAuxRptMsg::CAN_ID, std::move(steer_aux_rpt_pub));
-  pub_tx_list.emplace(TurnAuxRptMsg::CAN_ID, std::move(turn_aux_rpt_pub));
-  pub_tx_list.emplace(VehicleSpeedRptMsg::CAN_ID, std::move(vehicle_speed_pub));
-  pub_tx_list.emplace(VinRptMsg::CAN_ID, std::move(vin_rpt_pub));
+  pub_tx_list.emplace(GLOBAL_RPT_CANID, std::move(global_rpt_pub));
+  pub_tx_list.emplace(COMPONENT_RPT_00_CANID, std::move(component_rpt_pub));
+  pub_tx_list.emplace(ACCEL_RPT_CANID, std::move(accel_rpt_pub));
+  pub_tx_list.emplace(BRAKE_RPT_CANID, std::move(brake_rpt_pub));
+  pub_tx_list.emplace(SHIFT_RPT_CANID, std::move(shift_rpt_pub));
+  pub_tx_list.emplace(STEERING_RPT_CANID, std::move(steering_rpt_pub));
+  pub_tx_list.emplace(TURN_RPT_CANID, std::move(turn_rpt_pub));
+  pub_tx_list.emplace(ACCEL_AUX_RPT_CANID, std::move(accel_aux_rpt_pub));
+  pub_tx_list.emplace(BRAKE_AUX_RPT_CANID, std::move(brake_aux_rpt_pub));
+  pub_tx_list.emplace(SHIFT_AUX_RPT_CANID, std::move(shift_aux_rpt_pub));
+  pub_tx_list.emplace(STEERING_AUX_RPT_CANID, std::move(steer_aux_rpt_pub));
+  pub_tx_list.emplace(TURN_AUX_RPT_CANID, std::move(turn_aux_rpt_pub));
+  pub_tx_list.emplace(VEHICLE_SPEED_RPT_CANID, std::move(vehicle_speed_pub));
+  pub_tx_list.emplace(VIN_RPT_CANID, std::move(vin_rpt_pub));
 
   // Subscribers
   can_tx_sub = nh_.subscribe("can_tx", 20, &Pacmod3Nl::can_read, this);
@@ -86,31 +86,33 @@ void Pacmod3Nl::onInit()
   turn_cmd_sub = nh_.subscribe("turn_cmd", 20, &Pacmod3Nl::callback_turn_signal_set_cmd, this);
 
   rx_list.emplace(
-    AccelCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(AccelCmdMsg::DATA_LENGTH)));
+    ACCEL_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    BrakeCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(BrakeCmdMsg::DATA_LENGTH)));
+    BRAKE_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    ShiftCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(ShiftCmdMsg::DATA_LENGTH)));
+    SHIFT_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    SteerCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(SteerCmdMsg::DATA_LENGTH)));
+    STEERING_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    TurnSignalCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
+    TURN_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
 
   // Init cmds to send, always init core subsystems with enable false
-  received_cmds_.insert(AccelCmdMsg::CAN_ID);
-  received_cmds_.insert(BrakeCmdMsg::CAN_ID);
-  received_cmds_.insert(SteerCmdMsg::CAN_ID);
-  received_cmds_.insert(ShiftCmdMsg::CAN_ID);
+  received_cmds_.insert(ACCEL_CMD_CANID);
+  received_cmds_.insert(BRAKE_CMD_CANID);
+  received_cmds_.insert(SHIFT_CMD_CANID);
+  received_cmds_.insert(STEERING_CMD_CANID);
+  received_cmds_.insert(TURN_CMD_CANID);
 
   // Initialize Turn Signal with non-0 value
-  TurnSignalCmdMsg turn_encoder;
-  turn_encoder.encode(false, false, false, pacmod3_msgs::SystemCmdInt::TURN_NONE);
-  rx_list[TurnSignalCmdMsg::CAN_ID]->setData(std::move(turn_encoder.data));
+  std::vector<unsigned char> initial_turn_cmd;
+  initial_turn_cmd.resize(2);
+  initial_turn_cmd[1] = pacmod3_msgs::SystemCmdInt::TURN_NONE;
+  rx_list[TURN_CMD_CANID]->setData(std::move(initial_turn_cmd));
 
   // Set initial state
   set_enable(false);
@@ -137,9 +139,9 @@ void Pacmod3Nl::initializeBrakeMotorRptApi()
   ros::Publisher brake_rpt_detail_2_pub = nh_.advertise<pacmod3_msgs::MotorRpt2>("brake_motor_rpt_2", 20);
   ros::Publisher brake_rpt_detail_3_pub = nh_.advertise<pacmod3_msgs::MotorRpt3>("brake_motor_rpt_3", 20);
 
-  pub_tx_list.emplace(BrakeMotorRpt1Msg::CAN_ID, std::move(brake_rpt_detail_1_pub));
-  pub_tx_list.emplace(BrakeMotorRpt2Msg::CAN_ID, std::move(brake_rpt_detail_2_pub));
-  pub_tx_list.emplace(BrakeMotorRpt3Msg::CAN_ID, std::move(brake_rpt_detail_3_pub));
+  pub_tx_list.emplace(BRAKE_MOTOR_RPT_1_CANID, std::move(brake_rpt_detail_1_pub));
+  pub_tx_list.emplace(BRAKE_MOTOR_RPT_2_CANID, std::move(brake_rpt_detail_2_pub));
+  pub_tx_list.emplace(BRAKE_MOTOR_RPT_3_CANID, std::move(brake_rpt_detail_3_pub));
   NODELET_INFO("Initialized BrakeMotorRpt API");
 }
 
@@ -151,9 +153,9 @@ void Pacmod3Nl::initializeSteeringMotorRptApi()
     nh_.advertise<pacmod3_msgs::MotorRpt2>("steering_motor_rpt_2", 20);
   ros::Publisher steering_rpt_detail_3_pub =
     nh_.advertise<pacmod3_msgs::MotorRpt3>("steering_motor_rpt_3", 20);
-  pub_tx_list.emplace(SteerMotorRpt1Msg::CAN_ID, std::move(steering_rpt_detail_1_pub));
-  pub_tx_list.emplace(SteerMotorRpt2Msg::CAN_ID, std::move(steering_rpt_detail_2_pub));
-  pub_tx_list.emplace(SteerMotorRpt3Msg::CAN_ID, std::move(steering_rpt_detail_3_pub));
+  pub_tx_list.emplace(STEERING_MOTOR_RPT_1_CANID, std::move(steering_rpt_detail_1_pub));
+  pub_tx_list.emplace(STEERING_MOTOR_RPT_2_CANID, std::move(steering_rpt_detail_2_pub));
+  pub_tx_list.emplace(STEERING_MOTOR_RPT_3_CANID, std::move(steering_rpt_detail_3_pub));
   NODELET_INFO("Initialized SteeringMotorRpt API");
 }
 
@@ -161,14 +163,14 @@ void Pacmod3Nl::initializeWiperApi()
 {
   ros::Publisher wiper_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptInt>("wiper_rpt", 20);
   ros::Publisher wiper_aux_rpt_pub = nh_.advertise<pacmod3_msgs::WiperAuxRpt>("wiper_aux_rpt", 20);
-  pub_tx_list.emplace(WiperRptMsg::CAN_ID, std::move(wiper_rpt_pub));
-  pub_tx_list.emplace(WiperAuxRptMsg::CAN_ID, std::move(wiper_aux_rpt_pub));
+  pub_tx_list.emplace(WIPER_RPT_CANID, std::move(wiper_rpt_pub));
+  pub_tx_list.emplace(WIPER_AUX_RPT_CANID, std::move(wiper_aux_rpt_pub));
 
   wiper_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe(
     "wiper_cmd", 20, &Pacmod3Nl::callback_wiper_set_cmd, this));
   rx_list.emplace(
-    WiperCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(WiperCmdMsg::DATA_LENGTH)));
+    WIPER_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized Wiper API");
 }
 
@@ -178,14 +180,14 @@ void Pacmod3Nl::initializeHeadlightApi()
     nh_.advertise<pacmod3_msgs::SystemRptInt>("headlight_rpt", 20);
   ros::Publisher headlight_aux_rpt_pub =
     nh_.advertise<pacmod3_msgs::HeadlightAuxRpt>("headlight_aux_rpt", 20);
-  pub_tx_list.emplace(HeadlightRptMsg::CAN_ID, std::move(headlight_rpt_pub));
-  pub_tx_list.emplace(HeadlightAuxRptMsg::CAN_ID, std::move(headlight_aux_rpt_pub));
+  pub_tx_list.emplace(HEADLIGHT_RPT_CANID, std::move(headlight_rpt_pub));
+  pub_tx_list.emplace(HEADLIGHT_AUX_RPT_CANID, std::move(headlight_aux_rpt_pub));
 
   headlight_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe(
     "headlight_cmd", 20, &Pacmod3Nl::callback_headlight_set_cmd, this));
   rx_list.emplace(
-      HeadlightCmdMsg::CAN_ID,
-      std::shared_ptr<LockedData>(new LockedData(HeadlightCmdMsg::DATA_LENGTH)));
+      HEADLIGHT_CMD_CANID,
+      std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized Headlight API");
 }
 
@@ -193,13 +195,13 @@ void Pacmod3Nl::initializeHornApi()
 {
   ros::Publisher horn_rpt_pub =
     nh_.advertise<pacmod3_msgs::SystemRptBool>("horn_rpt", 20);
-  pub_tx_list.emplace(HornRptMsg::CAN_ID, std::move(horn_rpt_pub));
+  pub_tx_list.emplace(HORN_RPT_CANID, std::move(horn_rpt_pub));
 
   horn_set_cmd_sub = std::make_shared<ros::Subscriber>(nh_.subscribe(
     "horn_cmd", 20, &Pacmod3Nl::callback_horn_set_cmd, this));
   rx_list.emplace(
-    HornCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(HornCmdMsg::DATA_LENGTH)));
+    HORN_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized Horn API");
 }
 
@@ -207,7 +209,7 @@ void Pacmod3Nl::initializeWheelSpeedApi()
 {
   ros::Publisher wheel_speed_rpt_pub =
     nh_.advertise<pacmod3_msgs::WheelSpeedRpt>("wheel_speed_rpt", 20);
-  pub_tx_list.emplace(WheelSpeedRptMsg::CAN_ID, std::move(wheel_speed_rpt_pub));
+  pub_tx_list.emplace(WHEEL_SPEED_RPT_CANID, std::move(wheel_speed_rpt_pub));
   NODELET_INFO("Initialized WheelSpeed API");
 }
 
@@ -215,7 +217,7 @@ void Pacmod3Nl::initializeParkingBrakeRptApi()
 {
   ros::Publisher parking_brake_rpt_pub =
     nh_.advertise<pacmod3_msgs::SystemRptBool>("parking_brake_rpt", 20);
-  pub_tx_list.emplace(ParkingBrakeRptMsg::CAN_ID, std::move(parking_brake_rpt_pub));
+  pub_tx_list.emplace(PARKING_BRAKE_RPT_CANID, std::move(parking_brake_rpt_pub));
   NODELET_INFO("Initialized ParkingBrakeRpt API");
 }
 
@@ -223,7 +225,7 @@ void Pacmod3Nl::initializeDoorRptApi()
 {
   ros::Publisher door_rpt_pub =
     nh_.advertise<pacmod3_msgs::DoorRpt>("door_rpt", 20);
-  pub_tx_list.emplace(DoorRptMsg::CAN_ID, std::move(door_rpt_pub));
+  pub_tx_list.emplace(DOOR_RPT_CANID, std::move(door_rpt_pub));
   NODELET_INFO("Initialized DoorRpt API");
 }
 
@@ -231,7 +233,7 @@ void Pacmod3Nl::initializeInteriorLightsRptApi()
 {
   ros::Publisher interior_lights_rpt_pub =
     nh_.advertise<pacmod3_msgs::InteriorLightsRpt>("interior_lights_rpt", 20);
-  pub_tx_list.emplace(InteriorLightsRptMsg::CAN_ID, std::move(interior_lights_rpt_pub));
+  pub_tx_list.emplace(INTERIOR_LIGHTS_RPT_CANID, std::move(interior_lights_rpt_pub));
   NODELET_INFO("Initialized InteriorLights API");
 }
 
@@ -239,7 +241,7 @@ void Pacmod3Nl::initializeOccupancyRptApi()
 {
   ros::Publisher occupancy_rpt_pub =
     nh_.advertise<pacmod3_msgs::OccupancyRpt>("occupancy_rpt", 20);
-  pub_tx_list.emplace(OccupancyRptMsg::CAN_ID, std::move(occupancy_rpt_pub));
+  pub_tx_list.emplace(OCCUPANCY_RPT_CANID, std::move(occupancy_rpt_pub));
   NODELET_INFO("Initialized OccupancyRpt API");
 }
 
@@ -247,7 +249,7 @@ void Pacmod3Nl::initializeRearLightsRptApi()
 {
   ros::Publisher rear_lights_rpt_pub =
     nh_.advertise<pacmod3_msgs::RearLightsRpt>("rear_lights_rpt", 20);
-  pub_tx_list.emplace(RearLightsRptMsg::CAN_ID, std::move(rear_lights_rpt_pub));
+  pub_tx_list.emplace(REAR_LIGHTS_RPT_CANID, std::move(rear_lights_rpt_pub));
   NODELET_INFO("Initialized RearLightsRpt API");
 }
 
@@ -255,13 +257,13 @@ void Pacmod3Nl::initializeHazardLightApi()
 {
   ros::Publisher hazard_lights_rpt_pub =
     nh_.advertise<pacmod3_msgs::SystemRptBool>("hazard_lights_rpt", 20);
-  pub_tx_list.emplace(HazardLightRptMsg::CAN_ID, std::move(hazard_lights_rpt_pub));
+  pub_tx_list.emplace(HAZARD_LIGHTS_RPT_CANID, std::move(hazard_lights_rpt_pub));
 
   hazard_lights_set_cmd_sub = std::make_shared<ros::Subscriber>(
     nh_.subscribe("hazard_lights_cmd", 20, &Pacmod3Nl::callback_hazard_lights_set_cmd, this));
   rx_list.emplace(
-    HazardLightCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(HazardLightCmdMsg::DATA_LENGTH)));
+    HAZARD_LIGHTS_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized HazardLight API");
 }
 
@@ -273,9 +275,9 @@ void Pacmod3Nl::initializeLexusSpecificApi()
     nh_.advertise<pacmod3_msgs::LatLonHeadingRpt>("lat_lon_heading_rpt", 20);
   ros::Publisher yaw_rate_rpt_pub =
     nh_.advertise<pacmod3_msgs::YawRateRpt>("yaw_rate_rpt", 20);
-  pub_tx_list.emplace(DateTimeRptMsg::CAN_ID, std::move(date_time_rpt_pub));
-  pub_tx_list.emplace(LatLonHeadingRptMsg::CAN_ID, std::move(lat_lon_heading_rpt_pub));
-  pub_tx_list.emplace(YawRateRptMsg::CAN_ID, std::move(yaw_rate_rpt_pub));
+  pub_tx_list.emplace(DATE_TIME_RPT_CANID, std::move(date_time_rpt_pub));
+  pub_tx_list.emplace(LAT_LON_HEADING_RPT_CANID, std::move(lat_lon_heading_rpt_pub));
+  pub_tx_list.emplace(YAW_RATE_RPT_CANID, std::move(yaw_rate_rpt_pub));
   NODELET_INFO("Initialized Lexus-specific API");
 }
 
@@ -289,10 +291,10 @@ void Pacmod3Nl::initializeFreightlinerSpecificApi()
     nh_.advertise<pacmod3_msgs::SystemRptBool>("marker_lamp_rpt", 20);
   ros::Publisher sprayer_rpt_pub =
     nh_.advertise<pacmod3_msgs::SystemRptBool>("sprayer_rpt", 20);
-  pub_tx_list.emplace(CruiseControlButtonsRptMsg::CAN_ID, std::move(cruise_control_buttons_rpt_pub));
-  pub_tx_list.emplace(EngineBrakeRptMsg::CAN_ID, std::move(engine_brake_rpt_pub));
-  pub_tx_list.emplace(MarkerLampRptMsg::CAN_ID, std::move(marker_lamp_rpt_pub));
-  pub_tx_list.emplace(SprayerRptMsg::CAN_ID, std::move(sprayer_rpt_pub));
+  pub_tx_list.emplace(CRUISE_CONTROL_BUTTONS_RPT_CANID, std::move(cruise_control_buttons_rpt_pub));
+  pub_tx_list.emplace(ENGINE_BRAKE_RPT_CANID, std::move(engine_brake_rpt_pub));
+  pub_tx_list.emplace(MARKER_LAMP_RPT_CANID, std::move(marker_lamp_rpt_pub));
+  pub_tx_list.emplace(SPRAYER_RPT_CANID, std::move(sprayer_rpt_pub));
 
   cruise_control_buttons_set_cmd_sub = std::make_shared<ros::Subscriber>(
     nh_.subscribe("cruise_control_buttons_cmd", 20, &Pacmod3Nl::callback_cruise_control_buttons_set_cmd, this));
@@ -303,31 +305,44 @@ void Pacmod3Nl::initializeFreightlinerSpecificApi()
   sprayer_set_cmd_sub = std::make_shared<ros::Subscriber>(
     nh_.subscribe("sprayer_cmd", 20, &Pacmod3Nl::callback_sprayer_set_cmd, this));
   rx_list.emplace(
-    CruiseControlButtonsCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(CruiseControlButtonsCmdMsg::DATA_LENGTH)));
+    CRUISE_CONTROL_BUTTONS_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    EngineBrakeCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(EngineBrakeCmdMsg::DATA_LENGTH)));
+    ENGINE_BRAKE_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    MarkerLampCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(MarkerLampCmdMsg::DATA_LENGTH)));
+    MARKER_LAMP_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   rx_list.emplace(
-    SprayerCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(SprayerCmdMsg::DATA_LENGTH)));
+    SPRAYER_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized Freightliner-specific API");
 }
 
 void Pacmod3Nl::initializeJapanTaxiSpecificApi()
 {
   rear_pass_door_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptInt>("rear_pass_door_rpt", 20);
-  pub_tx_list.emplace(RearPassDoorRptMsg::CAN_ID, std::move(rear_pass_door_rpt_pub));
+  pub_tx_list.emplace(REAR_PASS_DOOR_RPT_CANID, std::move(rear_pass_door_rpt_pub));
 
   rear_pass_door_cmd_sub = nh_.subscribe(
     "rear_pass_door_cmd", 20, &Pacmod3Nl::callback_rear_pass_door_set_cmd, this);
   rx_list.emplace(
-    RearPassDoorCmdMsg::CAN_ID,
-    std::shared_ptr<LockedData>(new LockedData(RearPassDoorCmdMsg::DATA_LENGTH)));
+    REAR_PASS_DOOR_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized Japan Taxi-specific API");
+}
+
+void Pacmod3Nl::initializeFordTransitSpecificApi()
+{
+  media_controls_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptInt>("media_controls_rpt", 20);
+  pub_tx_list.emplace(MEDIA_CONTROLS_RPT_CANID, std::move(media_controls_rpt_pub));
+
+  media_controls_cmd_sub = nh_.subscribe(
+    "media_controls_cmd", 20, &Pacmod3Nl::callback_media_controls_set_cmd, this);
+  rx_list.emplace(
+    MEDIA_CONTROLS_CMD_CANID,
+    std::shared_ptr<LockedData>(new LockedData()));
+  NODELET_INFO("Initialized Ford Transit-specific API");
 }
 
 void Pacmod3Nl::initializeVehicle4SpecificApi()
@@ -337,8 +352,8 @@ void Pacmod3Nl::initializeVehicle4SpecificApi()
   ros::Publisher vehicle_dynamics_rpt_pub =
     nh_.advertise<pacmod3_msgs::VehicleDynamicsRpt>("vehicle_dynamics_rpt", 20);
 
-  pub_tx_list.emplace(DetectedObjectRptMsg::CAN_ID, std::move(detected_object_rpt_pub));
-  pub_tx_list.emplace(VehicleDynamicsRptMsg::CAN_ID, std::move(vehicle_dynamics_rpt_pub));
+  pub_tx_list.emplace(DETECTED_OBJECT_RPT_CANID, std::move(detected_object_rpt_pub));
+  pub_tx_list.emplace(VEH_DYNAMICS_RPT_CANID, std::move(vehicle_dynamics_rpt_pub));
   NODELET_INFO("Initialized Vehicle4-specific API");
 }
 
@@ -347,89 +362,94 @@ void Pacmod3Nl::initializeApiForMsg(uint32_t msg_can_id)
   // Need to initialize pubs/subs for this message group
   switch (msg_can_id)
   {
-    case BrakeMotorRpt1Msg::CAN_ID:
-    case BrakeMotorRpt2Msg::CAN_ID:
-    case BrakeMotorRpt3Msg::CAN_ID:
+    case BRAKE_MOTOR_RPT_1_CANID:
+    case BRAKE_MOTOR_RPT_2_CANID:
+    case BRAKE_MOTOR_RPT_3_CANID:
       {
         initializeBrakeMotorRptApi();
         break;
       }
-    case SteerMotorRpt1Msg::CAN_ID:
-    case SteerMotorRpt2Msg::CAN_ID:
-    case SteerMotorRpt3Msg::CAN_ID:
+    case STEERING_MOTOR_RPT_1_CANID:
+    case STEERING_MOTOR_RPT_2_CANID:
+    case STEERING_MOTOR_RPT_3_CANID:
       {
         initializeSteeringMotorRptApi();
         break;
       }
-    case WiperRptMsg::CAN_ID:
-    case WiperAuxRptMsg::CAN_ID:
+    case WIPER_RPT_CANID:
+    case WIPER_AUX_RPT_CANID:
       {
         initializeWiperApi();
         break;
       }
-    case HeadlightRptMsg::CAN_ID:
-    case HeadlightAuxRptMsg::CAN_ID:
+    case HEADLIGHT_RPT_CANID:
+    case HEADLIGHT_AUX_RPT_CANID:
       {
         initializeHeadlightApi();
         break;
       }
-    case HornRptMsg::CAN_ID:
+    case HORN_RPT_CANID:
       {
         initializeHornApi();
         break;
       }
-    case WheelSpeedRptMsg::CAN_ID:
+    case WHEEL_SPEED_RPT_CANID:
       {
         initializeWheelSpeedApi();
         break;
       }
-    case ParkingBrakeRptMsg::CAN_ID:
+    case PARKING_BRAKE_RPT_CANID:
       {
         initializeParkingBrakeRptApi();
         break;
       }
-    case DoorRptMsg::CAN_ID:
+    case DOOR_RPT_CANID:
       {
         initializeDoorRptApi();
         break;
       }
-    case InteriorLightsRptMsg::CAN_ID:
+    case INTERIOR_LIGHTS_RPT_CANID:
       {
         initializeInteriorLightsRptApi();
         break;
       }
-    case OccupancyRptMsg::CAN_ID:
+    case OCCUPANCY_RPT_CANID:
       {
         initializeOccupancyRptApi();
         break;
       }
-    case RearLightsRptMsg::CAN_ID:
+    case REAR_LIGHTS_RPT_CANID:
       {
         initializeRearLightsRptApi();
         break;
       }
-    case HazardLightRptMsg::CAN_ID:
+    case HAZARD_LIGHTS_RPT_CANID:
       {
         initializeHazardLightApi();
         break;
       }
-    case DateTimeRptMsg::CAN_ID:
-    case LatLonHeadingRptMsg::CAN_ID:
-    case YawRateRptMsg::CAN_ID:
+    case DATE_TIME_RPT_CANID:
+    case LAT_LON_HEADING_RPT_CANID:
+    case YAW_RATE_RPT_CANID:
       {
         initializeLexusSpecificApi();
         break;
       }
-    case CruiseControlButtonsRptMsg::CAN_ID:
-    case EngineBrakeRptMsg::CAN_ID:
-    case MarkerLampRptMsg::CAN_ID:
-    case SprayerRptMsg::CAN_ID:
+    case CRUISE_CONTROL_BUTTONS_RPT_CANID:
+    case ENGINE_BRAKE_RPT_CANID:
+    case MARKER_LAMP_RPT_CANID:
+    case SPRAYER_RPT_CANID:
       {
         initializeFreightlinerSpecificApi();
         break;
       }
-    case DetectedObjectRptMsg::CAN_ID:
-    case VehicleDynamicsRptMsg::CAN_ID:
+    case MEDIA_CONTROLS_RPT_CANID:
+      {
+        initializeFordTransitSpecificApi();
+        break;
+      }
+    case DETECTED_OBJECT_RPT_CANID:
+    case VEH_DYNAMICS_RPT_CANID:
       {
         initializeVehicle4SpecificApi();
         break;
@@ -439,87 +459,77 @@ void Pacmod3Nl::initializeApiForMsg(uint32_t msg_can_id)
 
 void Pacmod3Nl::callback_accel_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
+  lookup_and_encode(ACCEL_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_brake_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
+  lookup_and_encode(BRAKE_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_cruise_control_buttons_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
-}
-
-void Pacmod3Nl::callback_dash_controls_left_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
-{
-  lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
-}
-
-void Pacmod3Nl::callback_dash_controls_right_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
-{
-  lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(CRUISE_CONTROL_BUTTONS_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_headlight_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(HEADLIGHT_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_horn_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  lookup_and_encode(HornCmdMsg::CAN_ID, msg);
+  lookup_and_encode(HORN_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_media_controls_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
+  lookup_and_encode(MEDIA_CONTROLS_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_shift_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
+  lookup_and_encode(SHIFT_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_steer_cmd_sub(const pacmod3_msgs::SteeringCmd::ConstPtr& msg)
 {
-  lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
+  lookup_and_encode(STEERING_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_turn_signal_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
+  lookup_and_encode(TURN_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_rear_pass_door_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+  lookup_and_encode(REAR_PASS_DOOR_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_wiper_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
+  lookup_and_encode(WIPER_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_engine_brake_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+  lookup_and_encode(ENGINE_BRAKE_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_marker_lamp_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  lookup_and_encode(MarkerLampCmdMsg::CAN_ID, msg);
+  lookup_and_encode(MARKER_LAMP_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_sprayer_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  lookup_and_encode(SprayerCmdMsg::CAN_ID, msg);
+  lookup_and_encode(SPRAYER_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::callback_hazard_lights_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
 {
-  lookup_and_encode(HazardLightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(HAZARD_LIGHTS_CMD_CANID, msg);
 }
 
 void Pacmod3Nl::SystemStatusUpdate(const ros::TimerEvent& event)
@@ -531,35 +541,31 @@ void Pacmod3Nl::SystemStatusUpdate(const ros::TimerEvent& event)
   {
     pacmod3_msgs::KeyValuePair kvp;
 
-    if (system->first == AccelRptMsg::CAN_ID)
+    if (system->first == ACCEL_RPT_CANID)
       kvp.key = "Accelerator";
-    else if (system->first == BrakeRptMsg::CAN_ID)
+    else if (system->first == BRAKE_RPT_CANID)
       kvp.key = "Brakes";
-    else if (system->first == CruiseControlButtonsRptMsg::CAN_ID)
+    else if (system->first == CRUISE_CONTROL_BUTTONS_RPT_CANID)
       kvp.key = "Cruise Control Buttons";
-    else if (system->first == DashControlsLeftRptMsg::CAN_ID)
-      kvp.key = "Dash Controls Left";
-    else if (system->first == DashControlsRightRptMsg::CAN_ID)
-      kvp.key = "Dash Controls Right";
-    else if (system->first == HazardLightRptMsg::CAN_ID)
+    else if (system->first == HAZARD_LIGHTS_RPT_CANID)
       kvp.key = "Hazard Lights";
-    else if (system->first == HeadlightRptMsg::CAN_ID)
+    else if (system->first == HEADLIGHT_RPT_CANID)
       kvp.key = "Headlights";
-    else if (system->first == HornRptMsg::CAN_ID)
+    else if (system->first == HORN_RPT_CANID)
       kvp.key = "Horn";
-    else if (system->first == MediaControlsRptMsg::CAN_ID)
+    else if (system->first == MEDIA_CONTROLS_RPT_CANID)
       kvp.key = "Media Controls";
-    else if (system->first == ParkingBrakeRptMsg::CAN_ID)
+    else if (system->first == PARKING_BRAKE_RPT_CANID)
       kvp.key = "Parking Brake";
-    else if (system->first == ShiftRptMsg::CAN_ID)
+    else if (system->first == SHIFT_RPT_CANID)
       kvp.key = "Shifter";
-    else if (system->first == SteerRptMsg::CAN_ID)
+    else if (system->first == STEERING_RPT_CANID)
       kvp.key = "Steering";
-    else if (system->first == TurnSignalRptMsg::CAN_ID)
+    else if (system->first == TURN_RPT_CANID)
       kvp.key = "Turn Signals";
-    else if (system->first == RearPassDoorRptMsg::CAN_ID)
+    else if (system->first == REAR_PASS_DOOR_RPT_CANID)
       kvp.key = "Rear Passenger Door";
-    else if (system->first == WiperRptMsg::CAN_ID)
+    else if (system->first == WIPER_RPT_CANID)
       kvp.key = "Wipers";
 
     kvp.value = std::get<0>(system->second) ? "True" : "False";
@@ -602,7 +608,7 @@ void Pacmod3Nl::can_write(const ros::TimerEvent& event)
 
 void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
 {
-  auto parser_class = Pacmod3TxMsg::make_message(msg->id);
+  // auto parser_class = Pacmod3TxMsg::make_message(msg->id);
   auto pub = pub_tx_list.find(msg->id);
 
   if (pub == pub_tx_list.end())
@@ -610,38 +616,40 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
     initializeApiForMsg(msg->id);
   }
 
-  // Only parse messages for which we have a parser and a publisher.
-  if (parser_class != NULL && pub != pub_tx_list.end())
+  // Only parse messages for which we have a publisher.
+  if (pub != pub_tx_list.end())
   {
-    parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
+    // parser_class->parse(const_cast<uint8_t *>(&msg->data[0]));
     handler->ParseAndPublish(*msg, pub->second);
 
-    if (parser_class->isSystem())
-    {
-      auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
+    // TODO: Re-enable this code after refactoring it, or maybe it's not needed at all?
+    // if (parser_class->isSystem())
+    // {
+    //   auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
 
-      std::unique_lock<std::mutex> lock(sys_status_mutex_);
-      system_statuses[msg->id] = std::make_tuple(dc_parser->enabled,
-                                 dc_parser->override_active,
-                                 (dc_parser->command_output_fault |
-                                  dc_parser->input_output_fault |
-                                  dc_parser->output_reported_fault |
-                                  dc_parser->pacmod_fault |
-                                  dc_parser->vehicle_fault));
-    }
+    //   std::unique_lock<std::mutex> lock(sys_status_mutex_);
+    //   system_statuses[msg->id] = std::make_tuple(dc_parser->enabled,
+    //                              dc_parser->override_active,
+    //                              (dc_parser->command_output_fault |
+    //                               dc_parser->input_output_fault |
+    //                               dc_parser->output_reported_fault |
+    //                               dc_parser->pacmod_fault |
+    //                               dc_parser->vehicle_fault));
+    // }
 
-    if (msg->id == GlobalRptMsg::CAN_ID)
-    {
-      auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
+    // TODO: Re-enable this code after refactoring it, or maybe it's not needed at all?
+    // if (msg->id == GlobalRptMsg::CAN_ID)
+    // {
+    //   auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
 
-      std_msgs::Bool bool_pub_msg;
-      bool_pub_msg.data = (dc_parser->enabled);
-      enabled_pub.publish(bool_pub_msg);
+    //   std_msgs::Bool bool_pub_msg;
+    //   bool_pub_msg.data = (dc_parser->enabled);
+    //   enabled_pub.publish(bool_pub_msg);
 
-      if (dc_parser->override_active ||
-          dc_parser->fault_active)
-        set_enable(false);
-    }
+    //   if (dc_parser->override_active ||
+    //       dc_parser->fault_active)
+    //     set_enable(false);
+    // }
   }
 }
 

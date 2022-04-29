@@ -21,6 +21,8 @@
 #ifndef PACMOD3_DBC_ROS_API_H
 #define PACMOD3_DBC_ROS_API_H
 
+#include "pacmod3_can_ids.h"
+
 #include <string>
 #include <vector>
 #include <memory>
@@ -30,7 +32,8 @@
 
 #ifdef USE_ROS1
 
-#include <pacmod3/pacmod3_core.h>
+// #include <pacmod3/pacmod3_core.h>
+
 #include <ros/ros.h>
 
 #include <can_msgs/Frame.h>

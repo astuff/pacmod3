@@ -21,7 +21,6 @@
 #ifndef PACMOD3_PACMOD3_NODELET_H
 #define PACMOD3_PACMOD3_NODELET_H
 
-#include "pacmod3/pacmod3_core.h"
 #include "pacmod3/pacmod3_ros_msg_handler.h"
 
 #include <map>
@@ -82,6 +81,7 @@ private:
   void onInit() override;
   void loadParams();
 
+  // Generic APIs
   void initializeBrakeMotorRptApi();
   void initializeSteeringMotorRptApi();
   void initializeWiperApi();
@@ -95,9 +95,11 @@ private:
   void initializeRearLightsRptApi();
   void initializeHazardLightApi();
 
+  // Vehicle-specific APIs
   void initializeLexusSpecificApi();
   void initializeFreightlinerSpecificApi();
   void initializeJapanTaxiSpecificApi();
+  void initializeFordTransitSpecificApi();
   void initializeVehicle4SpecificApi();
 
   void initializeApiForMsg(uint32_t msg_can_id);
@@ -139,9 +141,10 @@ private:
   ros::Publisher accel_rpt_pub;
   ros::Publisher brake_rpt_pub;
   ros::Publisher shift_rpt_pub;
-  ros::Publisher steer_rpt_pub;
+  ros::Publisher steering_rpt_pub;
   ros::Publisher turn_rpt_pub;
   ros::Publisher rear_pass_door_rpt_pub;
+  ros::Publisher media_controls_rpt_pub;
   ros::Publisher vehicle_speed_pub;
   ros::Publisher vin_rpt_pub;
   ros::Publisher accel_aux_rpt_pub;
@@ -157,6 +160,7 @@ private:
   ros::Subscriber steer_cmd_sub;
   ros::Subscriber turn_cmd_sub;
   ros::Subscriber rear_pass_door_cmd_sub;
+  ros::Subscriber media_controls_cmd_sub;
 
   ros::Timer status_update_timer_;
   ros::Timer can_send_timer_;

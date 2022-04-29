@@ -41,7 +41,6 @@ add_library(pacmod3_common
 # nodelets
 add_library(${PROJECT_NAME}_nodelet
   src/pacmod3_nodelet.cpp
-  src/pacmod3_core.cpp
   src/pacmod3_ros_msg_handler.cpp
 )
 

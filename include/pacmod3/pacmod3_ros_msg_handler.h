@@ -31,7 +31,6 @@
 #include <memory>
 #include <mutex>
 
-#include <pacmod3/pacmod3_core.h>
 #include <ros/ros.h>
 
 #include <can_msgs/Frame.h>
@@ -74,7 +73,7 @@ namespace pacmod3
 class LockedData
 {
 public:
-  explicit LockedData(unsigned char data_length);
+  explicit LockedData(unsigned char data_length = 8U);
 
   std::vector<unsigned char> getData() const;
   void setData(std::vector<unsigned char> new_data);

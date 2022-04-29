@@ -28,6 +28,9 @@ main()
   cp "$TEMP_DIR/output/conf/$DRIVER_NAME-config.h" "$SCRIPT_DIR/autogen/"
   # cp "$TEMP_DIR/output/conf/dbccodeconf.h" "$SCRIPT_DIR/autogen/"
 
+  # Pull out all CAN IDS:
+  grep -h "_CANID" "$SCRIPT_DIR/autogen/$DRIVER_NAME.h" > "dbc$DBC_MAJOR_VERSION.canids"
+
   echo ""
   echo "Done"
 }
