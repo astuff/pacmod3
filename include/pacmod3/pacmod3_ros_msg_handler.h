@@ -95,15 +95,16 @@ public:
 
   void ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
 
-  // Functions for packing/encoding data into CAN messages
-  can_msgs::Frame Encode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdBool::ConstPtr& msg);
-  can_msgs::Frame Encode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
-  can_msgs::Frame Encode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
-
-  std::vector<uint8_t>
-    unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg);
-  std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SystemCmdInt::ConstPtr& msg);
-  std::vector<uint8_t> unpackAndEncode(const uint32_t& can_id, const pacmod3_msgs::SteeringCmd::ConstPtr& msg);
+  // Function for packing/encoding data into CAN messages. It's located in the header to force
+  // the compiler to instatiate types required by the includer.
+  template <class RosMsgType>
+  can_msgs::Frame Encode(uint32_t can_id, const RosMsgType& msg)
+  {
+    can_msgs::Frame new_frame;
+    new_frame = msg_api_->EncodeCmd(*msg);
+    new_frame.id = can_id;
+    return new_frame;
+  }
 
 private:
   std::unique_ptr<DbcApi> msg_api_;

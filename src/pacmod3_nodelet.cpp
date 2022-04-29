@@ -102,10 +102,10 @@ void Pacmod3Nl::onInit()
     std::shared_ptr<LockedData>(new LockedData(TurnSignalCmdMsg::DATA_LENGTH)));
 
   // Init cmds to send, always init core subsystems with enable false
-  received_cmds.insert(AccelCmdMsg::CAN_ID);
-  received_cmds.insert(BrakeCmdMsg::CAN_ID);
-  received_cmds.insert(SteerCmdMsg::CAN_ID);
-  received_cmds.insert(ShiftCmdMsg::CAN_ID);
+  received_cmds_.insert(AccelCmdMsg::CAN_ID);
+  received_cmds_.insert(BrakeCmdMsg::CAN_ID);
+  received_cmds_.insert(SteerCmdMsg::CAN_ID);
+  received_cmds_.insert(ShiftCmdMsg::CAN_ID);
 
   // Initialize Turn Signal with non-0 value
   TurnSignalCmdMsg turn_encoder;
@@ -439,32 +439,32 @@ void Pacmod3Nl::initializeApiForMsg(uint32_t msg_can_id)
 
 void Pacmod3Nl::callback_accel_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  // lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
+  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_brake_cmd_sub(const pacmod3_msgs::SystemCmdFloat::ConstPtr& msg)
 {
-  // lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
+  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_cruise_control_buttons_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
+  lookup_and_encode(CruiseControlButtonsCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_dash_controls_left_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
+  lookup_and_encode(DashControlsLeftCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_dash_controls_right_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(DashControlsRightCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_headlight_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_horn_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
@@ -474,37 +474,37 @@ void Pacmod3Nl::callback_horn_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPt
 
 void Pacmod3Nl::callback_media_controls_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
+  lookup_and_encode(MediaControlsCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_shift_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
+  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_steer_cmd_sub(const pacmod3_msgs::SteeringCmd::ConstPtr& msg)
 {
-  // lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
+  lookup_and_encode(SteerCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_turn_signal_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
+  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_rear_pass_door_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+  lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_wiper_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
+  lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_engine_brake_set_cmd(const pacmod3_msgs::SystemCmdInt::ConstPtr& msg)
 {
-  // lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+  lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
 }
 
 void Pacmod3Nl::callback_marker_lamp_set_cmd(const pacmod3_msgs::SystemCmdBool::ConstPtr& msg)
@@ -580,7 +580,7 @@ void Pacmod3Nl::SystemStatusUpdate(const ros::TimerEvent& event)
 
 void Pacmod3Nl::can_write(const ros::TimerEvent& event)
 {
-  for (const auto& can_id : received_cmds)
+  for (const auto& can_id : received_cmds_)
   {
     auto data = rx_list[can_id]->getData();
 
@@ -665,7 +665,8 @@ void Pacmod3Nl::set_enable(bool val)
 }
 
 // Looks up the appropriate LockedData and inserts the command info
-template<class T> void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, const T& msg)
+template<class RosMsgType>
+void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, const RosMsgType& msg)
 {
   auto rx_it = rx_list.find(can_id);
 
@@ -679,7 +680,7 @@ template<class T> void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, cons
     new_data.resize(packed_frame.dlc);
 
     rx_it->second->setData(new_data);
-    received_cmds.insert(can_id);
+    received_cmds_.insert(can_id);
   }
   else
   {

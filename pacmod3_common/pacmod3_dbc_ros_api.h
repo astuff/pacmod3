@@ -132,8 +132,6 @@ namespace pacmod3
 class DbcApi
 {
 public:
-  DbcApi(uint32_t dbc_major_version) {dbc_major_version_ = dbc_major_version;};
-
   // Parsing functions take in a ROS CAN msg and return a pointer to a ROS pacmod msg
   virtual std::shared_ptr<void> ParseAccelAuxRpt(const can_msgs::Frame& can_msg) = 0;
   virtual std::shared_ptr<void> ParseAngVelRpt(const can_msgs::Frame& can_msg) = 0;
@@ -166,14 +164,15 @@ public:
   virtual std::shared_ptr<void> ParseWiperAuxRpt(const can_msgs::Frame& can_msg) = 0;
   virtual std::shared_ptr<void> ParseYawRateRpt(const can_msgs::Frame& can_msg) = 0;
 
-  // Encoding functions take in a ROS pacmod msg and return and ROS CAN msg.
-  virtual can_msgs::Frame EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg) = 0;
-  virtual can_msgs::Frame EncodeNotificationCmd(const pm_msgs::NotificationCmd& msg) = 0;
-  virtual can_msgs::Frame EncodeSteeringCmd(const pm_msgs::SteeringCmd& msg) = 0;
-  virtual can_msgs::Frame EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg) = 0;
-  virtual can_msgs::Frame EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg) = 0;
-  virtual can_msgs::Frame EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg) = 0;
+  // Encoding functions take in a ROS pacmod msg and return and ROS CAN frame msg.
+  virtual can_msgs::Frame EncodeCmd(const pm_msgs::GlobalCmd& msg) = 0;
+  virtual can_msgs::Frame EncodeCmd(const pm_msgs::NotificationCmd& msg) = 0;
+  virtual can_msgs::Frame EncodeCmd(const pm_msgs::SteeringCmd& msg) = 0;
+  virtual can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdBool& msg) = 0;
+  virtual can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdFloat& msg) = 0;
+  virtual can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdInt& msg) = 0;
 
+  void SetDbcVersion(uint32_t dbc_major_version);
   void PrintParseError(const std::string& msg_type);
   void PrintEncodeError(const std::string& msg_type);
 

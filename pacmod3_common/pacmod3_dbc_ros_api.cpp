@@ -25,12 +25,17 @@
 namespace pacmod3
 {
 
-DbcApi::PrintParseError(const std::string& msg_type)
+void DbcApi::SetDbcVersion(uint32_t dbc_major_version)
 {
-  std::string full_msg = "Unable to parse " + msg_type + ", it is not supported by DBC version " + str(dbc_major_version_);
+  dbc_major_version_ = dbc_major_version;
+}
+
+void DbcApi::PrintParseError(const std::string& msg_type)
+{
+  std::string full_msg = "Unable to parse " + msg_type + ", it is not supported by DBC version " + std::to_string(dbc_major_version_);
 
   #ifdef USE_ROS1
-    ROS_WARN(full_msg);
+    ROS_WARN_STREAM(full_msg);
   #endif  // USE_ROS1
 
   #ifdef USE_ROS2
@@ -38,15 +43,17 @@ DbcApi::PrintParseError(const std::string& msg_type)
   #endif  // USE_ROS2
 }
 
-DbcApi::PrintEncodeError(const std::string& msg_type)
+void DbcApi::PrintEncodeError(const std::string& msg_type)
 {
-  std::string full_msg = "Unable to encode " + msg_type + ", it is not supported by DBC version " + str(dbc_major_version_);
+  std::string full_msg = "Unable to encode " + msg_type + ", it is not supported by DBC version " + std::to_string(dbc_major_version_);
 
   #ifdef USE_ROS1
-    ROS_WARN(full_msg);
+    ROS_WARN_STREAM(full_msg);
   #endif  // USE_ROS1
 
   #ifdef USE_ROS2
 
   #endif  // USE_ROS2
 }
+
+}  // namespace pacmod3

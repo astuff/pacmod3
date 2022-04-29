@@ -125,7 +125,8 @@ private:
   void can_write(const ros::TimerEvent& event);
   void can_read(const can_msgs::Frame::ConstPtr &msg);
   void set_enable(bool val);
-  template<class T> void lookup_and_encode(const uint32_t& can_id, const T& msg);
+  template<class RosMsgType>
+  void lookup_and_encode(const uint32_t& can_id, const RosMsgType& msg);
 
   std::unordered_map<uint32_t, ros::Publisher> pub_tx_list;
   std::unique_ptr<Pacmod3RosMsgHandler> handler;
@@ -182,7 +183,7 @@ private:
   int dbc_major_version_;
 
   // Commands that have been received from ROS subscribers
-  std::set<uint32_t> received_cmds;
+  std::set<uint32_t> received_cmds_;
 
   // Data shared across threads
   std::unordered_map<uint32_t, std::shared_ptr<LockedData>> rx_list;

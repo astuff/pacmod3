@@ -28,6 +28,10 @@
 
 namespace pacmod3
 {
+Dbc4Api::Dbc4Api()
+{
+  SetDbcVersion(4);
+}
 
 std::shared_ptr<void> Dbc4Api::ParseAngVelRpt(const can_msgs::Frame& can_msg)
 {
@@ -190,7 +194,7 @@ std::shared_ptr<void> Dbc4Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
 
 // Message Encoding
 
-can_msgs::Frame Dbc4Api::EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg)
+can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::GlobalCmd& msg)
 {
   can_msgs::Frame packed_frame;
 
@@ -203,7 +207,7 @@ can_msgs::Frame Dbc4Api::EncodeGlobalCmd(const pm_msgs::GlobalCmd& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeNotificationCmd(const pm_msgs::NotificationCmd& msg)
+can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::NotificationCmd& msg)
 {
   can_msgs::Frame packed_frame;
 
@@ -217,7 +221,7 @@ can_msgs::Frame Dbc4Api::EncodeNotificationCmd(const pm_msgs::NotificationCmd& m
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
+can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
 {
   can_msgs::Frame packed_frame;
 
@@ -233,7 +237,7 @@ can_msgs::Frame Dbc4Api::EncodeSystemCmdBool(const pm_msgs::SystemCmdBool& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg)
+can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
 {
   can_msgs::Frame packed_frame;
 
@@ -249,7 +253,7 @@ can_msgs::Frame Dbc4Api::EncodeSystemCmdInt(const pm_msgs::SystemCmdInt& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg)
+can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
 {
   can_msgs::Frame packed_frame;
 
@@ -265,6 +269,4 @@ can_msgs::Frame Dbc4Api::EncodeSystemCmdFloat(const pm_msgs::SystemCmdFloat& msg
   return packed_frame;
 }
 
-
 }  // namespace pacmod3
-
