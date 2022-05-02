@@ -17,18 +17,47 @@ find_package(can_msgs REQUIRED)
 find_package(pacmod3_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 
+###########
+## Build ##
+###########
+
 include_directories(
   include/
   pacmod3_common/
 )
 
-add_library(
-  ${PROJECT_NAME}_node SHARED
+# TODO: Change this to library for pacmod3_common
+add_library(pacmod3_common SHARED
+  pacmod3_common/pacmod3_dbc_ros_api.cpp
+  pacmod3_common/pacmod3_dbc3_ros_api.cpp
+  pacmod3_common/pacmod3_dbc4_ros_api.cpp
+  pacmod3_common/autogen/pacmod3.c
+  pacmod3_common/autogen/pacmod4.c
+)
+ament_target_dependencies(
+  pacmod3_common
+  "rclcpp"
+  # "rclcpp_components"
+  # "rclcpp_lifecycle"
+  "can_msgs"
+  "pacmod3_msgs"
+  # "std_msgs"
+)
+
+add_library(${PROJECT_NAME}_node SHARED
   src/pacmod3_ros_msg_handler.cpp
-  pacmod3_common/pacmod3_dbc12_ros_api.cpp
+  # pacmod3_common/pacmod3_dbc_ros_api.cpp
+  # pacmod3_common/pacmod3_dbc3_ros_api.cpp
+  # pacmod3_common/pacmod3_dbc4_ros_api.cpp
   src/pacmod3_core.cpp
   src/pacmod3_node.cpp
 )
+target_link_libraries(${PROJECT_NAME}_node
+  pacmod3_common
+)
+
+# TODO: build pacmod3_common librarby with USE_ROS1/USE_ROS2 set appropriately
+
 target_compile_definitions(
   ${PROJECT_NAME}_node
   PRIVATE "COMPOSITION_BUILDING_DLL"
@@ -63,6 +92,7 @@ target_link_libraries(
 
 ament_export_include_directories(include)
 ament_export_interfaces(export_${PROJECT_NAME}_node HAS_LIBRARY_TARGET)
+# ament_export_targets(
 ament_export_libraries(${PROJECT_NAME}_node)
 
 if(BUILD_TESTING)
@@ -70,8 +100,12 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+#############
+## Install ##
+#############
+
 install(
-  TARGETS ${PROJECT_NAME}_node
+  TARGETS ${PROJECT_NAME}_node pacmod3_common
   EXPORT export_${PROJECT_NAME}_node
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

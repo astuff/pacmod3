@@ -55,6 +55,8 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
       "This driver currently only supports PACMod DBC version 3");
     rclcpp::shutdown();
   }
+
+  handler_ = std::make_unique<Pacmod3TxRosMsgHandler>(dbc_major_version_);
 }
 
 PACMod3Node::~PACMod3Node()
@@ -596,7 +598,7 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
   if (parser_class != nullptr && pub != can_pubs_.end()) {
     const std::vector<uint8_t> data_copy(msg->data.begin(), msg->data.end());
     parser_class->parse(data_copy);
-    tx_handler_.ParseAndPublish(msg->id, frame_id_, pub->second, parser_class);
+    handler_->ParseAndPublish(*msg, pub->second);
 
     if (parser_class->isSystem()) {
       auto dc_parser = std::dynamic_pointer_cast<SystemRptMsg>(parser_class);
@@ -789,6 +791,59 @@ void PACMod3Node::set_enable(bool enable)
     cmd.second.second->setData(std::move(current_data));
   }
 }
+
+template<class RosMsgType>
+void PACMod3Node::lookup_and_encode(const unsigned int & can_id, const RosMsgType & msg)
+{
+  auto cmd = can_subs_.find(can_id);
+
+  if (cmd != can_subs_.end()) {
+    // cmd->second.second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode2(can_id, msg));
+    // cmd->second.second->setData(handler_->Encode(can_id, msg));
+
+    can_msgs::msg::Frame packed_frame = handler_->Encode(can_id, msg);
+
+    std::vector<unsigned char> new_data;
+    new_data.resize(8);
+    std::move(packed_frame.data.begin(), packed_frame.data.end(), new_data.begin());
+    new_data.resize(packed_frame.dlc);
+
+    cmd->second.second->setData(new_data);
+    // received_cmds_.insert(can_id);
+
+
+  } else {
+    RCLCPP_WARN(
+      this->get_logger(),
+      "Received a command message for ID 0x%x for which we do not have an encoder.",
+      can_id);
+  }
+}
+
+
+// template<class RosMsgType>
+// void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, const RosMsgType& msg)
+// {
+//   auto rx_it = rx_list.find(can_id);
+
+//   if (rx_it != rx_list.end())
+//   {
+//     can_msgs::Frame packed_frame = handler->Encode(can_id, msg);
+
+//     std::vector<unsigned char> new_data;
+//     new_data.resize(8);
+//     std::move(packed_frame.data.begin(), packed_frame.data.end(), new_data.begin());
+//     new_data.resize(packed_frame.dlc);
+
+//     rx_it->second->setData(new_data);
+//     received_cmds_.insert(can_id);
+//   }
+//   else
+//   {
+//     ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
+//   }
+// }
+
 
 }  // namespace pacmod3
 

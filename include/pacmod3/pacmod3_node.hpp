@@ -116,21 +116,8 @@ private:
   void callback_turn_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
   void callback_wiper_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg);
 
-  template<class T>
-  void lookup_and_encode(const unsigned int & can_id, const T & msg)
-  {
-    auto cmd = can_subs_.find(can_id);
-
-    if (cmd != can_subs_.end()) {
-      // cmd->second.second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode2(can_id, msg));
-      cmd->second.second->setData(tx_handler_.Encode(can_id, msg));
-    } else {
-      RCLCPP_WARN(
-        this->get_logger(),
-        "Received a command message for ID 0x%x for which we do not have an encoder.",
-        can_id);
-    }
-  }
+  template<class RosMsgType>
+  void lookup_and_encode(const unsigned int & can_id, const RosMsgType & msg);
 
   void publish_cmds();
   void publish_all_system_statuses();
@@ -141,7 +128,8 @@ private:
 
   std::string frame_id_;
   unsigned int dbc_major_version_;
-  Pacmod3TxRosMsgHandler tx_handler_;
+  // Pacmod3TxRosMsgHandler handler_;
+  std::unique_ptr<Pacmod3TxRosMsgHandler> handler_;
   std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
 
   std::shared_ptr<rclcpp::TimerBase> system_statuses_timer_;

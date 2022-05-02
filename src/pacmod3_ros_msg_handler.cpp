@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+#include "pacmod3/pacmod3_ros_msg_handler.hpp"
+
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
 
@@ -25,12 +27,12 @@
 #include <string>
 #include <memory>
 
-#include "pacmod3/pacmod3_ros_msg_handler.hpp"
-
 namespace lc = rclcpp_lifecycle;
 
 namespace pacmod3
 {
+
+// LockedData
 
 LockedData::LockedData(unsigned char data_length)
 : _data(),
@@ -45,33 +47,92 @@ std::vector<unsigned char> LockedData::getData() const
   return _data;
 }
 
-void LockedData::setData(std::vector<unsigned char> && new_data)
+void LockedData::setData(const std::vector<unsigned char>& new_data)
 {
   std::lock_guard<std::mutex> lck(_data_mut);
   _data = new_data;
 }
 
-Pacmod3TxRosMsgHandler::Pacmod3TxRosMsgHandler()
-{
-  parse_functions[HornRptMsg::CAN_ID] = std::bind(&Dbc12Api::ParseSystemRptBool, msg_parser_, std::placeholders::_1, std::placeholders::_2);
+// Pacmod3TxRosMsgHandler
 
-  pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::msg::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4);
+Pacmod3TxRosMsgHandler::Pacmod3TxRosMsgHandler(uint32_t dbc_major_version)
+{
+  switch (dbc_major_version)
+  {
+    case (3):
+      msg_api_ = std::make_unique<Dbc3Api>();
+      break;
+    case (4):
+    default:
+      msg_api_ = std::make_unique<Dbc4Api>();
+      break;
+  }
+  // TODO: Convert to ROS2:
+  // ROS_INFO("Initialized API for DBC version %d", msg_api_->GetDbcVersion());
+
+
+
+  // parse_functions[HornRptMsg::CAN_ID] = std::bind(&Dbc12Api::ParseSystemRptBool, msg_parser_, std::placeholders::_1, std::placeholders::_2);
+
+  // pub_functions[HornRptMsg::CAN_ID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::msg::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+
+  // Bool Reports
+  parse_functions[HORN_RPT_CANID] =
+  parse_functions[PARKING_BRAKE_RPT_CANID] =
+  parse_functions[MARKER_LAMP_RPT_CANID] =
+  parse_functions[SPRAYER_RPT_CANID] =
+  parse_functions[HAZARD_LIGHTS_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[HORN_RPT_CANID] =
+  pub_functions[PARKING_BRAKE_RPT_CANID] =
+  pub_functions[MARKER_LAMP_RPT_CANID] =
+  pub_functions[SPRAYER_RPT_CANID] =
+  pub_functions[HAZARD_LIGHTS_RPT_CANID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::msg::SystemRptBool>, this, std::placeholders::_1, std::placeholders::_2);
+
+  // Int Reports
+  parse_functions[CRUISE_CONTROL_BUTTONS_RPT_CANID] =
+  parse_functions[TURN_RPT_CANID] =
+  parse_functions[REAR_PASS_DOOR_RPT_CANID] =
+  parse_functions[SHIFT_RPT_CANID] =
+  parse_functions[HEADLIGHT_RPT_CANID] =
+  parse_functions[MEDIA_CONTROLS_RPT_CANID] =
+  parse_functions[WIPER_RPT_CANID] =
+  parse_functions[ENGINE_BRAKE_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptInt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[CRUISE_CONTROL_BUTTONS_RPT_CANID] =
+  pub_functions[TURN_RPT_CANID] =
+  pub_functions[REAR_PASS_DOOR_RPT_CANID] =
+  pub_functions[SHIFT_RPT_CANID] =
+  pub_functions[HEADLIGHT_RPT_CANID] =
+  pub_functions[MEDIA_CONTROLS_RPT_CANID] =
+  pub_functions[WIPER_RPT_CANID] =
+  pub_functions[ENGINE_BRAKE_RPT_CANID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::msg::SystemRptInt>, this, std::placeholders::_1, std::placeholders::_2);
+
+  // Float Reports
+  parse_functions[ACCEL_RPT_CANID] =
+  parse_functions[BRAKE_RPT_CANID] =
+  parse_functions[STEERING_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[ACCEL_RPT_CANID] =
+  pub_functions[BRAKE_RPT_CANID] =
+  pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::msg::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
+
+  // Other Reports
+  parse_functions[ENGINE_RPT_CANID] = std::bind(&DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3TxRosMsgHandler::ParseAndPublishType<pacmod3_msgs::msg::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
+
+
 }
 
 template <class RosMsgType>
 void Pacmod3TxRosMsgHandler::ParseAndPublishType(
-  const uint32_t & can_id,
-  const std::string & frame_id,
-  const std::shared_ptr<lc::LifecyclePublisherInterface> & pub,
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class)
+  const can_msgs::msg::Frame& can_msg,
+  const std::shared_ptr<lc::LifecyclePublisherInterface> & pub)
 {
   // Call generic fill function from common hybrid lib, cast void pointer return
-  if (parse_functions.count(can_id))
+  if (parse_functions.count(can_msg.id))
   {
-    std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_id](parser_class, frame_id));
+    std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg));
 
-    ros_msg->header.frame_id = frame_id;
-    // ros_msg.header.stamp = 0.0;
+    ros_msg->header.frame_id = "pacmod3";
+    ros_msg->header.stamp = can_msg.header.stamp;
 
     // setup publisher
     auto dc_pub =
@@ -83,225 +144,223 @@ void Pacmod3TxRosMsgHandler::ParseAndPublishType(
 }
 
 void Pacmod3TxRosMsgHandler::ParseAndPublish(
-  const uint32_t & can_id,
-  const std::string & frame_id,
-  const std::shared_ptr<lc::LifecyclePublisherInterface> & pub,
-  const std::shared_ptr<Pacmod3TxMsg> & parser_class)
+  const can_msgs::msg::Frame& can_msg,
+  const std::shared_ptr<lc::LifecyclePublisherInterface> & pub)
 {
-  if (pub_functions.count(can_id))
+  if (pub_functions.count(can_msg.id))
   {
-    pub_functions[can_id](can_id, frame_id, pub, parser_class);
+    pub_functions[can_msg.id](can_msg, pub);
   }
 }
 
 
-std::vector<uint8_t> Pacmod3TxRosMsgHandler::Encode(
-  const uint32_t & can_id,
-  const pacmod3_msgs::msg::SystemCmdBool::SharedPtr & msg)
-{
-  return msg_api_.EncodeSystemCmdBool(*msg);
-}
+// std::vector<uint8_t> Pacmod3TxRosMsgHandler::Encode(
+//   const uint32_t & can_id,
+//   const pacmod3_msgs::msg::SystemCmdBool::SharedPtr & msg)
+// {
+//   return msg_api_.EncodeSystemCmdBool(*msg);
+// }
 
 
 // Command messages
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-  const uint32_t & can_id,
-  const pacmod3_msgs::msg::SystemCmdBool::SharedPtr & msg)
-{
-  // Note: The clear_faults field has been removed in later DBC versions.
-  // It is omitted here.
+// std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+//   const uint32_t & can_id,
+//   const pacmod3_msgs::msg::SystemCmdBool::SharedPtr & msg)
+// {
+//   // Note: The clear_faults field has been removed in later DBC versions.
+//   // It is omitted here.
 
-  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
+//   // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
-  // if (can_id == HornCmdMsg::CAN_ID) {
-  //   HornCmdMsg encoder;
-  //   encoder.encode(
-  //     msg->enable,
-  //     msg->ignore_overrides,
-  //     msg->clear_override,
-  //     false,
-  //     msg->command);
-  //   return encoder.data;
-  // } else if (can_id == ParkingBrakeCmdMsg::CAN_ID) {
-  //   ParkingBrakeCmdMsg encoder;
-  //   encoder.encode(
-  //     msg->enable,
-  //     msg->ignore_overrides,
-  //     msg->clear_override,
-  //     false,
-  //     msg->command);
-  //   return encoder.data;
-  // } else if (can_id == HazardLightCmdMsg::CAN_ID) {
-  //   HazardLightCmdMsg encoder;
-  //   encoder.encode(
-  //     msg->enable,
-  //     msg->ignore_overrides,
-  //     msg->clear_override,
-  //     false,
-  //     msg->command);
-  //   return encoder.data;
-  // } else {
-  //   std::vector<uint8_t> bad_id;
-  //   bad_id.assign(8, 0);
-  //   return bad_id;
-  // }
-}
+//   // if (can_id == HornCmdMsg::CAN_ID) {
+//   //   HornCmdMsg encoder;
+//   //   encoder.encode(
+//   //     msg->enable,
+//   //     msg->ignore_overrides,
+//   //     msg->clear_override,
+//   //     false,
+//   //     msg->command);
+//   //   return encoder.data;
+//   // } else if (can_id == ParkingBrakeCmdMsg::CAN_ID) {
+//   //   ParkingBrakeCmdMsg encoder;
+//   //   encoder.encode(
+//   //     msg->enable,
+//   //     msg->ignore_overrides,
+//   //     msg->clear_override,
+//   //     false,
+//   //     msg->command);
+//   //   return encoder.data;
+//   // } else if (can_id == HazardLightCmdMsg::CAN_ID) {
+//   //   HazardLightCmdMsg encoder;
+//   //   encoder.encode(
+//   //     msg->enable,
+//   //     msg->ignore_overrides,
+//   //     msg->clear_override,
+//   //     false,
+//   //     msg->command);
+//   //   return encoder.data;
+//   // } else {
+//   //   std::vector<uint8_t> bad_id;
+//   //   bad_id.assign(8, 0);
+//   //   return bad_id;
+//   // }
+// }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-  const uint32_t & can_id,
-  const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr & msg)
-{
-  // Note: The clear_faults field has been removed in later DBC versions.
-  // It is omitted here.
+// std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+//   const uint32_t & can_id,
+//   const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr & msg)
+// {
+//   // Note: The clear_faults field has been removed in later DBC versions.
+//   // It is omitted here.
 
-  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
+//   // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
-  if (can_id == AccelCmdMsg::CAN_ID) {
-    AccelCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == BrakeCmdMsg::CAN_ID) {
-    BrakeCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
-  }
-}
+//   if (can_id == AccelCmdMsg::CAN_ID) {
+//     AccelCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == BrakeCmdMsg::CAN_ID) {
+//     BrakeCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else {
+//     std::vector<uint8_t> bad_id;
+//     bad_id.assign(8, 0);
+//     return bad_id;
+//   }
+// }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-  const uint32_t & can_id,
-  const pacmod3_msgs::msg::SystemCmdInt::SharedPtr & msg)
-{
-  // Note: The clear_faults field has been removed in later DBC versions.
-  // It is omitted here.
+// std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+//   const uint32_t & can_id,
+//   const pacmod3_msgs::msg::SystemCmdInt::SharedPtr & msg)
+// {
+//   // Note: The clear_faults field has been removed in later DBC versions.
+//   // It is omitted here.
 
-  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
+//   // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
-  if (can_id == CruiseControlButtonsCmdMsg::CAN_ID) {
-    CruiseControlButtonsCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == DashControlsLeftCmdMsg::CAN_ID) {
-    DashControlsLeftCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == DashControlsRightCmdMsg::CAN_ID) {
-    DashControlsRightCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == HeadlightCmdMsg::CAN_ID) {
-    HeadlightCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == MediaControlsCmdMsg::CAN_ID) {
-    MediaControlsCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == RearPassDoorCmdMsg::CAN_ID) {
-    RearPassDoorCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == ShiftCmdMsg::CAN_ID) {
-    ShiftCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == TurnSignalCmdMsg::CAN_ID) {
-    TurnSignalCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else if (can_id == WiperCmdMsg::CAN_ID) {
-    WiperCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command);
-    return encoder.data;
-  } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
-  }
-}
+//   if (can_id == CruiseControlButtonsCmdMsg::CAN_ID) {
+//     CruiseControlButtonsCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == DashControlsLeftCmdMsg::CAN_ID) {
+//     DashControlsLeftCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == DashControlsRightCmdMsg::CAN_ID) {
+//     DashControlsRightCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == HeadlightCmdMsg::CAN_ID) {
+//     HeadlightCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == MediaControlsCmdMsg::CAN_ID) {
+//     MediaControlsCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == RearPassDoorCmdMsg::CAN_ID) {
+//     RearPassDoorCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == ShiftCmdMsg::CAN_ID) {
+//     ShiftCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == TurnSignalCmdMsg::CAN_ID) {
+//     TurnSignalCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else if (can_id == WiperCmdMsg::CAN_ID) {
+//     WiperCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command);
+//     return encoder.data;
+//   } else {
+//     std::vector<uint8_t> bad_id;
+//     bad_id.assign(8, 0);
+//     return bad_id;
+//   }
+// }
 
-std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
-  const uint32_t & can_id,
-  const pacmod3_msgs::msg::SteeringCmd::SharedPtr & msg)
-{
-  // Note: The clear_faults field has been removed in later DBC versions.
-  // It is omitted here.
+// std::vector<uint8_t> Pacmod3RxRosMsgHandler::unpackAndEncode(
+//   const uint32_t & can_id,
+//   const pacmod3_msgs::msg::SteeringCmd::SharedPtr & msg)
+// {
+//   // Note: The clear_faults field has been removed in later DBC versions.
+//   // It is omitted here.
 
-  // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
+//   // TODO(icolwell-as): should clear_faults be added back in here from global_cmd?
 
-  if (can_id == SteeringCmdMsg::CAN_ID) {
-    SteeringCmdMsg encoder;
-    encoder.encode(
-      msg->enable,
-      msg->ignore_overrides,
-      msg->clear_override,
-      false,
-      msg->command,
-      msg->rotation_rate);
-    return encoder.data;
-  } else {
-    std::vector<uint8_t> bad_id;
-    bad_id.assign(8, 0);
-    return bad_id;
-  }
-}
+//   if (can_id == SteeringCmdMsg::CAN_ID) {
+//     SteeringCmdMsg encoder;
+//     encoder.encode(
+//       msg->enable,
+//       msg->ignore_overrides,
+//       msg->clear_override,
+//       false,
+//       msg->command,
+//       msg->rotation_rate);
+//     return encoder.data;
+//   } else {
+//     std::vector<uint8_t> bad_id;
+//     bad_id.assign(8, 0);
+//     return bad_id;
+//   }
+// }
 
 }  // namespace pacmod3
