@@ -128,8 +128,7 @@ private:
 
   std::string frame_id_;
   unsigned int dbc_major_version_;
-  // Pacmod3TxRosMsgHandler handler_;
-  std::unique_ptr<Pacmod3TxRosMsgHandler> handler_;
+  std::unique_ptr<Pacmod3RosMsgHandler> handler_;
   std::map<unsigned int, std::tuple<bool, bool, bool>> system_statuses;
 
   std::shared_ptr<rclcpp::TimerBase> system_statuses_timer_;

@@ -28,11 +28,11 @@
 #include <memory>
 #include <mutex>
 
-#define USE_ROS2
+#ifndef ROS_VERSION
+  #define ROS_VERSION 1
+#endif
 
-#ifdef USE_ROS1
-
-// #include <pacmod3/pacmod3_core.h>
+#if ROS_VERSION==1
 
 #include <ros/ros.h>
 
@@ -77,16 +77,13 @@
 #include <pacmod3_msgs/YawRateRpt.h>
 
 namespace pm_msgs = pacmod3_msgs;
-namespace can_msgs = can_msgs;
+namespace cn_msgs = can_msgs;
 
-#endif  // USE_ROS1
+#endif  // ROS1
 
-#ifdef USE_ROS2
-
-// #include <pacmod3/pacmod3_core.hpp>
+#if ROS_VERSION==2
 
 #include <rclcpp/rclcpp.hpp>
-// #include <rclcpp_lifecycle/lifecycle_publisher.hpp>
 
 #include <can_msgs/msg/frame.hpp>
 
@@ -129,10 +126,9 @@ namespace can_msgs = can_msgs;
 #include <pacmod3_msgs/msg/yaw_rate_rpt.hpp>
 
 namespace pm_msgs = pacmod3_msgs::msg;
-// namespace can_msgs = can_msgs::msg;
 namespace cn_msgs = can_msgs::msg;
 
-#endif  // USE_ROS2
+#endif  // ROS2
 
 // namespace pacmod3_common
 namespace pacmod3

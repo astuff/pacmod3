@@ -56,7 +56,7 @@ PACMod3Node::PACMod3Node(rclcpp::NodeOptions options)
     rclcpp::shutdown();
   }
 
-  handler_ = std::make_unique<Pacmod3TxRosMsgHandler>(dbc_major_version_);
+  handler_ = std::make_unique<Pacmod3RosMsgHandler>(dbc_major_version_);
 }
 
 PACMod3Node::~PACMod3Node()
@@ -629,12 +629,12 @@ void PACMod3Node::callback_can_tx(const can_msgs::msg::Frame::SharedPtr msg)
 
 void PACMod3Node::callback_accel_cmd(const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr msg)
 {
-  // lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
+  lookup_and_encode(AccelCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_brake_cmd(const pacmod3_msgs::msg::SystemCmdFloat::SharedPtr msg)
 {
-  // lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
+  lookup_and_encode(BrakeCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_cruise_control_buttons_cmd(
@@ -645,12 +645,12 @@ void PACMod3Node::callback_cruise_control_buttons_cmd(
 
 void PACMod3Node::callback_engine_brake_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  // lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
+  lookup_and_encode(EngineBrakeCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_headlight_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  // lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
+  lookup_and_encode(HeadlightCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_hazard_lights_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg)
@@ -670,12 +670,12 @@ void PACMod3Node::callback_marker_lamp_cmd(const pacmod3_msgs::msg::SystemCmdBoo
 
 void PACMod3Node::callback_rear_pass_door_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  // lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
+  lookup_and_encode(RearPassDoorCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_shift_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  // lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
+  lookup_and_encode(ShiftCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_sprayer_cmd(const pacmod3_msgs::msg::SystemCmdBool::SharedPtr msg)
@@ -685,17 +685,17 @@ void PACMod3Node::callback_sprayer_cmd(const pacmod3_msgs::msg::SystemCmdBool::S
 
 void PACMod3Node::callback_steering_cmd(const pacmod3_msgs::msg::SteeringCmd::SharedPtr msg)
 {
-  // lookup_and_encode(SteeringCmdMsg::CAN_ID, msg);
+  lookup_and_encode(SteeringCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_turn_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  // lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
+  lookup_and_encode(TurnSignalCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::callback_wiper_cmd(const pacmod3_msgs::msg::SystemCmdInt::SharedPtr msg)
 {
-  // lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
+  lookup_and_encode(WiperCmdMsg::CAN_ID, msg);
 }
 
 void PACMod3Node::publish_cmds()
@@ -798,9 +798,6 @@ void PACMod3Node::lookup_and_encode(const unsigned int & can_id, const RosMsgTyp
   auto cmd = can_subs_.find(can_id);
 
   if (cmd != can_subs_.end()) {
-    // cmd->second.second->setData(Pacmod3RxRosMsgHandler::unpackAndEncode2(can_id, msg));
-    // cmd->second.second->setData(handler_->Encode(can_id, msg));
-
     can_msgs::msg::Frame packed_frame = handler_->Encode(can_id, msg);
 
     std::vector<unsigned char> new_data;
@@ -809,9 +806,6 @@ void PACMod3Node::lookup_and_encode(const unsigned int & can_id, const RosMsgTyp
     new_data.resize(packed_frame.dlc);
 
     cmd->second.second->setData(new_data);
-    // received_cmds_.insert(can_id);
-
-
   } else {
     RCLCPP_WARN(
       this->get_logger(),
@@ -819,31 +813,6 @@ void PACMod3Node::lookup_and_encode(const unsigned int & can_id, const RosMsgTyp
       can_id);
   }
 }
-
-
-// template<class RosMsgType>
-// void Pacmod3Nl::lookup_and_encode(const uint32_t& can_id, const RosMsgType& msg)
-// {
-//   auto rx_it = rx_list.find(can_id);
-
-//   if (rx_it != rx_list.end())
-//   {
-//     can_msgs::Frame packed_frame = handler->Encode(can_id, msg);
-
-//     std::vector<unsigned char> new_data;
-//     new_data.resize(8);
-//     std::move(packed_frame.data.begin(), packed_frame.data.end(), new_data.begin());
-//     new_data.resize(packed_frame.dlc);
-
-//     rx_it->second->setData(new_data);
-//     received_cmds_.insert(can_id);
-//   }
-//   else
-//   {
-//     ROS_WARN("Received command message for ID 0x%x for which we did not have an encoder.", can_id);
-//   }
-// }
-
 
 }  // namespace pacmod3
 
