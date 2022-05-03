@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,7 @@
 #include <memory>
 #include <mutex>
 
-// namespace pacmod3_common
-namespace pacmod3
+namespace pacmod3_common
 {
 
 class Dbc3Api : public DbcApi
@@ -37,44 +36,44 @@ class Dbc3Api : public DbcApi
 public:
   Dbc3Api();
 
-  std::shared_ptr<void> ParseAccelAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseAngVelRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseBrakeAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseComponentRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseDateTimeRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseDetectedObjectRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseDoorRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseEngineRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseGlobalRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseHeadlightAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseInteriorLightsRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseLatLonHeadingRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseLinearAccelRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseMotorRpt1(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseMotorRpt2(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseMotorRpt3(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseOccupancyRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseRearLightsRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseShiftAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSteeringAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptFloat(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseTurnAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseVehicleDynamicsRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseVehicleSpeedRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseVinRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseWheelSpeedRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseWiperAuxRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseYawRateRpt(const can_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseAccelAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseAngVelRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseBrakeAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseComponentRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseDateTimeRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseDetectedObjectRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseDoorRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseEngineRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseGlobalRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseHeadlightAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseInteriorLightsRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseLatLonHeadingRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseLinearAccelRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseMotorRpt1(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseMotorRpt2(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseMotorRpt3(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseOccupancyRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseRearLightsRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseShiftAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSteeringAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptBool(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptFloat(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptInt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseTurnAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseVehicleDynamicsRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseVehicleSpeedRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseVinRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseWheelSpeedRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseWiperAuxRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseYawRateRpt(const cn_msgs::Frame& can_msg) override;
 
-  can_msgs::Frame EncodeCmd(const pm_msgs::GlobalCmd& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::NotificationCmd& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SteeringCmd& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdBool& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdFloat& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdInt& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::GlobalCmd& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::NotificationCmd& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SteeringCmd& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdBool& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdFloat& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdInt& msg) override;
 };
-}  // namespace pacmod3
+}  // namespace pacmod3_common
 
 #endif  // PACMOD3_DBC3_ROS_API_H

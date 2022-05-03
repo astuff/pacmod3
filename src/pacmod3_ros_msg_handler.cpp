@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -52,11 +52,11 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   switch (dbc_major_version)
   {
     case (3):
-      msg_api_ = std::make_unique<Dbc3Api>();
+      msg_api_ = std::make_unique<pacmod3_common::Dbc3Api>();
       break;
     case (4):
     default:
-      msg_api_ = std::make_unique<Dbc4Api>();
+      msg_api_ = std::make_unique<pacmod3_common::Dbc4Api>();
       break;
   }
   ROS_INFO("Initialized API for DBC version %d", msg_api_->GetDbcVersion());
@@ -66,7 +66,7 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   parse_functions[PARKING_BRAKE_RPT_CANID] =
   parse_functions[MARKER_LAMP_RPT_CANID] =
   parse_functions[SPRAYER_RPT_CANID] =
-  parse_functions[HAZARD_LIGHTS_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[HAZARD_LIGHTS_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSystemRptBool, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[HORN_RPT_CANID] =
   pub_functions[PARKING_BRAKE_RPT_CANID] =
   pub_functions[MARKER_LAMP_RPT_CANID] =
@@ -81,7 +81,7 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   parse_functions[HEADLIGHT_RPT_CANID] =
   parse_functions[MEDIA_CONTROLS_RPT_CANID] =
   parse_functions[WIPER_RPT_CANID] =
-  parse_functions[ENGINE_BRAKE_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptInt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[ENGINE_BRAKE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSystemRptInt, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[CRUISE_CONTROL_BUTTONS_RPT_CANID] =
   pub_functions[TURN_RPT_CANID] =
   pub_functions[REAR_PASS_DOOR_RPT_CANID] =
@@ -94,13 +94,13 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   // Float Reports
   parse_functions[ACCEL_RPT_CANID] =
   parse_functions[BRAKE_RPT_CANID] =
-  parse_functions[STEERING_RPT_CANID] = std::bind(&DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[STEERING_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[ACCEL_RPT_CANID] =
   pub_functions[BRAKE_RPT_CANID] =
   pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
 
   // Other Reports
-  parse_functions[ENGINE_RPT_CANID] = std::bind(&DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[ENGINE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
 }
 

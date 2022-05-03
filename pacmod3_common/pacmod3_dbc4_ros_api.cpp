@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,22 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <pacmod3_dbc4_ros_api.h>
-#include <autogen/pacmod4.h>
+#include "pacmod3_dbc4_ros_api.h"
+#include "autogen/pacmod4.h"
 
 #include <vector>
 #include <string>
 #include <memory>
 
 
-namespace pacmod3
+namespace pacmod3_common
 {
+
 Dbc4Api::Dbc4Api()
 {
   SetDbcVersion(4);
 }
 
-std::shared_ptr<void> Dbc4Api::ParseAngVelRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc4Api::ParseAngVelRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::AngVelRpt> new_msg( new pm_msgs::AngVelRpt() );
 
@@ -55,7 +56,7 @@ std::shared_ptr<void> Dbc4Api::ParseAngVelRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc4Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc4Api::ParseComponentRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::ComponentRpt> new_msg( new pm_msgs::ComponentRpt() );
 
@@ -104,7 +105,7 @@ std::shared_ptr<void> Dbc4Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc4Api::ParseLinearAccelRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc4Api::ParseLinearAccelRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::LinearAccelRpt> new_msg( new pm_msgs::LinearAccelRpt() );
 
@@ -126,7 +127,7 @@ std::shared_ptr<void> Dbc4Api::ParseLinearAccelRpt(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc4Api::ParseSystemRptBool(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc4Api::ParseSystemRptBool(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptBool> new_msg( new pm_msgs::SystemRptBool() );
 
@@ -148,7 +149,7 @@ std::shared_ptr<void> Dbc4Api::ParseSystemRptBool(const can_msgs::Frame& can_msg
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc4Api::ParseSystemRptFloat(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc4Api::ParseSystemRptFloat(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptFloat> new_msg( new pm_msgs::SystemRptFloat() );
 
@@ -170,7 +171,7 @@ std::shared_ptr<void> Dbc4Api::ParseSystemRptFloat(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc4Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc4Api::ParseSystemRptInt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptInt> new_msg( new pm_msgs::SystemRptInt() );
 
@@ -194,9 +195,9 @@ std::shared_ptr<void> Dbc4Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
 
 // Message Encoding
 
-can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::GlobalCmd& msg)
+cn_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::GlobalCmd& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   GLOBAL_CMD_t unpacked_cmd;
   unpacked_cmd.CLEAR_FAULTS = msg.clear_faults;
@@ -207,9 +208,9 @@ can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::GlobalCmd& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::NotificationCmd& msg)
+cn_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::NotificationCmd& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   NOTIFICATION_CMD_t unpacked_cmd;
   unpacked_cmd.BUZZER_MUTE = msg.buzzer_mute;
@@ -221,9 +222,9 @@ can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::NotificationCmd& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
+cn_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   HORN_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -237,9 +238,9 @@ can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
+cn_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   SHIFT_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -253,9 +254,9 @@ can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
+cn_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   ACCEL_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -269,4 +270,4 @@ can_msgs::Frame Dbc4Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
   return packed_frame;
 }
 
-}  // namespace pacmod3
+}  // namespace pacmod3_common

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,8 +28,7 @@
 #include <memory>
 #include <mutex>
 
-// namespace pacmod3_common
-namespace pacmod3
+namespace pacmod3_common
 {
 
 // Derived from previous DBC API version
@@ -39,19 +38,19 @@ class Dbc4Api : public Dbc3Api
 public:
   Dbc4Api();
 
-  std::shared_ptr<void> ParseAngVelRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseComponentRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseLinearAccelRpt(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptBool(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptFloat(const can_msgs::Frame& can_msg) override;
-  std::shared_ptr<void> ParseSystemRptInt(const can_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseAngVelRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseComponentRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseLinearAccelRpt(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptBool(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptFloat(const cn_msgs::Frame& can_msg) override;
+  std::shared_ptr<void> ParseSystemRptInt(const cn_msgs::Frame& can_msg) override;
 
-  can_msgs::Frame EncodeCmd(const pm_msgs::GlobalCmd& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::NotificationCmd& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdBool& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdFloat& msg) override;
-  can_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdInt& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::GlobalCmd& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::NotificationCmd& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdBool& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdFloat& msg) override;
+  cn_msgs::Frame EncodeCmd(const pm_msgs::SystemCmdInt& msg) override;
 };
-}  // namespace pacmod3
+}  // namespace pacmod3_common
 
 #endif  // PACMOD3_DBC12_ROS_API_H

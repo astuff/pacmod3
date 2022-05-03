@@ -30,6 +30,7 @@ include_directories(
 )
 
 # Common Library
+add_compile_definitions(ROS_VERSION=$ENV{ROS_VERSION})
 add_library(pacmod3_common
   pacmod3_common/pacmod3_dbc_ros_api.cpp
   pacmod3_common/pacmod3_dbc3_ros_api.cpp

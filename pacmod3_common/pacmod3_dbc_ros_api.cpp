@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <pacmod3_dbc_ros_api.h>
+#include "pacmod3_dbc_ros_api.h"
 
 #include <string>
 
-namespace pacmod3
+namespace pacmod3_common
 {
 
 void DbcApi::SetDbcVersion(uint32_t dbc_major_version)
@@ -39,26 +39,26 @@ void DbcApi::PrintParseError(const std::string& msg_type)
 {
   std::string full_msg = "Unable to parse " + msg_type + ", it is not supported by DBC version " + std::to_string(dbc_major_version_);
 
-  #ifdef USE_ROS1
+  #if ROS_VERSION==1
     ROS_WARN_STREAM(full_msg);
-  #endif  // USE_ROS1
+  #endif
 
-  #ifdef USE_ROS2
+  #if ROS_VERSION==2
 
-  #endif  // USE_ROS2
+  #endif
 }
 
 void DbcApi::PrintEncodeError(const std::string& msg_type)
 {
   std::string full_msg = "Unable to encode " + msg_type + ", it is not supported by DBC version " + std::to_string(dbc_major_version_);
 
-  #ifdef USE_ROS1
+  #if ROS_VERSION==1
     ROS_WARN_STREAM(full_msg);
-  #endif  // USE_ROS1
+  #endif
 
-  #ifdef USE_ROS2
+  #if ROS_VERSION==2
 
-  #endif  // USE_ROS2
+  #endif
 }
 
-}  // namespace pacmod3
+}  // namespace pacmod3_common

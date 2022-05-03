@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <pacmod3_dbc3_ros_api.h>
-#include <autogen/pacmod3.h>
+#include "pacmod3_dbc3_ros_api.h"
+#include "autogen/pacmod3.h"
 
 #include <vector>
 #include <string>
 #include <memory>
 
 
-namespace pacmod3
+namespace pacmod3_common
 {
 
 Dbc3Api::Dbc3Api()
@@ -34,7 +34,7 @@ Dbc3Api::Dbc3Api()
   SetDbcVersion(3);
 }
 
-std::shared_ptr<void> Dbc3Api::ParseAccelAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseAccelAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::AccelAuxRpt> new_msg( new pm_msgs::AccelAuxRpt() );
 
@@ -56,7 +56,7 @@ std::shared_ptr<void> Dbc3Api::ParseAccelAuxRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseAngVelRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseAngVelRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::AngVelRpt> new_msg( new pm_msgs::AngVelRpt() );
 
@@ -65,7 +65,7 @@ std::shared_ptr<void> Dbc3Api::ParseAngVelRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseBrakeAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseBrakeAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::BrakeAuxRpt> new_msg( new pm_msgs::BrakeAuxRpt() );
 
@@ -89,7 +89,7 @@ std::shared_ptr<void> Dbc3Api::ParseBrakeAuxRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseComponentRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::ComponentRpt> new_msg( new pm_msgs::ComponentRpt() );
 
@@ -138,7 +138,7 @@ std::shared_ptr<void> Dbc3Api::ParseComponentRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseDateTimeRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseDateTimeRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::DateTimeRpt> new_msg( new pm_msgs::DateTimeRpt() );
 
@@ -156,7 +156,7 @@ std::shared_ptr<void> Dbc3Api::ParseDateTimeRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseDetectedObjectRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseDetectedObjectRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::DetectedObjectRpt> new_msg( new pm_msgs::DetectedObjectRpt() );
 
@@ -169,7 +169,7 @@ std::shared_ptr<void> Dbc3Api::ParseDetectedObjectRpt(const can_msgs::Frame& can
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseDoorRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseDoorRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::DoorRpt> new_msg( new pm_msgs::DoorRpt() );
 
@@ -194,7 +194,7 @@ std::shared_ptr<void> Dbc3Api::ParseDoorRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseEngineRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseEngineRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::EngineRpt> new_msg( new pm_msgs::EngineRpt() );
 
@@ -203,7 +203,7 @@ std::shared_ptr<void> Dbc3Api::ParseEngineRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseGlobalRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseGlobalRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::GlobalRpt> new_msg( new pm_msgs::GlobalRpt() );
 
@@ -225,7 +225,7 @@ std::shared_ptr<void> Dbc3Api::ParseGlobalRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseHeadlightAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseHeadlightAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::HeadlightAuxRpt> new_msg( new pm_msgs::HeadlightAuxRpt() );
 
@@ -244,7 +244,7 @@ std::shared_ptr<void> Dbc3Api::ParseHeadlightAuxRpt(const can_msgs::Frame& can_m
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseInteriorLightsRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseInteriorLightsRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::InteriorLightsRpt> new_msg( new pm_msgs::InteriorLightsRpt() );
 
@@ -267,7 +267,7 @@ std::shared_ptr<void> Dbc3Api::ParseInteriorLightsRpt(const can_msgs::Frame& can
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseLatLonHeadingRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseLatLonHeadingRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::LatLonHeadingRpt> new_msg( new pm_msgs::LatLonHeadingRpt() );
 
@@ -285,7 +285,7 @@ std::shared_ptr<void> Dbc3Api::ParseLatLonHeadingRpt(const can_msgs::Frame& can_
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseLinearAccelRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseLinearAccelRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::LinearAccelRpt> new_msg( new pm_msgs::LinearAccelRpt() );
 
@@ -294,7 +294,7 @@ std::shared_ptr<void> Dbc3Api::ParseLinearAccelRpt(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseMotorRpt1(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseMotorRpt1(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::MotorRpt1> new_msg( new pm_msgs::MotorRpt1() );
 
@@ -307,7 +307,7 @@ std::shared_ptr<void> Dbc3Api::ParseMotorRpt1(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseMotorRpt2(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseMotorRpt2(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::MotorRpt2> new_msg( new pm_msgs::MotorRpt2() );
 
@@ -321,7 +321,7 @@ std::shared_ptr<void> Dbc3Api::ParseMotorRpt2(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseMotorRpt3(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseMotorRpt3(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::MotorRpt3> new_msg( new pm_msgs::MotorRpt3() );
 
@@ -334,7 +334,7 @@ std::shared_ptr<void> Dbc3Api::ParseMotorRpt3(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseOccupancyRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseOccupancyRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::OccupancyRpt> new_msg( new pm_msgs::OccupancyRpt() );
 
@@ -365,7 +365,7 @@ std::shared_ptr<void> Dbc3Api::ParseOccupancyRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseRearLightsRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseRearLightsRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::RearLightsRpt> new_msg( new pm_msgs::RearLightsRpt() );
 
@@ -380,7 +380,7 @@ std::shared_ptr<void> Dbc3Api::ParseRearLightsRpt(const can_msgs::Frame& can_msg
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseShiftAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseShiftAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::ShiftAuxRpt> new_msg( new pm_msgs::ShiftAuxRpt() );
 
@@ -405,7 +405,7 @@ std::shared_ptr<void> Dbc3Api::ParseShiftAuxRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseSteeringAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseSteeringAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SteeringAuxRpt> new_msg( new pm_msgs::SteeringAuxRpt() );
 
@@ -430,7 +430,7 @@ std::shared_ptr<void> Dbc3Api::ParseSteeringAuxRpt(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptBool> new_msg( new pm_msgs::SystemRptBool() );
 
@@ -452,7 +452,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptBool(const can_msgs::Frame& can_msg
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptFloat> new_msg( new pm_msgs::SystemRptFloat() );
 
@@ -474,7 +474,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptFloat(const can_msgs::Frame& can_ms
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseSystemRptInt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::SystemRptInt> new_msg( new pm_msgs::SystemRptInt() );
 
@@ -496,7 +496,7 @@ std::shared_ptr<void> Dbc3Api::ParseSystemRptInt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseTurnAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseTurnAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::TurnAuxRpt> new_msg( new pm_msgs::TurnAuxRpt() );
 
@@ -511,7 +511,7 @@ std::shared_ptr<void> Dbc3Api::ParseTurnAuxRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseVehicleDynamicsRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseVehicleDynamicsRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::VehicleDynamicsRpt> new_msg( new pm_msgs::VehicleDynamicsRpt() );
 
@@ -523,7 +523,7 @@ std::shared_ptr<void> Dbc3Api::ParseVehicleDynamicsRpt(const can_msgs::Frame& ca
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseVehicleSpeedRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseVehicleSpeedRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::VehicleSpeedRpt> new_msg( new pm_msgs::VehicleSpeedRpt() );
 
@@ -536,7 +536,7 @@ std::shared_ptr<void> Dbc3Api::ParseVehicleSpeedRpt(const can_msgs::Frame& can_m
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseVinRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseVinRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::VinRpt> new_msg( new pm_msgs::VinRpt() );
 
@@ -554,7 +554,7 @@ std::shared_ptr<void> Dbc3Api::ParseVinRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseWheelSpeedRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseWheelSpeedRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::WheelSpeedRpt> new_msg( new pm_msgs::WheelSpeedRpt() );
 
@@ -569,7 +569,7 @@ std::shared_ptr<void> Dbc3Api::ParseWheelSpeedRpt(const can_msgs::Frame& can_msg
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseWiperAuxRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseWiperAuxRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::WiperAuxRpt> new_msg( new pm_msgs::WiperAuxRpt() );
 
@@ -593,7 +593,7 @@ std::shared_ptr<void> Dbc3Api::ParseWiperAuxRpt(const can_msgs::Frame& can_msg)
   return new_msg;
 }
 
-std::shared_ptr<void> Dbc3Api::ParseYawRateRpt(const can_msgs::Frame& can_msg)
+std::shared_ptr<void> Dbc3Api::ParseYawRateRpt(const cn_msgs::Frame& can_msg)
 {
   std::shared_ptr<pm_msgs::YawRateRpt> new_msg( new pm_msgs::YawRateRpt() );
 
@@ -607,27 +607,27 @@ std::shared_ptr<void> Dbc3Api::ParseYawRateRpt(const can_msgs::Frame& can_msg)
 
 // Message Encoding
 
-can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::GlobalCmd& msg)
+cn_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::GlobalCmd& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   PrintEncodeError("GlobalCmd");
 
   return packed_frame;
 }
 
-can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::NotificationCmd& msg)
+cn_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::NotificationCmd& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   PrintEncodeError("Notification");
 
   return packed_frame;
 }
 
-can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SteeringCmd& msg)
+cn_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SteeringCmd& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   STEERING_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -642,9 +642,9 @@ can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SteeringCmd& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
+cn_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   HORN_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -658,9 +658,9 @@ can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdBool& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
+cn_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   ACCEL_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -674,9 +674,9 @@ can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdFloat& msg)
   return packed_frame;
 }
 
-can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
+cn_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
 {
-  can_msgs::Frame packed_frame;
+  cn_msgs::Frame packed_frame;
 
   SHIFT_CMD_t unpacked_cmd;
   unpacked_cmd.ENABLE = msg.enable;
@@ -690,5 +690,5 @@ can_msgs::Frame Dbc3Api::EncodeCmd(const pm_msgs::SystemCmdInt& msg)
   return packed_frame;
 }
 
-}  // namespace pacmod3
+}  // namespace pacmod3_common
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 AutonomouStuff, LLC
+// Copyright (c) 2022 AutonomouStuff, LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -106,7 +106,7 @@ public:
   }
 
 private:
-  std::unique_ptr<DbcApi> msg_api_;
+  std::unique_ptr<pacmod3_common::DbcApi> msg_api_;
 
   // List of functions for parsing CAN frames into ROS msgs
   std::map<uint32_t, std::function<std::shared_ptr<void>(const can_msgs::Frame&)>> parse_functions;
