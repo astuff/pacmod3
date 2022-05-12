@@ -156,7 +156,7 @@ class GlobalRpt2Msg :
   public Pacmod3TxMsg
 {
 public:
-  static constexpr uint32_t CAN_ID = 0x17;
+  static constexpr uint32_t CAN_ID = 0x11;
 
   bool system_enabled;
   bool system_override_active;
