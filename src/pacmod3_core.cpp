@@ -25,6 +25,7 @@ namespace pacmod3
 {
 
 constexpr uint32_t GlobalRptMsg::CAN_ID;
+constexpr uint32_t GlobalRpt2Msg::CAN_ID;
 constexpr uint32_t ComponentRptMsg::CAN_ID;
 
 // System Commands
@@ -150,6 +151,9 @@ std::shared_ptr<Pacmod3TxMsg> Pacmod3TxMsg::make_message(const uint32_t& can_id)
     break;
   case GlobalRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new GlobalRptMsg);
+    break;
+  case GlobalRpt2Msg::CAN_ID:
+    return std::shared_ptr<Pacmod3TxMsg>(new GlobalRpt2Msg);
     break;
   case HazardLightRptMsg::CAN_ID:
     return std::shared_ptr<Pacmod3TxMsg>(new HazardLightRptMsg);
@@ -304,6 +308,14 @@ void GlobalRptMsg::parse(const uint8_t *in)
   subsystem_can_timeout = ((in[0] & 0x20) > 0);
   vehicle_can_timeout = ((in[0] & 0x40) > 0);
   user_can_read_errors = ((in[6] << 8) | in[7]);
+}
+
+void GlobalRpt2Msg::parse(const uint8_t *in)
+{
+  system_enabled = in[0] & 0x01;
+  system_override_active = ((in[0] & 0x02) > 0);
+  system_fault_active = ((in[0] & 0x04) > 0);
+  supervisory_enable_required = ((in[0] & 0x08) > 0);
 }
 
 void ComponentRptMsg::parse(const uint8_t *in)

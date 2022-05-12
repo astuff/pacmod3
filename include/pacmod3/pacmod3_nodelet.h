@@ -134,6 +134,7 @@ private:
   ros::Publisher can_rx_pub;
   ros::Publisher all_system_statuses_pub;
   ros::Publisher global_rpt_pub;
+  ros::Publisher global_rpt_2_pub;
   ros::Publisher component_rpt_pub;
   ros::Publisher accel_rpt_pub;
   ros::Publisher brake_rpt_pub;
