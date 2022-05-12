@@ -33,6 +33,7 @@
 #include <pacmod3_msgs/SystemCmdFloat.h>
 #include <pacmod3_msgs/SystemCmdInt.h>
 #include <pacmod3_msgs/GlobalRpt.h>
+#include <pacmod3_msgs/GlobalRpt2.h>
 #include <pacmod3_msgs/AccelAuxRpt.h>
 #include <pacmod3_msgs/AllSystemStatuses.h>
 #include <pacmod3_msgs/BrakeAuxRpt.h>
@@ -102,6 +103,10 @@ private:
   void fillGlobalRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,
       pacmod3_msgs::GlobalRpt * new_msg,
+      const std::string& frame_id);
+  void fillGlobalRpt2(
+      const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+      pacmod3_msgs::GlobalRpt2 * new_msg,
       const std::string& frame_id);
   void fillComponentRpt(
       const std::shared_ptr<Pacmod3TxMsg>& parser_class,

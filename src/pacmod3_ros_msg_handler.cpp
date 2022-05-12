@@ -333,6 +333,22 @@ void Pacmod3TxRosMsgHandler::fillGlobalRpt(
   new_msg->header.stamp = ros::Time::now();
 }
 
+void Pacmod3TxRosMsgHandler::fillGlobalRpt2(
+    const std::shared_ptr<Pacmod3TxMsg>& parser_class,
+    pacmod3_msgs::GlobalRpt2 * new_msg,
+    const std::string& frame_id)
+{
+  auto dc_parser = std::dynamic_pointer_cast<GlobalRpt2Msg>(parser_class);
+
+  new_msg->system_enabled = dc_parser->system_enabled;
+  new_msg->system_override_active = dc_parser->system_override_active;
+  new_msg->system_fault_active = dc_parser->system_fault_active;
+  new_msg->supervisory_enable_required = dc_parser->supervisory_enable_required;
+
+  new_msg->header.frame_id = frame_id;
+  new_msg->header.stamp = ros::Time::now();
+}
+
 void Pacmod3TxRosMsgHandler::fillComponentRpt(
     const std::shared_ptr<Pacmod3TxMsg>& parser_class,
     pacmod3_msgs::ComponentRpt * new_msg,
