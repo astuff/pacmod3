@@ -7,6 +7,7 @@ commands:
       - run:
           name: Set Up Container
           command: |
+            git submodule sync --recursive && git submodule update --recursive --init
             apt-get update -qq
             source /opt/ros/*/setup.bash
             mkdir pacmod3 && mv `find -maxdepth 1 -not -name . -not -name pacmod3` pacmod3/
