@@ -91,6 +91,9 @@ public:
 
   // Functions for parsing raw CAN messages
   template <class RosMsgType>
+  bool ParseType(const can_msgs::Frame& can_msg, RosMsgType& ros_msg);
+
+  template <class RosMsgType>
   void ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
 
   void ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub);

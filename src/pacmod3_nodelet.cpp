@@ -638,19 +638,23 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
     //                               dc_parser->vehicle_fault));
     // }
 
-    // TODO: Re-enable this code after refactoring it, or maybe it's not needed at all?
-    // if (msg->id == GlobalRptMsg::CAN_ID)
-    // {
-    //   auto dc_parser = std::dynamic_pointer_cast<GlobalRptMsg>(parser_class);
+    if (msg->id == GLOBAL_RPT_CANID)
+    {
+      pacmod3_msgs::GlobalRpt global_rpt_msg;
+      handler->ParseType(*msg, global_rpt_msg);
 
-    //   std_msgs::Bool bool_pub_msg;
-    //   bool_pub_msg.data = (dc_parser->enabled);
-    //   enabled_pub.publish(bool_pub_msg);
+      std_msgs::Bool bool_msg;
+      bool_msg.data = global_rpt_msg.enabled;
+      enabled_pub.publish(bool_msg);
 
-    //   if (dc_parser->override_active ||
-    //       dc_parser->fault_active)
-    //     set_enable(false);
-    // }
+      // Auto-disable
+      if (global_rpt_msg.override_active ||
+          global_rpt_msg.pacmod_sys_fault_active ||
+          global_rpt_msg.config_fault_active)
+      {
+        set_enable(false);
+      }
+    }
   }
 }
 
