@@ -47,6 +47,7 @@ void Pacmod3Nl::onInit()
   all_system_statuses_pub = nh_.advertise<pacmod3_msgs::AllSystemStatuses>("all_system_statuses", 20);
 
   global_rpt_pub = nh_.advertise<pacmod3_msgs::GlobalRpt>("global_rpt", 20);
+  global_rpt_2_pub = nh_.advertise<pacmod3_msgs::GlobalRpt>("global_rpt_2", 20);
   component_rpt_pub = nh_.advertise<pacmod3_msgs::ComponentRpt>("component_rpt", 20);
   accel_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("accel_rpt", 20);
   brake_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("brake_rpt", 20);

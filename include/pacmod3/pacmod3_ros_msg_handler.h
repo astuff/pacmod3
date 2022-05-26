@@ -38,6 +38,7 @@
 #include <pacmod3_msgs/SystemCmdFloat.h>
 #include <pacmod3_msgs/SystemCmdInt.h>
 #include <pacmod3_msgs/GlobalRpt.h>
+#include <pacmod3_msgs/GlobalRpt2.h>
 #include <pacmod3_msgs/AccelAuxRpt.h>
 #include <pacmod3_msgs/AllSystemStatuses.h>
 #include <pacmod3_msgs/BrakeAuxRpt.h>

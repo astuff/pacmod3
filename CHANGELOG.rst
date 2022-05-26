@@ -2,6 +2,19 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.0.0 (2021-11-17)
+------------------
+* Remove need to specify vehicle type (`#110 <https://github.com/astuff/pacmod3/issues/110>`_)
+* Update README (`#113 <https://github.com/astuff/pacmod3/issues/113>`_)
+* Improve minimal publishing changes (`#112 <https://github.com/astuff/pacmod3/issues/112>`_)
+* Add strict version dependency on pacmod3_msgs (`#115 <https://github.com/astuff/pacmod3/issues/115>`_)
+* Update ROS API to use pacmod3_msgs (`#108 <https://github.com/astuff/pacmod3/issues/108>`_)
+* Nodelet Refactor  (`#105 <https://github.com/astuff/pacmod3/issues/105>`_)
+* Add argument for specifying the DBC major version (`#102 <https://github.com/astuff/pacmod3/issues/102>`_)
+* Update readme for hcv `#76 <https://github.com/astuff/pacmod3/issues/76>`_ from astuff/update_readme
+* Adding noetic build `#75 <https://github.com/astuff/pacmod3/issues/75>`_ from astuff/maint/add_noetic_build
+* Contributors: Amruta Mhaske, Sneha Ganesh, amrutamhaske, icolwell-as
+
 1.3.1 (2021-01-07)
 ------------------
 * Add brake and steer detail rpt when vehicle type is JUPITER SPIRIT (`#70 <https://github.com/astuff/pacmod3/issues/70>`_)
