@@ -21,11 +21,12 @@ commands:
             source /opt/ros/*/setup.bash
             cd ..
             catkin build
-      - run:
-          name: Lint
-          command: |
-            cd ..
-            catkin build pacmod3 --no-deps --make-args roslint
+      # TODO: Re-enable after auto-formatting the repo
+      # - run:
+      #     name: Lint
+      #     command: |
+      #       cd ..
+      #       catkin build pacmod3 --no-deps --make-args roslint
       - run:
           name: Run Tests
           command: |

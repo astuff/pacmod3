@@ -59,8 +59,15 @@ target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
 
-set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
-roslint_cpp()
+# TODO: Re-enable after auto-formatting
+# set(ROSLINT_CPP_OPTS "--filter=-build/include_subdir")
+# roslint_cpp(
+#   src/pacmod3_node.cpp
+#   src/pacmod3_nodelet.cpp
+#   src/pacmod3_ros_msg_handler.cpp
+#   include/pacmod3/pacmod3_nodelet.h
+#   include/pacmod3/pacmod3_ros_msg_handler.h
+#   )
 
 install(TARGETS
   ${PROJECT_NAME}_node
