@@ -25,18 +25,18 @@ catkin_package(
 
 include_directories(
   include
-  pacmod3_common
+  pacmod3_common/include
   ${catkin_INCLUDE_DIRS}
 )
 
 # Common Library
 add_compile_definitions(ROS_VERSION=$ENV{ROS_VERSION})
 add_library(pacmod3_common
-  pacmod3_common/pacmod3_dbc_ros_api.cpp
-  pacmod3_common/pacmod3_dbc3_ros_api.cpp
-  pacmod3_common/pacmod3_dbc4_ros_api.cpp
-  pacmod3_common/autogen/pacmod3.c
-  pacmod3_common/autogen/pacmod4.c
+  pacmod3_common/src/pacmod3_dbc_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc3_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc4_ros_api.cpp
+  pacmod3_common/src/autogen/pacmod3.c
+  pacmod3_common/src/autogen/pacmod4.c
 )
 
 # nodelets
