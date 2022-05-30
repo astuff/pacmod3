@@ -1,0 +1,3 @@
+[submodule "pacmod3_common"]
+	path = pacmod3_common
+	url = ../pacmod3_common.git

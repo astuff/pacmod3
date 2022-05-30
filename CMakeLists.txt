@@ -25,17 +25,28 @@ catkin_package(
 
 include_directories(
   include
+  pacmod3_common/include
   ${catkin_INCLUDE_DIRS}
+)
+
+# Common Library
+add_compile_definitions(ROS_VERSION=$ENV{ROS_VERSION})
+add_library(pacmod3_common
+  pacmod3_common/src/pacmod3_dbc_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc3_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc4_ros_api.cpp
+  pacmod3_common/src/autogen/pacmod3.c
+  pacmod3_common/src/autogen/pacmod4.c
 )
 
 # nodelets
 add_library(${PROJECT_NAME}_nodelet
   src/pacmod3_nodelet.cpp
-  src/pacmod3_core.cpp
   src/pacmod3_ros_msg_handler.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_nodelet
+  pacmod3_common
   ${catkin_LIBRARIES}
 )
 
@@ -48,8 +59,15 @@ target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
 
-set(ROSLINT_CPP_OPTS "--filter=-build/c++11")
-roslint_cpp()
+# TODO: Re-enable after auto-formatting
+# set(ROSLINT_CPP_OPTS "--filter=-build/include_subdir")
+# roslint_cpp(
+#   src/pacmod3_node.cpp
+#   src/pacmod3_nodelet.cpp
+#   src/pacmod3_ros_msg_handler.cpp
+#   include/pacmod3/pacmod3_nodelet.h
+#   include/pacmod3/pacmod3_ros_msg_handler.h
+#   )
 
 install(TARGETS
   ${PROJECT_NAME}_node
