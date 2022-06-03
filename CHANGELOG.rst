@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2002.1.1 (2022-06-03)
+---------------------
 * Update lifecycle API (`#119 <https://github.com/astuff/pacmod3/issues/119>`_)
 * Change to Humble CI (`#130 <https://github.com/astuff/pacmod3/issues/130>`_)
 * Contributors: Daisuke Nishimatsu, icolwell-as
