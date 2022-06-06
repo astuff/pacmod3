@@ -2,6 +2,12 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2002.1.1 (2022-06-03)
+---------------------
+* Update lifecycle API (`#119 <https://github.com/astuff/pacmod3/issues/119>`_)
+* Change to Humble CI (`#130 <https://github.com/astuff/pacmod3/issues/130>`_)
+* Contributors: Daisuke Nishimatsu, icolwell-as
+
 2002.1.0 (2022-03-04)
 ---------------------
 * Add rear pass door report (`#120 <https://github.com/astuff/pacmod3/issues/120>`_)
