@@ -102,43 +102,10 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
 
   // Other Reports
+  parse_functions[GLOBAL_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[ENGINE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[GLOBAL_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
-}
-
-template <class RosMsgType>
-bool Pacmod3RosMsgHandler::ParseType(const can_msgs::Frame& can_msg, RosMsgType& ros_msg)
-{
-  // Call generic fill function from common hybrid lib, cast void pointer return
-  if (parse_functions.count(can_msg.id))
-  {
-    ros_msg = *(std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg)));
-
-    ros_msg.header.frame_id = "pacmod3";
-    ros_msg.header.stamp = can_msg.header.stamp;
-
-    return true;
-  }
-  else
-  {
-    ros_msg = RosMsgType();
-    return false;
-  }
-}
-
-template <class RosMsgType>
-void Pacmod3RosMsgHandler::ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
-{
-  // Call generic fill function from common hybrid lib, cast void pointer return
-  if (parse_functions.count(can_msg.id))
-  {
-    std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg));
-
-    ros_msg->header.frame_id = "pacmod3";
-    ros_msg->header.stamp = can_msg.header.stamp;
-
-    pub.publish(*ros_msg);
-  }
 }
 
 void Pacmod3RosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
