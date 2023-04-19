@@ -89,14 +89,45 @@ class Pacmod3RosMsgHandler
 public:
   Pacmod3RosMsgHandler(uint32_t dbc_major_version);
 
-  // Functions for parsing raw CAN messages
-  template <class RosMsgType>
-  bool ParseType(const can_msgs::Frame& can_msg, RosMsgType& ros_msg);
-
-  template <class RosMsgType>
-  void ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
-
+  // Main parsing and publishing function, call this from the driver
   void ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub);
+
+  // Parse and publish a certain ROS msg type
+  template <class RosMsgType>
+  void ParseAndPublishType(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
+  {
+    // Call generic fill function from common hybrid lib, cast void pointer return
+    if (parse_functions.count(can_msg.id))
+    {
+      std::shared_ptr<RosMsgType> ros_msg = std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg));
+
+      ros_msg->header.frame_id = "pacmod3";
+      ros_msg->header.stamp = can_msg.header.stamp;
+
+      pub.publish(*ros_msg);
+    }
+  }
+
+  // Parse a CAN msg into a ROS msg
+  template <class RosMsgType>
+  bool ParseType(const can_msgs::Frame& can_msg, RosMsgType& ros_msg)
+  {
+    // Call generic fill function from common hybrid lib, cast void pointer return
+    if (parse_functions.count(can_msg.id))
+    {
+      ros_msg = *(std::static_pointer_cast<RosMsgType>(parse_functions[can_msg.id](can_msg)));
+
+      ros_msg.header.frame_id = "pacmod3";
+      ros_msg.header.stamp = can_msg.header.stamp;
+
+      return true;
+    }
+    else
+    {
+      ros_msg = RosMsgType();
+      return false;
+    }
+  }
 
   // Function for packing/encoding data into CAN messages. It's located in the header to force
   // the compiler to instatiate types required by the includer.
