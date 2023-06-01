@@ -35,8 +35,10 @@ add_library(pacmod3_common
   pacmod3_common/src/pacmod3_dbc_ros_api.cpp
   pacmod3_common/src/pacmod3_dbc3_ros_api.cpp
   pacmod3_common/src/pacmod3_dbc4_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc5_ros_api.cpp
   pacmod3_common/src/autogen/pacmod3.c
   pacmod3_common/src/autogen/pacmod4.c
+  pacmod3_common/src/autogen/pacmod5.c
 )
 
 # nodelets

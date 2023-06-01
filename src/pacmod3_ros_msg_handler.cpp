@@ -57,8 +57,11 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
       msg_api_ = std::make_unique<pacmod3_common::Dbc3Api>();
       break;
     case (4):
-    default:
       msg_api_ = std::make_unique<pacmod3_common::Dbc4Api>();
+      break;
+    case (5):
+    default:
+      msg_api_ = std::make_unique<pacmod3_common::Dbc5Api>();
       break;
   }
   ROS_INFO("Initialized API for DBC version %d", msg_api_->GetDbcVersion());
@@ -102,10 +105,12 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
 
   // Other Reports
-  parse_functions[GLOBAL_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[ENGINE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
-  pub_functions[GLOBAL_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  parse_functions[ESTOP_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEStopRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[GLOBAL_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[ESTOP_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EStopRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[GLOBAL_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt>, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 void Pacmod3RosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
