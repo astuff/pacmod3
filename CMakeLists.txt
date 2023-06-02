@@ -36,9 +36,23 @@ add_library(pacmod3_common
   pacmod3_common/src/pacmod3_dbc3_ros_api.cpp
   pacmod3_common/src/pacmod3_dbc4_ros_api.cpp
   pacmod3_common/src/pacmod3_dbc5_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc6_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc7_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc8_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc9_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc10_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc11_ros_api.cpp
+  pacmod3_common/src/pacmod3_dbc12_ros_api.cpp
   pacmod3_common/src/autogen/pacmod3.c
   pacmod3_common/src/autogen/pacmod4.c
   pacmod3_common/src/autogen/pacmod5.c
+  pacmod3_common/src/autogen/pacmod6.c
+  pacmod3_common/src/autogen/pacmod7.c
+  pacmod3_common/src/autogen/pacmod8.c
+  pacmod3_common/src/autogen/pacmod9.c
+  pacmod3_common/src/autogen/pacmod10.c
+  pacmod3_common/src/autogen/pacmod11.c
+  pacmod3_common/src/autogen/pacmod12.c
 )
 
 # nodelets

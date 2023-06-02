@@ -5,7 +5,7 @@
   <arg name="kvaser_circuit_id" default="0" />
   <arg name="use_socketcan" default="false" />
   <arg name="socketcan_device" default="can0" />
-  <arg name="dbc_major_version" default="5" />
+  <arg name="dbc_major_version" default="4" />
   <arg name="namespace" default="pacmod" />
 
   <group ns="$(arg namespace)">

@@ -23,9 +23,7 @@
 
 
 #include "pacmod3_dbc_ros_api.h"
-#include "pacmod3_dbc3_ros_api.h"
-#include "pacmod3_dbc4_ros_api.h"
-#include "pacmod3_dbc5_ros_api.h"
+#include "pacmod3_dbc12_ros_api.h"
 
 #include <string>
 #include <vector>
@@ -33,42 +31,6 @@
 #include <mutex>
 
 #include <ros/ros.h>
-
-#include <can_msgs/Frame.h>
-#include <pacmod3_msgs/SystemCmdBool.h>
-#include <pacmod3_msgs/SystemCmdFloat.h>
-#include <pacmod3_msgs/SystemCmdInt.h>
-#include <pacmod3_msgs/GlobalRpt.h>
-#include <pacmod3_msgs/GlobalRpt2.h>
-#include <pacmod3_msgs/AccelAuxRpt.h>
-#include <pacmod3_msgs/AllSystemStatuses.h>
-#include <pacmod3_msgs/BrakeAuxRpt.h>
-#include <pacmod3_msgs/ComponentRpt.h>
-#include <pacmod3_msgs/DateTimeRpt.h>
-#include <pacmod3_msgs/DetectedObjectRpt.h>
-#include <pacmod3_msgs/DoorRpt.h>
-#include <pacmod3_msgs/EngineRpt.h>
-#include <pacmod3_msgs/HeadlightAuxRpt.h>
-#include <pacmod3_msgs/InteriorLightsRpt.h>
-#include <pacmod3_msgs/LatLonHeadingRpt.h>
-#include <pacmod3_msgs/MotorRpt1.h>
-#include <pacmod3_msgs/MotorRpt2.h>
-#include <pacmod3_msgs/MotorRpt3.h>
-#include <pacmod3_msgs/OccupancyRpt.h>
-#include <pacmod3_msgs/RearLightsRpt.h>
-#include <pacmod3_msgs/ShiftAuxRpt.h>
-#include <pacmod3_msgs/SteeringAuxRpt.h>
-#include <pacmod3_msgs/SteeringCmd.h>
-#include <pacmod3_msgs/SystemRptBool.h>
-#include <pacmod3_msgs/SystemRptFloat.h>
-#include <pacmod3_msgs/SystemRptInt.h>
-#include <pacmod3_msgs/TurnAuxRpt.h>
-#include <pacmod3_msgs/VehicleDynamicsRpt.h>
-#include <pacmod3_msgs/VehicleSpeedRpt.h>
-#include <pacmod3_msgs/VinRpt.h>
-#include <pacmod3_msgs/WheelSpeedRpt.h>
-#include <pacmod3_msgs/WiperAuxRpt.h>
-#include <pacmod3_msgs/YawRateRpt.h>
 
 namespace pacmod3
 {

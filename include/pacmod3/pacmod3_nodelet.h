@@ -96,6 +96,7 @@ private:
   void initializeRearLightsRptApi();
   void initializeHazardLightApi();
   void initializeEStopRptApi();
+  void initializeGlobalRpt2Api();
 
   // Vehicle-specific APIs
   void initializeLexusSpecificApi();
