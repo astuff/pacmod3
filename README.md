@@ -62,30 +62,32 @@ Topics published on supported platforms only:
 - `brake_motor_rpt_1` ([pacmod3_msgs/MotorRpt1](https://github.com/astuff/pacmod3_msgs/blob/master/msg/MotorRpt1.msg))
 - `brake_motor_rpt_2` ([pacmod3_msgs/MotorRpt2](https://github.com/astuff/pacmod3_msgs/blob/master/msg/MotorRpt2.msg))
 - `brake_motor_rpt_3` ([pacmod3_msgs/MotorRpt3](https://github.com/astuff/pacmod3_msgs/blob/master/msg/MotorRpt3.msg))
+- `cruise_control_buttons_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
+- `date_time_rpt` ([pacmod3_msgs/DateTimeRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/DateTimeRpt.msg))
+- `detected_object_rpt` ([pacmod3_msgs/DetectedObjectRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/DetectedObjectRpt.msg))
+- `door_rpt` ([pacmod3_msgs/DoorRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/DoorRpt.msg))
+- `estop_rpt` ([pacmod3_msgs/EStopRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/EStopRpt.msg))
+- `global_rpt_2` ([pacmod3_msgs/GlobalRpt2](https://github.com/astuff/pacmod3_msgs/blob/master/msg/GlobalRpt2.msg))
+- `engine_brake_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
+- `hazard_lights_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
+- `headlight_aux_rpt` ([pacmod3_msgs/HeadlightAuxRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/HeadlightAuxRpt.msg))
+- `headlight_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
+- `horn_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
+- `interior_lights_rpt` ([pacmod3_msgs/InteriorLightsRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/InteriorLightsRpt.msg))
+- `lat_lon_heading_rpt` ([pacmod3_msgs/LatLonHeadingRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/LatLonHeadingRpt.msg))
+- `marker_lamp_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
+- `occupancy_rpt` ([pacmod3_msgs/OccupancyRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/OccupancyRpt.msg))
+- `parking_brake_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
+- `rear_lights_rpt` ([pacmod3_msgs/RearLightsRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/RearLightsRpt.msg))
+- `sprayer_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
 - `steering_motor_rpt_1` ([pacmod3_msgs/MotorRpt1](https://github.com/astuff/pacmod3_msgs/blob/master/msg/MotorRpt1.msg))
 - `steering_motor_rpt_2` ([pacmod3_msgs/MotorRpt2](https://github.com/astuff/pacmod3_msgs/blob/master/msg/MotorRpt2.msg))
 - `steering_motor_rpt_3` ([pacmod3_msgs/MotorRpt3](https://github.com/astuff/pacmod3_msgs/blob/master/msg/MotorRpt3.msg))
-- `wiper_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
-- `wiper_aux_rpt` ([pacmod3_msgs/WiperAuxRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/WiperAuxRpt.msg))
-- `headlight_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
-- `headlight_aux_rpt` ([pacmod3_msgs/HeadlightAuxRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/HeadlightAuxRpt.msg))
-- `horn_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
-- `wheel_speed_rpt` ([pacmod3_msgs/WheelSpeedRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/WheelSpeedRpt.msg))
-- `parking_brake_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
-- `door_rpt` ([pacmod3_msgs/DoorRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/DoorRpt.msg))
-- `interior_lights_rpt` ([pacmod3_msgs/InteriorLightsRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/InteriorLightsRpt.msg))
-- `occupancy_rpt` ([pacmod3_msgs/OccupancyRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/OccupancyRpt.msg))
-- `rear_lights_rpt` ([pacmod3_msgs/RearLightsRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/RearLightsRpt.msg))
-- `hazard_lights_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
-- `date_time_rpt` ([pacmod3_msgs/DateTimeRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/DateTimeRpt.msg))
-- `lat_lon_heading_rpt` ([pacmod3_msgs/LatLonHeadingRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/LatLonHeadingRpt.msg))
-- `yaw_rate_rpt` ([pacmod3_msgs/YawRateRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/YawRateRpt.msg))
-- `cruise_control_buttons_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
-- `engine_brake_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
-- `marker_lamp_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
-- `sprayer_rpt` ([pacmod3_msgs/SystemRptBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptBool.msg))
-- `detected_object_rpt` ([pacmod3_msgs/DetectedObjectRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/DetectedObjectRpt.msg))
 - `vehicle_dynamics_rpt` ([pacmod3_msgs/VehicleDynamicsRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/VehicleDynamicsRpt.msg))
+- `wheel_speed_rpt` ([pacmod3_msgs/WheelSpeedRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/WheelSpeedRpt.msg))
+- `wiper_aux_rpt` ([pacmod3_msgs/WiperAuxRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/WiperAuxRpt.msg))
+- `wiper_rpt` ([pacmod3_msgs/SystemRptInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemRptInt.msg))
+- `yaw_rate_rpt` ([pacmod3_msgs/YawRateRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/YawRateRpt.msg))
 
 ### Subscribed Topics
 
@@ -100,20 +102,20 @@ Topics subscribed on all platforms:
 
 Topics subscribed on supported platforms only:
 
-- `wiper_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
-- `headlight_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
-- `horn_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
-- `hazard_lights_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
 - `cruise_control_buttons_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
 - `engine_brake_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
+- `hazard_lights_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
+- `headlight_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
+- `horn_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
 - `marker_lamp_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
-- `sprayer_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
 - `rear_pass_door_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
+- `sprayer_cmd` ([pacmod3_msgs/SystemCmdBool](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdBool.msg))
+- `wiper_cmd` ([pacmod3_msgs/SystemCmdInt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/SystemCmdInt.msg))
 
 ## Supported Vehicles ##
 
-At the moment, this pacmod3 driver only supports vehicles that use DBC version 3.
-The majority of existing Lexus platforms use DBC version 3.
-However, recently-purchased vehicle platforms (including Lexus) use a newer DBC version.
+At the moment, this pacmod3 driver supports DBC versions 3 through 12 for a core set of common messages.
+This means not all vehicle-specific CAN messages are currently supported.
+If you need a specific CAN message to be supported please open an issue [here](https://github.com/astuff/pacmod3/issues).
 
 If you are unsure about which DBC version your existing PACMod supports, please reach out to our support team: https://autonomoustuff.com/support
