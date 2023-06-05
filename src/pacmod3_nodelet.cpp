@@ -47,7 +47,9 @@ void Pacmod3Nl::onInit()
   all_system_statuses_pub = nh_.advertise<pacmod3_msgs::AllSystemStatuses>("all_system_statuses", 20);
 
   global_rpt_pub = nh_.advertise<pacmod3_msgs::GlobalRpt>("global_rpt", 20);
-  component_rpt_pub = nh_.advertise<pacmod3_msgs::ComponentRpt>("component_rpt", 20);
+  component_rpt_00_pub = nh_.advertise<pacmod3_msgs::ComponentRpt>("component_rpt_00", 20);
+  component_rpt_01_pub = nh_.advertise<pacmod3_msgs::ComponentRpt>("component_rpt_01", 20);
+  component_rpt_02_pub = nh_.advertise<pacmod3_msgs::ComponentRpt>("component_rpt_02", 20);
   accel_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("accel_rpt", 20);
   brake_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptFloat>("brake_rpt", 20);
   shift_rpt_pub = nh_.advertise<pacmod3_msgs::SystemRptInt>("shift_rpt", 20);
@@ -62,7 +64,9 @@ void Pacmod3Nl::onInit()
   vin_rpt_pub = nh_.advertise<pacmod3_msgs::VinRpt>("vin_rpt", 5);
 
   pub_tx_list.emplace(GLOBAL_RPT_CANID, std::move(global_rpt_pub));
-  pub_tx_list.emplace(COMPONENT_RPT_00_CANID, std::move(component_rpt_pub));
+  pub_tx_list.emplace(COMPONENT_RPT_00_CANID, std::move(component_rpt_00_pub));
+  pub_tx_list.emplace(COMPONENT_RPT_01_CANID, std::move(component_rpt_01_pub));
+  pub_tx_list.emplace(COMPONENT_RPT_02_CANID, std::move(component_rpt_02_pub));
   pub_tx_list.emplace(ACCEL_RPT_CANID, std::move(accel_rpt_pub));
   pub_tx_list.emplace(BRAKE_RPT_CANID, std::move(brake_rpt_pub));
   pub_tx_list.emplace(SHIFT_RPT_CANID, std::move(shift_rpt_pub));

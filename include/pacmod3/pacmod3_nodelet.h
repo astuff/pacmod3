@@ -141,7 +141,9 @@ private:
   ros::Publisher all_system_statuses_pub;
   ros::Publisher global_rpt_pub;
   ros::Publisher global_rpt_2_pub;
-  ros::Publisher component_rpt_pub;
+  ros::Publisher component_rpt_00_pub;
+  ros::Publisher component_rpt_01_pub;
+  ros::Publisher component_rpt_02_pub;
   ros::Publisher accel_rpt_pub;
   ros::Publisher brake_rpt_pub;
   ros::Publisher shift_rpt_pub;

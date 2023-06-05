@@ -141,6 +141,14 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   pub_functions[TURN_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::TurnAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[WIPER_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::WiperAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
 
+  // Aux Reports
+  parse_functions[COMPONENT_RPT_00_CANID] = std::bind(&pacmod3_common::DbcApi::ParseComponentRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[COMPONENT_RPT_01_CANID] = std::bind(&pacmod3_common::DbcApi::ParseComponentRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[COMPONENT_RPT_02_CANID] = std::bind(&pacmod3_common::DbcApi::ParseComponentRpt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[COMPONENT_RPT_00_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ComponentRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[COMPONENT_RPT_01_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ComponentRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[COMPONENT_RPT_02_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ComponentRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  
   // Other Reports
   parse_functions[ENGINE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[ESTOP_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEStopRpt, std::ref(*msg_api_), std::placeholders::_1);
