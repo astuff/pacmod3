@@ -125,15 +125,43 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   pub_functions[BRAKE_RPT_CANID] =
   pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
 
+  // Aux Reports
+  parse_functions[ACCEL_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseAccelAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[BRAKE_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseBrakeAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[HEADLIGHT_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseHeadlightAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[SHIFT_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseShiftAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[STEERING_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSteeringAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[TURN_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseTurnAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[WIPER_AUX_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseWiperAuxRpt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[ACCEL_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::AccelAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[BRAKE_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::BrakeAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[HEADLIGHT_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::HeadlightAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[SHIFT_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ShiftAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[STEERING_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SteeringAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[TURN_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::TurnAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[WIPER_AUX_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::WiperAuxRpt>, this, std::placeholders::_1, std::placeholders::_2);
+
+  // Component Reports
+  parse_functions[COMPONENT_RPT_00_CANID] = std::bind(&pacmod3_common::DbcApi::ParseComponentRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[COMPONENT_RPT_01_CANID] = std::bind(&pacmod3_common::DbcApi::ParseComponentRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[COMPONENT_RPT_02_CANID] = std::bind(&pacmod3_common::DbcApi::ParseComponentRpt, std::ref(*msg_api_), std::placeholders::_1);
+  pub_functions[COMPONENT_RPT_00_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ComponentRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[COMPONENT_RPT_01_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ComponentRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[COMPONENT_RPT_02_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::ComponentRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  
   // Other Reports
   parse_functions[ENGINE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEngineRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[ESTOP_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEStopRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[GLOBAL_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[GLOBAL_RPT_2_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt2, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[WHEEL_SPEED_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseWheelSpeedRpt, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[VEHICLE_SPEED_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseVehicleSpeedRpt, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[ESTOP_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EStopRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[GLOBAL_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[GLOBAL_RPT_2_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt2>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[WHEEL_SPEED_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::WheelSpeedRpt>, this, std::placeholders::_1, std::placeholders::_2);
+  pub_functions[VEHICLE_SPEED_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::VehicleSpeedRpt>, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 void Pacmod3RosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)

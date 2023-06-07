@@ -139,23 +139,6 @@ private:
   ros::Publisher enabled_pub;
   ros::Publisher can_rx_pub;
   ros::Publisher all_system_statuses_pub;
-  ros::Publisher global_rpt_pub;
-  ros::Publisher global_rpt_2_pub;
-  ros::Publisher component_rpt_pub;
-  ros::Publisher accel_rpt_pub;
-  ros::Publisher brake_rpt_pub;
-  ros::Publisher shift_rpt_pub;
-  ros::Publisher steering_rpt_pub;
-  ros::Publisher turn_rpt_pub;
-  ros::Publisher rear_pass_door_rpt_pub;
-  ros::Publisher media_controls_rpt_pub;
-  ros::Publisher vehicle_speed_pub;
-  ros::Publisher vin_rpt_pub;
-  ros::Publisher accel_aux_rpt_pub;
-  ros::Publisher brake_aux_rpt_pub;
-  ros::Publisher shift_aux_rpt_pub;
-  ros::Publisher steer_aux_rpt_pub;
-  ros::Publisher turn_aux_rpt_pub;
 
   ros::Subscriber can_tx_sub;
   ros::Subscriber accel_cmd_sub;
