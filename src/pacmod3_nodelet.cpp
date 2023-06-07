@@ -683,6 +683,22 @@ void Pacmod3Nl::can_read(const can_msgs::Frame::ConstPtr &msg)
         set_enable(false);
       }
     }
+	if (msg->id == GLOBAL_RPT_2_CANID)
+    {
+      pacmod3_msgs::GlobalRpt2 global_rpt_2_msg;
+      handler->ParseType(*msg, global_rpt_2_msg);
+
+      std_msgs::Bool bool_msg;
+      bool_msg.data = global_rpt_2_msg.system_enabled;
+      enabled_pub.publish(bool_msg);
+
+      // Auto-disable
+      if (global_rpt_2_msg.system_override_active ||
+          global_rpt_2_msg.system_fault_active)
+      {
+        set_enable(false);
+      }
+    }
   }
 }
 
