@@ -53,7 +53,9 @@ Topics published on all platforms:
 - `vehicle_speed_rpt` ([pacmod3_msgs/VehicleSpeedRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/VehicleSpeedRpt.msg))
 - `vin_rpt` ([pacmod3_msgs/VinRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/VinRpt.msg))
 - `global_rpt` ([pacmod3_msgs/GlobalRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/GlobalRpt.msg))
-- `component_rpt` ([pacmod3_msgs/ComponentRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/ComponentRpt.msg))
+- `component_rpt_00` ([pacmod3_msgs/ComponentRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/ComponentRpt.msg))
+- `component_rpt_01` ([pacmod3_msgs/ComponentRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/ComponentRpt.msg))
+- `component_rpt_02` ([pacmod3_msgs/ComponentRpt](https://github.com/astuff/pacmod3_msgs/blob/master/msg/ComponentRpt.msg))
 - `all_system_statuses` ([pacmod3_msgs/AllSystemStatuses](https://github.com/astuff/pacmod3_msgs/blob/master/msg/AllSystemStatuses.msg))
 - `can_rx` ([can_msgs/Frame](http://docs.ros.org/en/noetic/api/can_msgs/html/msg/Frame.html))
 
