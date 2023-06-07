@@ -154,20 +154,14 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
   parse_functions[ESTOP_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseEStopRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[GLOBAL_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[GLOBAL_RPT_2_CANID] = std::bind(&pacmod3_common::DbcApi::ParseGlobalRpt2, std::ref(*msg_api_), std::placeholders::_1);
-<<<<<<< HEAD
   parse_functions[WHEEL_SPEED_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseWheelSpeedRpt, std::ref(*msg_api_), std::placeholders::_1);
   parse_functions[VEHICLE_SPEED_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseVehicleSpeedRpt, std::ref(*msg_api_), std::placeholders::_1);
-=======
->>>>>>> origin/ros1_master
   pub_functions[ENGINE_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EngineRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[ESTOP_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::EStopRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[GLOBAL_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[GLOBAL_RPT_2_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::GlobalRpt2>, this, std::placeholders::_1, std::placeholders::_2);
-<<<<<<< HEAD
   pub_functions[WHEEL_SPEED_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::WheelSpeedRpt>, this, std::placeholders::_1, std::placeholders::_2);
   pub_functions[VEHICLE_SPEED_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::VehicleSpeedRpt>, this, std::placeholders::_1, std::placeholders::_2);
-=======
->>>>>>> origin/ros1_master
 }
 
 void Pacmod3RosMsgHandler::ParseAndPublish(const can_msgs::Frame& can_msg, const ros::Publisher& pub)
