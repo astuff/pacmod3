@@ -126,9 +126,9 @@ void Pacmod3Nl::loadParams()
 {
   // Get and validate parameters
   pnh_.param<int>("dbc_major_version", dbc_major_version_, 3);
-  if (dbc_major_version_ < 3 || dbc_major_version_ > 4)
+  if (dbc_major_version_ < 3 || dbc_major_version_ > 12)
   {
-    NODELET_ERROR("This driver currently only supports PACMod DBC version 3 through 4");
+    NODELET_ERROR("This driver currently only supports PACMod DBC version 3 through 12");
     ros::shutdown();
   }
 }
@@ -265,6 +265,22 @@ void Pacmod3Nl::initializeHazardLightApi()
     HAZARD_LIGHTS_CMD_CANID,
     std::shared_ptr<LockedData>(new LockedData()));
   NODELET_INFO("Initialized HazardLight API");
+}
+
+void Pacmod3Nl::initializeEStopRptApi()
+{
+  ros::Publisher estop_rpt_pub =
+    nh_.advertise<pacmod3_msgs::EStopRpt>("estop_rpt", 20);
+  pub_tx_list.emplace(ESTOP_RPT_CANID, std::move(estop_rpt_pub));
+  NODELET_INFO("Initialized EStopRpt API");
+}
+
+void Pacmod3Nl::initializeGlobalRpt2Api()
+{
+  ros::Publisher global_rpt_2_pub =
+    nh_.advertise<pacmod3_msgs::GlobalRpt2>("global_rpt_2", 20);
+  pub_tx_list.emplace(GLOBAL_RPT_2_CANID, std::move(global_rpt_2_pub));
+  NODELET_INFO("Initialized GlobalRpt2 API");
 }
 
 void Pacmod3Nl::initializeLexusSpecificApi()
@@ -427,6 +443,15 @@ void Pacmod3Nl::initializeApiForMsg(uint32_t msg_can_id)
       {
         initializeHazardLightApi();
         break;
+      }
+    case ESTOP_RPT_CANID:
+      {
+        initializeEStopRptApi();
+        break;
+      }
+    case GLOBAL_RPT_2_CANID:
+      {
+        initializeGlobalRpt2Api();
       }
     case DATE_TIME_RPT_CANID:
     case LAT_LON_HEADING_RPT_CANID:

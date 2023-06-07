@@ -34,10 +34,6 @@
 #include <nodelet/nodelet.h>
 
 #include <can_msgs/Frame.h>
-#include <pacmod3_msgs/SystemCmdBool.h>
-#include <pacmod3_msgs/SystemCmdFloat.h>
-#include <pacmod3_msgs/SystemCmdInt.h>
-#include <pacmod3_msgs/GlobalRpt.h>
 #include <pacmod3_msgs/AccelAuxRpt.h>
 #include <pacmod3_msgs/AllSystemStatuses.h>
 #include <pacmod3_msgs/BrakeAuxRpt.h>
@@ -45,7 +41,9 @@
 #include <pacmod3_msgs/DateTimeRpt.h>
 #include <pacmod3_msgs/DetectedObjectRpt.h>
 #include <pacmod3_msgs/DoorRpt.h>
+#include <pacmod3_msgs/EStopRpt.h>
 #include <pacmod3_msgs/EngineRpt.h>
+#include <pacmod3_msgs/GlobalRpt.h>
 #include <pacmod3_msgs/HeadlightAuxRpt.h>
 #include <pacmod3_msgs/InteriorLightsRpt.h>
 #include <pacmod3_msgs/LatLonHeadingRpt.h>
@@ -57,6 +55,9 @@
 #include <pacmod3_msgs/ShiftAuxRpt.h>
 #include <pacmod3_msgs/SteeringAuxRpt.h>
 #include <pacmod3_msgs/SteeringCmd.h>
+#include <pacmod3_msgs/SystemCmdBool.h>
+#include <pacmod3_msgs/SystemCmdFloat.h>
+#include <pacmod3_msgs/SystemCmdInt.h>
 #include <pacmod3_msgs/SystemRptBool.h>
 #include <pacmod3_msgs/SystemRptFloat.h>
 #include <pacmod3_msgs/SystemRptInt.h>
@@ -94,6 +95,8 @@ private:
   void initializeOccupancyRptApi();
   void initializeRearLightsRptApi();
   void initializeHazardLightApi();
+  void initializeEStopRptApi();
+  void initializeGlobalRpt2Api();
 
   // Vehicle-specific APIs
   void initializeLexusSpecificApi();
