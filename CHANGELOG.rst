@@ -2,6 +2,16 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.0 (2023-06-08)
+------------------
+* Add README to install folder (`#140 <https://github.com/astuff/pacmod3/issues/140>`_)
+* Add missing parsing for various msg types, fix global_rpt_2 (`#139 <https://github.com/astuff/pacmod3/issues/139>`_)
+* Support all DBCs and add estop_rpt (`#137 <https://github.com/astuff/pacmod3/issues/137>`_)
+* Move template function definitions into the header (`#134 <https://github.com/astuff/pacmod3/issues/134>`_)
+* Utilize pacmod3_common repo for CAN parsing (`#129 <https://github.com/astuff/pacmod3/issues/129>`_)
+* Add support for global_rpt_2 (`#125 <https://github.com/astuff/pacmod3/issues/125>`_)
+* Contributors: Ian Colwell, cullenstoneAS, icolwell-as
+
 2.0.0 (2021-11-17)
 ------------------
 * Remove need to specify vehicle type (`#110 <https://github.com/astuff/pacmod3/issues/110>`_)
