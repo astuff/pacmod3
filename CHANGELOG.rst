@@ -2,8 +2,8 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.0 (2023-06-08)
+------------------
 * Add README to install folder (`#140 <https://github.com/astuff/pacmod3/issues/140>`_)
 * Add missing parsing for various msg types, fix global_rpt_2 (`#139 <https://github.com/astuff/pacmod3/issues/139>`_)
 * Support all DBCs and add estop_rpt (`#137 <https://github.com/astuff/pacmod3/issues/137>`_)
