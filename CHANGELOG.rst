@@ -2,6 +2,13 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+2.2.1 (2023-06-26)
+------------------
+* Fix steering rpt (`#143 <https://github.com/astuff/pacmod3/issues/143>`_)
+  * update submodule and nodelet to use autogen steering_rpt_t to unpack steering rpt (need signed ints)
+  * update submodule commit hash
+* Contributors: cullenstoneAS
+
 2.2.0 (2023-06-08)
 ------------------
 * Add README to install folder (`#140 <https://github.com/astuff/pacmod3/issues/140>`_)
