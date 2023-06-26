@@ -3,6 +3,9 @@ project(pacmod3)
 
 add_definitions(-std=c++14)
 
+# For static library
+add_compile_options(-fPIC)
+
 set(catkin_deps
   nodelet
   roscpp
@@ -31,7 +34,7 @@ include_directories(
 
 # Common Library
 add_compile_definitions(ROS_VERSION=$ENV{ROS_VERSION})
-add_library(pacmod3_common
+add_library(pacmod3_common STATIC
   pacmod3_common/src/pacmod3_dbc_ros_api.cpp
   pacmod3_common/src/pacmod3_dbc3_ros_api.cpp
   pacmod3_common/src/pacmod3_dbc4_ros_api.cpp
