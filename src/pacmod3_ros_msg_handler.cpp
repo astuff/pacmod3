@@ -119,8 +119,8 @@ Pacmod3RosMsgHandler::Pacmod3RosMsgHandler(uint32_t dbc_major_version)
 
   // Float Reports
   parse_functions[ACCEL_RPT_CANID] =
-  parse_functions[BRAKE_RPT_CANID] =
-  parse_functions[STEERING_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[BRAKE_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSystemRptFloat, std::ref(*msg_api_), std::placeholders::_1);
+  parse_functions[STEERING_RPT_CANID] = std::bind(&pacmod3_common::DbcApi::ParseSteeringRpt, std::ref(*msg_api_), std::placeholders::_1);
   pub_functions[ACCEL_RPT_CANID] =
   pub_functions[BRAKE_RPT_CANID] =
   pub_functions[STEERING_RPT_CANID] = std::bind(&Pacmod3RosMsgHandler::ParseAndPublishType<pacmod3_msgs::SystemRptFloat>, this, std::placeholders::_1, std::placeholders::_2);
