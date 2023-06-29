@@ -2,6 +2,14 @@
 Changelog for package pacmod3
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
+2.2.2 (2023-06-26)
+------------------
+* Create pacmod3_common as a static library (`#146 <https://github.com/astuff/pacmod3/issues/146>`_)
+* Contributors: Ian Colwell
+
 2.2.1 (2023-06-26)
 ------------------
 * Fix steering rpt (`#143 <https://github.com/astuff/pacmod3/issues/143>`_)
